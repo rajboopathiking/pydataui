@@ -22,6 +22,21 @@ class App:
         self._custom_api_routes = []
         self._setup_internal_routes()
         
+    @property
+    def title(self) -> str:
+        """Application title."""
+        return self.config.title
+
+    @property
+    def routes(self) -> Dict[str, Callable]:
+        """Dictionary of registered page path to handler."""
+        return {path: route.handler for path, route in self._page_router._routes.items()}
+
+    @property
+    def api_routes(self) -> Dict[str, Dict[str, Any]]:
+        """Dictionary of registered custom API endpoints."""
+        return {path: {'method': method, 'handler': func} for method, path, func in self._custom_api_routes}
+
     def page(self, path: str, title: Optional[str] = None, layout: Optional[Callable] = None):
         """Decorator to register a page route."""
         def decorator(func: Callable):
@@ -35,6 +50,7 @@ class App:
         def decorator(func: Callable):
             route_method = getattr(self._engine, method.lower())
             route_method(path, **kwargs)(func)
+            self._custom_api_routes.append((method, path, func))
             return func
         return decorator
         

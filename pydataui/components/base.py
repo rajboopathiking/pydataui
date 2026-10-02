@@ -21,7 +21,14 @@ class Component:
         hidden: bool = False,
         **props: Any,
     ):
-        self.children = list(children)
+        passed_children = list(children)
+        if 'children' in props:
+            kw_children = props.pop('children')
+            if isinstance(kw_children, (list, tuple)):
+                passed_children.extend(kw_children)
+            elif kw_children is not None:
+                passed_children.append(kw_children)
+        self.children = passed_children
         self.id = id or generate_id()
         self.class_name = class_name
         self.style = style
@@ -34,10 +41,12 @@ class Component:
             if key in EVENT_TRIGGERS:
                 self._event_props[key] = props.pop(key)
     
-    def render(self, state_snapshot: StateSnapshot) -> str:
+    def render(self, state_snapshot: Optional[StateSnapshot] = None) -> str:
         """Render component to HTML string."""
         if self.hidden:
             return ''
+        if state_snapshot is None:
+            state_snapshot = {}
         
         attrs = self._build_attrs(state_snapshot)
         children_html = self._render_children(state_snapshot)
@@ -47,6 +56,11 @@ class Component:
             
         attrs_str = f' {attrs}' if attrs else ''
         return f'<{self.tag}{attrs_str}>{children_html}</{self.tag}>'
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, Component):
+            return self.tag == other.tag and self.children == other.children
+        return False
     
     def _build_attrs(self, state_snapshot: StateSnapshot) -> str:
         """Build HTML attributes string."""

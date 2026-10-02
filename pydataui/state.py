@@ -8,6 +8,35 @@ class StateVarRef:
         self.field_name = field_name
         self.default = default
         
+    def _get_val(self) -> Any:
+        cls = StateMeta._registry.get(self.state_cls_name)
+        if cls and hasattr(cls, '_class_store') and self.field_name in cls._class_store:
+            return cls._class_store[self.field_name]
+        return self.default
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, StateVarRef):
+            return self.state_cls_name == other.state_cls_name and self.field_name == other.field_name
+        return self._get_val() == other
+
+    def __int__(self) -> int:
+        return int(self._get_val())
+
+    def __float__(self) -> float:
+        return float(self._get_val())
+
+    def __add__(self, other: Any) -> Any:
+        return self._get_val() + other
+
+    def __radd__(self, other: Any) -> Any:
+        return other + self._get_val()
+
+    def __sub__(self, other: Any) -> Any:
+        return self._get_val() - other
+
+    def __rsub__(self, other: Any) -> Any:
+        return other - self._get_val()
+        
     def resolve(self, state_snapshot: StateSnapshot) -> Any:
         state_dict = state_snapshot.get(self.state_cls_name, {})
         return state_dict.get(self.field_name, self.default)
@@ -82,6 +111,17 @@ class EventHandler:
                     and self.method_name == other.method_name)
         return NotImplemented
 
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        """Allow calling event handlers directly on the class for convenience."""
+        cls = StateMeta._registry.get(self.state_cls_name)
+        if cls:
+            for klass in cls.__mro__:
+                if self.method_name in klass.__dict__:
+                    func = klass.__dict__[self.method_name]
+                    if callable(func):
+                        return func(cls, *args, **kwargs)
+        return None
+
 
 # ---------------------------------------------------------------------------
 # Names that belong to Python / the metaclass and must never be wrapped.
@@ -94,7 +134,7 @@ _META_PASSTHROUGH = frozenset({
     '__abstractmethods__', '__flags__',
     # Our own helpers that must stay accessible:
     '_registry', 'get_state_vars', 'get_event_handlers',
-    'to_dict', 'from_dict', 'reset',
+    'to_dict', 'from_dict', 'reset', '_class_store',
 })
 
 
@@ -129,9 +169,25 @@ class StateMeta(type):
                 namespace[field] = StateVar(default=default, field_name=field)
 
         cls = super().__new__(mcs, name, bases, namespace, **kwargs)
+        cls._class_store = {}
+        for f, var in cls.get_state_vars().items():
+            cls._class_store[f] = var.default
         if name != 'State':
             mcs._registry[name] = cls
         return cls
+
+    def __setattr__(cls, name: str, value: Any) -> None:
+        if hasattr(cls, '_class_store') and name in cls.get_state_vars():
+            cls._class_store[name] = value
+            return
+        super().__setattr__(name, value)
+
+    def to_dict(cls) -> Dict[str, Any]:
+        return {name: cls._class_store.get(name, var.default) for name, var in cls.get_state_vars().items()}
+
+    def reset(cls) -> None:
+        for name, var in cls.get_state_vars().items():
+            cls._class_store[name] = var.default
 
     # ---- intercept class-level attribute access ----------------------------
     def __getattribute__(cls, name: str) -> Any:
@@ -168,6 +224,18 @@ class StateMeta(type):
         return super().__getattribute__(name)
 
 
+class hybridmethod:
+    """Descriptor that acts as a classmethod when accessed on a class,
+    and an instancemethod when accessed on an instance."""
+    def __init__(self, func: Callable):
+        self.func = func
+    def __get__(self, obj: Any, objtype: Optional[Type] = None) -> Callable:
+        target = obj if obj is not None else objtype
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            return self.func(target, *args, **kwargs)
+        return wrapper
+
+
 class State(metaclass=StateMeta):
     """Base class for application state.
 
@@ -192,9 +260,13 @@ class State(metaclass=StateMeta):
             # Use object.__setattr__ to bypass descriptors during init
             self.__dict__[name] = var.default
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Serialize current state to a plain dictionary."""
-        return {name: getattr(self, name) for name in self.get_state_vars()}
+    @hybridmethod
+    def to_dict(self_or_cls: Any) -> Dict[str, Any]:
+        """Serialize current state to a plain dictionary (works on class or instance)."""
+        if isinstance(self_or_cls, type):
+            store = getattr(self_or_cls, '_class_store', {})
+            return {name: store.get(name, var.default) for name, var in self_or_cls.get_state_vars().items()}
+        return {name: getattr(self_or_cls, name) for name in self_or_cls.get_state_vars()}
 
     def from_dict(self, data: Dict[str, Any]) -> None:
         """Bulk-update state from a dictionary."""
@@ -203,10 +275,16 @@ class State(metaclass=StateMeta):
             if k in vars_dict:
                 setattr(self, k, v)
 
-    def reset(self) -> None:
-        """Reset all state variables to their declared defaults."""
-        for name, var in self.get_state_vars().items():
-            setattr(self, name, var.default)
+    @hybridmethod
+    def reset(self_or_cls: Any) -> None:
+        """Reset state variables to their declared defaults (works on class or instance)."""
+        if isinstance(self_or_cls, type):
+            if hasattr(self_or_cls, '_class_store'):
+                for name, var in self_or_cls.get_state_vars().items():
+                    self_or_cls._class_store[name] = var.default
+            return
+        for name, var in self_or_cls.get_state_vars().items():
+            setattr(self_or_cls, name, var.default)
 
     @classmethod
     def get_event_handlers(cls) -> Dict[str, Callable]:

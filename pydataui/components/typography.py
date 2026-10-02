@@ -24,6 +24,10 @@ class Text(Component):
         if self.truncate: classes.append('pdu-truncate')
         return classes
 
+    @property
+    def text(self) -> str:
+        return str(self.children[0]) if self.children else ""
+
 class Heading(Component):
     def __init__(self, *children, level=1, size=None, weight='bold', color=None, align=None, **props):
         super().__init__(*children, **props)
@@ -40,6 +44,10 @@ class Heading(Component):
         if self.color: classes.append(f'pdu-text-{self.color}')
         if self.align: classes.append(f'pdu-text-{self.align}')
         return classes
+
+    @property
+    def text(self) -> str:
+        return str(self.children[0]) if self.children else ""
 
 class Paragraph(Component):
     tag = 'p'

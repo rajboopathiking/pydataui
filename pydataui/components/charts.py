@@ -87,3 +87,23 @@ class Sparkline(Chart):
         if 'pdu-chart-container' in classes: classes.remove('pdu-chart-container')
         classes.append('pdu-sparkline')
         return classes
+
+class BarChart(Chart):
+    """Bar chart component."""
+    def __init__(self, data=None, options=None, **props):
+        super().__init__(type='bar', data=data, options=options, **props)
+
+class LineChart(Chart):
+    """Line chart component."""
+    def __init__(self, data=None, options=None, **props):
+        super().__init__(type='line', data=data, options=options, **props)
+
+class PieChart(Chart):
+    """Pie chart component."""
+    def __init__(self, data=None, options=None, **props):
+        super().__init__(type='pie', data=data, options=options, **props)
+
+class DoughnutChart(Chart):
+    """Doughnut chart component."""
+    def __init__(self, data=None, options=None, **props):
+        super().__init__(type='doughnut', data=data, options=options, **props)

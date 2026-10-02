@@ -22,9 +22,21 @@ class Button(Component):
         if self.loading: classes.append('pdu-btn-loading')
         return classes
 
+    @property
+    def label(self) -> str:
+        if self.children:
+            return str(self.children[0])
+        return str(self.props.get('label', ''))
+
+    @property
+    def on_click(self) -> Any:
+        return self._event_props.get('on_click') or self.props.get('on_click')
+
 class Input(Component):
     tag = 'input'
-    def __init__(self, type='text', placeholder='', value=None, name=None, required=False, disabled=False, readonly=False, size='md', variant='outline', label=None, helper_text=None, error=None, on_change=None, on_input=None, **props):
+    def __init__(self, *args, type='text', placeholder='', value=None, name=None, required=False, disabled=False, readonly=False, size='md', variant='outline', label=None, helper_text=None, error=None, on_change=None, on_input=None, **props):
+        if args and label is None:
+            label = args[0]
         super().__init__(**props)
         self.props['type'] = type
         self.props['placeholder'] = placeholder
@@ -38,6 +50,10 @@ class Input(Component):
         self.label = label
         self.helper_text = helper_text
         self.error = error
+
+    @property
+    def placeholder(self) -> str:
+        return self.props.get('placeholder', '')
         
         # HTMX integration for inputs
         if on_change:

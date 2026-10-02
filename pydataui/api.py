@@ -1,4 +1,5 @@
 from typing import Any
+from rustapi.responses import JSONResponse
 from .config import AppConfig
 from .session import SessionManager, Session
 from .state import StateMeta
@@ -50,7 +51,7 @@ class APIGenerator:
                 state_instance = session.state_instances[state_name]
                 if hasattr(state_instance, field):
                     return {field: getattr(state_instance, field)}
-                return {"error": "Field not found"}, 404
+                return JSONResponse({"error": "Field not found"}, status_code=404)
                 
             @engine.put(base_url)
             def update_state(request, state_name=state_name, state_cls=state_cls):
@@ -85,4 +86,4 @@ class APIGenerator:
                     else:
                         func()
                     return state_instance.to_dict()
-                return {"error": "Method not found"}, 404
+                return JSONResponse({"error": "Method not found"}, status_code=404)

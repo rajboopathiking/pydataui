@@ -1,5 +1,7 @@
+import os
 from typing import Callable, Optional, Dict, Any
 from rustapi import FastAPI as RustAPIApp
+from rustapi.responses import HTMLResponse, Response, RedirectResponse, PlainTextResponse
 
 from .config import AppConfig
 from .page import PageRouter
@@ -14,7 +16,15 @@ class App:
     
     def __init__(self, title: str = 'PyDataUI App', description: str = '', version: str = '0.1.0', debug: bool = False, **kwargs):
         self.config = AppConfig(title=title, description=description, version=version, debug=debug, **kwargs)
-        self._engine = RustAPIApp(title=title, description=description, version=version)
+        docs_url = f"{self.config.api_prefix}/docs"
+        openapi_url = f"{self.config.api_prefix}/openapi.json"
+        self._engine = RustAPIApp(
+            title=title,
+            description=description,
+            version=version,
+            docs_url=docs_url,
+            openapi_url=openapi_url,
+        )
         self._page_router = PageRouter()
         self._renderer = Renderer(self.config)
         self._session_manager = SessionManager(secret=self.config.session_secret, max_age=self.config.session_max_age)
@@ -55,7 +65,8 @@ class App:
         return decorator
         
     def _get_session(self, request: Any) -> Session:
-        cookies_header = request.headers.get('cookie', '')
+        headers = getattr(request, 'headers', {})
+        cookies_header = headers.get('cookie') or headers.get('Cookie') or ''
         session_cookie = None
         for cookie in cookies_header.split(';'):
             cookie = cookie.strip()
@@ -74,13 +85,21 @@ class App:
         
     def _setup_internal_routes(self):
         """Register internal framework routes."""
+        # Ensure /docs and /openapi.json redirect to /api/docs and /api/openapi.json
+        @self._engine.get('/docs')
+        def docs_redirect(request):
+            return RedirectResponse(url=f'{self.config.api_prefix}/docs')
+
+        @self._engine.get('/openapi.json')
+        def openapi_redirect(request):
+            return RedirectResponse(url=f'{self.config.api_prefix}/openapi.json')
+
         @self._engine.post(f'{self.config.internal_prefix}/event/{{state_name}}/{{method_name}}')
         def event_handler(request, state_name: str, method_name: str):
             return self._handle_event(request, state_name, method_name)
             
         @self._engine.get(f'{self.config.internal_prefix}/static/{{filename}}')
         def static_handler(request, filename: str):
-            import os
             if filename == 'pydataui.css':
                 css_path = os.path.join(
                     os.path.dirname(__file__), 'styling', 'css', 'pydataui.css'
@@ -88,10 +107,10 @@ class App:
                 try:
                     with open(css_path, 'r', encoding='utf-8') as f:
                         css_content = f.read()
-                    return (css_content, 200, {"Content-Type": "text/css; charset=utf-8"})
+                    return Response(content=css_content, status_code=200, headers={"Content-Type": "text/css; charset=utf-8"})
                 except FileNotFoundError:
-                    return ("/* PyDataUI CSS not found */", 200, {"Content-Type": "text/css"})
-            return ("Not found", 404, {"Content-Type": "text/plain"})
+                    return Response(content="/* PyDataUI CSS not found */", status_code=200, headers={"Content-Type": "text/css; charset=utf-8"})
+            return PlainTextResponse("Not found", status_code=404)
             
         @self._engine.get(f'{self.config.internal_prefix}/health')
         def internal_health(request):
@@ -108,7 +127,9 @@ class App:
             
             snapshot = self._build_state_snapshot(session)
             
-            is_htmx = request.headers.get('hx-request') == 'true'
+            headers_req = getattr(request, 'headers', {})
+            hx_header = headers_req.get('hx-request') or headers_req.get('HX-Request') or ''
+            is_htmx = str(hx_header).lower() == 'true'
             if is_htmx:
                 content = self._renderer.render_fragment(page.handler, snapshot)
             else:
@@ -116,13 +137,8 @@ class App:
                 content = self._renderer.render_page(page.handler, snapshot, title=title)
                 
             cookie_val = self._session_manager.get_session_cookie_value(session)
-            
-            # Using pyrustapi dictionary format to set headers, if supported
-            # Otherwise assuming it can handle headers in return or via middleware
-            # Here we wrap it in a mock response dictionary (or string, but need headers)
-            # Typically frameworks handle HTML with string. We will just return a structured dict or rely on PyDataUI middleware.
-            # Assuming pyrustapi allows tuple: (body, status_code, headers_dict)
-            return (content, 200, {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly", "Content-Type": "text/html"})
+            resp_headers = {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+            return HTMLResponse(content=content, status_code=200, headers=resp_headers)
             
     def _handle_event(self, request: Any, state_name: str, method_name: str) -> Any:
         """Handle an event from HTMX."""
@@ -132,7 +148,7 @@ class App:
             if state_name in StateMeta._registry:
                 session.state_instances[state_name] = StateMeta._registry[state_name]()
             else:
-                return "State not found", 404
+                return PlainTextResponse("State not found", status_code=404)
                 
         state_instance = session.state_instances[state_name]
         
@@ -140,9 +156,9 @@ class App:
             func = getattr(state_instance, method_name)
             # Basic parsing of kwargs from body if any
             kwargs = {}
-            if request.headers.get('content-type') == 'application/json' and hasattr(request, 'json'):
+            if hasattr(request, 'headers') and request.headers.get('content-type', '').startswith('application/json') and hasattr(request, 'json'):
                 kwargs = request.json() or {}
-            elif hasattr(request, 'form') and callable(request.form): # If it's a form
+            elif hasattr(request, 'form') and callable(request.form):
                 kwargs = request.form() or {}
                 
             if isinstance(kwargs, dict):
@@ -154,14 +170,14 @@ class App:
         page_path = session.current_page or '/'
         page = self._page_router.get_page(page_path)
         if not page:
-            # Fallback to just rendering empty or something if page is lost
-            return "", 200
+            return HTMLResponse("", status_code=200)
             
         snapshot = self._build_state_snapshot(session)
         content = self._renderer.render_fragment(page.handler, snapshot)
         
         cookie_val = self._session_manager.get_session_cookie_value(session)
-        return (content, 200, {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly", "Content-Type": "text/html"})
+        resp_headers = {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+        return HTMLResponse(content=content, status_code=200, headers=resp_headers)
         
     def run(self, host: Optional[str] = None, port: Optional[int] = None, reload: bool = False, workers: int = 1):
         """Run the application."""
@@ -171,5 +187,5 @@ class App:
         p = port or self.config.port
         print(f'\n  PyDataUI v{self.config.version}')
         print(f'  Running on http://{h}:{p}')
-        print(f'  API docs at http://{h}:{p}/api/docs\n')
+        print(f'  API docs at http://{h}:{p}{self.config.api_prefix}/docs (or /docs)\n')
         self._engine.run(host=h, port=p, reload=reload, workers=workers)

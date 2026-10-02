@@ -133,8 +133,14 @@ class Component:
         trigger = EVENT_TRIGGERS.get(event_name, 'click')
         if isinstance(handler, EventSpec):
             return handler.get_htmx_attrs(trigger=trigger)
-        elif isinstance(handler, EventHandler):
+        if isinstance(handler, EventHandler):
             return handler.get_htmx_attrs(trigger=trigger)
+        if callable(handler):
+            from ..state import StateMeta, EventHandler as EH
+            qual = getattr(handler, '__qualname__', '')
+            parts = qual.split('.')
+            if len(parts) >= 2 and parts[-2] in StateMeta._registry:
+                return EH(parts[-2], parts[-1]).get_htmx_attrs(trigger=trigger)
         return {}
     
     def _get_classes(self) -> List[str]:

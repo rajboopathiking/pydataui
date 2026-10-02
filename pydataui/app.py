@@ -67,13 +67,17 @@ class App:
     def _get_session(self, request: Any) -> Session:
         headers = getattr(request, 'headers', {})
         cookies_header = headers.get('cookie') or headers.get('Cookie') or ''
-        session_cookie = None
+        session = None
         for cookie in cookies_header.split(';'):
             cookie = cookie.strip()
             if cookie.startswith('pdu-session='):
-                session_cookie = cookie.split('=', 1)[1]
-                break
-        return self._session_manager.get_or_create_session(session_cookie)
+                cookie_val = cookie.split('=', 1)[1]
+                session = self._session_manager.parse_session_cookie(cookie_val)
+                if session:
+                    break
+        if not session:
+            session = self._session_manager.create_session()
+        return session
         
     def _build_state_snapshot(self, session: Session) -> Dict[str, Dict[str, Any]]:
         snapshot = {}
@@ -167,8 +171,19 @@ class App:
                 func()
         
         # Re-render the current page fragment
+        headers_req = getattr(request, 'headers', {})
+        current_url = headers_req.get('hx-current-url') or headers_req.get('HX-Current-URL') or headers_req.get('referer') or headers_req.get('Referer') or ''
+        if current_url:
+            from urllib.parse import urlparse
+            path = urlparse(current_url).path
+            if path and self._page_router.get_page(path):
+                session.current_page = path
+
         page_path = session.current_page or '/'
         page = self._page_router.get_page(page_path)
+        if not page:
+            all_pages = self._page_router.get_all_pages()
+            page = all_pages[0] if all_pages else None
         if not page:
             return HTMLResponse("", status_code=200)
             

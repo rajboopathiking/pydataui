@@ -117,9 +117,11 @@ class EventHandler:
         if cls:
             for klass in cls.__mro__:
                 if self.method_name in klass.__dict__:
-                    func = klass.__dict__[self.method_name]
-                    if callable(func):
-                        return func(cls, *args, **kwargs)
+                    attr = klass.__dict__[self.method_name]
+                    if isinstance(attr, hybridmethod):
+                        return attr.__get__(None, cls)(*args, **kwargs)
+                    if callable(attr):
+                        return attr(cls, *args, **kwargs)
         return None
 
 
@@ -134,7 +136,7 @@ _META_PASSTHROUGH = frozenset({
     '__abstractmethods__', '__flags__',
     # Our own helpers that must stay accessible:
     '_registry', 'get_state_vars', 'get_event_handlers',
-    'to_dict', 'from_dict', 'reset', '_class_store',
+    'to_dict', '_class_store',
 })
 
 

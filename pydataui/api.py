@@ -11,14 +11,19 @@ class APIGenerator:
         
     def _get_session_from_request(self, request: Any, session_manager: SessionManager) -> Session:
         """Extract session from request cookies."""
-        cookies_header = request.headers.get('cookie', '')
-        session_cookie = None
+        headers = getattr(request, 'headers', {})
+        cookies_header = headers.get('cookie') or headers.get('Cookie') or ''
+        session = None
         for cookie in cookies_header.split(';'):
             cookie = cookie.strip()
             if cookie.startswith('pdu-session='):
-                session_cookie = cookie.split('=', 1)[1]
-                break
-        return session_manager.get_or_create_session(session_cookie)
+                cookie_val = cookie.split('=', 1)[1]
+                session = session_manager.parse_session_cookie(cookie_val)
+                if session:
+                    break
+        if not session:
+            session = session_manager.create_session()
+        return session
         
     def generate_state_endpoints(self, engine: Any, session_manager: SessionManager) -> None:
         """Register API routes on the pyrustapi engine for all State classes."""

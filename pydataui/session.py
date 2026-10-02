@@ -45,9 +45,13 @@ class SessionManager:
             
     def get_or_create_session(self, session_id: Optional[str]) -> Session:
         if session_id:
-            session = self.get_session(session_id)
-            if session:
-                return session
+            if '.' in session_id:
+                verified = self.verify_session_id(session_id)
+                session_id = verified
+            if session_id:
+                session = self.get_session(session_id)
+                if session:
+                    return session
         return self.create_session()
         
     def delete_session(self, session_id: str) -> None:

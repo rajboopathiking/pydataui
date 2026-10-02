@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "pydataui"
+version = "0.1.0"
+description = "A production-grade full-stack Python framework powered by pyrustapi. Write Python, get web apps with auto-generated REST APIs."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Boopathi Raj"}
+]
+keywords = ["web", "framework", "fullstack", "python", "rust", "htmx", "ssr", "api"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: FastAPI",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+dependencies = [
+    "pyrustapi>=1.8.0",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx", "ruff"]
+
+[project.urls]
+Homepage = "https://github.com/rajboopathiking/pydataui"
+Documentation = "https://pydataui.dev"
+Repository = "https://github.com/rajboopathiking/pydataui"
+
+[project.scripts]
+pydataui = "pydataui.cli.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]  
+
+[tool.ruff]
+line-length = 120

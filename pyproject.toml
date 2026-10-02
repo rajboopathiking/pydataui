@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=64", "wheel"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "pydataui"
@@ -43,7 +43,10 @@ Repository = "https://github.com/rajboopathiking/pydataui"
 pydataui = "pydataui.cli.main:cli"
 
 [tool.setuptools.packages.find]
-where = ["."]  
+where = ["."]
+
+[tool.setuptools.package-data]
+"pydataui" = ["styling/css/*.css"]  
 
 [tool.ruff]
 line-length = 120

@@ -75,11 +75,20 @@ class DataTable(Table):
         controls_html = f"<div class='pdu-datatable-controls'>{''.join(controls)}</div>" if controls else ""
         return f"<div class='pdu-datatable-wrapper'>{controls_html}{table_html}</div>"
 
+class ListItem(Component):
+    """List item component."""
+    tag = 'li'
+    def __init__(self, *children, **props):
+        super().__init__(*children, **props)
+
+    def _get_classes(self) -> List[str]:
+        return super()._get_classes() + ['pdu-list-item']
+
 class List(Component):
-    def __init__(self, items=None, ordered=False, style_type=None, **props):
-        super().__init__(**props)
+    def __init__(self, *children, items=None, ordered=False, style_type=None, **props):
+        super().__init__(*children, **props)
         self.tag = 'ol' if ordered else 'ul'
-        self.items = items or []
+        self.items = items if items is not None else list(children)
         self.style_type = style_type
         
     def _get_classes(self) -> List[str]:
@@ -94,7 +103,9 @@ class List(Component):
         
         li_html = []
         for item in items:
-            if isinstance(item, Component):
+            if isinstance(item, ListItem):
+                li_html.append(item.render(state_snapshot))
+            elif isinstance(item, Component):
                 li_html.append(f"<li>{item.render(state_snapshot)}</li>")
             else:
                 li_html.append(f"<li>{escape_html(str(item))}</li>")

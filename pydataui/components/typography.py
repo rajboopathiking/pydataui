@@ -5,7 +5,7 @@ from ..utils import escape_html
 
 class Text(Component):
     tag = 'span'
-    def __init__(self, *children, size='md', weight='normal', color=None, align=None, italic=False, underline=False, truncate=False, **props):
+    def __init__(self, *children, size='md', weight='normal', color=None, align=None, italic=False, underline=False, strike=False, truncate=False, **props):
         super().__init__(*children, **props)
         self.size = size
         self.weight = weight
@@ -13,6 +13,7 @@ class Text(Component):
         self.align = align
         self.italic = italic
         self.underline = underline
+        self.strike = strike
         self.truncate = truncate
         
     def _get_classes(self) -> List[str]:
@@ -21,6 +22,7 @@ class Text(Component):
         if self.align: classes.append(f'pdu-text-{self.align}')
         if self.italic: classes.append('pdu-italic')
         if self.underline: classes.append('pdu-underline')
+        if self.strike: classes.append('pdu-line-through')
         if self.truncate: classes.append('pdu-truncate')
         return classes
 

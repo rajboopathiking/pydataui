@@ -86,6 +86,8 @@ class Component:
         
         # Data attributes and other props
         for key, value in self.props.items():
+            if key == 'bind':
+                continue
             if key.startswith('data_'):
                 attrs[f'data-{key[5:]}'] = self._resolve_value(value, state_snapshot)
             elif key not in EVENT_TRIGGERS:
@@ -121,9 +123,15 @@ class Component:
         return ''.join(parts)
     
     def _resolve_value(self, value: Any, state_snapshot: StateSnapshot) -> Any:
-        """Resolve a value that might be a StateVarRef."""
+        """Resolve a value that might be a StateVarRef or container of StateVarRefs."""
         if isinstance(value, StateVarRef):
             return value.resolve(state_snapshot)
+        if isinstance(value, dict):
+            return {k: self._resolve_value(v, state_snapshot) for k, v in value.items()}
+        if isinstance(value, list):
+            return [self._resolve_value(v, state_snapshot) for v in value]
+        if isinstance(value, tuple):
+            return tuple(self._resolve_value(v, state_snapshot) for v in value)
         if callable(value) and not isinstance(value, (type, Component)):
             return value(state_snapshot)
         return value
@@ -131,17 +139,40 @@ class Component:
     def _get_event_htmx_attrs(self, event_name: str, handler: Any) -> Dict[str, str]:
         """Convert event handler to HTMX attributes."""
         trigger = EVENT_TRIGGERS.get(event_name, 'click')
+        attrs = {}
         if isinstance(handler, EventSpec):
-            return handler.get_htmx_attrs(trigger=trigger)
-        if isinstance(handler, EventHandler):
-            return handler.get_htmx_attrs(trigger=trigger)
-        if callable(handler):
+            attrs = handler.get_htmx_attrs(trigger=trigger)
+        elif isinstance(handler, EventHandler):
+            attrs = handler.get_htmx_attrs(trigger=trigger)
+        elif callable(handler):
             from ..state import StateMeta, EventHandler as EH
             qual = getattr(handler, '__qualname__', '')
             parts = qual.split('.')
             if len(parts) >= 2 and parts[-2] in StateMeta._registry:
-                return EH(parts[-2], parts[-1]).get_htmx_attrs(trigger=trigger)
-        return {}
+                attrs = EH(parts[-2], parts[-1]).get_htmx_attrs(trigger=trigger)
+            elif getattr(handler, '__name__', '') == '<lambda>':
+                co_names = handler.__code__.co_names
+                state_cls_name = None
+                method_name = None
+                for name in co_names:
+                    if name in StateMeta._registry:
+                        state_cls_name = name
+                        break
+                if state_cls_name:
+                    cls = StateMeta._registry[state_cls_name]
+                    for name in co_names:
+                        if hasattr(cls, name) and name != state_cls_name:
+                            method_name = name
+                            break
+                if state_cls_name and method_name:
+                    args_dict = {}
+                    if handler.__defaults__:
+                        for param_name, default_val in zip(handler.__code__.co_varnames, handler.__defaults__):
+                            args_dict[param_name] = default_val
+                    attrs = EventSpec(EH(state_cls_name, method_name), args=args_dict).get_htmx_attrs(trigger=trigger)
+        if attrs and 'hx-include' not in attrs:
+            attrs['hx-include'] = '#pdu-root'
+        return attrs
     
     def _get_classes(self) -> List[str]:
         """Get CSS classes for this component. Override in subclasses."""

@@ -1,20 +1,20 @@
 import os
 from typing import Callable, Optional, Dict, Any
 from rustapi import FastAPI as RustAPIApp
-from rustapi.responses import HTMLResponse, Response, RedirectResponse, PlainTextResponse
+from rustapi.responses import HTMLResponse, Response, RedirectResponse, PlainTextResponse, StreamingResponse
 
 from .config import AppConfig
 from .page import PageRouter
 from .compiler.renderer import Renderer
 from .session import SessionManager, Session
 from .api import APIGenerator
-from .state import StateMeta
+from .state import StateMeta, _current_session, _current_snapshot
 from .components.base import Component
 
 class App:
     """PyDataUI Application."""
     
-    def __init__(self, title: str = 'PyDataUI App', description: str = '', version: str = '0.1.0', debug: bool = False, **kwargs):
+    def __init__(self, title: str = 'PyDataUI App', description: str = '', version: str = '0.2.0', debug: bool = False, **kwargs):
         self.config = AppConfig(title=title, description=description, version=version, debug=debug, **kwargs)
         docs_url = f"{self.config.api_prefix}/docs"
         openapi_url = f"{self.config.api_prefix}/openapi.json"
@@ -31,6 +31,7 @@ class App:
         self._api_generator = APIGenerator(self.config)
         self._custom_api_routes = []
         self._setup_internal_routes()
+        self._register_api_endpoints()
         
     @property
     def title(self) -> str:
@@ -65,16 +66,22 @@ class App:
         return decorator
         
     def _get_session(self, request: Any) -> Session:
-        headers = getattr(request, 'headers', {})
-        cookies_header = headers.get('cookie') or headers.get('Cookie') or ''
         session = None
-        for cookie in cookies_header.split(';'):
-            cookie = cookie.strip()
-            if cookie.startswith('pdu-session='):
-                cookie_val = cookie.split('=', 1)[1]
+        if hasattr(request, 'cookies') and isinstance(request.cookies, dict):
+            cookie_val = request.cookies.get('pdu-session')
+            if cookie_val:
                 session = self._session_manager.parse_session_cookie(cookie_val)
-                if session:
-                    break
+                
+        if not session:
+            headers = getattr(request, 'headers', {})
+            cookies_header = headers.get('cookie') or headers.get('Cookie') or ''
+            for cookie in cookies_header.split(';'):
+                cookie = cookie.strip()
+                if cookie.startswith('pdu-session='):
+                    cookie_val = cookie.split('=', 1)[1]
+                    session = self._session_manager.parse_session_cookie(cookie_val)
+                    if session:
+                        break
         if not session:
             session = self._session_manager.create_session()
         return session
@@ -89,33 +96,107 @@ class App:
         
     def _setup_internal_routes(self):
         """Register internal framework routes."""
-        # Ensure /docs and /openapi.json redirect to /api/docs and /api/openapi.json
         @self._engine.get('/docs')
-        def docs_redirect(request):
-            return RedirectResponse(url=f'{self.config.api_prefix}/docs')
+        def docs_handler(request):
+            return HTMLResponse(content=self._engine._get_swagger_ui_html(), status_code=200)
+
+        @self._engine.get(f'{self.config.api_prefix}/docs')
+        def api_docs_handler(request):
+            return HTMLResponse(content=self._engine._get_swagger_ui_html(), status_code=200)
 
         @self._engine.get('/openapi.json')
-        def openapi_redirect(request):
-            return RedirectResponse(url=f'{self.config.api_prefix}/openapi.json')
+        def openapi_handler(request):
+            return self._engine.openapi()
+
+        @self._engine.get(f'{self.config.api_prefix}/openapi.json')
+        def api_openapi_handler(request):
+            return self._engine.openapi()
 
         @self._engine.post(f'{self.config.internal_prefix}/event/{{state_name}}/{{method_name}}')
         def event_handler(request, state_name: str, method_name: str):
             return self._handle_event(request, state_name, method_name)
             
+        MIME_TYPES = {
+            '.css': 'text/css; charset=utf-8',
+            '.js': 'application/javascript; charset=utf-8',
+            '.mjs': 'application/javascript; charset=utf-8',
+            '.json': 'application/json; charset=utf-8',
+            '.map': 'application/json; charset=utf-8',
+            '.svg': 'image/svg+xml',
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.gif': 'image/gif',
+            '.webp': 'image/webp',
+            '.ico': 'image/x-icon',
+            '.woff': 'font/woff',
+            '.woff2': 'font/woff2',
+            '.ttf': 'font/ttf',
+            '.otf': 'font/otf',
+            '.txt': 'text/plain; charset=utf-8',
+            '.html': 'text/html; charset=utf-8',
+        }
+
+        def serve_file(target_path: str, ext: str):
+            media_type = MIME_TYPES.get(ext) or 'application/octet-stream'
+            try:
+                with open(target_path, 'rb') as f:
+                    content = f.read()
+                return StreamingResponse(
+                    iter([content]),
+                    status_code=200,
+                    media_type=media_type,
+                    headers={"Cache-Control": "public, max-age=3600"}
+                )
+            except FileNotFoundError:
+                return PlainTextResponse("Not found", status_code=404)
+
         @self._engine.get(f'{self.config.internal_prefix}/static/{{filename}}')
         def static_handler(request, filename: str):
-            if filename == 'pydataui.css':
-                css_path = os.path.join(
-                    os.path.dirname(__file__), 'styling', 'css', 'pydataui.css'
-                )
-                try:
-                    with open(css_path, 'r', encoding='utf-8') as f:
-                        css_content = f.read()
-                    return Response(content=css_content, status_code=200, headers={"Content-Type": "text/css; charset=utf-8"})
-                except FileNotFoundError:
-                    return Response(content="/* PyDataUI CSS not found */", status_code=200, headers={"Content-Type": "text/css; charset=utf-8"})
-            return PlainTextResponse("Not found", status_code=404)
+            if '..' in filename or filename.startswith('/'):
+                return PlainTextResponse("Forbidden", status_code=403)
             
+            # 1. Check custom static_dir if configured
+            if self.config.static_dir and os.path.isdir(self.config.static_dir):
+                candidate = os.path.join(self.config.static_dir, filename)
+                if os.path.isfile(candidate):
+                    ext = os.path.splitext(filename)[1].lower()
+                    return serve_file(candidate, ext)
+
+            # 2. Check pydataui/styling directory
+            static_base = os.path.join(os.path.dirname(__file__), 'styling')
+            ext = os.path.splitext(filename)[1].lower()
+            if ext == '.css':
+                candidate = os.path.join(static_base, 'css', filename)
+            elif ext == '.js':
+                candidate = os.path.join(static_base, 'js', filename)
+            else:
+                candidate = os.path.join(static_base, filename)
+
+            if os.path.isfile(candidate):
+                return serve_file(candidate, ext)
+            return PlainTextResponse(f"{filename} not found", status_code=404)
+
+        @self._engine.get(f'{self.config.internal_prefix}/static/{{subfolder}}/{{filename}}')
+        def static_subfolder_handler(request, subfolder: str, filename: str):
+            if '..' in subfolder or '..' in filename:
+                return PlainTextResponse("Forbidden", status_code=403)
+
+            # 1. Check custom static_dir
+            if self.config.static_dir and os.path.isdir(self.config.static_dir):
+                candidate = os.path.join(self.config.static_dir, subfolder, filename)
+                if os.path.isfile(candidate):
+                    ext = os.path.splitext(filename)[1].lower()
+                    return serve_file(candidate, ext)
+
+            # 2. Check pydataui/styling
+            static_base = os.path.join(os.path.dirname(__file__), 'styling')
+            candidate = os.path.join(static_base, subfolder, filename)
+            ext = os.path.splitext(filename)[1].lower()
+            if os.path.isfile(candidate):
+                return serve_file(candidate, ext)
+            return PlainTextResponse(f"{subfolder}/{filename} not found", status_code=404)
+
         @self._engine.get(f'{self.config.internal_prefix}/health')
         def internal_health(request):
             return {"status": "ok"}
@@ -130,77 +211,275 @@ class App:
             session.current_page = path
             
             snapshot = self._build_state_snapshot(session)
-            
+            token_sess = _current_session.set(session)
+            token_snap = _current_snapshot.set(snapshot)
             headers_req = getattr(request, 'headers', {})
             hx_header = headers_req.get('hx-request') or headers_req.get('HX-Request') or ''
             is_htmx = str(hx_header).lower() == 'true'
-            if is_htmx:
-                content = self._renderer.render_fragment(page.handler, snapshot)
-            else:
-                title = page.title or self.config.title
-                content = self._renderer.render_page(page.handler, snapshot, title=title)
+            import html
+            try:
+                if is_htmx:
+                    content = self._renderer.render_fragment(page.handler, snapshot)
+                else:
+                    title = page.title or self.config.title
+                    content = self._renderer.render_page(page.handler, snapshot, title=title)
+            except Exception as e:
+                import traceback
+                print(f"\n[PyDataUI Render Error] In page handler for '{path}': {e}")
+                traceback.print_exc()
+                tb_str = traceback.format_exc()
+                error_body = (
+                    f'<div class="pdu-error-boundary p-6 bg-red-50 border border-red-200 rounded-lg text-red-900 m-8 shadow-md max-w-4xl mx-auto font-sans">'
+                    f'<h2 class="font-bold text-xl text-red-700 flex items-center gap-2">⚠️ PyDataUI Application Error</h2>'
+                    f'<p class="mt-2 text-sm text-red-600 font-medium">An error occurred while rendering <code>{html.escape(path)}</code>:</p>'
+                    f'<div class="mt-2 font-bold text-red-800 text-sm bg-red-100 p-2 rounded">{html.escape(type(e).__name__)}: {html.escape(str(e))}</div>'
+                    f'<pre class="mt-3 p-4 bg-red-100/60 rounded text-xs overflow-auto font-mono text-red-900 max-h-96">{html.escape(tb_str)}</pre>'
+                    f'<button class="mt-4 px-4 py-2 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition" onclick="window.location.reload()">Reload Page</button>'
+                    f'</div>'
+                )
+                if is_htmx:
+                    content = error_body
+                else:
+                    css_url = f'{self.config.internal_prefix}/static/pydataui.css'
+                    from .compiler.templates import get_base_html
+                    content = get_base_html(title="Error - " + self.config.title, content=error_body, css_url=css_url)
+            finally:
+                _current_session.reset(token_sess)
+                _current_snapshot.reset(token_snap)
                 
             cookie_val = self._session_manager.get_session_cookie_value(session)
             resp_headers = {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
             return HTMLResponse(content=content, status_code=200, headers=resp_headers)
             
     def _handle_event(self, request: Any, state_name: str, method_name: str) -> Any:
-        """Handle an event from HTMX."""
+        """Handle an event from HTMX with full error boundary and graceful degradation."""
+        import html
         session = self._get_session(request)
-        
-        if state_name not in session.state_instances:
-            if state_name in StateMeta._registry:
-                session.state_instances[state_name] = StateMeta._registry[state_name]()
-            else:
-                return PlainTextResponse("State not found", status_code=404)
-                
-        state_instance = session.state_instances[state_name]
-        
-        if hasattr(state_instance, method_name):
-            func = getattr(state_instance, method_name)
-            # Basic parsing of kwargs from body if any
-            kwargs = {}
-            if hasattr(request, 'headers') and request.headers.get('content-type', '').startswith('application/json') and hasattr(request, 'json'):
-                kwargs = request.json() or {}
-            elif hasattr(request, 'form') and callable(request.form):
-                kwargs = request.form() or {}
-                
-            if isinstance(kwargs, dict):
-                func(**kwargs)
-            else:
-                func()
-        
-        # Re-render the current page fragment
-        headers_req = getattr(request, 'headers', {})
-        current_url = headers_req.get('hx-current-url') or headers_req.get('HX-Current-URL') or headers_req.get('referer') or headers_req.get('Referer') or ''
-        if current_url:
-            from urllib.parse import urlparse
-            path = urlparse(current_url).path
-            if path and self._page_router.get_page(path):
-                session.current_page = path
-
-        page_path = session.current_page or '/'
-        page = self._page_router.get_page(page_path)
-        if not page:
-            all_pages = self._page_router.get_all_pages()
-            page = all_pages[0] if all_pages else None
-        if not page:
-            return HTMLResponse("", status_code=200)
+        token_sess = _current_session.set(session)
+        try:
+            if state_name not in session.state_instances:
+                if state_name in StateMeta._registry:
+                    session.state_instances[state_name] = StateMeta._registry[state_name]()
+                else:
+                    return PlainTextResponse("State not found", status_code=404)
+                    
+            state_instance = session.state_instances[state_name]
             
-        snapshot = self._build_state_snapshot(session)
-        content = self._renderer.render_fragment(page.handler, snapshot)
-        
-        cookie_val = self._session_manager.get_session_cookie_value(session)
-        resp_headers = {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
-        return HTMLResponse(content=content, status_code=200, headers=resp_headers)
-        
-    def run(self, host: Optional[str] = None, port: Optional[int] = None, reload: bool = False, workers: int = 1):
-        """Run the application."""
+            # Robust parsing of kwargs from query, form, and json body
+            kwargs: Dict[str, Any] = {}
+            if hasattr(request, 'query_params'):
+                qp = request.query_params() if callable(request.query_params) else request.query_params
+                if isinstance(qp, dict):
+                    kwargs.update(qp)
+            if hasattr(request, 'form'):
+                try:
+                    f = request.form() if callable(request.form) else request.form
+                    if isinstance(f, dict):
+                        kwargs.update(f)
+                except Exception:
+                    pass
+            if hasattr(request, 'json'):
+                try:
+                    j = request.json() if callable(request.json) else request.json
+                    if isinstance(j, dict):
+                        kwargs.update(j)
+                except Exception:
+                    pass
+            if hasattr(request, 'body'):
+                try:
+                    b = request.body() if callable(request.body) else request.body
+                    if isinstance(b, (bytes, str)) and b:
+                        b_str = b.decode('utf-8', errors='ignore') if isinstance(b, bytes) else b
+                        b_str_s = b_str.strip()
+                        if b_str_s and not b_str_s.startswith('{') and '=' in b_str_s:
+                            from urllib.parse import parse_qs
+                            parsed = parse_qs(b_str_s)
+                            for k, v in parsed.items():
+                                if k not in kwargs:
+                                    kwargs[k] = v[0] if len(v) == 1 else v
+                except Exception:
+                    pass
+
+            # Auto-update state variables matching submitted form/input fields across session states
+            for s_name, s_cls in StateMeta._registry.items():
+                if s_name not in session.state_instances:
+                    session.state_instances[s_name] = s_cls()
+                s_inst = session.state_instances[s_name]
+                for k, v in kwargs.items():
+                    if hasattr(s_inst, k) and k in s_cls.get_state_vars():
+                        try:
+                            ann = getattr(type(s_inst), '__annotations__', {}).get(k)
+                            if ann is bool:
+                                setattr(s_inst, k, v in (True, 'true', '1', 'on', 'yes'))
+                            elif ann is int:
+                                setattr(s_inst, k, int(v))
+                            elif ann is float:
+                                setattr(s_inst, k, float(v))
+                            else:
+                                setattr(s_inst, k, v)
+                        except Exception:
+                            pass
+            
+            handler_error = None
+            if hasattr(state_instance, method_name):
+                func = getattr(state_instance, method_name)
+                import inspect
+                sig = inspect.signature(func)
+                has_var_keyword = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+                if has_var_keyword:
+                    call_kwargs = kwargs
+                else:
+                    accepted_param_names = [p.name for p in sig.parameters.values() if p.name not in ('self', 'cls')]
+                    call_kwargs = {k: v for k, v in kwargs.items() if k in accepted_param_names}
+                    # Fallback for single argument with mismatched name (e.g. id -> item_id)
+                    if len(accepted_param_names) == 1 and len(kwargs) == 1 and not call_kwargs:
+                        call_kwargs = {accepted_param_names[0]: next(iter(kwargs.values()))}
+                try:
+                    func(**call_kwargs)
+                except Exception as e:
+                    import traceback
+                    handler_error = f"{type(e).__name__}: {e}"
+                    print(f"\n[PyDataUI Event Error] In {state_name}.{method_name}(): {e}")
+                    traceback.print_exc()
+            
+            # Re-render the current page fragment
+            headers_req = getattr(request, 'headers', {})
+            current_url = headers_req.get('hx-current-url') or headers_req.get('HX-Current-URL') or headers_req.get('referer') or headers_req.get('Referer') or ''
+            if current_url:
+                from urllib.parse import urlparse
+                path = urlparse(current_url).path
+                if path and self._page_router.get_page(path):
+                    session.current_page = path
+
+            page_path = session.current_page or '/'
+            page = self._page_router.get_page(page_path)
+            if not page:
+                all_pages = self._page_router.get_all_pages()
+                page = all_pages[0] if all_pages else None
+            if not page:
+                return HTMLResponse("", status_code=200)
+                
+            snapshot = self._build_state_snapshot(session)
+            token_snap = _current_snapshot.set(snapshot)
+            try:
+                content = self._renderer.render_fragment(page.handler, snapshot)
+            except Exception as e:
+                import traceback
+                print(f"\n[PyDataUI Render Error] While re-rendering page fragment '{page_path}': {e}")
+                traceback.print_exc()
+                tb_str = traceback.format_exc()
+                content = (
+                    f'<div class="pdu-error-boundary p-6 bg-red-50 border border-red-200 rounded-lg text-red-900 m-4 shadow-md font-sans">'
+                    f'<h3 class="font-bold text-lg text-red-700 flex items-center gap-2">⚠️ Page Re-render Error</h3>'
+                    f'<p class="mt-2 text-sm text-red-600 font-semibold">{html.escape(str(e))}</p>'
+                    f'<pre class="mt-3 p-3 bg-red-100 rounded text-xs overflow-auto font-mono text-red-800 max-h-60">{html.escape(tb_str)}</pre>'
+                    f'<button class="mt-4 px-4 py-2 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition" onclick="window.location.reload()">Reload Page</button>'
+                    f'</div>'
+                )
+            finally:
+                _current_snapshot.reset(token_snap)
+            
+            # Prepend toast/alert banner if handler raised an exception
+            if handler_error:
+                error_toast = (
+                    f'<div id="pdu-action-error" class="fixed top-4 right-4 z-[9999] max-w-md bg-red-600 text-white p-4 rounded-lg shadow-2xl border border-red-400 flex items-start gap-3" style="position:fixed;top:1rem;right:1rem;z-index:9999;max-width:28rem;background:#dc2626;color:#ffffff;padding:1rem;border-radius:0.5rem;box-shadow:0 20px 25px -5px rgba(0,0,0,0.3);">'
+                    f'<div style="flex:1;">'
+                    f'<div style="font-weight:bold;font-size:0.875rem;">Action Failed ({state_name}.{method_name})</div>'
+                    f'<div style="font-size:0.75rem;margin-top:0.25rem;color:#fee2e2;">{html.escape(handler_error)}</div>'
+                    f'</div>'
+                    f'<button type="button" style="background:none;border:none;color:#ffffff;font-weight:bold;font-size:1.25rem;line-height:1;cursor:pointer;padding:0;margin-left:0.5rem;" onclick="this.closest(\'#pdu-action-error\').remove()">&times;</button>'
+                    f'</div>'
+                )
+                content = error_toast + content
+
+            cookie_val = self._session_manager.get_session_cookie_value(session)
+            resp_headers = {"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+            return HTMLResponse(content=content, status_code=200, headers=resp_headers)
+        finally:
+            _current_session.reset(token_sess)
+    def _register_api_endpoints(self):
+        """Ensure state and REST API endpoints are registered on the engine."""
         self._api_generator.generate_state_endpoints(self._engine, self._session_manager)
+
+    def setup_auth(self, auth_manager):
+        self.auth = auth_manager
+        
+        # Register /api/auth/* routes
+        @self._engine.post('/api/auth/login')
+        def login_handler(request):
+            body = request.json() if callable(getattr(request, 'json', None)) else {}
+            username = body.get('username')
+            password = body.get('password')
+            token = self.auth.authenticate(username, password)
+            if token:
+                return {"token": token}
+            return PlainTextResponse("Invalid credentials", status_code=401)
+            
+        @self._engine.post('/api/auth/logout')
+        def logout_handler(request):
+            return {"status": "ok"}
+            
+        @self._engine.get('/api/auth/me')
+        def me_handler(request):
+            user = self.auth.require_auth_middleware(request)
+            if user:
+                return {"user": user.__dict__}
+            return PlainTextResponse("Unauthorized", status_code=401)
+            
+        @self._engine.post('/api/auth/register')
+        def register_handler(request):
+            body = request.json() if callable(getattr(request, 'json', None)) else {}
+            try:
+                user = self.auth.add_user(body.get('username'), body.get('password'), body.get('email', ''), body.get('roles', ['user']))
+                return {"user": user.__dict__}
+            except ValueError as e:
+                return PlainTextResponse(str(e), status_code=400)
+            
+        @self._engine.get('/api/auth/keys')
+        def get_keys_handler(request):
+            user = self.auth.require_auth_middleware(request)
+            if user:
+                keys = self.auth.list_api_keys(user.id)
+                return {"keys": [k.__dict__ for k in keys]}
+            return PlainTextResponse("Unauthorized", status_code=401)
+            
+        @self._engine.post('/api/auth/keys')
+        def create_key_handler(request):
+            user = self.auth.require_auth_middleware(request)
+            if user:
+                body = request.json() if callable(getattr(request, 'json', None)) else {}
+                key = self.auth.create_api_key(body.get('name', 'Key'), user.id, body.get('scopes', ['read']), body.get('expires_days'))
+                return {"key": key.__dict__}
+            return PlainTextResponse("Unauthorized", status_code=401)
+            
+        @self._engine.delete('/api/auth/keys/{key_id}')
+        def delete_key_handler(request, key_id: str):
+            user = self.auth.require_auth_middleware(request)
+            if user:
+                self.auth.revoke_api_key(key_id)
+                return {"status": "ok"}
+            return PlainTextResponse("Unauthorized", status_code=401)
+
+    def run(self, host: Optional[str] = None, port: Optional[int] = None, reload: bool = False, workers: int = 1, share: bool = False, auth: Optional[Any] = None):
+        """Run the application."""
+        if auth:
+            self.setup_auth(auth)
+            
+        self._register_api_endpoints()
         
         h = host or self.config.host
         p = port or self.config.port
-        print(f'\n  PyDataUI v{self.config.version}')
-        print(f'  Running on http://{h}:{p}')
-        print(f'  API docs at http://{h}:{p}{self.config.api_prefix}/docs (or /docs)\n')
+        print(f'\n  PyDataUI v{self.config.version}', flush=True)
+        print(f'  Running on http://{h}:{p}', flush=True)
+        if share:
+            from .tunnel import TunnelManager
+            self._tunnel = TunnelManager(port=p)
+            url = self._tunnel.create_tunnel(p)
+            if url:
+                print(f'  Public URL: {url}', flush=True)
+            else:
+                print(f'  [Warning] Could not establish public tunnel. Falling back to local URL.', flush=True)
+                
+        print(f'  API docs at http://{h}:{p}/docs and http://{h}:{p}{self.config.api_prefix}/docs', flush=True)
+        print(f'  REST API root at http://{h}:{p}{self.config.api_prefix}\n', flush=True)
         self._engine.run(host=h, port=p, reload=reload, workers=workers)

@@ -43,3 +43,26 @@ def deep_merge(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]
 def sanitize_attr(value: str) -> str:
     """Sanitize HTML attribute values."""
     return re.sub(r'[\x00-\x1F\x7F"\']', '', str(value))
+
+def to_json_compatible(obj: Any) -> Any:
+    """Recursively convert arbitrary Python objects (Pydantic models, dataclasses,
+    datetimes, sets, numpy types) into standard JSON-serializable primitives."""
+    if obj is None or isinstance(obj, (int, float, str, bool)):
+        return obj
+    if hasattr(obj, 'model_dump') and callable(obj.model_dump):
+        return to_json_compatible(obj.model_dump())
+    if hasattr(obj, 'dict') and callable(obj.dict):
+        return to_json_compatible(obj.dict())
+    from dataclasses import is_dataclass, asdict
+    if is_dataclass(obj):
+        return to_json_compatible(asdict(obj))
+    from datetime import datetime, date
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    if isinstance(obj, dict):
+        return {str(k): to_json_compatible(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple, set)):
+        return [to_json_compatible(v) for v in obj]
+    if hasattr(obj, 'to_dict') and callable(obj.to_dict):
+        return to_json_compatible(obj.to_dict())
+    return str(obj)

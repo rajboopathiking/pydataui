@@ -90,20 +90,52 @@ class Sparkline(Chart):
 
 class BarChart(Chart):
     """Bar chart component."""
-    def __init__(self, data=None, options=None, **props):
-        super().__init__(type='bar', data=data, options=options, **props)
+    def __init__(self, data=None, labels=None, options=None, **props):
+        if labels is not None or (isinstance(data, list) and data and not isinstance(data[0], dict)):
+            lbls = labels if labels is not None else [str(i + 1) for i in range(len(data))]
+            chart_data = {
+                'labels': lbls,
+                'datasets': [{'data': data, 'label': props.pop('label', 'Data'), 'backgroundColor': props.pop('color', '#3b82f6')}]
+            }
+        else:
+            chart_data = data or {}
+        super().__init__(type='bar', data=chart_data, options=options, **props)
 
 class LineChart(Chart):
     """Line chart component."""
-    def __init__(self, data=None, options=None, **props):
-        super().__init__(type='line', data=data, options=options, **props)
+    def __init__(self, data=None, labels=None, options=None, **props):
+        if labels is not None or (isinstance(data, list) and data and not isinstance(data[0], dict)):
+            lbls = labels if labels is not None else [str(i + 1) for i in range(len(data))]
+            chart_data = {
+                'labels': lbls,
+                'datasets': [{'data': data, 'label': props.pop('label', 'Data'), 'borderColor': props.pop('color', '#3b82f6'), 'fill': props.pop('fill', False)}]
+            }
+        else:
+            chart_data = data or {}
+        super().__init__(type='line', data=chart_data, options=options, **props)
 
 class PieChart(Chart):
     """Pie chart component."""
-    def __init__(self, data=None, options=None, **props):
-        super().__init__(type='pie', data=data, options=options, **props)
+    def __init__(self, data=None, labels=None, options=None, **props):
+        if labels is not None or (isinstance(data, list) and data and not isinstance(data[0], dict)):
+            lbls = labels if labels is not None else [str(i + 1) for i in range(len(data))]
+            chart_data = {
+                'labels': lbls,
+                'datasets': [{'data': data}]
+            }
+        else:
+            chart_data = data or {}
+        super().__init__(type='pie', data=chart_data, options=options, **props)
 
 class DoughnutChart(Chart):
     """Doughnut chart component."""
-    def __init__(self, data=None, options=None, **props):
-        super().__init__(type='doughnut', data=data, options=options, **props)
+    def __init__(self, data=None, labels=None, options=None, **props):
+        if labels is not None or (isinstance(data, list) and data and not isinstance(data[0], dict)):
+            lbls = labels if labels is not None else [str(i + 1) for i in range(len(data))]
+            chart_data = {
+                'labels': lbls,
+                'datasets': [{'data': data}]
+            }
+        else:
+            chart_data = data or {}
+        super().__init__(type='doughnut', data=chart_data, options=options, **props)

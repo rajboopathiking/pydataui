@@ -45,6 +45,9 @@ class CRUDState(State):
         else:
             self.users.append(User(id=uuid.uuid4().hex, name=self.current_name, email=self.current_email))
             self.message = "User created successfully."
+        self.current_name = ""
+        self.current_email = ""
+        self.editing_id = ""
         self.show_modal = False
         
     def delete_user(self, user_id: str):

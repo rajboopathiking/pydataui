@@ -1,23 +1,107 @@
+import copy
+import contextvars
 from typing import Any, Dict, Callable, Type, Optional
 from .types import StateSnapshot
 
+_current_snapshot: contextvars.ContextVar[Optional[Dict[str, Dict[str, Any]]]] = contextvars.ContextVar(
+    'current_snapshot', default=None
+)
+_current_session: contextvars.ContextVar[Optional[Any]] = contextvars.ContextVar(
+    'current_session', default=None
+)
+
 class StateVarRef:
-    """A reference to a state variable, used in components for reactive rendering."""
+    """A reference to a state variable, used in components for reactive rendering.
+    Acts as a transparent proxy to the underlying value during request execution."""
     def __init__(self, state_cls_name: str, field_name: str, default: Any = None):
         self.state_cls_name = state_cls_name
         self.field_name = field_name
         self.default = default
         
     def _get_val(self) -> Any:
+        # 1. Active request snapshot context
+        snapshot = _current_snapshot.get()
+        if snapshot is not None and self.state_cls_name in snapshot:
+            state_dict = snapshot[self.state_cls_name]
+            if self.field_name in state_dict:
+                return state_dict[self.field_name]
+
+        # 2. Active request session context
+        session = _current_session.get()
+        if session is not None and hasattr(session, 'state_instances') and self.state_cls_name in session.state_instances:
+            inst = session.state_instances[self.state_cls_name]
+            if hasattr(inst, self.field_name):
+                return getattr(inst, self.field_name)
+
+        # 3. Class store
         cls = StateMeta._registry.get(self.state_cls_name)
         if cls and hasattr(cls, '_class_store') and self.field_name in cls._class_store:
             return cls._class_store[self.field_name]
+            
         return self.default
+
+    def resolve(self, state_snapshot: StateSnapshot) -> Any:
+        state_dict = state_snapshot.get(self.state_cls_name, {})
+        return state_dict.get(self.field_name, self.default)
+
+    def __iter__(self):
+        val = self._get_val()
+        if val is None:
+            return iter(())
+        try:
+            return iter(val)
+        except TypeError:
+            return iter([val])
+
+    def __len__(self) -> int:
+        val = self._get_val()
+        if val is None:
+            return 0
+        try:
+            return len(val)
+        except TypeError:
+            return 1
+
+    def __getitem__(self, key: Any) -> Any:
+        val = self._get_val()
+        if val is None:
+            raise KeyError(key)
+        return val[key]
+
+    def __contains__(self, item: Any) -> bool:
+        val = self._get_val()
+        if val is None:
+            return False
+        return item in val
+
+    def __bool__(self) -> bool:
+        return bool(self._get_val())
+
+    def __getattr__(self, name: str) -> Any:
+        val = self._get_val()
+        if hasattr(val, name):
+            return getattr(val, name)
+        raise AttributeError(f"'{self.state_cls_name}.{self.field_name}' object has no attribute '{name}'")
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, StateVarRef):
             return self.state_cls_name == other.state_cls_name and self.field_name == other.field_name
         return self._get_val() == other
+
+    def __ne__(self, other: Any) -> bool:
+        return not (self == other)
+
+    def __lt__(self, other: Any) -> bool:
+        return self._get_val() < other
+
+    def __le__(self, other: Any) -> bool:
+        return self._get_val() <= other
+
+    def __gt__(self, other: Any) -> bool:
+        return self._get_val() > other
+
+    def __ge__(self, other: Any) -> bool:
+        return self._get_val() >= other
 
     def __int__(self) -> int:
         return int(self._get_val())
@@ -36,16 +120,55 @@ class StateVarRef:
 
     def __rsub__(self, other: Any) -> Any:
         return other - self._get_val()
-        
-    def resolve(self, state_snapshot: StateSnapshot) -> Any:
-        state_dict = state_snapshot.get(self.state_cls_name, {})
-        return state_dict.get(self.field_name, self.default)
-        
+
+    def __mul__(self, other: Any) -> Any:
+        return self._get_val() * other
+
+    def __rmul__(self, other: Any) -> Any:
+        return other * self._get_val()
+
+    def __truediv__(self, other: Any) -> Any:
+        return self._get_val() / other
+
+    def __rtruediv__(self, other: Any) -> Any:
+        return other / self._get_val()
+
+    def __floordiv__(self, other: Any) -> Any:
+        return self._get_val() // other
+
+    def __rfloordiv__(self, other: Any) -> Any:
+        return other // self._get_val()
+
+    def __mod__(self, other: Any) -> Any:
+        return self._get_val() % other
+
+    def __rmod__(self, other: Any) -> Any:
+        return other % self._get_val()
+
+    def __pow__(self, other: Any) -> Any:
+        return self._get_val() ** other
+
+    def __rpow__(self, other: Any) -> Any:
+        return other ** self._get_val()
+
+    def __neg__(self) -> Any:
+        return -self._get_val()
+
+    def __pos__(self) -> Any:
+        return +self._get_val()
+
+    def __abs__(self) -> Any:
+        return abs(self._get_val())
+
     def __str__(self) -> str:
-        return f'{{{{state.{self.state_cls_name}.{self.field_name}}}}}'
-        
-    def __format__(self, format_spec) -> str:
-        return str(self)
+        val = self._get_val()
+        return str(val) if val is not None else ''
+
+    def __repr__(self) -> str:
+        return f"StateVarRef({self.state_cls_name}.{self.field_name}, val={repr(self._get_val())})"
+
+    def __format__(self, format_spec: str) -> str:
+        return format(self._get_val(), format_spec)
 
 class StateVar:
     """Descriptor representing a reactive state variable reference."""
@@ -124,6 +247,10 @@ class EventHandler:
                         return attr(cls, *args, **kwargs)
         return None
 
+    def with_args(self, **kwargs: Any) -> Any:
+        from .event import EventSpec
+        return EventSpec(self, args=kwargs)
+
 
 # ---------------------------------------------------------------------------
 # Names that belong to Python / the metaclass and must never be wrapped.
@@ -160,20 +287,31 @@ class StateMeta(type):
     def __new__(mcs, name: str, bases: tuple, namespace: dict, **kwargs: Any):
         annotations = namespace.get('__annotations__', {})
 
-        # Wrap annotated fields as StateVar descriptors
-        for field, ann in annotations.items():
+        field_names = set(annotations.keys())
+        for key, val in namespace.items():
+            if key.startswith('_') or key in _META_PASSTHROUGH or key in ('reset', 'to_dict'):
+                continue
+            if isinstance(val, StateVar):
+                field_names.add(key)
+            elif callable(val) or isinstance(val, (classmethod, staticmethod, property, type, hybridmethod)):
+                continue
+            else:
+                field_names.add(key)
+
+        # Wrap state fields as StateVar descriptors
+        for field in field_names:
             if field.startswith('_'):
                 continue
             default = namespace.get(field, None)
             if (not isinstance(default, StateVar)
                     and not callable(default)
-                    and not isinstance(default, (classmethod, staticmethod, property))):
+                    and not isinstance(default, (classmethod, staticmethod, property, hybridmethod))):
                 namespace[field] = StateVar(default=default, field_name=field)
 
         cls = super().__new__(mcs, name, bases, namespace, **kwargs)
         cls._class_store = {}
         for f, var in cls.get_state_vars().items():
-            cls._class_store[f] = var.default
+            cls._class_store[f] = copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default
         if name != 'State':
             mcs._registry[name] = cls
         return cls
@@ -189,7 +327,7 @@ class StateMeta(type):
 
     def reset(cls) -> None:
         for name, var in cls.get_state_vars().items():
-            cls._class_store[name] = var.default
+            cls._class_store[name] = copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default
 
     # ---- intercept class-level attribute access ----------------------------
     def __getattribute__(cls, name: str) -> Any:
@@ -202,6 +340,11 @@ class StateMeta(type):
         """
         # Always let internal / dunder names through normally.
         if name.startswith('__') or name in _META_PASSTHROUGH:
+            return super().__getattribute__(name)
+
+        if name == 'reset':
+            if 'reset' in cls.__dict__ and callable(cls.__dict__['reset']) and not isinstance(cls.__dict__['reset'], hybridmethod):
+                return EventHandler(cls.__name__, 'reset')
             return super().__getattribute__(name)
 
         # If the attribute lives in the class dict and is a plain function
@@ -260,7 +403,7 @@ class State(metaclass=StateMeta):
     def __init__(self) -> None:
         for name, var in self.get_state_vars().items():
             # Use object.__setattr__ to bypass descriptors during init
-            self.__dict__[name] = var.default
+            self.__dict__[name] = copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default
 
     @hybridmethod
     def to_dict(self_or_cls: Any) -> Dict[str, Any]:
@@ -283,10 +426,10 @@ class State(metaclass=StateMeta):
         if isinstance(self_or_cls, type):
             if hasattr(self_or_cls, '_class_store'):
                 for name, var in self_or_cls.get_state_vars().items():
-                    self_or_cls._class_store[name] = var.default
+                    self_or_cls._class_store[name] = copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default
             return
         for name, var in self_or_cls.get_state_vars().items():
-            setattr(self_or_cls, name, var.default)
+            setattr(self_or_cls, name, copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default)
 
     @classmethod
     def get_event_handlers(cls) -> Dict[str, Callable]:

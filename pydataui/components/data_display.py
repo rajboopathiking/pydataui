@@ -46,9 +46,22 @@ class Table(Component):
         tbody_rows = []
         for row in data:
             tds = []
-            for col in cols:
-                val = row.get(col, "") if is_dict else (row[col] if col < len(row) else "")
-                tds.append(f"<td>{escape_html(str(val))}</td>")
+            if is_dict:
+                for col in cols:
+                    val = row.get(col, "")
+                    if isinstance(val, Component):
+                        cell_content = val.render(state_snapshot)
+                    else:
+                        cell_content = escape_html(str(self._resolve_value(val, state_snapshot)))
+                    tds.append(f"<td>{cell_content}</td>")
+            else:
+                for idx in range(len(cols)):
+                    val = row[idx] if idx < len(row) else ""
+                    if isinstance(val, Component):
+                        cell_content = val.render(state_snapshot)
+                    else:
+                        cell_content = escape_html(str(self._resolve_value(val, state_snapshot)))
+                    tds.append(f"<td>{cell_content}</td>")
             tbody_rows.append(f"<tr>{''.join(tds)}</tr>")
             
         tbody = f"<tbody>{''.join(tbody_rows)}</tbody>"

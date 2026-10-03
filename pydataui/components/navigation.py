@@ -6,6 +6,9 @@ from ..utils import escape_html
 class Navbar(Component):
     tag = 'nav'
     def __init__(self, *children, brand=None, brand_href='/', sticky=True, variant='dark', **props):
+        title = props.pop('title', None)
+        if brand is None and title is not None:
+            brand = title
         super().__init__(*children, **props)
         self.brand = brand
         self.brand_href = brand_href
@@ -50,8 +53,16 @@ class NavLink(Component):
 
 class Sidebar(Component):
     tag = 'aside'
-    def __init__(self, *children, width='250px', collapsible=False, collapsed=False, position='left', **props):
-        super().__init__(*children, **props)
+    def __init__(self, *children, links=None, width='250px', collapsible=False, collapsed=False, position='left', **props):
+        child_list = list(children)
+        if links:
+            for l in links:
+                if isinstance(l, dict):
+                    child_list.append(NavLink(text=l.get('label', ''), href=l.get('href', '#')))
+                elif isinstance(l, Component):
+                    child_list.append(l)
+        super().__init__(*child_list, **props)
+        self.links = links
         self.width = width
         self.collapsible = collapsible
         self.collapsed = collapsed

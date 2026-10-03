@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 from .base import Component
 from .typography import Label
 from ..utils import escape_html
+from ..state import StateVarRef
 
 class Button(Component):
     tag = 'button'
@@ -34,14 +35,25 @@ class Button(Component):
 
 class Input(Component):
     tag = 'input'
-    def __init__(self, *args, type='text', placeholder='', value=None, name=None, required=False, disabled=False, readonly=False, size='md', variant='outline', label=None, helper_text=None, error=None, on_change=None, on_input=None, **props):
+    def __init__(self, *args, type='text', placeholder='', value=None, name=None, bind=None, required=False, disabled=False, readonly=False, size='md', variant='outline', label=None, helper_text=None, error=None, on_change=None, on_input=None, **props):
         if args and label is None:
             label = args[0]
+        if bind is None:
+            bind = props.pop('bind', None)
+        self.bind = bind
+        if self.bind is not None:
+            if isinstance(self.bind, StateVarRef):
+                if name is None:
+                    name = self.bind.field_name
+                if value is None:
+                    value = self.bind
+        if name is None and label:
+            name = str(label).lower().strip().replace(' ', '_')
         super().__init__(**props)
         self.props['type'] = type
         self.props['placeholder'] = placeholder
         if value is not None: self.props['value'] = value
-        if name: self.props['name'] = name
+        if name is not None: self.props['name'] = name
         if required: self.props['required'] = 'required'
         if disabled: self.props['disabled'] = 'disabled'
         if readonly: self.props['readonly'] = 'readonly'
@@ -51,19 +63,19 @@ class Input(Component):
         self.helper_text = helper_text
         self.error = error
 
-    @property
-    def placeholder(self) -> str:
-        return self.props.get('placeholder', '')
-        
         # HTMX integration for inputs
         if on_change:
             self._event_props['on_change'] = on_change
             self.props['hx-trigger'] = self.props.get('hx-trigger', 'change')
-            self.props['hx-include'] = 'this'
+            self.props['hx-include'] = self.props.get('hx-include', '#pdu-root')
         if on_input:
             self._event_props['on_input'] = on_input
             self.props['hx-trigger'] = self.props.get('hx-trigger', 'input delay:300ms')
-            self.props['hx-include'] = 'this'
+            self.props['hx-include'] = self.props.get('hx-include', '#pdu-root')
+
+    @property
+    def placeholder(self) -> str:
+        return self.props.get('placeholder', '')
             
     def _get_classes(self) -> List[str]:
         classes = super()._get_classes() + ['pdu-input', f'pdu-input-{self.size}', f'pdu-input-{self.variant}']
@@ -90,8 +102,8 @@ class Input(Component):
 
 class TextArea(Input):
     tag = 'textarea'
-    def __init__(self, placeholder='', value=None, name=None, rows=4, required=False, disabled=False, size='md', label=None, error=None, on_change=None, **props):
-        super().__init__(type=None, placeholder=placeholder, value=value, name=name, required=required, disabled=disabled, size=size, label=label, error=error, on_change=on_change, **props)
+    def __init__(self, placeholder='', value=None, name=None, bind=None, rows=4, required=False, disabled=False, size='md', label=None, error=None, on_change=None, **props):
+        super().__init__(type=None, placeholder=placeholder, value=value, name=name, bind=bind, required=required, disabled=disabled, size=size, label=label, error=error, on_change=on_change, **props)
         self.props['rows'] = rows
         self._value_content = self.props.pop('value', '')
         
@@ -165,35 +177,49 @@ class Select(Input):
 
 class Checkbox(Component):
     tag = 'label'
-    def __init__(self, label='', checked=False, name=None, value=None, disabled=False, on_change=None, **props):
+    def __init__(self, label='', checked=False, name=None, value=None, bind=None, disabled=False, on_change=None, **props):
+        if bind is None:
+            bind = props.pop('bind', None)
+        self.bind = bind
+        if self.bind is not None:
+            if isinstance(self.bind, StateVarRef):
+                if name is None:
+                    name = self.bind.field_name
+                checked = self.bind
+        if name is None and label:
+            name = str(label).lower().strip().replace(' ', '_')
         super().__init__(**props)
         self.label = label
+        self.checked = checked
         self.input_props = {'type': 'checkbox'}
-        if checked: self.input_props['checked'] = 'checked'
-        if name: self.input_props['name'] = name
+        if name is not None: self.input_props['name'] = name
         if value is not None: self.input_props['value'] = value
         if disabled: self.input_props['disabled'] = 'disabled'
+        self.on_change = on_change
         if on_change:
             self.input_props['hx-trigger'] = 'change'
-            self.input_props['hx-include'] = 'this'
-            self._event_props['on_change'] = on_change
+            self.input_props['hx-include'] = '#pdu-root'
             
     def _get_classes(self) -> List[str]:
         return super()._get_classes() + ['pdu-checkbox-wrapper']
         
     def render(self, state_snapshot: dict) -> str:
         attrs = self._build_attrs(state_snapshot)
+        is_chk = self._resolve_value(self.checked, state_snapshot)
+        inp_props = dict(self.input_props)
+        if is_chk:
+            inp_props['checked'] = 'checked'
         
         inp_attrs = []
-        for k, v in self.input_props.items():
-            inp_attrs.append(f"{k}='{escape_html(str(v))}'")
-        if 'on_change' in self._event_props:
-            htmx = self._get_event_htmx_attrs('on_change', self._event_props['on_change'])
+        for k, v in inp_props.items():
+            inp_attrs.append(f'{k}="{escape_html(str(v))}"')
+        if self.on_change:
+            htmx = self._get_event_htmx_attrs('on_change', self.on_change)
             for hk, hv in htmx.items():
-                inp_attrs.append(f"{hk}='{escape_html(str(hv))}'")
+                inp_attrs.append(f'{hk}="{escape_html(str(hv))}"')
                 
-        inp_html = f"<input class='pdu-checkbox' {' '.join(inp_attrs)} />"
-        return f"<{self.tag} {attrs}>{inp_html}<span class='pdu-checkbox-label'>{escape_html(self.label)}</span></{self.tag}>"
+        inp_html = f'<input class="pdu-checkbox" {" ".join(inp_attrs)} />'
+        return f'<{self.tag} {attrs}>{inp_html}<span class="pdu-checkbox-label">{escape_html(self.label)}</span></{self.tag}>'
 
 class Radio(Checkbox):
     def __init__(self, label='', name=None, value=None, checked=False, disabled=False, on_change=None, **props):

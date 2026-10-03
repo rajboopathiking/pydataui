@@ -33,6 +33,8 @@ class Component:
         self.class_name = class_name
         self.style = style
         self.hidden = hidden
+        if 'tag' in props:
+            self.tag = props.pop('tag')
         self.props = props
         self._event_props: Dict[str, Union[EventHandler, EventSpec]] = {}
         
@@ -88,13 +90,29 @@ class Component:
         for key, value in self.props.items():
             if key == 'bind':
                 continue
+            resolved = self._resolve_value(value, state_snapshot)
+            if resolved is None or resolved is False:
+                continue
             if key.startswith('data_'):
-                attrs[f'data-{key[5:]}'] = self._resolve_value(value, state_snapshot)
+                attrs[f'data-{key[5:]}'] = '' if resolved is True else resolved
             elif key not in EVENT_TRIGGERS:
                 html_key = key.replace('_', '-')
-                attrs[html_key] = self._resolve_value(value, state_snapshot)
+                attrs[html_key] = '' if resolved is True else resolved
         
-        return ' '.join(f'{k}="{escape_html(str(v))}"' for k, v in attrs.items() if v is not None)
+        BOOLEAN_HTML_ATTRS = {
+            'disabled', 'required', 'readonly', 'checked', 'selected',
+            'autofocus', 'multiple', 'hidden', 'open', 'novalidate',
+            'defer', 'async', 'loop', 'autoplay', 'controls', 'muted'
+        }
+        rendered_attrs = []
+        for k, v in attrs.items():
+            if v is None or v is False:
+                continue
+            if k in BOOLEAN_HTML_ATTRS and (v is True or v == '' or v == k):
+                rendered_attrs.append(k)
+            else:
+                rendered_attrs.append(f'{k}="{escape_html(str(v))}"')
+        return ' '.join(rendered_attrs)
     
     def _render_children(self, state_snapshot: StateSnapshot) -> str:
         """Render all children to HTML."""
@@ -192,3 +210,24 @@ class Component:
     
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(id={self.id!r})'
+
+
+class RawHtml(Component):
+    """
+    Renders raw, unescaped HTML markup directly.
+    Useful for embedding custom HTML templates, SVG icons, or custom third-party widgets.
+    """
+    tag = ''
+
+    def __init__(self, content: Any = '', **props):
+        super().__init__(**props)
+        self.raw_content = content
+
+    def render(self, state_snapshot: Optional[StateSnapshot] = None) -> str:
+        if self.hidden:
+            return ''
+        return str(self._resolve_value(self.raw_content, state_snapshot or {}))
+
+
+# Friendly alias
+Html = RawHtml

@@ -1,5 +1,5 @@
 import os
-from typing import Callable, Optional, Dict, Any
+from typing import Callable, Optional, Dict, Any, List, Union
 from rustapi import FastAPI as RustAPIApp
 from rustapi.responses import HTMLResponse, Response, RedirectResponse, PlainTextResponse, StreamingResponse
 
@@ -14,8 +14,35 @@ from .components.base import Component
 class App:
     """PyDataUI Application."""
     
-    def __init__(self, title: str = 'PyDataUI App', description: str = '', version: str = '0.2.0', debug: bool = False, **kwargs):
-        self.config = AppConfig(title=title, description=description, version=version, debug=debug, **kwargs)
+    def __init__(
+        self,
+        title: str = 'PyDataUI App',
+        description: str = '',
+        version: str = '0.2.0',
+        debug: bool = False,
+        theme: str = 'light',
+        palette: str = 'zinc',
+        tailwind_config: Optional[Dict[str, Any]] = None,
+        custom_css: Optional[str] = None,
+        stylesheets: Optional[List[str]] = None,
+        scripts: Optional[List[str]] = None,
+        head: Optional[Union[str, List[str]]] = None,
+        **kwargs
+    ):
+        self.config = AppConfig(
+            title=title,
+            description=description,
+            version=version,
+            debug=debug,
+            theme=theme,
+            palette=palette,
+            tailwind_config=tailwind_config,
+            custom_css=custom_css,
+            stylesheets=stylesheets,
+            scripts=scripts,
+            head=head,
+            **kwargs
+        )
         docs_url = f"{self.config.api_prefix}/docs"
         openapi_url = f"{self.config.api_prefix}/openapi.json"
         self._engine = RustAPIApp(
@@ -242,7 +269,13 @@ class App:
                 else:
                     css_url = f'{self.config.internal_prefix}/static/pydataui.css'
                     from .compiler.templates import get_base_html
-                    content = get_base_html(title="Error - " + self.config.title, content=error_body, css_url=css_url)
+                    content = get_base_html(
+                        title="Error - " + self.config.title,
+                        content=error_body,
+                        css_url=css_url,
+                        theme=getattr(self.config, 'theme', 'light'),
+                        palette=getattr(self.config, 'palette', 'zinc')
+                    )
             finally:
                 _current_session.reset(token_sess)
                 _current_snapshot.reset(token_snap)

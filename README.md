@@ -309,6 +309,7 @@ pydataui build app.py --output dist/
 ## 📚 In-Depth Guides
 
 - 📘 [Full Documentation](docs/README.md)
+- 🎨 [UI Customization Guide (Tailwind, shadcn & HTML)](docs/CUSTOMIZATION.md)
 - 🛠️ [Troubleshooting & Architecture Guide](docs/TROUBLESHOOTING.md)
 - 🔒 [Authentication & Security Guide](docs/AUTHENTICATION.md)
 - 📊 [Data Science & Engineering Components](docs/DATA_COMPONENTS.md)

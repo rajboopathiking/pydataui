@@ -25,6 +25,7 @@
 11. [CLI Tooling](#11-cli-tooling)
 12. [Production Deployment](#12-production-deployment)
 13. [Troubleshooting & Architecture Guide](TROUBLESHOOTING.md)
+14. [UI Customization Guide (Tailwind, shadcn & HTML)](CUSTOMIZATION.md)
 
 ---
 

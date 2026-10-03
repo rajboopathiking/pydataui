@@ -8,6 +8,8 @@ from .auth import (
     LoginState, current_user
 )
 from .tunnel import TunnelManager
+from .components.base import Component, RawHtml, Html
+from . import html
 
 __version__ = '0.2.0'
 
@@ -28,5 +30,9 @@ __all__ = [
     'LoginState',
     'current_user',
     'TunnelManager',
+    'Component',
+    'RawHtml',
+    'Html',
+    'html',
     '__version__',
 ]

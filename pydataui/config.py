@@ -16,17 +16,24 @@ class AppConfig:
     session_max_age: int = 3600  # seconds
     api_prefix: str = '/api'
     internal_prefix: str = '/_pdu'
-    theme: str = 'default'
+    theme: str = 'light'
+    palette: str = 'zinc'
+    tailwind_config: Optional[Dict[str, Any]] = None
+    custom_css: Optional[str] = None
+    stylesheets: Optional[List[str]] = None
+    scripts: Optional[List[str]] = None
+    head: Optional[str] = None
     cors_origins: List[str] = ['*']
     static_dir: Optional[str] = None
     
     def __init__(self, **kwargs: Any):
+        self.stylesheets = []
+        self.scripts = []
         # Load from defaults
         self._load_from_env()
         # Override with kwargs
         for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+            setattr(self, k, v)
                 
     def _load_from_env(self) -> None:
         """Load configuration from environment variables prefixed with PYDATAUI_."""

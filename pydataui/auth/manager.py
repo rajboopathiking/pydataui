@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional
 import jwt
 
 from .models import APIKey, User
+from ..exceptions import AuthenticationThrottledError
 
 _current_user_var: ContextVar[Optional[User]] = ContextVar('current_user', default=None)
 _current_auth_var: ContextVar[Optional[Any]] = ContextVar('current_auth', default=None)
@@ -144,12 +145,18 @@ class AuthManager:
     def set_default(cls, instance):
         cls._default_instance = instance
 
-    def __init__(self, secret_key=None, token_expire_hours=24, store: Optional[Any] = None):
+    def __init__(self, secret_key=None, token_expire_hours=24, store: Optional[Any] = None,
+                 max_login_attempts: int = 5, lockout_duration_seconds: int = 900,
+                 attempt_window_seconds: int = 900, enable_throttling: bool = True):
         secret_key = secret_key or os.environ.get('PYDATAUI_AUTH_SECRET') or secrets.token_hex(32)
         if not isinstance(secret_key, str) or len(secret_key.encode()) < 32:
             raise ValueError('Authentication secret must contain at least 32 bytes')
         self.secret_key = secret_key
         self.token_expire_hours = token_expire_hours
+        self.max_login_attempts = max_login_attempts
+        self.lockout_duration_seconds = lockout_duration_seconds
+        self.attempt_window_seconds = attempt_window_seconds
+        self.enable_throttling = enable_throttling
         from ..storage import BaseAuthStore, MemoryAuthStore
         self._store = store if store is not None else MemoryAuthStore()
         if isinstance(self._store, MemoryAuthStore):
@@ -219,13 +226,41 @@ class AuthManager:
                 self._store._users[user.id] = user
                 self._store._users_by_username[user.username] = user.id
 
-    def authenticate(self, username, password):
+    def authenticate(self, username, password, client_ip: Optional[str] = None):
         if not isinstance(username, str):
             return None
+
+        # Brute-force throttling check
+        keys_to_check = [f"user:{username.lower().strip()}"]
+        if client_ip:
+            keys_to_check.append(f"ip:{client_ip}")
+
+        if self.enable_throttling and hasattr(self._store, "is_login_locked"):
+            for k in keys_to_check:
+                is_locked, remaining = self._store.is_login_locked(k)
+                if is_locked:
+                    raise AuthenticationThrottledError(
+                        f"Too many failed login attempts. Temporarily locked out. Please try again in {remaining} seconds."
+                    )
+
         user_id = self.users_by_username.get(username)
         user = self._store.get_user(user_id) if user_id else self._store.get_user_by_username(username)
         if not user or not user.is_active or not self._verify_password(password, user.password_hash):
+            if self.enable_throttling and hasattr(self._store, "record_failed_login"):
+                for k in keys_to_check:
+                    self._store.record_failed_login(
+                        k,
+                        window_seconds=self.attempt_window_seconds,
+                        max_attempts=self.max_login_attempts,
+                        lockout_seconds=self.lockout_duration_seconds
+                    )
             return None
+
+        # Reset failed attempts on success
+        if self.enable_throttling and hasattr(self._store, "reset_failed_logins"):
+            for k in keys_to_check:
+                self._store.reset_failed_logins(k)
+
         user.last_login = utcnow().isoformat()
         self._store.save_user(user)
         return jwt.encode({'sub': user.id, 'jti': uuid.uuid4().hex,

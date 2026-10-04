@@ -29,3 +29,12 @@ class RenderError(PyDataUIError):
 class APIError(PyDataUIError):
     """Raised when there is an issue with API generation or routing."""
     pass
+
+class ConcurrencyError(SessionError):
+    """Raised when a concurrent modification conflict is detected during optimistic locking."""
+    pass
+
+class AuthenticationThrottledError(PyDataUIError):
+    """Raised when too many failed authentication attempts occur within a throttling window."""
+    pass
+

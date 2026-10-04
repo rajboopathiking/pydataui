@@ -14,6 +14,7 @@ from .session import SessionManager, Session
 from .api import APIGenerator
 from .state import StateMeta, _current_session, _current_snapshot
 from .components.base import Component
+from .exceptions import AuthenticationThrottledError
 
 class App:
     """PyDataUI Application."""
@@ -70,6 +71,12 @@ class App:
         storage_path = parse_storage_path(self.config.storage)
         if storage_path:
             session_store = SQLiteSessionStore(storage_path)
+            # Ensure multi-worker cluster secret continuity:
+            # If PYDATAUI_SESSION_SECRET is not in env and session_secret was not explicitly
+            # passed in kwargs, load or initialize the shared cluster secret from SQLite metadata.
+            if "session_secret" not in kwargs and "PYDATAUI_SESSION_SECRET" not in os.environ:
+                shared_secret = session_store.get_or_create_cluster_secret()
+                self.config.session_secret = shared_secret
         else:
             session_store = MemorySessionStore()
 
@@ -640,7 +647,20 @@ class App:
             if denied is not None:
                 return denied
             body = body_of(request)
-            token = self.auth.authenticate(body.get('username'), body.get('password'))
+            client_ip = None
+            client = getattr(request, 'client', None)
+            if client and hasattr(client, 'host'):
+                client_ip = client.host
+            elif isinstance(client, str):
+                client_ip = client
+            else:
+                client_ip = getattr(request, 'remote_addr', None)
+
+            try:
+                token = self.auth.authenticate(body.get('username'), body.get('password'), client_ip=client_ip)
+            except AuthenticationThrottledError as throttled:
+                return JSONResponse({'error': str(throttled)}, status_code=429)
+
             if not token:
                 return PlainTextResponse('Invalid credentials', status_code=401)
             old = self._get_session(request)
@@ -651,7 +671,7 @@ class App:
             session.data.update(auth_token=token, auth_user_id=user.id)
             request._pdu_session = session
             return JSONResponse({'token': token}, headers={'Set-Cookie': self._session_cookie(session),
-                                                         'Cache-Control': 'no-store'})
+                                                          'Cache-Control': 'no-store'})
 
         @self._engine.post('/api/auth/logout')
         def logout_handler(request):
@@ -738,6 +758,10 @@ class App:
             if isinstance(self._session_manager._store, MemorySessionStore):
                 default_db = ".pydataui_storage.db"
                 sqlite_session = SQLiteSessionStore(default_db)
+                if "PYDATAUI_SESSION_SECRET" not in os.environ:
+                    shared_secret = sqlite_session.get_or_create_cluster_secret()
+                    self.config.session_secret = shared_secret
+                    self._session_manager._secret = shared_secret.encode('utf-8')
                 for sid, s in list(self._session_manager._active_sessions.items()):
                     sqlite_session.save(sid, s.to_dict(), s.last_accessed)
                 self._session_manager._store = sqlite_session

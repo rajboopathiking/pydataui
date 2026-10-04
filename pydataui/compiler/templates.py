@@ -320,7 +320,8 @@ def get_base_html(
     stylesheets: Optional[List[str]] = None,
     scripts: Optional[List[str]] = None,
     extra_head: Union[str, List[str]] = '',
-    extra_body: str = ''
+    extra_body: str = '',
+    csrf_token: str = "",
 ) -> str:
     """Generate the full HTML shell with HTMX, Tailwind, and theme customization."""
     theme_lower = theme.lower().strip()
@@ -419,6 +420,7 @@ def get_base_html(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="pdu-csrf-token" content="{csrf_token}">
     <title>{title}</title>
     {system_theme_script}
     <!-- Tailwind CSS Play CDN -->
@@ -442,7 +444,7 @@ def get_base_html(
     {stylesheets_html}
     {extra_head_str}
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen" hx-headers='{json.dumps({"X-CSRF-Token": csrf_token})}'>
     <div id="pdu-root" class="min-h-screen">
         {content}
     </div>

@@ -1,7 +1,7 @@
-import copy
 import inspect
 from typing import Any, Dict, Set
 from rustapi.responses import JSONResponse
+from .request import request_context
 from .config import AppConfig
 from .session import SessionManager, Session
 from .state import StateMeta
@@ -9,27 +9,15 @@ from .utils import to_json_compatible
 
 class APIGenerator:
     """Generates REST API endpoints for all registered State classes."""
-    def __init__(self, config: AppConfig):
+    def __init__(self, config: AppConfig, app):
         self.config = config
+        self.app = app
         self._registered_states: Set[str] = set()
         self._root_registered = False
 
-    def _get_session_and_stateless(self, request: Any, session_manager: SessionManager):
-        headers = getattr(request, 'headers', {})
-        cookies_header = headers.get('cookie') or headers.get('Cookie') or ''
-        session = None
-        has_cookie = False
-        for cookie in cookies_header.split(';'):
-            cookie = cookie.strip()
-            if cookie.startswith('pdu-session='):
-                cookie_val = cookie.split('=', 1)[1]
-                session = session_manager.parse_session_cookie(cookie_val)
-                if session:
-                    has_cookie = True
-                    break
-        if not session:
-            session = session_manager.create_session()
-        return session, not has_cookie
+    def _get_session_and_stateless(self, request, session_manager):
+        # A request-local context reuses exactly one verified session.
+        return self.app._get_session(request), False
 
     def _extract_kwargs(self, request: Any) -> Dict[str, Any]:
         kwargs: Dict[str, Any] = {}
@@ -70,20 +58,27 @@ class APIGenerator:
                 pass
         return kwargs
 
-    def _ensure_instance(self, session: Session, state_name: str, state_cls: Any) -> Any:
+    def _ensure_instance(self, session, state_name, state_cls):
         if state_name not in session.state_instances:
-            inst = state_cls()
-            if hasattr(state_cls, '_class_store'):
-                for k, v in state_cls._class_store.items():
-                    if hasattr(inst, k):
-                        setattr(inst, k, copy.deepcopy(v) if isinstance(v, (list, dict, set)) else v)
-            session.state_instances[state_name] = inst
+            session.state_instances[state_name] = state_cls()
         return session.state_instances[state_name]
 
-    def _sync_to_class_store(self, state_cls: Any, state_instance: Any):
-        if hasattr(state_cls, '_class_store'):
-            for k, v in state_instance.to_dict().items():
-                state_cls._class_store[k] = copy.deepcopy(v) if isinstance(v, (list, dict, set)) else v
+    def _protected(self, scope, state_cls=None):
+        from functools import wraps
+        def decorate(func):
+            @wraps(func)
+            def wrapped(request, *args, **kwargs):
+                request = request_context(request, self.app)
+                session = self.app._get_session(request)
+                with session.lock:
+                    denied = self.app._guard_request(request, session, scope=scope,
+                                                     roles=getattr(state_cls, '__roles__', ()))
+                    if denied is not None:
+                        return denied
+                    with self.app._request_context(request):
+                        return func(request, *args, **kwargs)
+            return wrapped
+        return decorate
 
     def generate_state_endpoints(self, engine: Any, session_manager: SessionManager) -> None:
         """Register API routes on the pyrustapi engine for all State classes."""
@@ -94,16 +89,14 @@ class APIGenerator:
 
             @engine.get(f'{prefix}')
             @engine.get(f'{prefix}/')
+            @self._protected("read")
             def api_catalog(request):
                 states_info = {}
                 for s_name, s_cls in StateMeta._registry.items():
-                    methods = [
-                        m for m in dir(s_cls)
-                        if callable(getattr(s_cls, m)) and not m.startswith('_') and m not in (
-                            'to_dict', 'from_dict', 'reset', 'get_state_vars', 'get_event_handlers'
-                        )
-                    ]
-                    vars_dict = {f: var.default for f, var in s_cls.get_state_vars().items()}
+                    if not self.config.auto_api or not s_cls.__api__:
+                        continue
+                    methods = list(s_cls.get_event_handlers())
+                    vars_dict = {f: var.default for f, var in s_cls.get_public_state_vars().items()}
                     states_info[s_name] = {
                         "endpoint": f"{prefix}/{s_name}",
                         "state_endpoint": f"{prefix}/state/{s_name}",
@@ -143,6 +136,8 @@ class APIGenerator:
 
         # Dynamic state endpoints
         for state_name, state_cls in StateMeta._registry.items():
+            if not state_cls.__api__ or not self.config.auto_api:
+                continue
             if state_name in self._registered_states:
                 continue
             self._registered_states.add(state_name)
@@ -159,63 +154,63 @@ class APIGenerator:
         self, engine: Any, session_manager: SessionManager, base_url: str, state_name: str, state_cls: Any
     ):
         @engine.get(base_url)
-        def get_state(request, state_name=state_name, state_cls=state_cls):
+        @self._protected("read", state_cls)
+        def get_state(request):
             session, stateless = self._get_session_and_stateless(request, session_manager)
             inst = self._ensure_instance(session, state_name, state_cls)
-            cookie_val = session_manager.get_session_cookie_value(session)
             return JSONResponse(
                 content=to_json_compatible(inst.to_dict()),
                 status_code=200,
-                headers={"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+                headers={"Set-Cookie": self.app._session_cookie(session), "Cache-Control": "no-store"}
             )
 
         @engine.get(f'{base_url}/{{field}}')
-        def get_state_field(request, field: str, state_name=state_name, state_cls=state_cls):
+        @self._protected('read', state_cls)
+        def get_state_field(request, field: str):
             session, stateless = self._get_session_and_stateless(request, session_manager)
             inst = self._ensure_instance(session, state_name, state_cls)
-            cookie_val = session_manager.get_session_cookie_value(session)
-            if hasattr(inst, field) and field in state_cls.get_state_vars():
+            if hasattr(inst, field) and field in state_cls.get_public_state_vars():
                 return JSONResponse(
                     content=to_json_compatible({field: getattr(inst, field)}),
                     status_code=200,
-                    headers={"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+                    headers={"Set-Cookie": self.app._session_cookie(session), "Cache-Control": "no-store"}
                 )
             return JSONResponse(content={"error": f"Field '{field}' not found"}, status_code=404)
 
         @engine.put(base_url)
-        def update_state(request, state_name=state_name, state_cls=state_cls):
+        @self._protected("write", state_cls)
+        def update_state(request):
             session, stateless = self._get_session_and_stateless(request, session_manager)
             inst = self._ensure_instance(session, state_name, state_cls)
             data = self._extract_kwargs(request)
-            inst.from_dict(data)
-            if stateless:
-                self._sync_to_class_store(state_cls, inst)
-            cookie_val = session_manager.get_session_cookie_value(session)
+            try:
+                inst.from_dict(data)
+            except ValueError:
+                return JSONResponse(content={"error": "Invalid state input"}, status_code=422)
             return JSONResponse(
                 content=to_json_compatible(inst.to_dict()),
                 status_code=200,
-                headers={"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+                headers={"Set-Cookie": self.app._session_cookie(session), "Cache-Control": "no-store"}
             )
 
         @engine.delete(base_url)
-        def reset_state(request, state_name=state_name, state_cls=state_cls):
+        @self._protected("write", state_cls)
+        def reset_state(request):
             session, stateless = self._get_session_and_stateless(request, session_manager)
             inst = self._ensure_instance(session, state_name, state_cls)
             inst.reset()
-            if stateless:
-                self._sync_to_class_store(state_cls, inst)
-            cookie_val = session_manager.get_session_cookie_value(session)
             return JSONResponse(
                 content=to_json_compatible({"status": "reset", "state": inst.to_dict()}),
                 status_code=200,
-                headers={"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+                headers={"Set-Cookie": self.app._session_cookie(session), "Cache-Control": "no-store"}
             )
 
         @engine.post(f'{base_url}/{{method}}')
-        def call_state_method(request, method: str, state_name=state_name, state_cls=state_cls):
+        @self._protected("write", state_cls)
+        def call_state_method(request, method: str):
             session, stateless = self._get_session_and_stateless(request, session_manager)
             inst = self._ensure_instance(session, state_name, state_cls)
-            if hasattr(inst, method) and callable(getattr(inst, method)):
+            if method in state_cls.get_event_handlers():
                 func = getattr(inst, method)
                 kwargs = self._extract_kwargs(request)
                 sig = inspect.signature(func)
@@ -228,20 +223,17 @@ class APIGenerator:
                     if len(accepted_param_names) == 1 and len(kwargs) == 1 and not call_kwargs:
                         call_kwargs = {accepted_param_names[0]: next(iter(kwargs.values()))}
 
-                cookie_val = session_manager.get_session_cookie_value(session)
                 try:
                     result = func(**call_kwargs)
                 except Exception as e:
                     import traceback
                     traceback.print_exc()
                     return JSONResponse(
-                        content={"error": str(e), "type": type(e).__name__},
+                        content={"error": str(e) if self.config.debug else "Action failed"},
                         status_code=400,
-                        headers={"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+                        headers={"Set-Cookie": self.app._session_cookie(session), "Cache-Control": "no-store"}
                     )
 
-                if stateless:
-                    self._sync_to_class_store(state_cls, inst)
 
                 if result is not None:
                     resp_data = {"result": result, "state": inst.to_dict()}
@@ -250,6 +242,6 @@ class APIGenerator:
                 return JSONResponse(
                     content=to_json_compatible(resp_data),
                     status_code=200,
-                    headers={"Set-Cookie": f"pdu-session={cookie_val}; Path=/; HttpOnly"}
+                    headers={"Set-Cookie": self.app._session_cookie(session), "Cache-Control": "no-store"}
                 )
             return JSONResponse(content={"error": f"Method '{method}' not found"}, status_code=404)

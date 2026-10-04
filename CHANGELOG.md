@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## [0.2.1] — 2026-10-04 (source update)
+
+- Add pluggable storage engine (`pydataui.storage`) supporting `MemoryStore` and high-performance `SQLiteStore` with Write-Ahead Logging (WAL) mode.
+- Remove single-process isolation bottleneck: enable cross-process multi-worker support (`workers=4+`) and container volume sharing with zero external infrastructure.
+- Add `Session.to_dict()` and `Session.from_dict()` for full state tree and data persistence across worker processes.
+- Add `_UsersDictProxy`, `_ApiKeysDictProxy`, and `_UsersByUsernameProxy` to `AuthManager` for seamless transparent persistence on SQLite.
+- Protect generated APIs, custom APIs, browser actions, and pages when auth is configured.
+- Isolate REST state per signed session; remove implicit class-store synchronization.
+- Add state action allowlists, API opt-out, private fields, typed/atomic inputs, and role gates.
+- Disable public registration by default and reject caller-supplied roles.
+- Hide password hashes; enforce key ownership/scopes; retain only API key digests.
+- Use randomly salted password hashes and random default auth/session secrets.
+- Rotate browser sessions at login, implement token/session logout, and reject inactive users.
+- Wire per-session CSRF tokens into HTMX and protect cookie-bearing mutation endpoints.
+- Escape authentication UI values and suppress production error details.
+- Refuse to delete nonempty CLI build output directories.
+- Add dispatcher regressions, optional Chromium coverage, and migration documentation.
+
+See `docs/MIGRATION_0_2_1.md` and `docs/PRODUCTION_READINESS.md` for compatibility changes and deployment guides.
+This source version has not been published to PyPI by this change.
+
+
 ## [0.1.1] — 2024-10-03
 
 ### 🐛 Critical Bug Fixes

@@ -7,12 +7,12 @@
 ![Rust Core](https://img.shields.io/badge/backend-pyrustapi%20(Rust%2FTokio)-orange.svg)
 ![UI Engine](https://img.shields.io/badge/styling-Tailwind%20CSS%20%2B%20shadcn%2Fui-38bdf8.svg)
 ![Reactivity](https://img.shields.io/badge/reactivity-HTMX-3b82f6.svg)
-![Tests](https://img.shields.io/badge/tests-36%20passed-brightgreen.svg)
 
-**The Production-Grade Full-Stack Python Framework for Data Roles.**  
+
+**A Full-Stack Python Framework for Data and AI Applications.**
 *Data Engineers • Data Analysts • AI/ML Engineers • Python Developers*
 
-Write pure Python → get reactive web applications, automatic REST APIs, and production speed.  
+Write pure Python → get reactive web applications, automatic REST APIs, and a Rust HTTP backend.
 **Zero JavaScript required.**
 
 [Quick Start](#-quick-start) • [Why PyDataUI?](#-why-pydataui) • [Components](#-components) • [Authentication](#-authentication--api-keys) • [Port Forwarding](#-port-forwarding-sharetrue) • [Benchmarks](#-performance-benchmarks) • [Documentation](docs/README.md)
@@ -23,17 +23,20 @@ Write pure Python → get reactive web applications, automatic REST APIs, and pr
 
 ## 🎯 Built Specifically for Data Roles
 
-Data professionals love Python, but traditional web frameworks force you into two bad options:
-1. **Toy prototyping tools (Streamlit, Gradio)**: Global state conflicts across users, hard to customize UI, no proper REST APIs, poor production concurrency.
-2. **Complex JS stacks (React, Next.js, Vue)**: Requires learning TypeScript, npm, webpack, CSS modules, and writing separate backend APIs in FastAPI.
+Build dashboards, dataset explorers, model evaluation interfaces, and data
+workflows using Python UI components and server-side logic.
+
+**0.2.1 security source update:** see [the migration guide](docs/MIGRATION_0_2_1.md)
+for protected routes, API permissions, CSRF, and session behavior. This checkout
+has not been published to PyPI by this change.
 
 **PyDataUI solves this:**
 - 🐍 **100% Python Code**: Build UI, reactive state, and server logic in clean, typed Python.
-- 🦀 **Rust-Powered HTTP Core (`pyrustapi`)**: Tokio/Hyper asynchronous backend that outperforms FastAPI & Uvicorn in throughput and latency.
+- 🦀 **Rust-Powered HTTP Core (`pyrustapi`)**: Tokio/Hyper HTTP backend; application performance needs workload-specific measurement.
 - 🎨 **Tailwind CSS + shadcn/ui**: Modern, accessible UI design system with built-in dark mode and CSS variables.
-- ⚡ **Reactive SSR via HTMX**: Server re-renders UI diffs on state mutation — seamless browser updates with zero client-side JavaScript.
-- 🔌 **Automatic REST API**: Every `State` class automatically exposes OpenAPI documentation and CRUD endpoints at `/api/{State}`.
-- 🔒 **Auth & API Keys**: Production JWT authentication, role-based access control (RBAC), and `pdu_live_...` API keys for ETL automation.
+- ⚡ **Reactive SSR via HTMX**: Server re-renders the current page fragment on state mutation — seamless browser updates with no user-authored JavaScript for common interactions.
+- 🔌 **Automatic REST API**: Eligible `State` classes expose OpenAPI documentation and CRUD endpoints at `/api/{State}`.
+- 🔒 **Auth & API Keys**: JWT authentication, role-based access control (RBAC), and `pdu_live_...` API keys for ETL automation.
 - 🌐 **One-Click Sharing (`share=True`)**: Create public internet tunnels for demos and stakeholders instantly, like Gradio.
 
 ---
@@ -156,12 +159,12 @@ Secure your application for enterprise data workflows:
 from pydataui import App
 from pydataui.components import Container, Heading, Flex
 from pydataui.auth import (
-    AuthManager, LoginPage, UserMenu, APIKeyManager, 
-    require_auth, require_role, Role
+    AuthManager, LoginPage, UserMenu, APIKeyManager,
+    require_auth, require_role, Role, current_user
 )
 
 app = App(title="Secure Analytics Portal")
-auth = AuthManager(secret_key="your-secure-random-secret-key-min-32-chars!")
+auth = AuthManager()  # Configure PYDATAUI_AUTH_SECRET for deployment
 
 # Register users with roles
 admin = auth.add_user("lead_eng", "password123", roles=[Role.ADMIN, Role.DATA_ENGINEER])
@@ -176,13 +179,14 @@ def login_route():
 
 @app.page("/")
 def dashboard():
+    user = current_user.get()
     return Container(
         Flex(
             Heading("Data Warehouse Control Center", level=1),
-            UserMenu(admin),
+            UserMenu(user),
             justify="space-between", align="center"
         ),
-        APIKeyManager(keys=auth.list_api_keys(admin.id)),
+        APIKeyManager(keys=auth.list_api_keys(user.id) if user else []),
         padding="lg"
     )
 
@@ -230,18 +234,12 @@ Output:
 
 ---
 
-## 📊 Performance: `pyrustapi` vs FastAPI / Uvicorn
+## 📊 Performance
 
-PyDataUI is built directly on **pyrustapi** (Rust Tokio + Hyper HTTP core) instead of Python ASGI servers:
-
-| Metric | PyDataUI (`pyrustapi`) | FastAPI (`uvicorn`) | Streamlit (`tornado`) |
-|---|---|---|---|
-| **Language Core** | 🦀 Rust (Tokio/Hyper) | 🐍 Python (uvloop) | 🐍 Python |
-| **P99 Response Latency** | **< 1.2ms** | ~ 4.8ms | > 25ms |
-| **Requests / Second** | **65,000+** | ~ 18,000 | ~ 1,200 |
-| **Memory Footprint** | **~ 22 MB** | ~ 55 MB | ~ 120 MB |
-| **Architecture** | Pure Multi-threaded Async | Event loop | Script rerun model |
-| **UI Updates** | Targeted DOM Swaps (HTMX) | N/A (Backend only) | Full Page Rerun |
+The backend uses pyrustapi. This repository does not yet contain a reproducible
+benchmark suite establishing throughput, P99 latency, or memory superiority over
+other frameworks. Evaluate equivalent real applications on the same hardware;
+HTTP hello-world throughput does not establish data-application performance.
 
 ---
 
@@ -291,7 +289,7 @@ pydataui new analytics_hub --template dashboard
 pydataui dev app.py --port 8000 --reload
 
 # 3. Run production server with public tunnel
-pydataui run app.py --workers 4 --share
+pydataui run app.py --workers 1 --share
 
 # 4. Check syntax and route definitions
 pydataui check app.py
@@ -315,18 +313,19 @@ pydataui build app.py --output dist/
 - 📊 [Data Science & Engineering Components](docs/DATA_COMPONENTS.md)
 - 📖 [Complete API Reference](docs/API_REFERENCE.md)
 - 🚀 [Production & Cloud Deployment](docs/DEPLOYMENT.md)
+- 🛡️ [Production Readiness Assessment](docs/PRODUCTION_READINESS.md)
 - ⚡ [Quick Reference Card](docs/QUICKREF.md)
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions from the data science, AI/ML, and Python web development communities!  
+We welcome contributions from the data science, AI/ML, and Python web development communities!
 Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for local environment setup, testing, and pull request guidelines.
 
 ---
 
 ## 📄 License
 
-PyDataUI is licensed under the [MIT License](LICENSE).  
+PyDataUI is licensed under the [MIT License](LICENSE).
 Copyright (c) 2024 Boopathi Raj.

@@ -13,6 +13,7 @@ from pydataui.components.data_science import (
 )
 from pydataui.components.shadcn import ShadButton, ShadBadge
 from pydataui.auth import (
+    current_user,
     AuthManager, Role, LoginPage, UserMenu, APIKeyManager, require_auth
 )
 
@@ -22,14 +23,15 @@ app = App(
     version="0.2.0"
 )
 
-auth = AuthManager(secret_key="production-mlops-portal-secret-key-min-32-chars!")
+auth = AuthManager()
 
-# Seed users
-admin = auth.add_user("lead_mlops", "admin123", email="mlops@corp.internal", roles=[Role.ADMIN, Role.ML_ENGINEER])
-analyst = auth.add_user("data_analyst", "analyst123", email="analyst@corp.internal", roles=[Role.DATA_ANALYST])
+# Seed users (idempotent for persistent and multi-worker runs)
+admin = auth.get_or_create_user("lead_mlops", "admin123", email="mlops@corp.internal", roles=[Role.ADMIN, Role.ML_ENGINEER])
+analyst = auth.get_or_create_user("data_analyst", "analyst123", email="analyst@corp.internal", roles=[Role.DATA_ANALYST])
 
-# Seed production API key
-auth.create_api_key("Continuous-Training-Pipeline", admin.id, scopes=["read", "write"])
+# Seed production API key if not already present
+if not auth.list_api_keys(admin.id):
+    auth.create_api_key("Continuous-Training-Pipeline", admin.id, scopes=["read", "write"])
 
 app.setup_auth(auth)
 
@@ -50,18 +52,19 @@ class ModelTrainingState(State):
 def login_view():
     return LoginPage(
         title="MLOps Control Hub",
-        subtitle="Sign in with your engineering or analyst credentials",
+        subtitle="Demo Accounts: lead_mlops / admin123 (Admin) or data_analyst / analyst123 (Analyst)",
         redirect_to="/"
     )
 
 
-@app.page("/")
+@app.page("/", public=True)
 def hub_dashboard():
-    keys = auth.list_api_keys(admin.id)
+    user = current_user.get()
+    keys = auth.list_api_keys(user.id) if user else []
     return Container(
         Flex(
             Heading("Production Model Registry & Evaluation", level=1),
-            UserMenu(admin),
+            UserMenu(user),
             justify="space-between", align="center", margin_bottom="lg"
         ),
         # KPI & Metrics
@@ -111,4 +114,13 @@ def hub_dashboard():
 
 
 if __name__ == "__main__":
+    print("\n" + "=" * 60)
+    print("🚀 MLOps Model Performance Hub")
+    print("=" * 60)
+    print("🔐 Demo Accounts:")
+    print("   • Admin:   lead_mlops / admin123")
+    print("   • Analyst: data_analyst / analyst123")
+    print("🌐 Public Portal: http://127.0.0.1:8080")
+    print("🔑 Sign In Page:  http://127.0.0.1:8080/login")
+    print("=" * 60 + "\n", flush=True)
     app.run(share=True, port=8080)

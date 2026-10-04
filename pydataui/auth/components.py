@@ -1,3 +1,4 @@
+from html import escape
 from typing import Optional, List, Any
 from ..components.base import Component
 from ..components.layout import Container, Card, Flex, Box
@@ -34,7 +35,7 @@ class LoginPage(Component):
         
         error_alert = (
             f'<div class="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive border border-destructive/20">'
-            f'{error_msg}</div>'
+            f'{escape(str(error_msg))}</div>'
             if error_msg else ""
         )
         
@@ -47,8 +48,8 @@ class LoginPage(Component):
   <div class="w-full max-w-md rounded-xl border bg-card text-card-foreground shadow-lg p-8">
     <div class="flex flex-col items-center text-center mb-6">
       {logo_html}
-      <h1 class="text-2xl font-bold tracking-tight">{self.page_title}</h1>
-      <p class="text-sm text-muted-foreground mt-1">{self.subtitle}</p>
+      <h1 class="text-2xl font-bold tracking-tight">{escape(str(self.page_title))}</h1>
+      <p class="text-sm text-muted-foreground mt-1">{escape(str(self.subtitle))}</p>
     </div>
     {error_alert}
     <form hx-post="/_pdu/event/LoginState/login" hx-target="#pdu-root" hx-swap="innerHTML" class="space-y-4">
@@ -56,7 +57,7 @@ class LoginPage(Component):
         <label class="block text-sm font-medium mb-1.5" for="login-username">Username</label>
         <input id="login-username" name="username" type="text" required autocomplete="username"
                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-               placeholder="username" value="{login_snap.get('username', '')}" />
+               placeholder="username" value="{escape(str(login_snap.get('username', '')))}" />
       </div>
       <div>
         <label class="block text-sm font-medium mb-1.5" for="login-password">Password</label>
@@ -86,19 +87,19 @@ class UserMenu(Component):
 
     def render(self, state_snapshot: Optional[dict] = None) -> str:
         if not self.user:
-            return '<div class="text-sm text-muted-foreground">Not signed in</div>'
+            return '<div class="flex items-center gap-2"><span class="text-sm text-muted-foreground">Guest</span><a href="/login" class="inline-flex items-center justify-center rounded-md text-xs font-semibold bg-primary text-primary-foreground h-8 px-3 hover:bg-primary/90 transition-colors">Sign In</a></div>'
         
         roles_html = "".join(
-            f'<span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">{r}</span>'
+            f'<span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">{escape(str(r))}</span>'
             for r in self.user.roles
         )
         
         return f'''<div class="flex items-center gap-3 p-2 rounded-lg border bg-card shadow-sm">
   <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
-    {self.user.username[:2].upper()}
+    {escape(str(self.user.username[:2].upper()))}
   </div>
   <div class="flex flex-col min-w-0">
-    <span class="text-sm font-medium truncate">{self.user.username}</span>
+    <span class="text-sm font-medium truncate">{escape(str(self.user.username))}</span>
     <div class="flex gap-1 mt-0.5">{roles_html}</div>
   </div>
   <button hx-post="/_pdu/event/LoginState/logout" hx-target="#pdu-root" hx-swap="innerHTML"
@@ -127,12 +128,12 @@ class APIKeyManager(Component):
                 masked = key_str[:12] + "..." + key_str[-4:] if len(key_str) > 16 else key_str
                 key_id = getattr(k, 'key_id', '')
                 keys_rows += f'''<tr class="border-b transition-colors hover:bg-muted/50">
-  <td class="p-3 font-medium">{name}</td>
-  <td class="p-3 font-mono text-xs">{masked}</td>
-  <td class="p-3 text-xs text-muted-foreground">{scopes}</td>
-  <td class="p-3 text-xs text-muted-foreground">{created}</td>
+  <td class="p-3 font-medium">{escape(str(name))}</td>
+  <td class="p-3 font-mono text-xs">{escape(str(masked))}</td>
+  <td class="p-3 text-xs text-muted-foreground">{escape(str(scopes))}</td>
+  <td class="p-3 text-xs text-muted-foreground">{escape(str(created))}</td>
   <td class="p-3 text-right">
-    <button hx-delete="/api/auth/keys/{key_id}" hx-confirm="Are you sure you want to revoke this API key?"
+    <button hx-delete="/api/auth/keys/{escape(str(key_id))}" hx-confirm="Are you sure you want to revoke this API key?"
             class="text-xs text-destructive hover:underline">Revoke</button>
   </td>
 </tr>'''
@@ -145,7 +146,7 @@ class APIKeyManager(Component):
       <h3 class="text-lg font-semibold tracking-tight">API Key Management</h3>
       <p class="text-sm text-muted-foreground">Authenticate automated scripts, ML pipelines, and external integrations.</p>
     </div>
-    <button onclick="let name=prompt('Enter key name:'); if(name) fetch('/api/auth/keys', {{method:'POST', headers:{{'Content-Type':'application/json'}}, body:JSON.stringify({{name:name}})}}).then(r=>r.json()).then(d=>alert('Key created: ' + d.key.key)).then(()=>location.reload())"
+    <button onclick="let name=prompt('Enter key name:'); if(name) fetch('/api/auth/keys', {{method:'POST', headers:{{'Content-Type':'application/json','X-CSRF-Token':document.querySelector('meta[name=pdu-csrf-token]').content}}, body:JSON.stringify({{name:name}})}}).then(r=>r.json()).then(d=>alert('Key created: ' + d.key.key)).then(()=>location.reload())"
             class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 transition-colors">
       + Generate API Key
     </button>
@@ -185,6 +186,6 @@ class AuthGuard(Component):
         return (
             f'<div class="flex flex-col items-center justify-center p-8 text-center">'
             f'<p class="text-muted-foreground mb-4">Authentication required to view this content.</p>'
-            f'<a href="{self.redirect_to}" class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 transition-colors">Sign In</a>'
+            f'<a href="{escape(str(self.redirect_to))}" class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 transition-colors">Sign In</a>'
             f'</div>'
         )

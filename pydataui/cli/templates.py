@@ -274,10 +274,10 @@ if __name__ == "__main__":
 
     "auth": '''from pydataui import App, State
 from pydataui.components import Container, Card, Heading, Text, Flex
-from pydataui.auth import AuthManager, LoginPage, UserMenu, APIKeyManager, require_auth, User, Role
+from pydataui.auth import AuthManager, LoginPage, UserMenu, APIKeyManager, require_auth, User, Role, current_user
 
 app = App(title="PyDataUI Workspace with Auth")
-auth_mgr = AuthManager(secret_key="my-super-secret-key-12345")
+auth_mgr = AuthManager()
 
 # Seed initial users
 admin_user = auth_mgr.add_user("admin", "admin123", email="admin@org.com", roles=[Role.ADMIN, Role.DATA_ENGINEER])
@@ -294,11 +294,12 @@ def login_page():
 
 @app.page("/")
 def dashboard():
-    keys = auth_mgr.list_api_keys(admin_user.id)
+    user = current_user.get()
+    keys = auth_mgr.list_api_keys(user.id) if user else []
     return Container(
         Flex(
             Heading("Data Science Control Panel", level=1),
-            UserMenu(admin_user),
+            UserMenu(user),
             justify="space-between", align="center", margin_bottom="lg"
         ),
         Card(

@@ -8,10 +8,15 @@ from .auth import (
     LoginState, current_user
 )
 from .tunnel import TunnelManager
+from .storage import (
+    BaseSessionStore, BaseAuthStore,
+    MemorySessionStore, MemoryAuthStore,
+    SQLiteSessionStore, SQLiteAuthStore,
+)
 from .components.base import Component, RawHtml, Html
 from . import html
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 __all__ = [
     'App',
@@ -30,6 +35,12 @@ __all__ = [
     'LoginState',
     'current_user',
     'TunnelManager',
+    'BaseSessionStore',
+    'BaseAuthStore',
+    'MemorySessionStore',
+    'MemoryAuthStore',
+    'SQLiteSessionStore',
+    'SQLiteAuthStore',
     'Component',
     'RawHtml',
     'Html',

@@ -263,7 +263,7 @@ _META_PASSTHROUGH = frozenset({
     '__abstractmethods__', '__flags__',
     # Our own helpers that must stay accessible:
     '_registry', 'get_state_vars', 'get_event_handlers',
-    'to_dict', '_class_store',
+    'to_dict', '_class_store', 'get_public_state_vars', 'get_input_fields',
 })
 
 
@@ -406,19 +406,26 @@ class State(metaclass=StateMeta):
             self.__dict__[name] = copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default
 
     @hybridmethod
-    def to_dict(self_or_cls: Any) -> Dict[str, Any]:
+    def to_dict(self_or_cls: Any, include_private: bool = False) -> Dict[str, Any]:
         """Serialize current state to a plain dictionary (works on class or instance)."""
+        fields = self_or_cls.get_state_vars() if include_private else self_or_cls.get_public_state_vars()
         if isinstance(self_or_cls, type):
             store = getattr(self_or_cls, '_class_store', {})
-            return {name: store.get(name, var.default) for name, var in self_or_cls.get_state_vars().items()}
-        return {name: getattr(self_or_cls, name) for name in self_or_cls.get_state_vars()}
+            return {name: store.get(name, var.default) for name, var in fields.items()}
+        return {name: getattr(self_or_cls, name) for name in fields}
 
     def from_dict(self, data: Dict[str, Any]) -> None:
-        """Bulk-update state from a dictionary."""
-        vars_dict = self.get_state_vars()
-        for k, v in data.items():
-            if k in vars_dict:
-                setattr(self, k, v)
+        """Validate client-editable inputs atomically; reject unknown/read-only fields."""
+        from pydantic import TypeAdapter
+        from typing import get_type_hints
+        allowed = self.get_input_fields()
+        if not isinstance(data, dict) or any(k not in allowed for k in data):
+            raise ValueError('Unknown or read-only input field')
+        annotations = get_type_hints(type(self))
+        pending = {k: TypeAdapter(annotations.get(k, Any)).validate_python(v)
+                   for k, v in data.items()}
+        for k, v in pending.items():
+            setattr(self, k, v)
 
     @hybridmethod
     def reset(self_or_cls: Any) -> None:
@@ -431,18 +438,45 @@ class State(metaclass=StateMeta):
         for name, var in self_or_cls.get_state_vars().items():
             setattr(self_or_cls, name, copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default)
 
+    # Set __api__ = False to keep a state off generated REST routes.
+    # Set __actions__ to a collection to explicitly limit remotely callable methods.
+    __api__ = True
+    __actions__ = None
+    __private_fields__ = ()
+    __readonly_fields__ = ()
+    __input_fields__ = None
+    __roles__ = ()
+
+    @classmethod
+    def get_public_state_vars(cls):
+        private = set(cls.__private_fields__)
+        sensitive = {'password', 'password_hash', 'token', 'access_token', 'refresh_token',
+                     'api_key', 'secret', 'secret_key'}
+        return {k: v for k, v in cls.get_state_vars().items()
+                if k not in private and k.lower() not in sensitive}
+
+    @classmethod
+    def get_input_fields(cls):
+        # Private serialization fields can be explicit inputs (e.g. login password).
+        declared = cls.__input_fields__
+        available = cls.get_public_state_vars() if declared is None else cls.get_state_vars()
+        return set(available if declared is None else declared) - set(cls.__readonly_fields__)
+
     @classmethod
     def get_event_handlers(cls) -> Dict[str, Callable]:
-        """Return a dict of {name: function} for all public methods."""
-        handlers: Dict[str, Callable] = {}
-        for name in list(cls.__dict__):
-            if name.startswith('_'):
+        """Only public user actions (plus the documented reset action) are callable."""
+        handlers = {}
+        for klass in reversed(cls.__mro__):
+            if klass is State:
                 continue
-            attr = cls.__dict__[name]
-            if callable(attr) and not isinstance(
-                attr, (classmethod, staticmethod, type, StateVar)
-            ):
-                handlers[name] = attr
+            for name, attr in klass.__dict__.items():
+                if not name.startswith('_') and callable(attr) and not isinstance(
+                    attr, (classmethod, staticmethod, type, StateVar, hybridmethod)
+                ):
+                    handlers[name] = attr
+        handlers.setdefault('reset', State.__dict__['reset'])
+        if cls.__actions__ is not None:
+            handlers = {k: v for k, v in handlers.items() if k in cls.__actions__}
         return handlers
 
     @classmethod

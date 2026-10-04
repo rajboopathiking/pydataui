@@ -171,21 +171,77 @@ When running multiple independent VM or Kubernetes pod replicas that do not moun
 
 ---
 
-## 5. Production Pre-Flight Checklist
+## 5. Architectural Honesty: Framework Constraints vs. Application Usage Patterns
+
+A common question when evaluating PyDataUI against Django is:
+> *"Does PyDataUI have framework-level constraints that prevent it from being production-grade, or are the remaining differences simply application-level usage patterns?"*
+
+There is a vital distinction between a **core framework constraint** and an **application usage pattern**:
+
+| Category | Definition | Status in PyDataUI |
+|---|---|---|
+| **Framework Constraint** *(Engine Level)* | A hard architectural wall where the framework itself prevented multi-worker scaling or cross-process concurrency without changing core framework internals. | **SOLVED in v0.2.1.** The Pluggable Storage Engine (`pydataui.storage` with SQLite WAL mode) enables cross-process multi-worker scaling (`workers=4+`) with zero external infrastructure. |
+| **Application Usage Pattern** *(Userland Level)* | Architectural choices that developers naturally handle in userland code, external configuration, or infrastructure. | **No framework fix needed.** These are standard Bring-Your-Own (BYO) developer choices. |
+
+### How Common "Missing Monolith Features" Are Solved Naturally by Usage:
+
+#### 1. Database & ORM: Freedom of Choice (Often an Advantage!)
+Unlike Django, which binds you to Django ORM with heavy relational abstractions and slow migrations, modern data and AI teams **prefer freedom of data tooling**.
+* **Solved by Usage**: You connect directly to high-performance analytics engines inside your state or service methods:
+  ```python
+  import duckdb
+  from pydataui import State
+
+  con = duckdb.connect("analytics.duckdb")
+
+  class SalesDashboard(State):
+      total_revenue: float = 0.0
+
+      def load_metrics(self):
+          # Query millions of rows with sub-second DuckDB / Polars speed
+          df = con.execute("SELECT sum(amount) FROM transactions").df()
+          self.total_revenue = float(df.iloc[0, 0])
+  ```
+  Whether using **SQLAlchemy**, **DuckDB**, **Polars**, **ClickHouse**, or **Snowflake**, it works natively with zero framework friction.
+
+#### 2. Air-Gapped / Offline Environments: Built-in Static Assets
+Air-gapped enterprise intranets cannot load CDN scripts or stylesheets.
+* **Solved by Usage**: PyDataUI already supports custom static directories and local stylesheets:
+  ```python
+  app = App(
+      title="Air-Gapped Secure App",
+      static_dir="./static",
+      stylesheets=["/_pdu/static/tailwind.min.css"]  # Pre-compiled local CSS
+  )
+  ```
+  No external CDN request is ever made.
+
+#### 3. Enterprise SSO / OAuth: Reverse Proxy & Ingress Layer
+In enterprise production architectures (Kubernetes, AWS, Azure, GCP), internal dashboards are rarely tasked with low-level SAML/OIDC certificate handshakes.
+* **Solved by Usage**: Production deployments terminate authentication at the ingress/proxy layer using:
+  * **OAuth2-Proxy** (Kubernetes Ingress / Nginx)
+  * **Cloudflare Access / Zero Trust**
+  * **AWS Application Load Balancer (ALB) OIDC authentication**
+
+  The proxy handles Okta/Google/AzureAD login and forwards the authenticated user in standard HTTP headers (`X-Forwarded-User`, `X-Forwarded-Email`), which PyDataUI easily reads from `request.headers`.
+
+---
+
+## 6. Production Pre-Flight Checklist
 
 Before launching your PyDataUI application to production:
 
 - [ ] **Set `PYDATAUI_DEBUG=false`**: Suppresses internal error tracebacks from client responses.
 - [ ] **Set `PYDATAUI_COOKIE_SECURE=true`**: Ensures session cookies are transmitted only over TLS/HTTPS.
-- [ ] **Generate Stable Secret**: Provide `PYDATAUI_AUTH_SECRET` via environment variable (do not rely on process-local generated keys in production).
-- [ ] **Review Route Security**: Ensure sensitive admin pages do not have `public=True` and have appropriate `roles=(Role.ADMIN,)` restrictions.
-- [ ] **Narrow Actions**: Explicitly define `__actions__ = ("my_method",)` on all reactive `State` classes to restrict callable methods.
-- [ ] **Single Process Mode**: Run with `--workers 1` or configure sticky sessions on your reverse proxy.
+- [ ] **Generate Stable Secret**: Provide `PYDATAUI_AUTH_SECRET` via environment variable (do not rely on auto-generated secrets across restarts).
+- [ ] **Review Route Security**: Ensure sensitive pages do not have `public=True` and have appropriate `roles=(Role.ADMIN,)` restrictions.
+- [ ] **Narrow Actions**: Explicitly define `__actions__ = ("my_method",)` on reactive `State` classes to restrict callable methods.
+- [ ] **Multi-Worker Storage**: Set `PYDATAUI_STORAGE="sqlite:///path/to/storage.db"` or let PyDataUI auto-configure `.pydataui_storage.db` when running with `--workers 4+`.
 - [ ] **Configure Health Check**: Point load balancers and orchestrators to `GET /_pdu/health` (returns HTTP 200 `{"status": "ok"}`).
 
 ---
 
-## 6. Roadmap to v0.3.0
+## 7. Roadmap to v0.3.0
 
 To achieve distributed, multi-region enterprise clustering:
 1. **Pluggable Session Backends**: Optional Redis and PostgreSQL session adapters (`SessionManager(backend="redis://...")`).

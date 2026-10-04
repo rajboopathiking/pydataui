@@ -713,4 +713,4 @@ if __name__ == "__main__":
     print("  • Demo Admin Account: admin@ai.com / admin123")
     print("  • Multi-Worker Ready: SQLite WAL backend at .ai_metrics.db")
     print("=" * 70 + "\n")
-    app.run(workers=2, share=True, reload=True)
+    app.run(workers=2, share=True)

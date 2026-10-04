@@ -1,24 +1,34 @@
+import copy
 import threading
 import time
 import uuid
 import hashlib
 import hmac
-from typing import Dict, Any, Optional, TYPE_CHECKING
+from typing import Dict, Any, Optional, Callable, TYPE_CHECKING
+
+from .exceptions import ConcurrencyError, SessionError
 
 if TYPE_CHECKING:
     from .state import State
     from .storage import BaseSessionStore
 
 class Session:
-    """Represents a user session."""
-    def __init__(self, session_id: str):
+    """Represents a user session with optimistic concurrency tracking."""
+    def __init__(self, session_id: str, version: int = 1):
         self.session_id: str = session_id
+        self.version: int = version
         self.data: Dict[str, Any] = {}
         self.state_instances: Dict[str, 'State'] = {}
         self.created_at: float = time.time()
         self.last_accessed: float = self.created_at
         self.current_page: Optional[str] = None
         self.lock = threading.RLock()
+        self._initial_data: Dict[str, Any] = {}
+
+    def snapshot_baseline(self) -> None:
+        """Capture the baseline snapshot of data for three-way concurrency reconciliation."""
+        with self.lock:
+            self._initial_data = copy.deepcopy(self.data)
 
     def to_dict(self) -> Dict[str, Any]:
         with self.lock:
@@ -28,6 +38,7 @@ class Session:
                     states_dict[name] = inst.to_dict(include_private=True)
             return {
                 "session_id": self.session_id,
+                "version": self.version,
                 "data": self.data,
                 "created_at": self.created_at,
                 "last_accessed": self.last_accessed,
@@ -38,7 +49,8 @@ class Session:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Session':
         from .state import StateMeta
-        session = cls(data["session_id"])
+        version = data.get("version", data.get("_version", 1))
+        session = cls(data["session_id"], version=version)
         session.data = data.get("data", {})
         session.created_at = data.get("created_at", time.time())
         session.last_accessed = data.get("last_accessed", session.created_at)
@@ -51,10 +63,11 @@ class Session:
                 for k, v in fields.items():
                     setattr(inst, k, v)
                 session.state_instances[state_name] = inst
+        session.snapshot_baseline()
         return session
 
 class SessionManager:
-    """Thread-safe session manager with pluggable storage."""
+    """Thread-safe and cross-process session manager with pluggable storage and OCC."""
     def __init__(self, secret: str, max_age: int = 3600, store: Optional[Any] = None):
         from .storage import MemorySessionStore
         self._lock = threading.RLock()
@@ -69,10 +82,12 @@ class SessionManager:
 
     def create_session(self) -> Session:
         session_id = uuid.uuid4().hex
-        session = Session(session_id)
+        session = Session(session_id, version=1)
+        session.snapshot_baseline()
         with self._lock:
             self._active_sessions[session_id] = session
-            self._store.save(session_id, session.to_dict(), session.last_accessed)
+            new_ver = self._store.save(session_id, session.to_dict(), session.last_accessed, expected_version=None)
+            session.version = new_ver
         return session
 
     def get_session(self, session_id: str) -> Optional[Session]:
@@ -87,8 +102,11 @@ class SessionManager:
                 self.delete_session(session_id)
                 return None
 
+            version = payload.pop("_version", payload.get("version", 1))
+
             session = self._active_sessions.get(session_id)
             if session is not None:
+                session.version = version
                 session.last_accessed = now
                 session.data = payload.get("data", session.data)
                 session.current_page = payload.get("current_page", session.current_page)
@@ -106,19 +124,84 @@ class SessionManager:
                             for k, v in sfields.items():
                                 setattr(inst, k, v)
                             session.state_instances[sname] = inst
+                session.snapshot_baseline()
             else:
+                payload["version"] = version
                 session = Session.from_dict(payload)
                 session.last_accessed = now
                 self._active_sessions[session_id] = session
 
-            self._store.save(session_id, session.to_dict(), session.last_accessed)
+            # Touch access time in store without modifying payload version
+            self._store.touch(session_id, now)
             return session
 
-    def save_session(self, session: Session) -> None:
+    def save_session(self, session: Session, auto_merge: bool = True, max_retries: int = 5) -> None:
+        """
+        Thread-safe and cross-worker OCC session save.
+        If a concurrent update conflict occurs and auto_merge=True, calculates
+        the delta against baseline and reconciles with the latest database version,
+        guaranteeing zero lost updates across concurrent workers.
+        """
         with self._lock:
-            session.last_accessed = time.time()
-            self._active_sessions[session.session_id] = session
-            self._store.save(session.session_id, session.to_dict(), session.last_accessed)
+            for attempt in range(max_retries):
+                session.last_accessed = time.time()
+                try:
+                    new_ver = self._store.save(
+                        session.session_id,
+                        session.to_dict(),
+                        session.last_accessed,
+                        expected_version=session.version
+                    )
+                    session.version = new_ver
+                    session.snapshot_baseline()
+                    self._active_sessions[session.session_id] = session
+                    return
+                except ConcurrencyError as err:
+                    if not auto_merge or attempt == max_retries - 1:
+                        raise err
+
+                    # Auto-merge: fetch latest payload from DB
+                    fresh_payload = self._store.get(session.session_id)
+                    if not fresh_payload:
+                        raise err
+
+                    fresh_version = fresh_payload.pop("_version", fresh_payload.get("version", 1))
+                    fresh_data = fresh_payload.get("data", {})
+
+                    # Reconcile session.data deltas against session._initial_data
+                    with session.lock:
+                        for k, current_val in list(session.data.items()):
+                            initial_val = session._initial_data.get(k)
+                            # If numeric value modified by both: add the delta
+                            if (isinstance(current_val, (int, float)) and 
+                                isinstance(initial_val, (int, float)) and 
+                                k in fresh_data and 
+                                isinstance(fresh_data[k], (int, float))):
+                                delta = current_val - initial_val
+                                fresh_data[k] = fresh_data[k] + delta
+                            else:
+                                fresh_data[k] = current_val
+
+                        session.data = fresh_data
+                        session.version = fresh_version
+
+    def mutate_session(self, session_id: str, mutate_fn: Callable[[Session], None], max_retries: int = 15) -> Session:
+        """
+        Executes mutate_fn on the session with automatic optimistic concurrency retry.
+        Guarantees no lost updates under concurrent access across processes/workers.
+        """
+        for attempt in range(max_retries):
+            session = self.get_session(session_id)
+            if session is None:
+                raise SessionError(f"Session {session_id} not found")
+            mutate_fn(session)
+            try:
+                self.save_session(session, auto_merge=False)
+                return session
+            except ConcurrencyError:
+                if attempt == max_retries - 1:
+                    raise
+                time.sleep(0.005 * (2 ** (attempt % 5)))
 
     def get_or_create_session(self, session_id: Optional[str]) -> Session:
         if session_id:

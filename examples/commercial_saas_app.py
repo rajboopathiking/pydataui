@@ -45,23 +45,29 @@ app = App(
     palette="zinc"
 )
 
-auth = AuthManager(secret_key=os.environ.get("PYDATAUI_AUTH_SECRET", "ai-metrics-enterprise-secret-key-32bytes!"))
+is_prod = os.environ.get("PYDATAUI_ENV", "").lower() in ("production", "prod")
+auth_secret = os.environ.get("PYDATAUI_AUTH_SECRET")
+if not auth_secret:
+    if is_prod:
+        raise ValueError("FATAL: PYDATAUI_AUTH_SECRET environment variable is strictly required in production mode!")
+    auth_secret = "ai-metrics-enterprise-dev-secret-key-32bytes-min!"
 
-# Seed Enterprise Accounts (idempotent across restarts)
-admin_user = auth.get_or_create_user(
-    "admin@ai.com", "admin123",
-    email="admin@ai.com",
-    roles=[Role.ADMIN, Role.ML_ENGINEER]
-)
-dev_user = auth.get_or_create_user(
-    "developer@ai.com", "developer123",
-    email="dev@ai.com",
-    roles=[Role.ML_ENGINEER, Role.USER]
-)
+auth = AuthManager(secret_key=auth_secret)
 
-# Seed Gateway API Key if not present
-if not auth.list_api_keys(admin_user.id):
-    auth.create_api_key("Production-Inference-Gateway", admin_user.id, scopes=["read", "write"])
+# Seed Enterprise Demo Accounts (Development & Pilot evaluation only)
+if not is_prod:
+    admin_user = auth.get_or_create_user(
+        "admin@ai.com", "admin123",
+        email="admin@ai.com",
+        roles=[Role.ADMIN, Role.ML_ENGINEER]
+    )
+    dev_user = auth.get_or_create_user(
+        "developer@ai.com", "developer123",
+        email="dev@ai.com",
+        roles=[Role.ML_ENGINEER, Role.USER]
+    )
+    if not auth.list_api_keys(admin_user.id):
+        auth.create_api_key("Production-Inference-Gateway", admin_user.id, scopes=["read", "write"])
 
 app.setup_auth(auth)
 

@@ -29,3 +29,13 @@ htmlcov/
 # Distribution
 *.tar.gz
 *.whl
+
+# Local Storage & SQLite
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+.pydataui_storage*
+.pulse_metrics*
+.*.db*

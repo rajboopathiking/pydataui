@@ -20,6 +20,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import asdict
 
 from .auth.models import User, APIKey
+from .exceptions import ConcurrencyError
 
 
 # ==============================================================================
@@ -33,8 +34,16 @@ class BaseSessionStore(ABC):
         pass
 
     @abstractmethod
-    def save(self, session_id: str, payload: Dict[str, Any], last_accessed: float) -> None:
-        """Save session payload."""
+    def save(self, session_id: str, payload: Dict[str, Any], last_accessed: float, expected_version: Optional[int] = None) -> int:
+        """
+        Save session payload with optimistic concurrency control.
+        Returns the new version integer. Raises ConcurrencyError on conflict.
+        """
+        pass
+
+    @abstractmethod
+    def touch(self, session_id: str, last_accessed: float) -> None:
+        """Update last_accessed timestamp without modifying payload or version."""
         pass
 
     @abstractmethod
@@ -85,6 +94,21 @@ class BaseAuthStore(ABC):
     def revoke_token(self, jti: str, exp: float) -> None:
         pass
 
+    @abstractmethod
+    def record_failed_login(self, key: str, window_seconds: int = 900, max_attempts: int = 5, lockout_seconds: int = 900) -> Tuple[bool, int]:
+        """Record failed login attempt. Returns (is_locked_out: bool, remaining_seconds: int)."""
+        pass
+
+    @abstractmethod
+    def is_login_locked(self, key: str) -> Tuple[bool, int]:
+        """Check if key is locked out. Returns (is_locked: bool, remaining_seconds: int)."""
+        pass
+
+    @abstractmethod
+    def reset_failed_logins(self, key: str) -> None:
+        """Reset failed login attempts on successful login."""
+        pass
+
 
 # ==============================================================================
 # In-Memory Storage Implementations (Default)
@@ -92,19 +116,41 @@ class BaseAuthStore(ABC):
 
 class MemorySessionStore(BaseSessionStore):
     def __init__(self):
-        self._sessions: Dict[str, Tuple[Dict[str, Any], float]] = {}
+        # session_id -> (payload, last_accessed, version)
+        self._sessions: Dict[str, Tuple[Dict[str, Any], float, int]] = {}
         self._lock = threading.RLock()
 
     def get(self, session_id: str) -> Optional[Dict[str, Any]]:
         with self._lock:
             record = self._sessions.get(session_id)
             if record:
-                return record[0]
+                payload = dict(record[0])
+                payload["_version"] = record[2]
+                return payload
             return None
 
-    def save(self, session_id: str, payload: Dict[str, Any], last_accessed: float) -> None:
+    def save(self, session_id: str, payload: Dict[str, Any], last_accessed: float, expected_version: Optional[int] = None) -> int:
         with self._lock:
-            self._sessions[session_id] = (payload, last_accessed)
+            record = self._sessions.get(session_id)
+            if expected_version is not None and record is not None:
+                curr_ver = record[2]
+                if curr_ver != expected_version:
+                    raise ConcurrencyError(
+                        f"Concurrent update conflict for session '{session_id}': expected version {expected_version}, found {curr_ver}."
+                    )
+                new_ver = curr_ver + 1
+            elif record is not None:
+                new_ver = record[2] + 1
+            else:
+                new_ver = 1
+            self._sessions[session_id] = (payload, last_accessed, new_ver)
+            return new_ver
+
+    def touch(self, session_id: str, last_accessed: float) -> None:
+        with self._lock:
+            record = self._sessions.get(session_id)
+            if record:
+                self._sessions[session_id] = (record[0], last_accessed, record[2])
 
     def delete(self, session_id: str) -> None:
         with self._lock:
@@ -113,7 +159,7 @@ class MemorySessionStore(BaseSessionStore):
     def cleanup_expired(self, max_age: int) -> int:
         now = time.time()
         with self._lock:
-            expired = [sid for sid, (_, la) in self._sessions.items() if now - la > max_age]
+            expired = [sid for sid, (_, la, _) in self._sessions.items() if now - la > max_age]
             for sid in expired:
                 del self._sessions[sid]
             return len(expired)
@@ -125,6 +171,8 @@ class MemoryAuthStore(BaseAuthStore):
         self._users_by_username: Dict[str, str] = {}
         self._api_keys: Dict[str, APIKey] = {}
         self._revoked_tokens: Dict[str, float] = {}
+        # key -> (attempts: int, last_attempt: float, locked_until: float)
+        self._login_attempts: Dict[str, Tuple[int, float, float]] = {}
         self._lock = threading.RLock()
 
     def get_user(self, user_id: str) -> Optional[User]:
@@ -167,6 +215,45 @@ class MemoryAuthStore(BaseAuthStore):
         with self._lock:
             self._revoked_tokens[jti] = exp
 
+    def record_failed_login(self, key: str, window_seconds: int = 900, max_attempts: int = 5, lockout_seconds: int = 900) -> Tuple[bool, int]:
+        now = time.time()
+        with self._lock:
+            record = self._login_attempts.get(key)
+            if record:
+                attempts, last_attempt, locked_until = record
+                if locked_until > now:
+                    return True, int(locked_until - now)
+                if now - last_attempt > window_seconds:
+                    attempts = 1
+                else:
+                    attempts += 1
+            else:
+                attempts = 1
+                locked_until = 0.0
+
+            if attempts >= max_attempts:
+                locked_until = now + lockout_seconds
+                self._login_attempts[key] = (attempts, now, locked_until)
+                return True, lockout_seconds
+
+            self._login_attempts[key] = (attempts, now, 0.0)
+            return False, 0
+
+    def is_login_locked(self, key: str) -> Tuple[bool, int]:
+        now = time.time()
+        with self._lock:
+            record = self._login_attempts.get(key)
+            if not record:
+                return False, 0
+            attempts, last_attempt, locked_until = record
+            if locked_until > now:
+                return True, int(locked_until - now)
+            return False, 0
+
+    def reset_failed_logins(self, key: str) -> None:
+        with self._lock:
+            self._login_attempts.pop(key, None)
+
 
 # ==============================================================================
 # SQLite Multi-Process Persistent Storage (WAL Mode)
@@ -203,36 +290,124 @@ class SQLiteSessionStore(BaseSessionStore):
                 CREATE TABLE IF NOT EXISTS pdu_sessions (
                     session_id TEXT PRIMARY KEY,
                     payload TEXT NOT NULL,
-                    last_accessed REAL NOT NULL
+                    last_accessed REAL NOT NULL,
+                    version INTEGER NOT NULL DEFAULT 1
                 );
             """)
             conn.execute("CREATE INDEX IF NOT EXISTS idx_pdu_sessions_accessed ON pdu_sessions(last_accessed);")
+            
+            # Migration check for existing databases lacking version column
+            cursor = conn.cursor()
+            cursor.execute("PRAGMA table_info(pdu_sessions);")
+            cols = [row[1] for row in cursor.fetchall()]
+            if "version" not in cols:
+                conn.execute("ALTER TABLE pdu_sessions ADD COLUMN version INTEGER NOT NULL DEFAULT 1;")
+
+            # Cluster metadata table for cross-worker secrets
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS pdu_cluster_metadata (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL
+                );
+            """)
             conn.commit()
         finally:
             conn.close()
 
+    def get_or_create_cluster_secret(self, key_name: str = "cluster_session_secret") -> str:
+        """
+        Retrieves or initializes a cluster-wide high-entropy HMAC secret shared across all workers.
+        Guarantees that independent worker processes accept each other's signed cookies by default.
+        """
+        import secrets
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM pdu_cluster_metadata WHERE key = ?", (key_name,))
+        row = cursor.fetchone()
+        if row:
+            return row[0]
+        
+        new_secret = secrets.token_hex(32)
+        try:
+            conn.execute("""
+                INSERT INTO pdu_cluster_metadata (key, value)
+                VALUES (?, ?)
+                ON CONFLICT(key) DO NOTHING
+            """, (key_name, new_secret))
+            conn.commit()
+        except sqlite3.IntegrityError:
+            pass
+            
+        cursor.execute("SELECT value FROM pdu_cluster_metadata WHERE key = ?", (key_name,))
+        row = cursor.fetchone()
+        return row[0] if row else new_secret
+
     def get(self, session_id: str) -> Optional[Dict[str, Any]]:
         conn = self._get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT payload FROM pdu_sessions WHERE session_id = ?", (session_id,))
+        cursor.execute("SELECT payload, version FROM pdu_sessions WHERE session_id = ?", (session_id,))
         row = cursor.fetchone()
         if not row:
             return None
         try:
-            return json.loads(row[0])
+            payload = json.loads(row[0])
+            payload["_version"] = row[1]
+            return payload
         except Exception:
             return None
 
-    def save(self, session_id: str, payload: Dict[str, Any], last_accessed: float) -> None:
+    def save(self, session_id: str, payload: Dict[str, Any], last_accessed: float, expected_version: Optional[int] = None) -> int:
         conn = self._get_connection()
         data_str = json.dumps(payload)
-        conn.execute("""
-            INSERT INTO pdu_sessions (session_id, payload, last_accessed)
-            VALUES (?, ?, ?)
-            ON CONFLICT(session_id) DO UPDATE SET
-                payload = excluded.payload,
-                last_accessed = excluded.last_accessed
-        """, (session_id, data_str, last_accessed))
+        cursor = conn.cursor()
+
+        if expected_version is not None:
+            cursor.execute("SELECT version FROM pdu_sessions WHERE session_id = ?", (session_id,))
+            existing = cursor.fetchone()
+            if existing is None:
+                new_ver = 1
+                conn.execute("""
+                    INSERT INTO pdu_sessions (session_id, payload, last_accessed, version)
+                    VALUES (?, ?, ?, ?)
+                """, (session_id, data_str, last_accessed, new_ver))
+                conn.commit()
+                return new_ver
+            else:
+                curr_ver = existing[0]
+                if curr_ver != expected_version:
+                    raise ConcurrencyError(
+                        f"Concurrent update conflict for session '{session_id}': expected version {expected_version}, but found {curr_ver}."
+                    )
+                new_ver = curr_ver + 1
+                cursor.execute("""
+                    UPDATE pdu_sessions
+                    SET payload = ?, last_accessed = ?, version = ?
+                    WHERE session_id = ? AND version = ?
+                """, (data_str, last_accessed, new_ver, session_id, expected_version))
+                if cursor.rowcount == 0:
+                    conn.rollback()
+                    raise ConcurrencyError(
+                        f"Concurrent update race condition for session '{session_id}'."
+                    )
+                conn.commit()
+                return new_ver
+        else:
+            cursor.execute("""
+                INSERT INTO pdu_sessions (session_id, payload, last_accessed, version)
+                VALUES (?, ?, ?, 1)
+                ON CONFLICT(session_id) DO UPDATE SET
+                    payload = excluded.payload,
+                    last_accessed = excluded.last_accessed,
+                    version = pdu_sessions.version + 1
+            """, (session_id, data_str, last_accessed))
+            conn.commit()
+            cursor.execute("SELECT version FROM pdu_sessions WHERE session_id = ?", (session_id,))
+            row = cursor.fetchone()
+            return row[0] if row else 1
+
+    def touch(self, session_id: str, last_accessed: float) -> None:
+        conn = self._get_connection()
+        conn.execute("UPDATE pdu_sessions SET last_accessed = ? WHERE session_id = ?", (last_accessed, session_id))
         conn.commit()
 
     def delete(self, session_id: str) -> None:
@@ -308,6 +483,14 @@ class SQLiteAuthStore(BaseAuthStore):
                     exp REAL NOT NULL
                 );
             """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS pdu_login_attempts (
+                    key TEXT PRIMARY KEY,
+                    attempts INTEGER NOT NULL,
+                    last_attempt REAL NOT NULL,
+                    locked_until REAL NOT NULL
+                );
+            """)
             conn.commit()
         finally:
             conn.close()
@@ -355,6 +538,12 @@ class SQLiteAuthStore(BaseAuthStore):
 
     def save_user(self, user: User) -> None:
         conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM pdu_users WHERE username = ?", (user.username,))
+        existing = cursor.fetchone()
+        if existing and existing[0] != user.id:
+            user.id = existing[0]
+
         conn.execute("""
             INSERT INTO pdu_users (id, username, email, password_hash, roles, is_active, created_at, last_login, metadata)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -438,6 +627,67 @@ class SQLiteAuthStore(BaseAuthStore):
             ON CONFLICT(jti) DO UPDATE SET exp = excluded.exp
         """, (jti, exp))
         conn.commit()
+
+    def record_failed_login(self, key: str, window_seconds: int = 900, max_attempts: int = 5, lockout_seconds: int = 900) -> Tuple[bool, int]:
+        now = time.time()
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT attempts, last_attempt, locked_until FROM pdu_login_attempts WHERE key = ?", (key,))
+        row = cursor.fetchone()
+        if row:
+            attempts, last_attempt, locked_until = row
+            if locked_until > now:
+                return True, int(locked_until - now)
+            if now - last_attempt > window_seconds:
+                attempts = 1
+            else:
+                attempts += 1
+        else:
+            attempts = 1
+            locked_until = 0.0
+
+        if attempts >= max_attempts:
+            locked_until = now + lockout_seconds
+            conn.execute("""
+                INSERT INTO pdu_login_attempts (key, attempts, last_attempt, locked_until)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(key) DO UPDATE SET
+                    attempts = excluded.attempts,
+                    last_attempt = excluded.last_attempt,
+                    locked_until = excluded.locked_until
+            """, (key, attempts, now, locked_until))
+            conn.commit()
+            return True, lockout_seconds
+
+        conn.execute("""
+            INSERT INTO pdu_login_attempts (key, attempts, last_attempt, locked_until)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(key) DO UPDATE SET
+                attempts = excluded.attempts,
+                last_attempt = excluded.last_attempt,
+                locked_until = excluded.locked_until
+        """, (key, attempts, now, 0.0))
+        conn.commit()
+        return False, 0
+
+    def is_login_locked(self, key: str) -> Tuple[bool, int]:
+        now = time.time()
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT locked_until FROM pdu_login_attempts WHERE key = ?", (key,))
+        row = cursor.fetchone()
+        if not row:
+            return False, 0
+        locked_until = row[0]
+        if locked_until > now:
+            return True, int(locked_until - now)
+        return False, 0
+
+    def reset_failed_logins(self, key: str) -> None:
+        conn = self._get_connection()
+        conn.execute("DELETE FROM pdu_login_attempts WHERE key = ?", (key,))
+        conn.commit()
+
 
 
 # ==============================================================================

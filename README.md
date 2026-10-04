@@ -276,6 +276,20 @@ PyDataUI includes modern Tailwind and shadcn/ui components:
 
 ---
 
+### 💼 Commercial SaaS Application Example
+
+Experience an enterprise-grade AI gateway and subscription billing platform built entirely with PyDataUI:
+
+```bash
+python examples/commercial_saas_app.py
+```
+
+* **Executive Observability**: Live KPI cards (MRR, Token Volume, P99 Latency), time-window filters (`24h`, `7d`, `30d`), and pipeline step tracking.
+* **Model Observatory**: Multi-model routing matrix (Claude 3.5 Sonnet, GPT-4o, Gemini 1.5 Pro, Llama 3 70B) with pricing and quality benchmarks.
+* **Tiered Subscription Billing**: Interactive plan cards (Starter, Growth, Enterprise Scale) with usage quota progress and automated invoice history.
+* **API Key Gateway**: Provision scoped production tokens (`pdu_live_...`) for automated pipelines.
+* **Production Persistence**: Backed by SQLite WAL cross-process storage supporting multi-worker execution out of the box.
+
 ## 🛠️ Powerful CLI
 
 Create, run, and containerize PyDataUI projects with zero boilerplate:

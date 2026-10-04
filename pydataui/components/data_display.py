@@ -5,9 +5,9 @@ from ..utils import escape_html
 
 class Table(Component):
     tag = 'table'
-    def __init__(self, data=None, columns=None, headers=None, striped=True, hoverable=True, bordered=False, compact=False, **props):
+    def __init__(self, data=None, columns=None, headers=None, striped=True, hoverable=True, bordered=False, compact=False, rows=None, **props):
         super().__init__(**props)
-        self.data = data or []
+        self.data = data if data is not None else (rows or [])
         self.columns = columns
         self.headers = headers
         self.striped = striped

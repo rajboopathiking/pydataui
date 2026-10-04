@@ -269,6 +269,7 @@ All PyDataUI settings can be configured via environment variables prefixed with 
 | `PYDATAUI_SESSION_MAX_AGE`| `86400` | Session lifetime in seconds (24 hours) |
 | `PYDATAUI_API_PREFIX` | `/api` | Base path for auto-generated REST APIs |
 | `PYDATAUI_THEME` | `light` | Default theme: `light` or `dark` |
+| `PYDATAUI_STORAGE` | Auto (`memory` or `sqlite`) | Pluggable store (`sqlite:///path/to/storage.db`) |
 
 ---
 
@@ -277,5 +278,5 @@ All PyDataUI settings can be configured via environment variables prefixed with 
 - [ ] **Secret Key**: Set `PYDATAUI_SESSION_SECRET` to a high-entropy string (e.g. `openssl rand -hex 32`).
 - [ ] **HTTPS**: Terminate SSL/TLS at your load balancer or Nginx reverse proxy.
 - [ ] **API Keys**: Revoke test keys before promoting to production.
-- [ ] **Workers**: Use one worker; shared persistent session/auth storage is not implemented.
+- [ ] **Multi-Worker Storage**: Set `PYDATAUI_STORAGE="sqlite:///path/to/storage.db"` or let PyDataUI auto-configure `.pydataui_storage.db` when running multi-worker (`--workers 4+`).
 - [ ] **CORS**: Configure `cors_origins` in `AppConfig` to restrict cross-origin API calls.

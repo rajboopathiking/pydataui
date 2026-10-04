@@ -1,3 +1,5 @@
+> See [0.2.1 migration](MIGRATION_0_2_1.md) for security defaults and state controls.
+
 # PyDataUI API Reference
 
 Complete reference for classes, functions, decorators, components, and CLI tools.
@@ -18,15 +20,15 @@ Complete reference for classes, functions, decorators, components, and CLI tools
 
 ## 1. App & Configuration
 
-### `class App(title="PyDataUI App", description="", version="0.2.0", debug=False, **kwargs)`
+### `class App(title="PyDataUI App", description="", version="0.2.1", debug=False, **kwargs)`
 The central application object integrating routing, state snapshots, REST APIs, and the pyrustapi HTTP server.
 
 #### Methods:
 - `app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)`
   Decorator registering an SSR page route. The decorated function must return a `Component` or HTML string.
-- `app.api(path: str, method: str = 'GET', **kwargs)`
+- `app.api(path: str, method: str = 'GET', public=False, roles=(), **kwargs)`
   Decorator registering a custom JSON endpoint on the underlying pyrustapi engine.
-- `app.setup_auth(auth_manager: AuthManager)`
+- `app.setup_auth(auth_manager: AuthManager, allow_registration=False)`
   Mounts `/api/auth/*` endpoints and registers authentication middleware handlers.
 - `app.run(host=None, port=None, reload=False, workers=1, share=False, auth=None)`
   Starts the HTTP server.

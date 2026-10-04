@@ -99,3 +99,34 @@ def test_app_theme_and_palette_rendering():
     assert "fonts.googleapis.com" in html_page  # stylesheet
     assert "canvas-confetti" in html_page  # script
     assert "PyDataUI Team" in html_page  # extra head tag
+
+
+@pytest.mark.anyio
+async def test_protected_page_redirects_browser_to_login():
+    from pydataui import AuthManager
+    from pydataui.auth import LoginPage
+
+    app = App()
+    auth = AuthManager()
+    auth.add_user("admin", "secret123")
+    app.setup_auth(auth)
+
+    @app.page("/login")
+    def login_page():
+        return LoginPage()
+
+    @app.page("/protected")
+    def secret_view():
+        return "Protected Data"
+
+    # API / non-browser request receives 401
+    status, _, _ = await app._engine.dispatch_request("GET", "/protected", "", {}, "")
+    assert status == 401
+
+    # Browser request receives 303 Redirect to /login
+    status, _, headers = await app._engine.dispatch_request(
+        "GET", "/protected", "", {"accept": "text/html,application/xhtml+xml"}, ""
+    )
+    assert status == 303
+    assert headers["location"] == "/login?next=/protected"
+

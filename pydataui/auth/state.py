@@ -6,6 +6,11 @@ class LoginState(State):
     Reactive State for Authentication in PyDataUI.
     Handles user login, credentials, session tokens, and logout.
     """
+    __api__ = False
+    __actions__ = ("login", "logout")
+    __input_fields__ = ("username", "password")
+    __private_fields__ = ("password", "token")
+
     username: str = ""
     password: str = ""
     error: str = ""
@@ -36,6 +41,7 @@ class LoginState(State):
             self.error = "Invalid username or password"
             self.is_authenticated = False
             self.token = ""
+        self.password = ""
             
         self.loading = False
         

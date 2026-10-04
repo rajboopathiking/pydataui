@@ -24,6 +24,6 @@ class SessionMiddleware:
         # Assuming response has a headers dict or similar mechanism
         if hasattr(response, 'headers'):
             cookie_val = self.session_manager.get_session_cookie_value(session)
-            response.headers['Set-Cookie'] = f"pdu-session={cookie_val}; Path=/; HttpOnly"
+            response.headers['Set-Cookie'] = f"pdu-session={cookie_val}; Path=/; HttpOnly; SameSite=Lax"
             
         return response

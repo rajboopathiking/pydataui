@@ -1,3 +1,6 @@
+> **0.2.1:** Read [the migration guide](MIGRATION_0_2_1.md) for changed defaults,
+> registration, protected routes, CSRF, key storage, and session lifetimes.
+
 # Authentication, Authorization & API Keys Guide
 
 PyDataUI provides a built-in enterprise authentication system designed for data platforms, analytics portals, and automated ETL pipelines.

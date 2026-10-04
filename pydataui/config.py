@@ -7,7 +7,7 @@ class AppConfig:
     
     title: str = 'PyDataUI App'
     description: str = ''
-    version: str = '0.2.0'
+    version: str = '0.2.1'
     debug: bool = False
     host: str = '127.0.0.1'
     port: int = 8000
@@ -23,10 +23,14 @@ class AppConfig:
     stylesheets: Optional[List[str]] = None
     scripts: Optional[List[str]] = None
     head: Optional[str] = None
-    cors_origins: List[str] = ['*']
+    cors_origins: List[str] = []
+    auto_api: bool = True
+    cookie_secure: bool = False
     static_dir: Optional[str] = None
+    storage: Optional[str] = None  # None / 'memory' / 'sqlite' / 'sqlite:///path/to/storage.db'
     
     def __init__(self, **kwargs: Any):
+        self.session_secret = secrets.token_hex(32)
         self.stylesheets = []
         self.scripts = []
         # Load from defaults

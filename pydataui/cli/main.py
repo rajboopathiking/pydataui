@@ -7,7 +7,7 @@ import importlib.util
 from pathlib import Path
 from pydataui.cli.templates import TEMPLATES
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 def _load_app(file_path_str: str):
     """Dynamically load and locate the PyDataUI App instance in a given file."""
@@ -60,7 +60,7 @@ def create_project(args):
         f.write(TEMPLATES.get(template, TEMPLATES["basic"]))
         
     with open(os.path.join(project_name, "requirements.txt"), "w", encoding="utf-8") as f:
-        f.write("pydataui>=0.2.0\n")
+        f.write("pydataui>=0.2.1\n")
         
     print(f"\n✨ Created PyDataUI project '{project_name}' with template '{template}'!")
     print(f"   cd {project_name}")
@@ -78,8 +78,8 @@ def run_server(args):
 
 def build_app(args):
     build_dir = args.output or "__pydataui_build__"
-    if os.path.exists(build_dir):
-        shutil.rmtree(build_dir)
+    if os.path.exists(build_dir) and os.listdir(build_dir):
+        raise ValueError("Build output directory is not empty; choose a new output directory")
     os.makedirs(build_dir, exist_ok=True)
     
     file_path = Path(args.file).resolve()
@@ -107,7 +107,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8000
-CMD ["pydataui", "run", "app.py", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+CMD ["pydataui", "run", "app.py", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
 '''
     with open(os.path.join(build_dir, "Dockerfile"), "w", encoding="utf-8") as f:
         f.write(dockerfile_content)
@@ -127,7 +127,7 @@ services:
         f.write(compose_content)
         
     with open(os.path.join(build_dir, "requirements.txt"), "w", encoding="utf-8") as f:
-        f.write("pydataui>=0.2.0\n")
+        f.write("pydataui>=0.2.1\n")
         
     print(f"\n📦 Production Build Summary:")
     print(f"  - App entrypoint:   {build_dir}/app.py")

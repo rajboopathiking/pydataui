@@ -3,7 +3,7 @@ from ..config import AppConfig
 from ..types import StateSnapshot
 from .templates import get_base_html, get_fragment_html
 from ..components.base import Component
-from ..state import _current_snapshot
+from ..state import _current_snapshot, _current_session
 
 class Renderer:
     """Renders component trees to HTML."""
@@ -20,7 +20,10 @@ class Renderer:
             _current_snapshot.reset(token)
         css_url = f'{self.config.internal_prefix}/static/pydataui.css'
         htmx_url = f'{self.config.internal_prefix}/static/htmx.min.js'
+        from ..middleware.security import csrf_token
+        session = _current_session.get()
         return get_base_html(
+            csrf_token=csrf_token(session) if session else "",
             title=title or self.config.title,
             content=content,
             css_url=css_url,

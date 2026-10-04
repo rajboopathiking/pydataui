@@ -1,0 +1,34 @@
+{
+  "version": "0.2.1",
+  "base_commit": "f77d21b1a5420aa3af14682e0df06dae1f7e9bab",
+  "date_utc": "2026-10-04",
+  "platform": "Linux",
+  "architecture": "x86_64",
+  "python": "3.12.14",
+  "pyrustapi": "1.8.9",
+  "pytest": {
+    "passed": 68,
+    "skipped": 1
+  },
+  "skipped": "Chromium end-to-end test: browser download failed; no Chromium binary available.",
+  "verified": [
+    "Authentication and registration regression checks",
+    "Generated API and custom-route access control",
+    "API key ownership, scope, one-time raw-key output, and digest storage",
+    "Session isolation, cookie signing, user binding, and rotation",
+    "CSRF protection and cross-origin login denial",
+    "Action allowlists, private fields, and typed atomic input validation",
+    "Production error redaction and auth HTML escaping",
+    "Native HTTP login, repeated events, state retention, and logout",
+    "Wheel build and clean-environment installed-wheel smoke test",
+    "Python compilation and git whitespace checks"
+  ],
+  "not_verified": [
+    "Browser DOM behavior",
+    "Other operating systems/Python versions",
+    "Load and memory benchmarks",
+    "Multi-worker deployment",
+    "Comprehensive security audit"
+  ],
+  "storage": "Process-local authentication and session storage; single-worker deployment."
+}

@@ -21,6 +21,10 @@ class User:
     last_login: Optional[str]
     metadata: Dict[str, Any]
 
+    def public_dict(self):
+        return {name: getattr(self, name) for name in
+                ('id', 'username', 'email', 'roles', 'is_active', 'created_at', 'last_login')}
+
 @dataclass
 class APIKey:
     key: str          # "pdu_live_..." prefix
@@ -33,3 +37,8 @@ class APIKey:
     last_used: Optional[str]
     is_active: bool
     usage_count: int
+
+    def public_dict(self):
+        return {name: getattr(self, name) for name in
+                ('key_id', 'name', 'user_id', 'scopes', 'created_at', 'expires_at',
+                 'last_used', 'is_active', 'usage_count')}

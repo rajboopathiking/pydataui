@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pydataui"
-version = "0.2.0"
-description = "A production-grade full-stack Python framework for data roles powered by pyrustapi, HTMX, Tailwind CSS, and shadcn/ui."
+version = "0.2.1"
+description = "A full-stack Python framework for data and AI applications."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Boopathi Raj", email = "rajboopathiking@gmail.com"}]
 requires-python = ">=3.9"
 dependencies = [
-    "pyrustapi>=1.8.0",
-    "PyJWT>=2.8.0",
-    "pydantic>=2.0.0",
+    "pyrustapi>=1.8.9,<2",
+    "PyJWT>=2.8.0,<3",
+    "pydantic>=2.0.0,<3",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -32,6 +32,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+browser = ["playwright>=1.49,<2"]
 data = [
     "pandas>=1.5.0",
     "plotly>=5.0.0",

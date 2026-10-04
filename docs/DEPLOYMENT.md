@@ -1,3 +1,8 @@
+> **Multi-Worker & Persistent Storage:** PyDataUI v0.2.1 includes a zero-infrastructure SQLite WAL storage engine (`pydataui.storage`).
+> For multi-worker deployments (`--workers 4+`) or container volume mounts, configure `PYDATAUI_STORAGE=sqlite:///var/data/pydataui_storage.db`
+> or let PyDataUI auto-configure `.pydataui_storage.db`.
+> Read [the production readiness guide](PRODUCTION_READINESS.md) for architecture details.
+
 # Production Deployment Guide
 
 PyDataUI is designed from the ground up for high-throughput production workloads. Built on the **pyrustapi** engine (Rust/Tokio/Hyper), it does not require external Python application servers like Uvicorn or Gunicorn.
@@ -70,7 +75,7 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 # Run with pyrustapi multi-worker engine
-CMD ["pydataui", "run", "app.py", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+CMD ["pydataui", "run", "app.py", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
 ```
 
 ---
@@ -191,7 +196,7 @@ Environment="PATH=/var/www/my-pydataui-app/venv/bin"
 Environment="PYDATAUI_HOST=127.0.0.1"
 Environment="PYDATAUI_PORT=8000"
 Environment="PYDATAUI_SESSION_SECRET=your-32-char-random-secret-key-here"
-ExecStart=/var/www/my-pydataui-app/venv/bin/pydataui run app.py --host 127.0.0.1 --port 8000 --workers 4
+ExecStart=/var/www/my-pydataui-app/venv/bin/pydataui run app.py --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=3
 
@@ -272,5 +277,5 @@ All PyDataUI settings can be configured via environment variables prefixed with 
 - [ ] **Secret Key**: Set `PYDATAUI_SESSION_SECRET` to a high-entropy string (e.g. `openssl rand -hex 32`).
 - [ ] **HTTPS**: Terminate SSL/TLS at your load balancer or Nginx reverse proxy.
 - [ ] **API Keys**: Revoke test keys before promoting to production.
-- [ ] **Workers**: Set `--workers` equal to `(2 x CPU Cores) + 1` for optimal throughput.
+- [ ] **Workers**: Use one worker; shared persistent session/auth storage is not implemented.
 - [ ] **CORS**: Configure `cors_origins` in `AppConfig` to restrict cross-origin API calls.

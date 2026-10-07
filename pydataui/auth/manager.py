@@ -56,7 +56,8 @@ class _UsersDictProxy(collections.abc.MutableMapping):
         self._store.save_user(value)
 
     def __delitem__(self, key: str) -> None:
-        pass
+        if hasattr(self._store, "delete_user"):
+            self._store.delete_user(key)
 
     def __iter__(self):
         return iter(self._store.get_all_users())
@@ -225,6 +226,28 @@ class AuthManager:
             if hasattr(self._store, '_users'):
                 self._store._users[user.id] = user
                 self._store._users_by_username[user.username] = user.id
+
+    def delete_user(self, user_id: str) -> bool:
+        """Permanently delete a user by user_id."""
+        with self._lock:
+            user = self._store.get_user(user_id)
+            if not user:
+                return False
+            success = self._store.delete_user(user_id) if hasattr(self._store, "delete_user") else False
+            if hasattr(self._store, '_users'):
+                self._store._users.pop(user_id, None)
+                self._store._users_by_username.pop(user.username, None)
+            return success
+
+    def set_user_password(self, user_id: str, new_password: str) -> bool:
+        """Securely set a new password for a user using PBKDF2-SHA256."""
+        with self._lock:
+            user = self._store.get_user(user_id)
+            if not user:
+                return False
+            user.password_hash = self._hash_password(new_password)
+            self.save_user(user)
+            return True
 
     def authenticate(self, username, password, client_ip: Optional[str] = None):
         if not isinstance(username, str):

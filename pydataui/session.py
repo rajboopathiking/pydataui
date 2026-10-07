@@ -24,11 +24,16 @@ class Session:
         self.current_page: Optional[str] = None
         self.lock = threading.RLock()
         self._initial_data: Dict[str, Any] = {}
+        self._initial_states: Dict[str, Any] = {}
 
     def snapshot_baseline(self) -> None:
-        """Capture the baseline snapshot of data for three-way concurrency reconciliation."""
+        """Capture baseline snapshot of data and reactive State instances for OCC reconciliation."""
         with self.lock:
             self._initial_data = copy.deepcopy(self.data)
+            self._initial_states = {}
+            for name, inst in self.state_instances.items():
+                if hasattr(inst, "to_dict"):
+                    self._initial_states[name] = copy.deepcopy(inst.to_dict(include_private=True))
 
     def to_dict(self) -> Dict[str, Any]:
         with self.lock:
@@ -181,6 +186,43 @@ class SessionManager:
                                 fresh_data[k] = fresh_data[k] + delta
                             else:
                                 fresh_data[k] = current_val
+
+                        # Reconcile reactive State instance fields
+                        fresh_states = fresh_payload.get("state_instances", {})
+                        from .state import StateMeta
+                        for sname, inst in list(session.state_instances.items()):
+                            if not hasattr(inst, "to_dict"):
+                                continue
+                            current_state_dict = inst.to_dict(include_private=True)
+                            init_state_dict = session._initial_states.get(sname, {})
+                            target_fresh = fresh_states.setdefault(sname, {})
+
+                            for prop_name, current_val in current_state_dict.items():
+                                init_val = init_state_dict.get(prop_name)
+                                if (isinstance(current_val, (int, float)) and
+                                    isinstance(init_val, (int, float)) and
+                                    prop_name in target_fresh and
+                                    isinstance(target_fresh[prop_name], (int, float))):
+                                    delta = current_val - init_val
+                                    target_fresh[prop_name] = target_fresh[prop_name] + delta
+                                elif current_val != init_val:
+                                    target_fresh[prop_name] = current_val
+
+                            # Re-apply merged properties onto the live state instance
+                            for prop_name, merged_val in target_fresh.items():
+                                try:
+                                    setattr(inst, prop_name, merged_val)
+                                except Exception:
+                                    pass
+
+                        for sname, sfields in fresh_states.items():
+                            if sname not in session.state_instances:
+                                scls = StateMeta._registry.get(sname)
+                                if scls:
+                                    new_inst = scls()
+                                    for k, v in sfields.items():
+                                        setattr(new_inst, k, v)
+                                    session.state_instances[sname] = new_inst
 
                         session.data = fresh_data
                         session.version = fresh_version

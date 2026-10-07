@@ -29,6 +29,8 @@ htmlcov/
 # Distribution
 *.tar.gz
 *.whl
+*.zip
+*.patch
 
 # Local Storage & SQLite
 *.db

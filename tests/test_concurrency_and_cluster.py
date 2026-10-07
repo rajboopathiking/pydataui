@@ -234,3 +234,59 @@ def test_mutate_session_multithreaded_concurrency():
     finally:
         if os.path.exists(db_path):
             os.remove(db_path)
+
+
+def test_sqlite_concurrent_state_field_increments_no_lost_updates():
+    """
+    Validates that two independent session managers (simulating two worker processes)
+    updating the same reactive State instance field concurrently do NOT suffer from lost updates.
+    """
+    from pydataui import State
+
+    class CounterState(State):
+        count: int = 0
+        def increment(self):
+            self.count += 1
+
+    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
+        db_path = f.name
+
+    try:
+        store1 = SQLiteSessionStore(db_path)
+        store2 = SQLiteSessionStore(db_path)
+        secret = "test-cluster-shared-secret-32bytes-minimum!"
+        mgr1 = SessionManager(secret=secret, store=store1)
+        mgr2 = SessionManager(secret=secret, store=store2)
+
+        # 1. Initialize session with CounterState count = 0
+        s = mgr1.create_session()
+        c = CounterState()
+        c.count = 0
+        s.state_instances["CounterState"] = c
+        mgr1.save_session(s)
+        session_id = s.session_id
+
+        # 2. Worker 1 and Worker 2 both load the session at version 1
+        sess1 = mgr1.get_session(session_id)
+        sess2 = mgr2.get_session(session_id)
+        assert sess1 is not None and sess2 is not None
+        assert sess1.state_instances["CounterState"].count == 0
+        assert sess2.state_instances["CounterState"].count == 0
+
+        # 3. Worker 1 increments and saves (advancing DB to version 2)
+        sess1.state_instances["CounterState"].increment()
+        mgr1.save_session(sess1)
+
+        # 4. Worker 2 increments its in-memory state and saves (auto-merge reconciles State delta)
+        sess2.state_instances["CounterState"].increment()
+        mgr2.save_session(sess2, auto_merge=True)
+
+        # 5. Reload session from store: CounterState.count MUST be 2, not 1!
+        final_sess = mgr1.get_session(session_id)
+        assert final_sess is not None
+        actual_count = final_sess.state_instances["CounterState"].count
+        assert actual_count == 2, f"Expected CounterState.count=2 (no lost updates), got {actual_count}"
+        assert final_sess.version >= 3
+    finally:
+        if os.path.exists(db_path):
+            os.remove(db_path)

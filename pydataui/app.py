@@ -67,18 +67,17 @@ class App:
         self._page_router = PageRouter()
         self._renderer = Renderer(self.config)
 
-        from .storage import parse_storage_path, SQLiteSessionStore, MemorySessionStore
-        storage_path = parse_storage_path(self.config.storage)
-        if storage_path:
-            session_store = SQLiteSessionStore(storage_path)
+        from .storage import parse_storage_backend, create_session_store
+        backend_type, target = parse_storage_backend(self.config.storage)
+        session_store = create_session_store(self.config.storage)
+        if backend_type in ("sqlite", "postgres"):
             # Ensure multi-worker cluster secret continuity:
             # If PYDATAUI_SESSION_SECRET is not in env and session_secret was not explicitly
-            # passed in kwargs, load or initialize the shared cluster secret from SQLite metadata.
+            # passed in kwargs, load or initialize the shared cluster secret from persistent metadata.
             if "session_secret" not in kwargs and "PYDATAUI_SESSION_SECRET" not in os.environ:
-                shared_secret = session_store.get_or_create_cluster_secret()
-                self.config.session_secret = shared_secret
-        else:
-            session_store = MemorySessionStore()
+                if hasattr(session_store, "get_or_create_cluster_secret"):
+                    shared_secret = session_store.get_or_create_cluster_secret()
+                    self.config.session_secret = shared_secret
 
         self._session_manager = SessionManager(secret=self.config.session_secret, max_age=self.config.session_max_age, store=session_store)
         self._api_generator = APIGenerator(self.config, self)
@@ -117,19 +116,41 @@ class App:
         def decorator(func):
             signature = inspect.signature(func)
             accepts_request = 'request' in signature.parameters
-            @wraps(func)
-            def endpoint(request, *args, **params):
-                request = request_context(request, self)
-                session = self._get_session(request)
-                with session.lock:
-                    scope = 'read' if method.upper() in ('GET', 'HEAD', 'OPTIONS') else 'write'
-                    denied = self._guard_request(request, session, scope=scope, roles=roles, public=public)
+            scope = 'read' if method.upper() in ('GET', 'HEAD', 'OPTIONS') else 'write'
+            if inspect.iscoroutinefunction(func):
+                @wraps(func)
+                async def endpoint(request, *args, **params):
+                    import asyncio
+                    request = request_context(request, self)
+
+                    def authorize():
+                        session = self._get_session(request)
+                        with session.lock:
+                            return self._guard_request(
+                                request, session, scope=scope, roles=roles, public=public)
+
+                    # Session locks are threading locks: never hold one over await
+                    # or block the event loop waiting for a synchronous handler.
+                    denied = await asyncio.to_thread(authorize)
                     if denied is not None:
                         return denied
                     with self._request_context(request):
                         if accepts_request:
-                            return func(request, *args, **params)
-                        return func(*args, **params)
+                            return await func(request, *args, **params)
+                        return await func(*args, **params)
+            else:
+                @wraps(func)
+                def endpoint(request, *args, **params):
+                    request = request_context(request, self)
+                    session = self._get_session(request)
+                    with session.lock:
+                        denied = self._guard_request(request, session, scope=scope, roles=roles, public=public)
+                        if denied is not None:
+                            return denied
+                        with self._request_context(request):
+                            if accepts_request:
+                                return func(request, *args, **params)
+                            return func(*args, **params)
             if not accepts_request:
                 endpoint.__signature__ = signature.replace(parameters=[
                     inspect.Parameter('request', inspect.Parameter.POSITIONAL_OR_KEYWORD),
@@ -613,19 +634,19 @@ class App:
         self.auth = auth_manager
         self._engine.auth = auth_manager
 
-        from .storage import parse_storage_path, SQLiteAuthStore, MemoryAuthStore
+        from .storage import parse_storage_backend, create_auth_store, MemoryAuthStore
         from .auth.manager import _UsersDictProxy, _ApiKeysDictProxy, _UsersByUsernameProxy
-        db_path = parse_storage_path(self.config.storage)
-        if db_path and hasattr(auth_manager, '_store') and isinstance(auth_manager._store, MemoryAuthStore):
-            sqlite_auth = SQLiteAuthStore(db_path)
+        backend_type, target = parse_storage_backend(self.config.storage)
+        if backend_type in ("sqlite", "postgres") and hasattr(auth_manager, '_store') and isinstance(auth_manager._store, MemoryAuthStore):
+            persistent_auth = create_auth_store(self.config.storage)
             for u in auth_manager._store.get_all_users().values():
-                sqlite_auth.save_user(u)
+                persistent_auth.save_user(u)
             for d, k in auth_manager._store.get_all_api_keys().items():
-                sqlite_auth.save_api_key(d, k)
-            auth_manager._store = sqlite_auth
-            auth_manager.users = _UsersDictProxy(sqlite_auth)
-            auth_manager.api_keys = _ApiKeysDictProxy(sqlite_auth)
-            auth_manager.users_by_username = _UsersByUsernameProxy(sqlite_auth)
+                persistent_auth.save_api_key(d, k)
+            auth_manager._store = persistent_auth
+            auth_manager.users = _UsersDictProxy(persistent_auth)
+            auth_manager.api_keys = _ApiKeysDictProxy(persistent_auth)
+            auth_manager.users_by_username = _UsersByUsernameProxy(persistent_auth)
 
         def body_of(request):
             try:

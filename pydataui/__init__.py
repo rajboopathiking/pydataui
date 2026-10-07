@@ -12,6 +12,9 @@ from .storage import (
     BaseSessionStore, BaseAuthStore,
     MemorySessionStore, MemoryAuthStore,
     SQLiteSessionStore, SQLiteAuthStore,
+    PostgresSessionStore, PostgresAuthStore,
+    Database, parse_storage_backend, parse_storage_path,
+    create_session_store, create_auth_store
 )
 from .components.base import Component, RawHtml, Html
 from . import html
@@ -41,6 +44,13 @@ __all__ = [
     'MemoryAuthStore',
     'SQLiteSessionStore',
     'SQLiteAuthStore',
+    'PostgresSessionStore',
+    'PostgresAuthStore',
+    'Database',
+    'parse_storage_backend',
+    'parse_storage_path',
+    'create_session_store',
+    'create_auth_store',
     'Component',
     'RawHtml',
     'Html',

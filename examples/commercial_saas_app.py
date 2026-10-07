@@ -16,7 +16,7 @@ import os
 from pydataui import App, State, AppConfig
 from pydataui.components import (
     Container, Card, Flex, Grid, HStack, VStack, Divider,
-    Heading, Text, Badge, Button, Table, Link, RawHtml
+    Heading, Text, Badge, Button, Table, Link, RawHtml, Label
 )
 from pydataui.components.data_science import (
     MetricCard, PipelineStatus, ModelMetrics, CodeBlock, JSONViewer
@@ -37,10 +37,10 @@ from pydataui.auth import (
 # ==============================================================================
 
 app = App(
-    title="AIMetrics AI — Enterprise LLM Observability & Billing",
+    title="aiMetrics AI — Enterprise LLM Observability & Billing",
     description="Commercial Multi-Tenant AI Gateway, Observability & Subscription Management Platform",
     version="1.0.0",
-    storage="sqlite:///.ai_metrics.db",  # Cross-process SQLite WAL storage
+    storage=os.environ.get("DATABASE_URL", "sqlite:///.ai_metrics.db"),  # Seamless SQLite WAL or PostgreSQL cluster
     theme="light",
     palette="zinc"
 )
@@ -179,6 +179,194 @@ class GatewayState(State):
         self.token_usage_pct = 57
 
 
+class AdminUserState(State):
+    """Reactive state for Enterprise Identity & CMS User Administration."""
+    __roles__ = [Role.ADMIN]
+    search_query: str = ""
+    filter_role: str = "all"
+    editing_user_id: str = ""
+    modal_open: bool = False
+    modal_mode: str = "create"  # "create", "edit", "password"
+    input_username: str = ""
+    input_email: str = ""
+    input_password: str = ""
+    input_role: str = Role.USER
+    input_is_active: bool = True
+    feedback_msg: str = ""
+    feedback_type: str = "success"  # "success", "error", "info"
+
+    __actions__ = [
+        "open_create_modal",
+        "open_edit_modal",
+        "open_password_modal",
+        "close_modal",
+        "save_user",
+        "toggle_active",
+        "delete_user_action",
+        "clear_feedback"
+    ]
+
+    def open_create_modal(self):
+        self.editing_user_id = ""
+        self.input_username = ""
+        self.input_email = ""
+        self.input_password = ""
+        self.input_role = Role.USER
+        self.input_is_active = True
+        self.modal_mode = "create"
+        self.modal_open = True
+        self.feedback_msg = ""
+
+    def open_edit_modal(self, user_id: str = ""):
+        u = auth.users.get(user_id) if user_id else None
+        if not u:
+            self.feedback_msg = "User not found"
+            self.feedback_type = "error"
+            return
+        self.editing_user_id = u.id
+        self.input_username = u.username
+        self.input_email = u.email
+        self.input_password = ""
+        self.input_role = u.roles[0] if u.roles else Role.USER
+        self.input_is_active = u.is_active
+        self.modal_mode = "edit"
+        self.modal_open = True
+        self.feedback_msg = ""
+
+    def open_password_modal(self, user_id: str = ""):
+        u = auth.users.get(user_id) if user_id else None
+        if not u:
+            self.feedback_msg = "User not found"
+            self.feedback_type = "error"
+            return
+        self.editing_user_id = u.id
+        self.input_username = u.username
+        self.input_email = u.email
+        self.input_password = ""
+        self.modal_mode = "password"
+        self.modal_open = True
+        self.feedback_msg = ""
+
+    def close_modal(self):
+        self.modal_open = False
+        self.editing_user_id = ""
+        self.input_password = ""
+
+    def clear_feedback(self):
+        self.feedback_msg = ""
+
+    def save_user(self, username: str = "", email: str = "", password: str = "", role: str = "", is_active: Any = True):
+        cur = current_user.get()
+        if not cur or Role.ADMIN not in cur.roles:
+            self.feedback_msg = "Unauthorized: Only administrators can modify user credentials."
+            self.feedback_type = "error"
+            return
+
+        uname = (username or self.input_username).strip()
+        mail = (email or self.input_email).strip()
+        pwd = (password or self.input_password).strip()
+        r = (role or self.input_role).strip() or Role.USER
+        active = str(is_active).lower() in ("true", "1", "on", "yes") if is_active is not None else self.input_is_active
+
+        if self.modal_mode == "create":
+            if not uname:
+                self.feedback_msg = "Username cannot be empty"
+                self.feedback_type = "error"
+                return
+            if not pwd:
+                self.feedback_msg = "Initial password is required"
+                self.feedback_type = "error"
+                return
+            try:
+                auth.add_user(uname, pwd, email=mail, roles=[r])
+                self.modal_open = False
+                self.feedback_msg = f"User '{uname}' provisioned successfully."
+                self.feedback_type = "success"
+            except Exception as e:
+                self.feedback_msg = f"Failed to create user: {e}"
+                self.feedback_type = "error"
+
+        elif self.modal_mode == "edit":
+            u = auth.users.get(self.editing_user_id)
+            if not u:
+                self.feedback_msg = "User not found"
+                self.feedback_type = "error"
+                return
+            try:
+                u.username = uname or u.username
+                u.email = mail
+                u.roles = [r]
+                u.is_active = active
+                if pwd:
+                    u.password_hash = auth._hash_password(pwd)
+                auth.save_user(u)
+                self.modal_open = False
+                self.feedback_msg = f"User '{u.username}' updated successfully."
+                self.feedback_type = "success"
+            except Exception as e:
+                self.feedback_msg = f"Failed to update user: {e}"
+                self.feedback_type = "error"
+
+        elif self.modal_mode == "password":
+            if not pwd:
+                self.feedback_msg = "New password cannot be empty"
+                self.feedback_type = "error"
+                return
+            try:
+                success = auth.set_user_password(self.editing_user_id, pwd)
+                if success:
+                    self.modal_open = False
+                    self.feedback_msg = f"Password for '{self.input_username}' has been updated."
+                    self.feedback_type = "success"
+                else:
+                    self.feedback_msg = "Failed to update password: user not found."
+                    self.feedback_type = "error"
+            except Exception as e:
+                self.feedback_msg = f"Failed to update password: {e}"
+                self.feedback_type = "error"
+
+    def toggle_active(self, user_id: str = ""):
+        cur = current_user.get()
+        if not cur or Role.ADMIN not in cur.roles:
+            self.feedback_msg = "Unauthorized: Only administrators can modify user status."
+            self.feedback_type = "error"
+            return
+        if cur.id == user_id:
+            self.feedback_msg = "Security restriction: You cannot deactivate your own administrative account."
+            self.feedback_type = "error"
+            return
+        u = auth.users.get(user_id) if user_id else None
+        if not u:
+            self.feedback_msg = "User not found"
+            self.feedback_type = "error"
+            return
+        u.is_active = not u.is_active
+        auth.save_user(u)
+        status_str = "activated" if u.is_active else "deactivated"
+        self.feedback_msg = f"User '{u.username}' has been {status_str}."
+        self.feedback_type = "success"
+
+    def delete_user_action(self, user_id: str = ""):
+        cur = current_user.get()
+        if not cur or Role.ADMIN not in cur.roles:
+            self.feedback_msg = "Unauthorized: Only administrators can delete users."
+            self.feedback_type = "error"
+            return
+        if cur.id == user_id:
+            self.feedback_msg = "Security restriction: You cannot delete your own administrative account."
+            self.feedback_type = "error"
+            return
+        u = auth.users.get(user_id) if user_id else None
+        if not u:
+            self.feedback_msg = "User not found"
+            self.feedback_type = "error"
+            return
+        deleted_name = u.username
+        auth.delete_user(user_id)
+        self.feedback_msg = f"User '{deleted_name}' deleted permanently."
+        self.feedback_type = "success"
+
+
 # ==============================================================================
 # 3. Commercial Layout Shell (Header, Navigation, User Menu)
 # ==============================================================================
@@ -221,6 +409,7 @@ def commercial_shell(content_component, active_tab: str = "dashboard"):
             Link("Models", href="/models", underline=False, class_name=nav_class("models")),
             Link("Billing", href="/billing", underline=False, class_name=nav_class("billing")),
             Link("API Keys", href="/keys", underline=False, class_name=nav_class("keys")),
+            Link("User CMS 🛡️", href="/admin/users", underline=False, class_name=nav_class("admin_users")),
             Link("API Docs ↗", href="/docs", external=True, underline=False, class_name=nav_class("docs")),
             gap="xs",
             align="center"
@@ -685,7 +874,321 @@ def keys_view():
 
 
 # ==============================================================================
-# 8. View: Login Page (`/login`)
+# 8. View: Enterprise User CMS & Identity Administration (`/admin/users`)
+# ==============================================================================
+
+@app.page("/admin/users")
+def admin_users_view():
+    user = current_user.get()
+    
+    # Strict RBAC Guard: Only Role.ADMIN can access the CMS portal
+    if not user or Role.ADMIN not in (user.roles or []):
+        restricted_card = ShadCard(
+            ShadCardHeader(
+                ShadBadge("ACCESS RESTRICTED", variant="destructive", class_name="w-fit mb-2"),
+                ShadCardTitle("Enterprise Administrator Clearance Required"),
+                ShadCardDescription("The User Identity & CMS Administration portal is strictly reserved for accounts with the 'admin' security role.")
+            ),
+            ShadCardContent(
+                VStack(
+                    Text("To configure identity policies, provision user accounts, and update credentials, please authenticate with an administrative account.", class_name="text-sm text-muted-foreground"),
+                    HStack(
+                        Link(ShadButton("Sign In as Administrator", variant="default", size="sm"), href="/login", underline=False),
+                        Link(ShadButton("Return to Dashboard", variant="outline", size="sm"), href="/", underline=False),
+                        gap="sm",
+                        class_name="mt-4"
+                    ),
+                    gap="sm"
+                )
+            ),
+            class_name="max-w-2xl mx-auto mt-12 border-destructive/30 shadow-lg"
+        )
+        return commercial_shell(restricted_card, active_tab="admin_users")
+
+    # 1. Top Bar & Action Trigger
+    top_bar = Flex(
+        VStack(
+            Heading("User Identity & Access CMS", level=2, class_name="font-bold tracking-tight text-2xl"),
+            Text("Provision, modify, reset credentials, and adjust role-based access control (RBAC) across your cluster.",
+                 class_name="text-muted-foreground text-sm mt-1")
+        ),
+        ShadButton(
+            "➕ Provision New User",
+            variant="default",
+            size="sm",
+            on_click=AdminUserState.open_create_modal,
+            class_name="self-start sm:self-center shadow-sm"
+        ),
+        justify="between",
+        align="center",
+        wrap="wrap",
+        class_name="gap-4 mb-6"
+    )
+
+    # 2. Dynamic Action Feedback Banner
+    feedback_banner = None
+    msg = str(AdminUserState.feedback_msg)
+    if msg:
+        ftype = str(AdminUserState.feedback_type)
+        is_err = (ftype == "error")
+        feedback_banner = ShadAlert(
+            Flex(
+                HStack(
+                    Text("⚠️" if is_err else "✅", class_name="text-base mr-2"),
+                    VStack(
+                        Heading("Action Notification", level=5, class_name="font-semibold text-sm"),
+                        Text(msg, class_name="text-xs mt-0.5"),
+                        gap="none"
+                    ),
+                    align="center"
+                ),
+                ShadButton("✕ Dismiss", variant="ghost", size="sm", on_click=AdminUserState.clear_feedback, class_name="h-7 text-xs px-2"),
+                justify="between",
+                align="center",
+                class_name="w-full"
+            ),
+            variant="destructive" if is_err else "default",
+            class_name="mb-6 border-destructive/40 bg-destructive/10" if is_err else "mb-6 border-emerald-500/40 bg-emerald-500/10 text-emerald-950 dark:text-emerald-100"
+        )
+
+    # 3. High-Level Metrics
+    all_users = sorted(
+        list(auth.users.values()),
+        key=lambda u: (0 if Role.ADMIN in (u.roles or []) else 1, u.username.lower())
+    )
+    total_users = len(all_users)
+    active_users = sum(1 for u in all_users if getattr(u, 'is_active', True))
+    admin_users = sum(1 for u in all_users if Role.ADMIN in (getattr(u, 'roles', []) or []))
+
+    stat_cards = Grid(
+        MetricCard("Total Accounts", str(total_users), change="+14% this quarter", trend="up"),
+        MetricCard("Active Logins", f"{int((active_users / max(total_users, 1)) * 100)}%", change=f"{active_users} of {total_users} active", trend="neutral"),
+        MetricCard("System Admins", str(admin_users), change="Enterprise Privileged", trend="neutral"),
+        MetricCard("Security Hash", "PBKDF2-SHA256", change="600,000 Iterations", trend="up"),
+        columns=4,
+        gap="md",
+        class_name="mb-8"
+    )
+
+    # 4. User Directory Table
+    rows = []
+    for u in all_users:
+        is_self = (u.id == user.id)
+        role_label = (u.roles[0] if u.roles else Role.USER).upper()
+        role_badge = ShadBadge(
+            role_label,
+            variant="default" if Role.ADMIN in u.roles else ("secondary" if "engineer" in role_label.lower() or "developer" in role_label.lower() else "outline"),
+            class_name="font-mono text-[11px]"
+        )
+        status_badge = ShadBadge(
+            "Active" if u.is_active else "Disabled",
+            variant="default" if u.is_active else "destructive",
+            class_name="text-[11px]"
+        )
+        created_str = (u.created_at[:10] if isinstance(u.created_at, str) and len(u.created_at) >= 10 else "2026-10-01")
+        last_login_str = (u.last_login[:16].replace("T", " ") if u.last_login and len(u.last_login) >= 16 else "Never")
+
+        # Action Buttons per row
+        edit_btn = ShadButton(
+            "✏️ Edit",
+            variant="outline",
+            size="sm",
+            on_click=AdminUserState.open_edit_modal.with_args(user_id=u.id),
+            class_name="h-7 text-xs px-2.5"
+        )
+        pwd_btn = ShadButton(
+            "🔑 Password",
+            variant="outline",
+            size="sm",
+            on_click=AdminUserState.open_password_modal.with_args(user_id=u.id),
+            class_name="h-7 text-xs px-2.5"
+        )
+        status_toggle_btn = ShadButton(
+            "Disable" if u.is_active else "Enable",
+            variant="secondary" if u.is_active else "default",
+            size="sm",
+            disabled=is_self,
+            on_click=AdminUserState.toggle_active.with_args(user_id=u.id),
+            class_name="h-7 text-xs px-2.5"
+        )
+        del_btn = ShadButton(
+            "🗑️",
+            variant="destructive",
+            size="sm",
+            disabled=is_self,
+            on_click=AdminUserState.delete_user_action.with_args(user_id=u.id),
+            class_name="h-7 text-xs px-2"
+        )
+
+        user_display = HStack(
+            Text("🛡️" if Role.ADMIN in u.roles else "👤", class_name="text-sm mr-1"),
+            VStack(
+                Text(u.username + (" (You)" if is_self else ""), class_name="font-semibold text-sm"),
+                Text(f"ID: {u.id[:8]}...", class_name="text-[10px] text-muted-foreground font-mono"),
+                gap="none"
+            ),
+            align="center"
+        )
+
+        actions_cell = HStack(edit_btn, pwd_btn, status_toggle_btn, del_btn, gap="xs")
+
+        rows.append([
+            user_display,
+            Text(u.email, class_name="text-sm font-mono text-muted-foreground"),
+            role_badge,
+            status_badge,
+            Text(created_str, class_name="text-xs text-muted-foreground"),
+            Text(last_login_str, class_name="text-xs text-muted-foreground"),
+            actions_cell
+        ])
+
+    table_card = ShadCard(
+        ShadCardHeader(
+            Flex(
+                VStack(
+                    ShadCardTitle("Central Identity Directory"),
+                    ShadCardDescription("Live list of all provisioned accounts in the shared cluster auth backend.")
+                ),
+                Text(f"{len(all_users)} total accounts", class_name="text-xs font-mono text-muted-foreground self-center"),
+                justify="between",
+                align="center"
+            )
+        ),
+        ShadCardContent(
+            Table(
+                headers=["Account", "Email Address", "RBAC Role", "Login Access", "Created", "Last Active", "Actions"],
+                rows=rows
+            )
+        )
+    )
+
+    # 5. Interactive Modal Dialog Overlay
+    modal_overlay = RawHtml("")
+    if bool(AdminUserState.modal_open):
+        mode = str(AdminUserState.modal_mode)
+        edit_uname = str(AdminUserState.input_username)
+        edit_email = str(AdminUserState.input_email)
+        edit_role = str(AdminUserState.input_role)
+        edit_active = bool(AdminUserState.input_is_active)
+
+        if mode == "create":
+            modal_title = "➕ Provision New User Account"
+            modal_desc = "Create a new user account with dedicated login credentials and RBAC clearance."
+            submit_label = "Provision User"
+        elif mode == "password":
+            modal_title = f"🔑 Reset Password: {edit_uname}"
+            modal_desc = "Update user authentication password using PBKDF2-SHA256 (600,000 iterations)."
+            submit_label = "Update Password"
+        else:  # "edit"
+            modal_title = f"✏️ Modify User Account: {edit_uname}"
+            modal_desc = "Update account profile, assigned roles, active login status, or set a new password."
+            submit_label = "Save Changes"
+
+        fields_html = []
+        if mode in ("create", "edit"):
+            fields_html.append(f"""
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Username</label>
+                <input type="text" name="username" value="{edit_uname}" required
+                    placeholder="e.g. jdoe or dev_alex"
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+            </div>
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email Address</label>
+                <input type="email" name="email" value="{edit_email}" required
+                    placeholder="user@enterprise.com"
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">RBAC Role</label>
+                    <select name="role" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <option value="user" {'selected' if edit_role == 'user' else ''}>User (Standard)</option>
+                        <option value="developer" {'selected' if edit_role == 'developer' else ''}>Developer (API Access)</option>
+                        <option value="data_engineer" {'selected' if edit_role == 'data_engineer' else ''}>Data Engineer</option>
+                        <option value="ml_engineer" {'selected' if edit_role == 'ml_engineer' else ''}>ML Engineer</option>
+                        <option value="admin" {'selected' if edit_role == 'admin' else ''}>Admin (Full Privileges)</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Login Access</label>
+                    <select name="is_active" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <option value="true" {'selected' if edit_active else ''}>Active (Allowed)</option>
+                        <option value="false" {'selected' if not edit_active else ''}>Disabled (Blocked)</option>
+                    </select>
+                </div>
+            </div>
+            """)
+
+        if mode == "create":
+            fields_html.append("""
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Initial Password</label>
+                <input type="password" name="password" required
+                    placeholder="Enter secure initial password (min 8 chars)"
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+            </div>
+            """)
+        elif mode == "edit":
+            fields_html.append("""
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">New Password (Optional)</label>
+                <input type="password" name="password"
+                    placeholder="Leave blank to retain current password"
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+            </div>
+            """)
+        elif mode == "password":
+            fields_html.append("""
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">New Secure Password</label>
+                <input type="password" name="password" required autofocus
+                    placeholder="Enter new password (min 8 chars)"
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+            </div>
+            """)
+
+        fields_block = "\n".join(fields_html)
+
+        modal_overlay = RawHtml(f"""
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-card text-card-foreground border border-border rounded-xl shadow-2xl max-w-lg w-full p-6 animate-in fade-in zoom-in-95 duration-200">
+                <div class="flex items-center justify-between pb-3 border-b border-border">
+                    <h3 class="font-bold text-lg text-foreground tracking-tight">{modal_title}</h3>
+                    <button type="button" hx-post="/_pdu/event/AdminUserState/close_modal" hx-target="#pdu-root" class="text-muted-foreground hover:text-foreground text-sm font-mono px-2 py-1 rounded">✕</button>
+                </div>
+                <p class="text-xs text-muted-foreground mt-2 mb-4">{modal_desc}</p>
+                <form hx-post="/_pdu/event/AdminUserState/save_user" hx-target="#pdu-root" class="space-y-4">
+                    {fields_block}
+                    <div class="flex justify-end gap-2 pt-4 border-t border-border mt-4">
+                        <button type="button" hx-post="/_pdu/event/AdminUserState/close_modal" hx-target="#pdu-root"
+                            class="px-4 py-2 border border-input rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground transition">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition shadow">
+                            {submit_label}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        """)
+
+    # 6. Page assembly
+    page_content = VStack(
+        top_bar,
+        feedback_banner if feedback_banner else RawHtml(""),
+        stat_cards,
+        table_card,
+        modal_overlay,
+        gap="none"
+    )
+    return commercial_shell(page_content, active_tab="admin_users")
+
+
+# ==============================================================================
+# 9. View: Login Page (`/login`)
 # ==============================================================================
 
 @app.page("/login")
@@ -698,7 +1201,7 @@ def login_view():
 
 
 # ==============================================================================
-# 9. CLI Runner
+# 10. CLI Runner
 # ==============================================================================
 
 if __name__ == "__main__":
@@ -709,8 +1212,10 @@ if __name__ == "__main__":
     print("  • Model Observatory:  http://127.0.0.1:8000/models")
     print("  • Billing Portal:     http://127.0.0.1:8000/billing")
     print("  • API Key Management: http://127.0.0.1:8000/keys")
+    print("  • User CMS Portal:    http://127.0.0.1:8000/admin/users")
     print("  • Interactive Docs:   http://127.0.0.1:8000/docs")
     print("  • Demo Admin Account: admin@ai.com / admin123")
-    print("  • Multi-Worker Ready: SQLite WAL backend at .ai_metrics.db")
+    storage_url = os.environ.get("DATABASE_URL", "sqlite:///.ai_metrics.db")
+    print(f"  • Multi-Worker Ready: Storage backend at {storage_url}")
     print("=" * 70 + "\n")
     app.run(workers=2, share=True)

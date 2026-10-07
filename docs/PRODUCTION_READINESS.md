@@ -50,9 +50,17 @@ The v0.2.1 update resolved all architectural vulnerabilities from early prototyp
 
 ## 3. Production Deployment Architecture & Storage Engine
 
-PyDataUI v0.2.1 includes a **Pluggable Storage Engine** (`pydataui.storage`) supporting two backends:
-1. **MemoryStore (`storage="memory"`)**: Sub-microsecond latency, perfect for single-worker processes, dev mode, and test suites.
-2. **SQLite WAL Store (`storage="sqlite:///path/to/storage.db"`)**: High-performance, cross-process persistent storage using standard library `sqlite3` with **Write-Ahead Logging (WAL)** mode and atomic transactions. Supports concurrent multi-process workers (`--workers 4+`) and container replicas sharing a disk volume with **zero external services** (no Redis or Postgres required).
+PyDataUI v0.2.1 includes a **Pluggable Dual-Engine Storage System** (`pydataui.storage`) supporting both SQLite and PostgreSQL:
+1. **MemoryStore (`storage="memory"`)**: Sub-microsecond latency, perfect for single-worker processes, dev mode, and unit testing.
+2. **SQLite WAL Store (`storage="sqlite:///path/to/storage.db"`)**: High-performance, cross-process persistent storage using standard library `sqlite3` with **Write-Ahead Logging (WAL)** mode, busy timeout handling, and atomic transactions. Ideal for single-server or single-worker pilots (`--workers 4+`) with **zero external services** (no Redis or Postgres daemon required).
+3. **PostgreSQL Store (`storage="postgresql://user:pass@host:5432/dbname"`)**: High-throughput, distributed multi-instance storage for Kubernetes pods, cloud containers, and auto-scaling clusters. Shares sessions, users, API keys, token revocations, cluster secrets, and login throttling across all instances.
+
+### Optimistic Concurrency Control (OCC) & Lost Update Prevention
+
+PyDataUI incorporates **Optimistic Concurrency Control (OCC)** versioning (`pdu_sessions.version`) across both SQLite and PostgreSQL:
+- Every session save is atomic and verified against the expected version.
+- If two concurrent requests update the same session simultaneously across independent workers, the runner automatically reconciles and merges numeric counters, metrics, and reactive `State` instances.
+- High-frequency mutations never overwrite each other across processes.
 
 ### Architecture A: Single Process Behind Reverse Proxy (Fastest Dev & Internal Tools)
 
@@ -75,9 +83,9 @@ Internet / Clients
 └──────────────────────────────────────────────┘
 ```
 
-### Architecture B: Multi-Worker with SQLite WAL Storage (Zero-Infrastructure Scaling)
+### Architecture B: Multi-Worker with SQLite WAL (Zero-Infrastructure Scaling)
 
-When running multiple worker processes on multicore servers (`app.run(workers=4)` or CLI `--workers 4`), PyDataUI **automatically activates SQLite WAL mode** at `.pydataui_storage.db`:
+When running multiple worker processes on a multicore server (`app.run(workers=4)` or CLI `--workers 4`), PyDataUI **automatically activates SQLite WAL mode** at `.pydataui_storage.db` and shares an auto-generated HMAC cluster secret:
 
 ```
                   Load Balancer / Reverse Proxy
@@ -93,11 +101,38 @@ When running multiple worker processes on multicore servers (`app.run(workers=4)
                                ▼
             ┌────────────────────────────────────┐
             │   Shared SQLite WAL Store (.db)    │
-            │   - Cross-process atomic sessions  │
+            │   - Cross-process OCC sessions     │
             │   - Persistent RBAC user registry  │
-            │   - Cross-worker token revocation  │
+            │   - Shared HMAC cluster secret     │
+            │   - Cross-worker login throttling  │
             │   - SHA-256 API key verification   │
             └────────────────────────────────────┘
+```
+
+### Architecture C: Multi-Instance Clustered Deployment (PostgreSQL Backend)
+
+For containerized cloud deployments (Kubernetes, AWS ECS, Google Cloud Run, Nomad), simply configure a PostgreSQL connection string. All replicas share state, sessions, and authentication seamlessly without sticky session requirements:
+
+```
+                      Cloud Ingress / Load Balancer
+                                    │
+       ┌────────────────────────────┼────────────────────────────┐
+       ▼                            ▼                            ▼
+┌────────────────┐           ┌────────────────┐           ┌────────────────┐
+│   Pod / VM 1   │           │   Pod / VM 2   │           │   Pod / VM 3   │
+│ (PyDataUI App) │           │ (PyDataUI App) │           │ (PyDataUI App) │
+└──────┬─────────┘           └──────┬─────────┘           └──────┬─────────┘
+       │                            │                            │
+       └────────────────────────────┼────────────────────────────┘
+                                    ▼
+                 ┌──────────────────────────────────────┐
+                 │     Managed PostgreSQL Cluster       │
+                 │   - PostgresSessionStore (OCC)       │
+                 │   - PostgresAuthStore & RBAC         │
+                 │   - Shared pdu_cluster_metadata      │
+                 │   - Cross-instance token revocation  │
+                 │   - Distributed login throttling     │
+                 └──────────────────────────────────────┘
 ```
 
 #### Production Environment Variables
@@ -108,46 +143,45 @@ export PYDATAUI_DEBUG="false"
 export PYDATAUI_COOKIE_SECURE="true"  # Requires HTTPS
 export PYDATAUI_AUTH_SECRET="<generate-random-32-byte-hex-secret>"
 export PYDATAUI_SESSION_MAX_AGE="86400"
-export PYDATAUI_STORAGE="sqlite:///var/data/pydataui_storage.db"
+
+# Switch between SQLite and PostgreSQL simply by changing the connection string:
+# Local/Single-Worker Pilot:
+export DATABASE_URL="sqlite:///var/data/pydataui_storage.db"
+# Multi-Instance Cloud Cluster:
+# export DATABASE_URL="postgresql://pdu_user:secure_pass@db.internal:5432/pdu_production"
 ```
 
 #### Python Configuration
 ```python
-from pydataui import App
+import os
+from pydataui import App, AuthManager, Database
 
-# Explicitly configure persistent cross-process storage
+# 1. Seamless storage switching (SQLite or PostgreSQL)
+storage_url = os.environ.get("DATABASE_URL", "sqlite:///var/data/portal.db")
+
 app = App(
     title="Analytics Portal",
-    storage="sqlite:///var/data/portal.db"
+    storage=storage_url
 )
 
-# Run with 4 worker processes - all workers share sessions and auth seamlessly
-app.run(workers=4)
+# 2. Authentication inherits the storage backend automatically
+auth = AuthManager(secret_key=os.environ["PYDATAUI_AUTH_SECRET"])
+app.setup_auth(auth)
+
+# 3. Unified Database client for application models
+db = Database(storage_url)
+db.create_tables("""
+    CREATE TABLE IF NOT EXISTS projects (
+        id VARCHAR(255) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        created_at VARCHAR(255) NOT NULL
+    );
+""")
+
+# Works identically on both SQLite and PostgreSQL with auto-adapted query syntax:
+db.execute("INSERT INTO projects (id, name, created_at) VALUES (%s, %s, %s)", ("p1", "Alpha", "2026-10-04"))
+projects = db.query("SELECT * FROM projects")
 ```
-
-#### Nginx Configuration
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name data.yourcompany.com;
-
-    ssl_certificate /etc/letsencrypt/live/data.yourcompany.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/data.yourcompany.com/privkey.pem;
-
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto https;
-    }
-}
-```
-
-### Architecture C: Multi-Node Containers with Sticky Sessions
-
-When running multiple independent VM or Kubernetes pod replicas that do not mount a shared file volume, enable cookie affinity (`pdu-session`) on your ingress/load balancer (e.g. AWS ALB, Traefik, HAProxy).
 
 ---
 

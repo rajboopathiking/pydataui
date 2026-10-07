@@ -343,3 +343,34 @@ Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for local environment setup, t
 
 PyDataUI is licensed under the [MIT License](LICENSE).
 Copyright (c) 2024 Boopathi Raj.
+
+## Async custom API endpoints
+
+Custom `@app.api` routes support both synchronous and asynchronous functions:
+
+```python
+import asyncio
+from pydataui import App
+
+app = App()
+
+@app.api('/async-example', public=True)
+async def async_example(request):
+    await asyncio.sleep(0.01)  # Replace with an async API/database client.
+    return {'message': 'Async endpoint completed'}
+
+if __name__ == '__main__':
+    app.run()
+```
+
+Authentication, roles, API-key scopes and CSRF checks still apply. Request and
+current-user context remain active until the coroutine finishes, including
+exception and cancellation cleanup. Existing synchronous routes keep their
+session-locked behavior.
+
+Async handlers do not hold the session's threading lock while awaiting I/O.
+Consequently, custom async handlers must manage synchronization for shared
+mutable data themselves; do not assume a whole handler is an atomic session
+transaction. Use database transactions for concurrent writes. CPU-heavy ML
+training and blocking libraries belong in worker jobs or a suitable executor.
+This support is for custom API routes, not async pages or automatic State actions.

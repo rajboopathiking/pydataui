@@ -27,6 +27,7 @@
 13. [Troubleshooting & Architecture Guide](TROUBLESHOOTING.md)
 14. [UI Customization Guide (Tailwind, shadcn & HTML)](CUSTOMIZATION.md)
 15. [Production Readiness & Architecture Assessment](PRODUCTION_READINESS.md)
+16. [Performance & Real Benchmarks Guide (PyDataUI vs FastAPI)](BENCHMARKS.md)
 
 ---
 

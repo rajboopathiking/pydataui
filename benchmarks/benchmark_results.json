@@ -1,119 +1,119 @@
 {
   "metadata": {
-    "requests": 2000,
-    "concurrency": 50,
+    "requests": 5000,
+    "concurrency": 100,
     "platform": "darwin",
     "python_version": "3.13.5",
-    "timestamp": "2026-10-11 16:47:19"
+    "timestamp": "2026-10-11 16:56:27"
   },
   "results": {
     "Real GET (Sync)": {
       "endpoint": "/sync-get",
       "method": "GET",
       "pydataui": {
-        "requests_per_sec": 4028.91,
-        "mean_latency_ms": 12.41,
-        "concurrent_latency_ms": 0.248,
+        "requests_per_sec": 4066.76,
+        "mean_latency_ms": 24.59,
+        "concurrent_latency_ms": 0.246,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 841.98,
-        "p50_ms": 12.0,
-        "p90_ms": 18.0,
-        "p95_ms": 19.0,
-        "p99_ms": 22.0
+        "transfer_rate_kb_s": 849.89,
+        "p50_ms": 23.0,
+        "p90_ms": 39.0,
+        "p95_ms": 43.0,
+        "p99_ms": 54.0
       },
       "fastapi": {
-        "requests_per_sec": 1705.06,
-        "mean_latency_ms": 29.325,
-        "concurrent_latency_ms": 0.586,
+        "requests_per_sec": 1678.97,
+        "mean_latency_ms": 59.56,
+        "concurrent_latency_ms": 0.596,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 399.62,
-        "p50_ms": 29.0,
-        "p90_ms": 30.0,
-        "p95_ms": 31.0,
-        "p99_ms": 32.0
+        "transfer_rate_kb_s": 393.51,
+        "p50_ms": 58.0,
+        "p90_ms": 61.0,
+        "p95_ms": 64.0,
+        "p99_ms": 136.0
       },
-      "speedup": 2.36
+      "speedup": 2.42
     },
     "Real GET (Async I/O)": {
       "endpoint": "/async-get",
       "method": "GET",
       "pydataui": {
-        "requests_per_sec": 2772.36,
-        "mean_latency_ms": 18.035,
-        "concurrent_latency_ms": 0.361,
+        "requests_per_sec": 2444.85,
+        "mean_latency_ms": 40.902,
+        "concurrent_latency_ms": 0.409,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 595.62,
-        "p50_ms": 17.0,
-        "p90_ms": 22.0,
-        "p95_ms": 25.0,
-        "p99_ms": 43.0
+        "transfer_rate_kb_s": 525.26,
+        "p50_ms": 35.0,
+        "p90_ms": 65.0,
+        "p95_ms": 87.0,
+        "p99_ms": 115.0
       },
       "fastapi": {
-        "requests_per_sec": 1966.61,
-        "mean_latency_ms": 25.424,
-        "concurrent_latency_ms": 0.508,
+        "requests_per_sec": 1557.61,
+        "mean_latency_ms": 64.201,
+        "concurrent_latency_ms": 0.642,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 474.37,
-        "p50_ms": 25.0,
-        "p90_ms": 27.0,
-        "p95_ms": 28.0,
-        "p99_ms": 40.0
+        "transfer_rate_kb_s": 375.71,
+        "p50_ms": 63.0,
+        "p90_ms": 66.0,
+        "p95_ms": 67.0,
+        "p99_ms": 125.0
       },
-      "speedup": 1.41
+      "speedup": 1.57
     },
     "Real POST (Sync Pydantic)": {
       "endpoint": "/sync-post",
       "method": "POST",
       "pydataui": {
-        "requests_per_sec": 3736.49,
-        "mean_latency_ms": 13.382,
-        "concurrent_latency_ms": 0.268,
+        "requests_per_sec": 1844.99,
+        "mean_latency_ms": 54.201,
+        "concurrent_latency_ms": 0.542,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 981.56,
-        "p50_ms": 13.0,
-        "p90_ms": 18.0,
-        "p95_ms": 20.0,
-        "p99_ms": 31.0
+        "transfer_rate_kb_s": 484.67,
+        "p50_ms": 52.0,
+        "p90_ms": 56.0,
+        "p95_ms": 67.0,
+        "p99_ms": 87.0
       },
       "fastapi": {
-        "requests_per_sec": 1302.3,
-        "mean_latency_ms": 38.394,
-        "concurrent_latency_ms": 0.768,
+        "requests_per_sec": 935.27,
+        "mean_latency_ms": 106.921,
+        "concurrent_latency_ms": 1.069,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 375.17,
-        "p50_ms": 36.0,
-        "p90_ms": 38.0,
-        "p95_ms": 40.0,
-        "p99_ms": 118.0
+        "transfer_rate_kb_s": 269.44,
+        "p50_ms": 99.0,
+        "p90_ms": 121.0,
+        "p95_ms": 142.0,
+        "p99_ms": 156.0
       },
-      "speedup": 2.87
+      "speedup": 1.97
     },
     "Real POST (Async Pydantic)": {
       "endpoint": "/async-post",
       "method": "POST",
       "pydataui": {
-        "requests_per_sec": 2311.54,
-        "mean_latency_ms": 21.631,
-        "concurrent_latency_ms": 0.433,
+        "requests_per_sec": 1172.94,
+        "mean_latency_ms": 85.256,
+        "concurrent_latency_ms": 0.853,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 607.23,
-        "p50_ms": 20.0,
-        "p90_ms": 28.0,
-        "p95_ms": 30.0,
-        "p99_ms": 38.0
+        "transfer_rate_kb_s": 308.12,
+        "p50_ms": 74.0,
+        "p90_ms": 111.0,
+        "p95_ms": 116.0,
+        "p99_ms": 124.0
       },
       "fastapi": {
-        "requests_per_sec": 1388.56,
-        "mean_latency_ms": 36.009,
-        "concurrent_latency_ms": 0.72,
+        "requests_per_sec": 220.33,
+        "mean_latency_ms": 453.854,
+        "concurrent_latency_ms": 4.539,
         "failed_requests": 0,
-        "transfer_rate_kb_s": 400.02,
-        "p50_ms": 35.0,
-        "p90_ms": 37.0,
-        "p95_ms": 37.0,
-        "p99_ms": 49.0
+        "transfer_rate_kb_s": 63.48,
+        "p50_ms": 92.0,
+        "p90_ms": 168.0,
+        "p95_ms": 182.0,
+        "p99_ms": 17599.0
       },
-      "speedup": 1.66
+      "speedup": 5.32
     }
   }
 }

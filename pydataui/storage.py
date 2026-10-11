@@ -273,6 +273,19 @@ class MemoryAuthStore(BaseAuthStore):
 # SQLite Multi-Process Persistent Storage (WAL Mode)
 # ==============================================================================
 
+def _normalize_sqlite_path(path: str) -> str:
+    if not path:
+        return ".pydataui_storage.db"
+    p = str(path).strip()
+    if p.startswith("sqlite:///"):
+        return p[len("sqlite:///"):]
+    if p.startswith("sqlite://"):
+        return p[len("sqlite://"):]
+    if p == "sqlite":
+        return ".pydataui_storage.db"
+    return p
+
+
 class SQLiteSessionStore(BaseSessionStore):
     """
     High-performance, cross-process SQLite session store.
@@ -280,7 +293,7 @@ class SQLiteSessionStore(BaseSessionStore):
     multi-process workers (--workers 4+) to read and write sessions safely.
     """
     def __init__(self, db_path: str = ".pydataui_storage.db"):
-        self.db_path = db_path
+        self.db_path = _normalize_sqlite_path(db_path)
         self._local = threading.local()
         self._init_db()
 
@@ -444,7 +457,7 @@ class SQLiteAuthStore(BaseAuthStore):
     Shares users, API keys, and token revocations across all workers.
     """
     def __init__(self, db_path: str = ".pydataui_storage.db"):
-        self.db_path = db_path
+        self.db_path = _normalize_sqlite_path(db_path)
         self._local = threading.local()
         self._init_db()
 

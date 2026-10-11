@@ -112,3 +112,97 @@ def test_async_write_requires_csrf_for_cookie_session():
         status, body, _=await app._engine.dispatch_request('POST','/write','',{'cookie':cookie,'x-csrf-token':token},'')
         assert status==200 and json.loads(body)=={'ok':True} and called==[True]
     asyncio.run(run())
+
+
+def test_native_http_async_and_sync_execution(tmp_path):
+    import os
+    import socket
+    import subprocess
+    import sys
+    import time
+    from pathlib import Path
+    from urllib.error import HTTPError
+    from urllib.request import build_opener, ProxyHandler, Request
+
+    with socket.socket() as sock:
+        sock.bind(('127.0.0.1', 0))
+        port = sock.getsockname()[1]
+    script = tmp_path / 'async_app.py'
+    script.write_text('''import asyncio
+from pydataui import App
+from pydataui.components import Container, Heading
+
+app = App()
+
+@app.api('/sync', method='GET', public=True)
+def sync_test():
+    return {'message': 'sync works'}
+
+@app.api('/async', method='GET', public=True)
+async def async_test():
+    await asyncio.sleep(0.05)
+    return {'message': 'async works'}
+
+@app.page('/async_page', public=True)
+async def async_page():
+    await asyncio.sleep(0.02)
+    return Container(Heading('Async Page Loaded'))
+
+app.run(port=int(__import__('os').environ['PYDATAUI_TEST_PORT']))
+''')
+    log_file = tmp_path / 'server.log'
+    log = log_file.open('w')
+    env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[1]),
+               PYDATAUI_TEST_PORT=str(port))
+    server = subprocess.Popen([sys.executable, str(script)], env=env, stdout=log, stderr=log)
+    opener = build_opener(ProxyHandler({}))
+    base = f'http://127.0.0.1:{port}'
+
+    def call(path, headers=None):
+        req = Request(base + path, headers=headers or {})
+        try:
+            response = opener.open(req, timeout=5)
+        except HTTPError as exc:
+            response = exc
+        with response:
+            return response.status, response.read().decode()
+
+    try:
+        for _ in range(100):
+            if server.poll() is not None:
+                raise AssertionError(log_file.read_text())
+            try:
+                if call('/_pdu/health')[0] == 200:
+                    break
+            except OSError:
+                time.sleep(0.1)
+        else:
+            raise AssertionError('Server did not become ready')
+
+        # Test sync endpoint
+        status, body = call('/sync')
+        assert status == 200
+        assert json.loads(body) == {'message': 'sync works'}
+
+        # Test async endpoint
+        status, body = call('/async')
+        assert status == 200
+        assert json.loads(body) == {'message': 'async works'}
+
+        # Test async page
+        status, html = call('/async_page')
+        assert status == 200
+        assert 'Async Page Loaded' in html
+    finally:
+        server.terminate()
+        try:
+            server.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            server.kill()
+            server.wait()
+        log.close()
+
+    server_output = log_file.read_text()
+    assert 'RuntimeWarning: coroutine' not in server_output
+    assert 'was never awaited' not in server_output
+

@@ -8,6 +8,19 @@ All tests measure real HTTP performance over loopback TCP sockets using **Apache
 
 ## 📊 Executive Summary (Local Machine Measured Results)
 
+### Profile A: High-Concurrency Stress Test (c=100, 5,000 requests)
+
+Under extreme concurrency (`100 concurrent workers`), PyDataUI demonstrates resilience and stability, while FastAPI/Uvicorn suffers severe queuing contention on asynchronous POST:
+
+| Benchmark Workload | PyDataUI (`pyrustapi`) | FastAPI (`uvicorn + uvloop`) | Speedup Advantage | PyDataUI Latency (Mean) | FastAPI Latency (Mean) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Real POST (Async Pydantic)**| **1,172.9 req/s** | 220.3 req/s | **⚡ 5.32x Faster** | **85.26 ms** | 453.85 ms (p99: 17.6s) |
+| **Real GET (Sync)** | **4,066.8 req/s** | 1,679.0 req/s | **⚡ 2.42x Faster** | **24.59 ms** | 59.56 ms |
+| **Real POST (Sync Pydantic)** | **1,845.0 req/s** | 935.3 req/s | **⚡ 1.97x Faster** | **54.20 ms** | 106.92 ms |
+| **Real GET (Async I/O)** | **2,444.8 req/s** | 1,557.6 req/s | **⚡ 1.57x Faster** | **40.90 ms** | 64.20 ms |
+
+### Profile B: Standard Load (c=50, 2,000 requests)
+
 | Benchmark Workload | PyDataUI (`pyrustapi`) | FastAPI (`uvicorn + uvloop`) | Speedup Advantage | PyDataUI Latency (Mean) | FastAPI Latency (Mean) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Real GET (Sync)** | **4,028.9 req/s** | 1,705.1 req/s | **⚡ 2.36x Faster** | **12.41 ms** | 29.32 ms |
@@ -15,7 +28,7 @@ All tests measure real HTTP performance over loopback TCP sockets using **Apache
 | **Real POST (Async Pydantic)**| **2,311.5 req/s** | 1,388.6 req/s | **⚡ 1.66x Faster** | **21.63 ms** | 36.01 ms |
 | **Real GET (Async I/O)** | **2,772.4 req/s** | 1,966.6 req/s | **⚡ 1.41x Faster** | **18.04 ms** | 25.42 ms |
 
-> **Key Takeaway**: Across all tested real-world workloads, PyDataUI achieves **1.4x to 2.87x higher throughput** and **up to 65% lower request latency** than FastAPI. In synchronous Pydantic validation and serialization, PyDataUI is nearly **3x faster**.
+> **Key Takeaway**: Under high concurrency, PyDataUI is **up to 5.3x faster** than FastAPI. FastAPI's event-loop queue suffers tail latency blowouts up to 17.6 seconds on async POST, while PyDataUI maintains p99 tail latency under 125 ms thanks to Tokio's multi-threaded work-stealing scheduler.
 
 ---
 

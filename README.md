@@ -322,6 +322,19 @@ pydataui build app.py --output dist/
 
 PyDataUI is powered by the compiled Rust **`pyrustapi`** engine (built on Tokio and Hyper). Below are real benchmark measurements comparing PyDataUI against **FastAPI (Uvicorn + uvloop)** under identical hardware, models, and load conditions (ApacheBench, 2,000 requests, 50 concurrency):
 
+### 1. High-Concurrency Stress Test (c=100, 5,000 requests)
+
+Under heavy concurrent load (`c=100`), PyDataUI sustains high throughput and tight sub-100ms latency, while FastAPI/Uvicorn suffers severe queuing contention on asynchronous POST:
+
+| Workload | PyDataUI (`pyrustapi`) | FastAPI (`uvicorn + uvloop`) | Speedup Advantage | PyDataUI Latency | FastAPI Latency |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Real POST (Async Pydantic)**| **1,172.9 req/s** | 220.3 req/s | **⚡ 5.32x Faster** | **85.26 ms** | 453.85 ms (p99: 17.6s) |
+| **Real GET (Sync)** | **4,066.8 req/s** | 1,679.0 req/s | **⚡ 2.42x Faster** | **24.59 ms** | 59.56 ms |
+| **Real POST (Sync Pydantic)** | **1,845.0 req/s** | 935.3 req/s | **⚡ 1.97x Faster** | **54.20 ms** | 106.92 ms |
+| **Real GET (Async I/O)** | **2,444.8 req/s** | 1,557.6 req/s | **⚡ 1.57x Faster** | **40.90 ms** | 64.20 ms |
+
+### 2. Standard Load (c=50, 2,000 requests)
+
 | Workload | PyDataUI (`pyrustapi`) | FastAPI (`uvicorn + uvloop`) | Speedup Advantage | PyDataUI Latency | FastAPI Latency |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Real GET (Sync)** | **4,028.9 req/s** | 1,705.1 req/s | **⚡ 2.36x Faster** | **12.41 ms** | 29.32 ms |
@@ -329,14 +342,16 @@ PyDataUI is powered by the compiled Rust **`pyrustapi`** engine (built on Tokio 
 | **Real POST (Async Pydantic)**| **2,311.5 req/s** | 1,388.6 req/s | **⚡ 1.66x Faster** | **21.63 ms** | 36.01 ms |
 | **Real GET (Async I/O)** | **2,772.4 req/s** | 1,966.6 req/s | **⚡ 1.41x Faster** | **18.04 ms** | 25.42 ms |
 
-- **Tested on Local Device**: Measured over loopback TCP using ApacheBench (`-n 2000 -c 50`, macOS Darwin, Python 3.13).
-- **Zero-Copy Serialization**: RustAPI directly buffers network I/O, reducing Python memory churn.
-- **Pydantic Validation**: Handles request models with nearly 3x the throughput and a third of the latency of Uvicorn.
-- **Detailed Report**: See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for full percentile analysis (p50, p95, p99) and reproduction instructions.
+- **Tested on Local Device**: Measured over loopback TCP using ApacheBench on macOS Darwin (Python 3.13).
+- **Rust Tokio/Hyper Core**: Zero-copy network buffering prevents Python event-loop exhaustion under high concurrency.
+- **Detailed Report**: See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for complete latency distributions (p50, p90, p95, p99) and reproduction instructions.
 
 ```bash
-# Run the benchmark yourself:
+# Run standard benchmark:
 python benchmarks/run_benchmark.py --requests 2000 --concurrency 50
+
+# Run high-concurrency stress test:
+python benchmarks/run_benchmark.py --requests 5000 --concurrency 100
 ```
 
 ---

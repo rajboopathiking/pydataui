@@ -23,7 +23,7 @@ class App:
         self,
         title: str = 'PyDataUI App',
         description: str = '',
-        version: str = '0.2.1',
+        version: str = '0.2.2',
         debug: bool = False,
         theme: str = 'light',
         palette: str = 'zinc',
@@ -136,8 +136,12 @@ class App:
                         return denied
                     with self._request_context(request):
                         if accepts_request:
-                            return await func(request, *args, **params)
-                        return await func(*args, **params)
+                            res = await func(request, *args, **params)
+                        else:
+                            res = await func(*args, **params)
+                        if inspect.isawaitable(res):
+                            res = await res
+                        return res
             else:
                 @wraps(func)
                 def endpoint(request, *args, **params):
@@ -149,8 +153,21 @@ class App:
                             return denied
                         with self._request_context(request):
                             if accepts_request:
-                                return func(request, *args, **params)
-                            return func(*args, **params)
+                                res = func(request, *args, **params)
+                            else:
+                                res = func(*args, **params)
+                            if inspect.isawaitable(res):
+                                import asyncio
+                                try:
+                                    loop = asyncio.get_event_loop()
+                                    if loop.is_running():
+                                        fut = asyncio.run_coroutine_threadsafe(res, loop)
+                                        return fut.result()
+                                    else:
+                                        return loop.run_until_complete(res)
+                                except RuntimeError:
+                                    return asyncio.run(res)
+                            return res
             if not accepts_request:
                 endpoint.__signature__ = signature.replace(parameters=[
                     inspect.Parameter('request', inspect.Parameter.POSITIONAL_OR_KEYWORD),
@@ -362,14 +379,19 @@ class App:
     def _register_page_route(self, path: str):
         """Register a page route on the pyrustapi engine."""
         page = self._page_router.get_page(path)
+        public, roles = self._page_security[path]
         
-        @self._engine.get(path)
-        def page_handler(request):
-            request = request_context(request, self)
-            session = self._get_session(request)
-            public, roles = self._page_security[path]
-            with session.lock:
-                denied = self._guard_request(request, session, roles=roles, public=public)
+        if inspect.iscoroutinefunction(page.handler):
+            @self._engine.get(path)
+            async def page_handler(request):
+                import asyncio
+                request = request_context(request, self)
+                def authorize():
+                    session = self._get_session(request)
+                    with session.lock:
+                        return self._guard_request(request, session, roles=roles, public=public)
+                denied = await asyncio.to_thread(authorize)
+                session = self._get_session(request)
                 if denied is not None:
                     headers_req = getattr(request, 'headers', {}) or {}
                     accept = headers_req.get('accept') or headers_req.get('Accept') or headers_req.get('sec-fetch-dest') or ''
@@ -383,9 +405,30 @@ class App:
                                                 headers={'Set-Cookie': cookie_header})
                     return denied
                 with self._request_context(request):
-                    return render_page(request, session)
+                    return await render_page_async(request, session)
+        else:
+            @self._engine.get(path)
+            def page_handler(request):
+                request = request_context(request, self)
+                session = self._get_session(request)
+                with session.lock:
+                    denied = self._guard_request(request, session, roles=roles, public=public)
+                    if denied is not None:
+                        headers_req = getattr(request, 'headers', {}) or {}
+                        accept = headers_req.get('accept') or headers_req.get('Accept') or headers_req.get('sec-fetch-dest') or ''
+                        if (getattr(denied, 'status_code', None) == 401
+                                and ('text/html' in str(accept).lower() or accept == 'document')
+                                and self._page_router.get_page('/login')
+                                and path != '/login'):
+                            from rustapi.responses import RedirectResponse
+                            cookie_header = self._session_cookie(session)
+                            return RedirectResponse(f'/login?next={path}', status_code=303,
+                                                    headers={'Set-Cookie': cookie_header})
+                        return denied
+                    with self._request_context(request):
+                        return render_page(request, session)
 
-        def render_page(request, session):
+        async def render_page_async(request, session):
             session.current_page = path
             
             snapshot = self._build_state_snapshot(session)
@@ -397,8 +440,9 @@ class App:
             import html
             render_failed = False
             try:
-                component = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
-                             else page.handler())
+                res = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
+                       else page.handler())
+                component = await res if inspect.isawaitable(res) else res
                 if isinstance(component, (Response, HTMLResponse, PlainTextResponse,
                                           RedirectResponse, JSONResponse, StreamingResponse)):
                     return component
@@ -439,7 +483,76 @@ class App:
                 _current_session.reset(token_sess)
                 _current_snapshot.reset(token_snap)
                 
-            cookie_val = self._session_manager.get_session_cookie_value(session)
+            resp_headers = {"Set-Cookie": self._session_cookie(session), "Cache-Control": "no-store"}
+            return HTMLResponse(content=content, status_code=500 if render_failed else 200, headers=resp_headers)
+
+        def render_page(request, session):
+            session.current_page = path
+            
+            snapshot = self._build_state_snapshot(session)
+            token_sess = _current_session.set(session)
+            token_snap = _current_snapshot.set(snapshot)
+            headers_req = getattr(request, 'headers', {})
+            hx_header = headers_req.get('hx-request') or headers_req.get('HX-Request') or ''
+            is_htmx = str(hx_header).lower() == 'true'
+            import html
+            render_failed = False
+            try:
+                res = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
+                       else page.handler())
+                if inspect.isawaitable(res):
+                    import asyncio
+                    try:
+                        loop = asyncio.get_event_loop()
+                        if loop.is_running():
+                            fut = asyncio.run_coroutine_threadsafe(res, loop)
+                            component = fut.result()
+                        else:
+                            component = loop.run_until_complete(res)
+                    except RuntimeError:
+                        component = asyncio.run(res)
+                else:
+                    component = res
+                if isinstance(component, (Response, HTMLResponse, PlainTextResponse,
+                                          RedirectResponse, JSONResponse, StreamingResponse)):
+                    return component
+                render_handler = lambda: component
+                if is_htmx:
+                    content = self._renderer.render_fragment(render_handler, snapshot)
+                else:
+                    title = page.title or self.config.title
+                    content = self._renderer.render_page(render_handler, snapshot, title=title)
+            except Exception as e:
+                render_failed = True
+                import traceback
+                print(f"\n[PyDataUI Render Error] In page handler for '{path}': {e}")
+                traceback.print_exc()
+                tb_str = traceback.format_exc() if self.config.debug else ''
+                error_body = (
+                    f'<div class="pdu-error-boundary p-6 bg-red-50 border border-red-200 rounded-lg text-red-900 m-8 shadow-md max-w-4xl mx-auto font-sans">'
+                    f'<h2 class="font-bold text-xl text-red-700 flex items-center gap-2">⚠️ PyDataUI Application Error</h2>'
+                    f'<p class="mt-2 text-sm text-red-600 font-medium">An error occurred while rendering <code>{html.escape(path)}</code>:</p>'
+                    f'<div class="mt-2 font-bold text-red-800 text-sm bg-red-100 p-2 rounded">{html.escape(type(e).__name__ if self.config.debug else "Error")}: {html.escape(str(e) if self.config.debug else "An internal error occurred")}</div>'
+                    f'<pre class="mt-3 p-4 bg-red-100/60 rounded text-xs overflow-auto font-mono text-red-900 max-h-96">{html.escape(tb_str)}</pre>'
+                    f'<button class="mt-4 px-4 py-2 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition" onclick="window.location.reload()">Reload Page</button>'
+                    f'</div>'
+                )
+                if is_htmx:
+                    content = error_body
+                else:
+                    css_url = f'{self.config.internal_prefix}/static/pydataui.css'
+                    from .compiler.templates import get_base_html
+                    content = get_base_html(
+                        title="Error - " + self.config.title,
+                        content=error_body,
+                        css_url=css_url,
+                        theme=getattr(self.config, 'theme', 'light'),
+                        palette=getattr(self.config, 'palette', 'zinc')
+                    )
+            finally:
+                _current_session.reset(token_sess)
+                _current_snapshot.reset(token_snap)
+                
             resp_headers = {"Set-Cookie": self._session_cookie(session), "Cache-Control": "no-store"}
             return HTMLResponse(content=content, status_code=500 if render_failed else 200, headers=resp_headers)
             
@@ -536,7 +649,18 @@ class App:
                     if len(accepted_param_names) == 1 and len(kwargs) == 1 and not call_kwargs:
                         call_kwargs = {accepted_param_names[0]: next(iter(kwargs.values()))}
                 try:
-                    func(**call_kwargs)
+                    res = func(**call_kwargs)
+                    if inspect.isawaitable(res):
+                        import asyncio
+                        try:
+                            loop = asyncio.get_event_loop()
+                            if loop.is_running():
+                                fut = asyncio.run_coroutine_threadsafe(res, loop)
+                                fut.result()
+                            else:
+                                loop.run_until_complete(res)
+                        except RuntimeError:
+                            asyncio.run(res)
                 except Exception as e:
                     import traceback
                     handler_error = f"{type(e).__name__}: {e}" if self.config.debug else "Action failed"
@@ -584,8 +708,21 @@ class App:
             snapshot = self._build_state_snapshot(session)
             token_snap = _current_snapshot.set(snapshot)
             try:
-                component = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
-                             else page.handler())
+                res = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
+                       else page.handler())
+                if inspect.isawaitable(res):
+                    import asyncio
+                    try:
+                        loop = asyncio.get_event_loop()
+                        if loop.is_running():
+                            fut = asyncio.run_coroutine_threadsafe(res, loop)
+                            component = fut.result()
+                        else:
+                            component = loop.run_until_complete(res)
+                    except RuntimeError:
+                        component = asyncio.run(res)
+                else:
+                    component = res
                 if isinstance(component, (Response, HTMLResponse, PlainTextResponse,
                                           RedirectResponse, JSONResponse, StreamingResponse)):
                     return component

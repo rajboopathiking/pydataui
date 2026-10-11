@@ -19,7 +19,7 @@ from .storage import (
 from .components.base import Component, RawHtml, Html
 from . import html
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 __all__ = [
     'App',

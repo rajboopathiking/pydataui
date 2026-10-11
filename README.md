@@ -324,13 +324,14 @@ PyDataUI is powered by the compiled Rust **`pyrustapi`** engine (built on Tokio 
 
 | Workload | PyDataUI (`pyrustapi`) | FastAPI (`uvicorn + uvloop`) | Speedup Advantage | PyDataUI Latency | FastAPI Latency |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Real GET (Sync)** | **4,354.5 req/s** | 2,391.1 req/s | **⚡ 1.82x – 2.14x Faster** | **11.48 ms** | 20.91 ms |
-| **Real POST (Sync Pydantic)** | **3,932.8 req/s** | 1,759.2 req/s | **⚡ 2.24x Faster** | **12.71 ms** | 28.42 ms |
-| **Real POST (Async Pydantic)**| **2,285.2 req/s** | 1,899.8 req/s | **⚡ 1.20x Faster** | **21.88 ms** | 26.32 ms |
-| **Real GET (Async I/O)** | **2,870.7 req/s** | 3,017.0 req/s | **~Parity (1.0x)** | **17.42 ms** | 16.57 ms |
+| **Real GET (Sync)** | **4,028.9 req/s** | 1,705.1 req/s | **⚡ 2.36x Faster** | **12.41 ms** | 29.32 ms |
+| **Real POST (Sync Pydantic)** | **3,736.5 req/s** | 1,302.3 req/s | **⚡ 2.87x Faster** | **13.38 ms** | 38.39 ms |
+| **Real POST (Async Pydantic)**| **2,311.5 req/s** | 1,388.6 req/s | **⚡ 1.66x Faster** | **21.63 ms** | 36.01 ms |
+| **Real GET (Async I/O)** | **2,772.4 req/s** | 1,966.6 req/s | **⚡ 1.41x Faster** | **18.04 ms** | 25.42 ms |
 
+- **Tested on Local Device**: Measured over loopback TCP using ApacheBench (`-n 2000 -c 50`, macOS Darwin, Python 3.13).
 - **Zero-Copy Serialization**: RustAPI directly buffers network I/O, reducing Python memory churn.
-- **Pydantic Validation**: Handles request models with less than half the request latency of Uvicorn.
+- **Pydantic Validation**: Handles request models with nearly 3x the throughput and a third of the latency of Uvicorn.
 - **Detailed Report**: See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for full percentile analysis (p50, p95, p99) and reproduction instructions.
 
 ```bash

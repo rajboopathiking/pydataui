@@ -3,8 +3,9 @@ from contextlib import contextmanager
 import secrets
 import inspect
 from typing import Callable, Optional, Dict, Any, List, Union
-from rustapi import FastAPI as RustAPIApp
-from rustapi.responses import JSONResponse, HTMLResponse, Response, RedirectResponse, PlainTextResponse, StreamingResponse
+from collections.abc import Mapping
+from .backend import create_engine
+from .responses import JSONResponse, HTMLResponse, Response, RedirectResponse, PlainTextResponse, StreamingResponse
 
 from .request import request_context
 from .config import AppConfig
@@ -12,7 +13,7 @@ from .page import PageRouter
 from .compiler.renderer import Renderer
 from .session import SessionManager, Session
 from .api import APIGenerator
-from .state import StateMeta, _current_session, _current_snapshot
+from .state import StateMeta, _current_session, _current_snapshot, _current_root_path
 from .components.base import Component
 from .exceptions import AuthenticationThrottledError
 
@@ -33,6 +34,7 @@ class App:
         scripts: Optional[List[str]] = None,
         head: Optional[Union[str, List[str]]] = None,
         storage: Optional[str] = None,
+        backend: str = 'fastapi',
         **kwargs
     ):
         self.config = AppConfig(
@@ -48,14 +50,17 @@ class App:
             scripts=scripts,
             head=head,
             storage=storage,
+            backend=backend,
             **kwargs
         )
         if storage is not None:
             self.config.storage = storage
 
+        self.backend = (backend or 'fastapi').lower()
         docs_url = f"{self.config.api_prefix}/docs"
         openapi_url = f"{self.config.api_prefix}/openapi.json"
-        self._engine = RustAPIApp(
+        self._engine = create_engine(
+            backend=self.backend,
             title=title,
             description=description,
             version=version,
@@ -99,6 +104,23 @@ class App:
     def api_routes(self) -> Dict[str, Dict[str, Any]]:
         """Dictionary of registered custom API endpoints."""
         return {path: {'method': method, 'handler': func} for method, path, func in self._custom_api_routes}
+
+    @property
+    def asgi_app(self) -> Any:
+        """Return the underlying ASGI application."""
+        if hasattr(self._engine, "app"):
+            return self._engine.app
+        return self._engine
+
+    async def __call__(self, scope: Dict[str, Any], receive: Callable, send: Callable) -> None:
+        """Allow PyDataUI App to be directly invoked as an ASGI application."""
+        asgi = self.asgi_app
+        await asgi(scope, receive, send)
+
+    def mount_to(self, parent_app: Any, path: str = "/ui") -> None:
+        """Mount this PyDataUI app onto an existing FastAPI or Starlette application."""
+        from .mount import mount
+        mount(parent_app, self, path=path)
 
     def page(self, path: str, title: Optional[str] = None, layout: Optional[Callable] = None, *, public: bool = False, roles=()):
         """Decorator to register a page route."""
@@ -317,8 +339,8 @@ class App:
             try:
                 with open(target_path, 'rb') as f:
                     content = f.read()
-                return StreamingResponse(
-                    iter([content]),
+                return Response(
+                    content=content,
                     status_code=200,
                     media_type=media_type,
                     headers={"Cache-Control": "public, max-age=3600"}
@@ -399,7 +421,7 @@ class App:
                             and ('text/html' in str(accept).lower() or accept == 'document')
                             and self._page_router.get_page('/login')
                             and path != '/login'):
-                        from rustapi.responses import RedirectResponse
+                        from .responses import RedirectResponse
                         cookie_header = self._session_cookie(session)
                         return RedirectResponse(f'/login?next={path}', status_code=303,
                                                 headers={'Set-Cookie': cookie_header})
@@ -420,7 +442,7 @@ class App:
                                 and ('text/html' in str(accept).lower() or accept == 'document')
                                 and self._page_router.get_page('/login')
                                 and path != '/login'):
-                            from rustapi.responses import RedirectResponse
+                            from .responses import RedirectResponse
                             cookie_header = self._session_cookie(session)
                             return RedirectResponse(f'/login?next={path}', status_code=303,
                                                     headers={'Set-Cookie': cookie_header})
@@ -431,6 +453,9 @@ class App:
         async def render_page_async(request, session):
             session.current_page = path
             
+            scope = getattr(request, 'scope', None) or {}
+            root_path = scope.get('root_path', '') or getattr(self.config, 'root_path', '') or ''
+            token_root = _current_root_path.set(root_path)
             snapshot = self._build_state_snapshot(session)
             token_sess = _current_session.set(session)
             token_snap = _current_snapshot.set(snapshot)
@@ -482,6 +507,7 @@ class App:
             finally:
                 _current_session.reset(token_sess)
                 _current_snapshot.reset(token_snap)
+                _current_root_path.reset(token_root)
                 
             resp_headers = {"Set-Cookie": self._session_cookie(session), "Cache-Control": "no-store"}
             return HTMLResponse(content=content, status_code=500 if render_failed else 200, headers=resp_headers)
@@ -489,6 +515,9 @@ class App:
         def render_page(request, session):
             session.current_page = path
             
+            scope = getattr(request, 'scope', None) or {}
+            root_path = scope.get('root_path', '') or getattr(self.config, 'root_path', '') or ''
+            token_root = _current_root_path.set(root_path)
             snapshot = self._build_state_snapshot(session)
             token_sess = _current_session.set(session)
             token_snap = _current_snapshot.set(snapshot)
@@ -552,6 +581,7 @@ class App:
             finally:
                 _current_session.reset(token_sess)
                 _current_snapshot.reset(token_snap)
+                _current_root_path.reset(token_root)
                 
             resp_headers = {"Set-Cookie": self._session_cookie(session), "Cache-Control": "no-store"}
             return HTMLResponse(content=content, status_code=500 if render_failed else 200, headers=resp_headers)
@@ -577,6 +607,9 @@ class App:
         """Handle an event from HTMX with full error boundary and graceful degradation."""
         import html
         session = self._get_session(request)
+        scope = getattr(request, 'scope', None) or {}
+        root_path = scope.get('root_path', '') or getattr(self.config, 'root_path', '') or ''
+        token_root = _current_root_path.set(root_path)
         token_sess = _current_session.set(session)
         try:
             if state_name not in session.state_instances:
@@ -588,39 +621,26 @@ class App:
             state_instance = session.state_instances[state_name]
             
             # Robust parsing of kwargs from query, form, and json body
+            req_ctx = request_context(request, self)
             kwargs: Dict[str, Any] = {}
-            if hasattr(request, 'query_params'):
-                qp = request.query_params() if callable(request.query_params) else request.query_params
-                if isinstance(qp, dict):
-                    kwargs.update(qp)
-            if hasattr(request, 'form'):
-                try:
-                    f = request.form() if callable(request.form) else request.form
-                    if isinstance(f, dict):
-                        kwargs.update(f)
-                except Exception:
-                    pass
-            if hasattr(request, 'json'):
-                try:
-                    j = request.json() if callable(request.json) else request.json
-                    if isinstance(j, dict):
-                        kwargs.update(j)
-                except Exception:
-                    pass
-            if hasattr(request, 'body'):
-                try:
-                    b = request.body() if callable(request.body) else request.body
-                    if isinstance(b, (bytes, str)) and b:
-                        b_str = b.decode('utf-8', errors='ignore') if isinstance(b, bytes) else b
-                        b_str_s = b_str.strip()
-                        if b_str_s and not b_str_s.startswith('{') and '=' in b_str_s:
-                            from urllib.parse import parse_qs
-                            parsed = parse_qs(b_str_s)
-                            for k, v in parsed.items():
-                                if k not in kwargs:
-                                    kwargs[k] = v[0] if len(v) == 1 else v
-                except Exception:
-                    pass
+            try:
+                qp = req_ctx.query_params
+                if isinstance(qp, (dict, Mapping)) or hasattr(qp, 'items'):
+                    kwargs.update(dict(qp))
+            except Exception:
+                pass
+            try:
+                f = req_ctx.form()
+                if isinstance(f, (dict, Mapping)) or hasattr(f, 'items'):
+                    kwargs.update(dict(f))
+            except Exception:
+                pass
+            try:
+                j = req_ctx.json()
+                if isinstance(j, (dict, Mapping)) or hasattr(j, 'items'):
+                    kwargs.update(dict(j))
+            except Exception:
+                pass
 
             # Only the targeted state receives declared client-editable fields.
             inputs = {k: v for k, v in kwargs.items()
@@ -761,6 +781,7 @@ class App:
             return HTMLResponse(content=content, status_code=200, headers=resp_headers)
         finally:
             _current_session.reset(token_sess)
+            _current_root_path.reset(token_root)
     def _register_api_endpoints(self):
         """Ensure state and REST API endpoints are registered on the engine."""
         self._api_generator.generate_state_endpoints(self._engine, self._session_manager)

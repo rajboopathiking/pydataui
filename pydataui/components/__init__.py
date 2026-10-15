@@ -10,6 +10,8 @@ from .media import Audio, Icon, Image, Video
 from .charts import BarChart, Chart, DoughnutChart, LineChart, PieChart, Sparkline
 from .shadcn import ShadButton, ShadCard, ShadCardHeader, ShadCardTitle, ShadCardDescription, ShadCardContent, ShadCardFooter, ShadInput, ShadCheckbox, ShadBadge, ShadAlert, ShadSeparator, ShadProgress, ShadSkeleton, ShadSwitch, ShadTable, ShadSelect, ShadTextarea, ShadLabel, ShadDialog, ShadScrollArea, ShadTabs, ShadToast, ShadAvatar, ShadHoverCard, ShadAccordion, ShadSheet
 from .data_science import DataFrameTable, MetricCard, ModelMetrics, PipelineStatus, ConfusionMatrix, JSONViewer, CodeBlock, FileDownload, DataUpload, SQLEditor, PlotlyChart, DataTimeline, FeatureImportance, SchemaViewer
+Metric = MetricCard
+from .advanced import Markdown, CodeEditor, Chat
 from .html import (
     Div, Span, Section, Article, Header, Footer, Main, Nav, Aside,
     P, H1, H2, H3, H4, H5, H6,
@@ -32,6 +34,7 @@ __all__ = [
     'BarChart', 'Chart', 'DoughnutChart', 'LineChart', 'PieChart', 'Sparkline',
     'ShadButton', 'ShadCard', 'ShadCardHeader', 'ShadCardTitle', 'ShadCardDescription', 'ShadCardContent', 'ShadCardFooter', 'ShadInput', 'ShadCheckbox', 'ShadBadge', 'ShadAlert', 'ShadSeparator', 'ShadProgress', 'ShadSkeleton', 'ShadSwitch', 'ShadTable', 'ShadSelect', 'ShadTextarea', 'ShadLabel', 'ShadDialog', 'ShadScrollArea', 'ShadTabs', 'ShadToast', 'ShadAvatar', 'ShadHoverCard', 'ShadAccordion', 'ShadSheet',
     'DataFrameTable', 'MetricCard', 'ModelMetrics', 'PipelineStatus', 'ConfusionMatrix', 'JSONViewer', 'CodeBlock', 'FileDownload', 'DataUpload', 'SQLEditor', 'PlotlyChart', 'DataTimeline', 'FeatureImportance', 'SchemaViewer',
+    'Markdown', 'CodeEditor', 'Chat',
     'Div', 'Span', 'Section', 'Article', 'Header', 'Footer', 'Main', 'Nav', 'Aside',
     'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
     'A', 'Ul', 'Ol', 'Li', 'Strong', 'Em', 'CodeTag', 'Pre', 'Hr', 'Br',

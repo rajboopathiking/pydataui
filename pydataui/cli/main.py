@@ -40,7 +40,12 @@ def _load_app(file_path_str: str):
             break
             
     if app_instance is None:
-        print(f"Error: Could not find an App instance in '{file_path_str}'. Define `app = App(...)`.")
+        from pydataui.dx import _default_app
+        if _default_app is not None:
+            app_instance = _default_app
+
+    if app_instance is None:
+        print(f"Error: Could not find an App instance in '{file_path_str}'. Define `app = App(...)` or use simplified `ui.*`.")
         sys.exit(1)
         
     return app_instance
@@ -138,7 +143,7 @@ services:
     print(f"\nReady for containerization! Run: cd {build_dir} && docker compose up --build\n")
 
 def show_version(args):
-    print(f"PyDataUI version {__version__} (powered by pyrustapi core)")
+    print(f"PyDataUI version {__version__} (FastAPI default core)")
 
 def open_docs(args):
     import webbrowser

@@ -1,0 +1,76 @@
+site_name: PyDataUI
+site_description: "A Full-Stack Python Framework for Data and AI Applications with a Compiled Rust HTTP Core"
+site_author: "Boopathi Raj"
+site_url: "https://rajboopathiking.github.io/pydataui/"
+repo_url: "https://github.com/rajboopathiking/pydataui"
+repo_name: "rajboopathiking/pydataui"
+
+exclude_docs: |
+  README.md
+  VERIFICATION_*.json
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - def_list
+
+nav:
+  - Home: index.md
+  - Benchmarks: BENCHMARKS.md
+  - Guides:
+      - Authentication & Security: AUTHENTICATION.md
+      - UI Customization & Tailwind: CUSTOMIZATION.md
+      - Data Science Components: DATA_COMPONENTS.md
+      - Production Deployment: DEPLOYMENT.md
+      - Production Readiness: PRODUCTION_READINESS.md
+      - Troubleshooting: TROUBLESHOOTING.md
+  - Reference:
+      - API Reference: API_REFERENCE.md
+      - Quick Reference: QUICKREF.md
+      - Migration Guide: MIGRATION_0_2_1.md

@@ -188,6 +188,10 @@ class Component:
                         for param_name, default_val in zip(handler.__code__.co_varnames, handler.__defaults__):
                             args_dict[param_name] = default_val
                     attrs = EventSpec(EH(state_cls_name, method_name), args=args_dict).get_htmx_attrs(trigger=trigger)
+            else:
+                from ..dx import register_callback
+                action_name = register_callback(handler)
+                attrs = EH('ActionState', action_name).get_htmx_attrs(trigger=trigger)
         if attrs and 'hx-include' not in attrs:
             attrs['hx-include'] = '#pdu-root'
         return attrs

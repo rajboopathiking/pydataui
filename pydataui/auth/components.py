@@ -44,6 +44,8 @@ class LoginPage(Component):
             'PDU</div>'
         )
 
+        from ..state import _current_root_path
+        prefix = _current_root_path.get().rstrip('/')
         return f'''<div class="min-h-screen flex items-center justify-center bg-muted/40 p-4">
   <div class="w-full max-w-md rounded-xl border bg-card text-card-foreground shadow-lg p-8">
     <div class="flex flex-col items-center text-center mb-6">
@@ -52,7 +54,7 @@ class LoginPage(Component):
       <p class="text-sm text-muted-foreground mt-1">{escape(str(self.subtitle))}</p>
     </div>
     {error_alert}
-    <form hx-post="/_pdu/event/LoginState/login" hx-target="#pdu-root" hx-swap="innerHTML" class="space-y-4">
+    <form hx-post="{prefix}/_pdu/event/LoginState/login" hx-target="#pdu-root" hx-swap="innerHTML" class="space-y-4">
       <div>
         <label class="block text-sm font-medium mb-1.5" for="login-username">Username</label>
         <input id="login-username" name="username" type="text" required autocomplete="username"
@@ -86,8 +88,10 @@ class UserMenu(Component):
         self.user = user
 
     def render(self, state_snapshot: Optional[dict] = None) -> str:
+        from ..state import _current_root_path
+        prefix = _current_root_path.get().rstrip('/')
         if not self.user:
-            return '<div class="flex items-center gap-2"><span class="text-sm text-muted-foreground">Guest</span><a href="/login" class="inline-flex items-center justify-center rounded-md text-xs font-semibold bg-primary text-primary-foreground h-8 px-3 hover:bg-primary/90 transition-colors">Sign In</a></div>'
+            return f'<div class="flex items-center gap-2"><span class="text-sm text-muted-foreground">Guest</span><a href="{prefix}/login" class="inline-flex items-center justify-center rounded-md text-xs font-semibold bg-primary text-primary-foreground h-8 px-3 hover:bg-primary/90 transition-colors">Sign In</a></div>'
         
         roles_html = "".join(
             f'<span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">{escape(str(r))}</span>'
@@ -102,7 +106,7 @@ class UserMenu(Component):
     <span class="text-sm font-medium truncate">{escape(str(self.user.username))}</span>
     <div class="flex gap-1 mt-0.5">{roles_html}</div>
   </div>
-  <button hx-post="/_pdu/event/LoginState/logout" hx-target="#pdu-root" hx-swap="innerHTML"
+  <button hx-post="{prefix}/_pdu/event/LoginState/logout" hx-target="#pdu-root" hx-swap="innerHTML"
           class="ml-auto inline-flex items-center justify-center rounded-md text-xs font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 transition-colors">
     Logout
   </button>

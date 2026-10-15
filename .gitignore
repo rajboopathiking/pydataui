@@ -41,3 +41,9 @@ htmlcov/
 .pydataui_storage*
 .pulse_metrics*
 .*.db*
+
+# Documentation build
+site/
+
+# Tooling
+.scopeforge/

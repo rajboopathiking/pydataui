@@ -1,6 +1,7 @@
 import inspect
 from typing import Any, Dict, Set
-from rustapi.responses import JSONResponse
+from collections.abc import Mapping
+from .responses import JSONResponse
 from .request import request_context
 from .config import AppConfig
 from .session import SessionManager, Session
@@ -20,42 +21,26 @@ class APIGenerator:
         return self.app._get_session(request), False
 
     def _extract_kwargs(self, request: Any) -> Dict[str, Any]:
+        req_ctx = request_context(request, self.app)
         kwargs: Dict[str, Any] = {}
-        if hasattr(request, 'query_params'):
-            try:
-                qp = request.query_params() if callable(request.query_params) else request.query_params
-                if isinstance(qp, dict):
-                    kwargs.update(qp)
-            except Exception:
-                pass
-        if hasattr(request, 'form'):
-            try:
-                f = request.form() if callable(request.form) else request.form
-                if isinstance(f, dict):
-                    kwargs.update(f)
-            except Exception:
-                pass
-        if hasattr(request, 'json'):
-            try:
-                j = request.json() if callable(request.json) else request.json
-                if isinstance(j, dict):
-                    kwargs.update(j)
-            except Exception:
-                pass
-        if hasattr(request, 'body'):
-            try:
-                b = request.body() if callable(request.body) else request.body
-                if isinstance(b, (bytes, str)) and b:
-                    b_str = b.decode('utf-8', errors='ignore') if isinstance(b, bytes) else b
-                    b_str_s = b_str.strip()
-                    if b_str_s and not b_str_s.startswith('{') and '=' in b_str_s:
-                        from urllib.parse import parse_qs
-                        parsed = parse_qs(b_str_s)
-                        for k, v in parsed.items():
-                            if k not in kwargs:
-                                kwargs[k] = v[0] if len(v) == 1 else v
-            except Exception:
-                pass
+        try:
+            qp = req_ctx.query_params
+            if isinstance(qp, (dict, Mapping)) or hasattr(qp, 'items'):
+                kwargs.update(dict(qp))
+        except Exception:
+            pass
+        try:
+            f = req_ctx.form()
+            if isinstance(f, (dict, Mapping)) or hasattr(f, 'items'):
+                kwargs.update(dict(f))
+        except Exception:
+            pass
+        try:
+            j = req_ctx.json()
+            if isinstance(j, (dict, Mapping)) or hasattr(j, 'items'):
+                kwargs.update(dict(j))
+        except Exception:
+            pass
         return kwargs
 
     def _ensure_instance(self, session, state_name, state_cls):

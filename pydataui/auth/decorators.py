@@ -1,5 +1,5 @@
 from functools import wraps
-from rustapi.responses import RedirectResponse, PlainTextResponse
+from ..responses import RedirectResponse, PlainTextResponse
 
 def require_auth(redirect_to="/login"):
     def decorator(func):

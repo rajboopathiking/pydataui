@@ -9,6 +9,9 @@ _current_snapshot: contextvars.ContextVar[Optional[Dict[str, Dict[str, Any]]]] =
 _current_session: contextvars.ContextVar[Optional[Any]] = contextvars.ContextVar(
     'current_session', default=None
 )
+_current_root_path: contextvars.ContextVar[str] = contextvars.ContextVar(
+    'current_root_path', default=''
+)
 
 class StateVarRef:
     """A reference to a state variable, used in components for reactive rendering.
@@ -206,7 +209,8 @@ class EventHandler:
 
     def get_endpoint(self) -> str:
         """Return the internal PyDataUI event endpoint path."""
-        return f'/_pdu/event/{self.state_cls_name}/{self.method_name}'
+        prefix = _current_root_path.get().rstrip('/')
+        return f'{prefix}/_pdu/event/{self.state_cls_name}/{self.method_name}'
 
     def get_htmx_attrs(
         self,

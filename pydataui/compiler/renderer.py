@@ -18,8 +18,13 @@ class Renderer:
             content = component.render(state_snapshot) if isinstance(component, Component) else str(component)
         finally:
             _current_snapshot.reset(token)
-        css_url = f'{self.config.internal_prefix}/static/pydataui.css'
-        htmx_url = f'{self.config.internal_prefix}/static/htmx.min.js'
+        prefix = getattr(self.config, 'root_path', '') or ''
+        from ..state import _current_root_path
+        if _current_root_path.get():
+            prefix = _current_root_path.get()
+        prefix = prefix.rstrip('/')
+        css_url = f'{prefix}{self.config.internal_prefix}/static/pydataui.css'
+        htmx_url = f'{prefix}{self.config.internal_prefix}/static/htmx.min.js'
         from ..middleware.security import csrf_token
         session = _current_session.get()
         return get_base_html(

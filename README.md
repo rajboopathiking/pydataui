@@ -4,40 +4,41 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Rust Core](https://img.shields.io/badge/backend-pyrustapi%20(Rust%2FTokio)-orange.svg)
+![Backend](https://img.shields.io/badge/backend-FastAPI%20(Default)%20%7C%20PyRustAPI%20(Optional)-emerald.svg)
 ![UI Engine](https://img.shields.io/badge/styling-Tailwind%20CSS%20%2B%20shadcn%2Fui-38bdf8.svg)
 ![Reactivity](https://img.shields.io/badge/reactivity-HTMX-3b82f6.svg)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-2ea44f.svg)](https://rajboopathiking.github.io/pydataui/)
 
 
-**A Full-Stack Python Framework for Data and AI Applications.**
+**A Python-First Full-Stack Framework for Reactive Apps, APIs, and AI Workloads.**
 *Data Engineers • Data Analysts • AI/ML Engineers • Python Developers*
 
-Write pure Python → get reactive web applications, automatic REST APIs, and a Rust HTTP backend.
+Write pure Python → get reactive web applications, automatic REST APIs, native FastAPI mounting, and optional Rust performance.
 **Zero JavaScript required.**
 
-[Quick Start](#-quick-start) • [Why PyDataUI?](#-why-pydataui) • [Components](#-components) • [Authentication](#-authentication--api-keys) • [Port Forwarding](#-port-forwarding-sharetrue) • [Benchmarks](#-performance-benchmarks) • [Documentation](docs/README.md)
+[🌐 Docs Website](https://rajboopathiking.github.io/pydataui/) • [Quick Start](#-quick-start) • [Streamlined DX](#-streamlined-developer-experience-streamlit-like) • [FastAPI Mounting](#-native-mounting-inside-fastapi) • [Components](#-components) • [Authentication](#-authentication--api-keys)
 
 </div>
 
 ---
 
-## 🎯 Built Specifically for Data Roles
+## 🎯 Modern Python-First Web Framework
 
-Build dashboards, dataset explorers, model evaluation interfaces, and data
-workflows using Python UI components and server-side logic.
+Build dashboards, dataset explorers, AI agent interfaces, and microservice workflows using pure Python UI components and server-side logic.
 
-**0.2.1 security source update:** see [the migration guide](docs/MIGRATION_0_2_1.md)
-for protected routes, API permissions, CSRF, and session behavior. This checkout
-has not been published to PyPI by this change.
+**v0.3.0 Upgrade Guide:** see [the v0.3.0 Migration Guide](docs/MIGRATION_0_3_0.md) for FastAPI default backend, mounting inside FastAPI, and simplified DX.
 
-**PyDataUI solves this:**
+**PyDataUI Core Advantages:**
 - 🐍 **100% Python Code**: Build UI, reactive state, and server logic in clean, typed Python.
-- 🦀 **Rust-Powered HTTP Core (`pyrustapi`)**: Tokio/Hyper HTTP backend; application performance needs workload-specific measurement.
-- 🎨 **Tailwind CSS + shadcn/ui**: Modern, accessible UI design system with built-in dark mode and CSS variables.
-- ⚡ **Reactive SSR via HTMX**: Server re-renders the current page fragment on state mutation — seamless browser updates with no user-authored JavaScript for common interactions.
-- 🔌 **Automatic REST API**: Eligible `State` classes expose OpenAPI documentation and CRUD endpoints at `/api/{State}`.
-- 🔒 **Auth & API Keys**: JWT authentication, role-based access control (RBAC), and `pdu_live_...` API keys for ETL automation.
-- 🌐 **One-Click Sharing (`share=True`)**: Create public internet tunnels for demos and stakeholders instantly, like Gradio.
+- ⚡ **FastAPI Default Engine**: Native ASGI foundation running on standard FastAPI and Uvicorn.
+- 🦀 **Optional PyRustAPI Support**: Plug in Rust-powered `pyrustapi` for high-throughput I/O.
+- 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards inside any existing FastAPI app via `mount(api, dashboard, path="/dashboard")`.
+- 🪄 **Streamlit-Like Simplicity**: Create immediate UIs with `import pydataui as ui; ui.title(...); ui.run()`.
+- 🎨 **Tailwind CSS + shadcn/ui**: Modern design system with dark mode and CSS variables.
+- ⚡ **Reactive SSR via HTMX**: Server re-renders page fragments on state mutation without client-side JavaScript.
+- 🤖 **AI & Agent Ready**: Built-in `Chat`, `Markdown`, and `CodeEditor` components compatible with LangGraph, UnifiedNexus, and LLMs.
+- 🔒 **Auth & API Keys**: JWT authentication, RBAC, and `pdu_live_...` API keys for ETL automation.
+- 🌐 **One-Click Sharing (`share=True`)**: Create public internet tunnels instantly for demos.
 
 ---
 
@@ -99,6 +100,62 @@ python app.py
 - 🌐 **Web UI:** `http://127.0.0.1:8000`
 - 📖 **Swagger UI:** `http://127.0.0.1:8000/docs`
 - 📡 **REST API Catalog:** `http://127.0.0.1:8000/api`
+
+---
+
+## 🪄 Streamlined Developer Experience (Streamlit-Like)
+
+Write simple, procedural scripts with automatic state and event handling — no boilerplate required:
+
+```python
+import pydataui as ui
+
+ui.title("Sales & Customer Metrics")
+ui.metric("Active Subscriptions", "4,820", change="+8.4%")
+ui.metric("Monthly Recurring Revenue", "$124,500", change="+12.1%")
+
+def on_export():
+    print("Exporting data report...")
+
+ui.button("Export CSV Report", on_click=on_export)
+
+if __name__ == "__main__":
+    ui.run()
+```
+
+---
+
+## 🔌 Native Mounting Inside FastAPI
+
+Already have an existing FastAPI backend or microservice? Mount a PyDataUI dashboard directly into your FastAPI application with preserved sub-paths:
+
+```python
+from fastapi import FastAPI
+from pydataui import App, mount
+from pydataui.components import Container, Heading, Text
+
+# Your existing FastAPI app
+api = FastAPI(title="Unified Core Service")
+
+@api.get("/api/v1/health")
+def health():
+    return {"status": "ok"}
+
+# Create PyDataUI dashboard
+dashboard = App(title="Ops Portal")
+
+@dashboard.page("/")
+def ops_home():
+    return Container(
+        Heading("Operations Portal"),
+        Text("Real-time system telemetry and controls")
+    )
+
+# Mount dashboard at /ops
+mount(api, dashboard, path="/ops")
+
+# Run with standard uvicorn: uvicorn main:api --reload
+```
 
 ---
 

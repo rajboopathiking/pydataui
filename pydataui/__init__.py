@@ -17,9 +17,19 @@ from .storage import (
     create_session_store, create_auth_store
 )
 from .components.base import Component, RawHtml, Html
+from .components.advanced import Markdown, CodeEditor, Chat
+from .mount import mount
+from .responses import (
+    Response, HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse, StreamingResponse
+)
+from .dx import (
+    title, header, subheader, text, markdown, button, input, textarea,
+    card, row, column, divider, metric, dataframe, table, code_editor,
+    chat, page, run, get_app, get_default_app
+)
 from . import html
 
-__version__ = '0.2.2'
+__version__ = '0.3.0'
 
 __all__ = [
     'App',
@@ -54,6 +64,37 @@ __all__ = [
     'Component',
     'RawHtml',
     'Html',
+    'Markdown',
+    'CodeEditor',
+    'Chat',
+    'mount',
+    'Response',
+    'HTMLResponse',
+    'JSONResponse',
+    'PlainTextResponse',
+    'RedirectResponse',
+    'StreamingResponse',
+    'title',
+    'header',
+    'subheader',
+    'text',
+    'markdown',
+    'button',
+    'input',
+    'textarea',
+    'card',
+    'row',
+    'column',
+    'divider',
+    'metric',
+    'dataframe',
+    'table',
+    'code_editor',
+    'chat',
+    'page',
+    'run',
+    'get_app',
+    'get_default_app',
     'html',
     '__version__',
 ]

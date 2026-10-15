@@ -8,10 +8,10 @@ Complete reference for classes, functions, decorators, components, and CLI tools
 
 ## Table of Contents
 
-1. [App & Configuration](#1-app--configuration)
-2. [State & Reactivity](#2-state--reactivity)
-3. [Authentication & Security](#3-authentication--security)
-4. [Tunnel & Port Forwarding](#4-tunnel--port-forwarding)
+1. [App & Configuration](#1-app-configuration)
+2. [State & Reactivity](#2-state-reactivity)
+3. [Authentication & Security](#3-authentication-security)
+4. [Tunnel & Port Forwarding](#4-tunnel-port-forwarding)
 5. [Component Index](#5-component-index)
 6. [CLI Command Reference](#6-cli-command-reference)
 7. [System HTTP Routes](#7-system-http-routes)

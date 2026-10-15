@@ -10,7 +10,7 @@ PyDataUI provides first-class native components built specifically for data prof
   - [DataFrameTable](#dataframetable)
   - [PlotlyChart](#plotlychart)
   - [MetricCard](#metriccard)
-- [For AI & ML Engineers](#for-ai--ml-engineers)
+- [For AI & ML Engineers](#for-ai-ml-engineers)
   - [ModelMetrics](#modelmetrics)
   - [ConfusionMatrix](#confusionmatrix)
   - [FeatureImportance](#featureimportance)
@@ -19,8 +19,8 @@ PyDataUI provides first-class native components built specifically for data prof
   - [DataTimeline](#datatimeline)
   - [SchemaViewer](#schemaviewer)
   - [SQLEditor](#sqleditor)
-  - [FileDownload & DataUpload](#filedownload--dataupload)
-  - [JSONViewer & CodeBlock](#jsonviewer--codeblock)
+  - [FileDownload & DataUpload](#filedownload-dataupload)
+  - [JSONViewer & CodeBlock](#jsonviewer-codeblock)
 
 ---
 

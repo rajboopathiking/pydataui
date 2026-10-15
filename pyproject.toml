@@ -4,14 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pydataui"
-version = "0.2.2"
+version = "0.3.0"
 description = "A full-stack Python framework for data and AI applications."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Boopathi Raj", email = "rajboopathiking@gmail.com"}]
 requires-python = ">=3.9"
 dependencies = [
-    "pyrustapi>=1.8.9,<2",
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.20.0",
+    "starlette>=0.27.0",
+    "httpx>=0.24.0",
     "PyJWT>=2.8.0,<3",
     "pydantic>=2.0.0,<3",
 ]
@@ -32,6 +35,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+pyrustapi = ["pyrustapi>=1.8.9,<2"]
 browser = ["playwright>=1.49,<2"]
 postgres = [
     "psycopg[binary]>=3.1.0",
@@ -44,11 +48,18 @@ data = [
 tunnel = [
     "pyngrok>=7.0.0",
 ]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+    "pymdown-extensions>=10.0",
+]
 dev = [
     "pytest>=7.0.0",
     "anyio>=4.0.0",
     "pandas>=1.5.0",
     "plotly>=5.0.0",
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
 ]
 all = [
     "pandas>=1.5.0",

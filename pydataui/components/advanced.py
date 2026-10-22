@@ -6,7 +6,7 @@ from __future__ import annotations
 import html
 from typing import Any, Callable, Dict, List, Optional, Union
 from .base import Component
-from ..utils import escape_html, generate_id
+from ..utils import escape_html, generate_id, sanitize_html
 from ..state import EventHandler
 
 
@@ -64,6 +64,10 @@ class Markdown(Component):
             if in_code:
                 out.append("</code></pre>")
             html_content = "".join(out)
+
+        # Markdown permits raw HTML and unsafe link schemes by default.
+        # Always pass the result through the allowlist sanitizer.
+        html_content = sanitize_html(html_content)
 
         return f'<div class="prose dark:prose-invert max-w-none pdu-markdown">{html_content}</div>'
 

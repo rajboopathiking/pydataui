@@ -1,0 +1,2136 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Full-Stack Python Framework for Data and AI Applications with a Compiled Rust HTTP Core">
+      
+      
+        <meta name="author" content="Boopathi Raj">
+      
+      
+        <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/HTML_REFERENCE/">
+      
+      
+        <link rel="prev" href="../TEMPLATE_GALLERY/">
+      
+      
+        <link rel="next" href="../CSS_REFERENCE/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>HTML Reference - PyDataUI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#html-reference-for-developers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PyDataUI" class="md-header__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyDataUI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              HTML Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../BENCHMARKS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../AUTHENTICATION/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../TEMPLATE_GALLERY/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PyDataUI" class="md-nav__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyDataUI
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTHENTICATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CUSTOMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_TEMPLATES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Team Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRODUCTION_READINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TROUBLESHOOTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TEMPLATE_GALLERY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Gallery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTML Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTML Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-rendering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Rendering Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-document-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Document Shell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-common-component-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Common Component Properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Common Component Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attribute-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attribute Normalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-semantic-html-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Semantic HTML Tags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Semantic HTML Tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure-and-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure and Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#links-and-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Links and Lists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-children-values-and-escaping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Children, Values, and Escaping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Children, Values, and Escaping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raw-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raw HTML
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-complete-rendered-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Complete Rendered Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-state-and-event-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. State and Event Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-extending-html-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Extending HTML Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-accessibility-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-testing-html-and-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Testing HTML and Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-source-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Source Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CSS_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSS Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QUICKREF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_2_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-rendering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Rendering Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-document-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Document Shell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-common-component-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Common Component Properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Common Component Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attribute-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attribute Normalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-semantic-html-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Semantic HTML Tags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Semantic HTML Tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure-and-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure and Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#links-and-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Links and Lists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-children-values-and-escaping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Children, Values, and Escaping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Children, Values, and Escaping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raw-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raw HTML
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-complete-rendered-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Complete Rendered Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-state-and-event-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. State and Event Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-extending-html-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Extending HTML Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-accessibility-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-testing-html-and-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Testing HTML and Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-source-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Source Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="html-reference-for-developers">HTML Reference for Developers</h1>
+<p>This guide covers the HTML contract behind PyDataUI: how Python components become markup, which semantic tags are available, how attributes are normalized, and where the security boundaries are. It is intended for application developers building custom layouts and for contributors extending the component system.</p>
+<p>For the higher-level customization workflow, start with <a href="../CUSTOMIZATION/">UI Customization &amp; Tailwind</a>. For design tokens and stylesheet internals, see the <a href="../CSS_REFERENCE/">CSS Reference</a>.</p>
+<hr />
+<h2 id="1-rendering-model">1. Rendering Model</h2>
+<p>PyDataUI does not use a client-side component runtime or a template language. Every component renders to an HTML string on the server.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Python component tree
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        |
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        v
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Component.render(state_snapshot)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        |
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        +--&gt; _build_attrs()      ids, classes, styles, hx-* attributes
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        +--&gt; _render_children()  escaped text, child components, state values
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        |
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        v
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>HTML string
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        |
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        +--&gt; full document shell (initial page load)
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        +--&gt; HTML fragment      (HTMX event response)
+</span></code></pre></div>
+<p>The main implementation points are:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pydataui/components/base.py</code></td>
+<td><code>Component</code>, attribute rendering, escaping, child rendering, <code>RawHtml</code></td>
+</tr>
+<tr>
+<td><code>pydataui/components/html.py</code></td>
+<td>Semantic HTML and SVG tag classes</td>
+</tr>
+<tr>
+<td><code>pydataui/compiler/templates.py</code></td>
+<td>Full document shell and application-level <code>&lt;head&gt;</code></td>
+</tr>
+<tr>
+<td><code>pydataui/compiler/renderer.py</code></td>
+<td>Page and fragment rendering</td>
+</tr>
+<tr>
+<td><code>pydataui/utils.py</code></td>
+<td><code>escape_html</code>, ID generation, value conversion</td>
+</tr>
+</tbody>
+</table>
+<p>An HTMX event returns a fragment, not a complete page. The fragment is swapped into <code>#pdu-root</code>; therefore a component must render correctly both inside the initial document and on its own.</p>
+<hr />
+<h2 id="2-document-shell">2. Document Shell</h2>
+<p>The application shell is generated by <code>get_base_html()</code> in <code>pydataui/compiler/templates.py</code>. Its relevant structure is:</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">html</span> <span class="na">class</span><span class="o">=</span><span class="s">"dark"</span><span class="p">&gt;</span> <span class="cm">&lt;!-- only when App(theme="dark") --&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://cdn.tailwindcss.com"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">tailwind</span><span class="p">.</span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{...};&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c">/* shadcn design tokens */</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="c">/* custom_css */</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"/_pdu/static/htmx.min.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">href</span><span class="o">=</span><span class="s">"/_pdu/static/pydataui.css"</span><span class="p">&gt;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="cm">&lt;!-- App(stylesheets=[...]) --&gt;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="cm">&lt;!-- App(head=...) --&gt;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="p">&lt;</span><span class="nt">body</span> <span class="na">class</span><span class="o">=</span><span class="s">"min-h-screen"</span> <span class="na">hx-headers</span><span class="o">=</span><span class="s">'{"X-CSRF-Token":"..."}'</span><span class="p">&gt;</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-root"</span> <span class="na">class</span><span class="o">=</span><span class="s">"min-h-screen"</span><span class="p">&gt;</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>      <span class="cm">&lt;!-- page content --&gt;</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<p>Key contracts:</p>
+<ul>
+<li><code>#pdu-root</code> is the default HTMX target and the default <code>hx-include</code> source.</li>
+<li><code>hx-headers</code> on <code>&lt;body&gt;</code> carries the CSRF token for event requests.</li>
+<li><code>App(stylesheets=[...])</code> loads after the framework stylesheet.</li>
+<li><code>App(custom_css="...")</code> is injected before HTMX and before <code>pydataui.css</code>.</li>
+<li><code>App(head="...")</code> is the last item in <code>&lt;head&gt;</code>.</li>
+</ul>
+<hr />
+<h2 id="3-common-component-properties">3. Common Component Properties</h2>
+<p>Every <code>Component</code> accepts the following arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Output</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>id="..."</code></td>
+<td>Generated as <code>pdu-&lt;8 hex chars&gt;</code> when omitted. Supply your own for anchors, labels, tests, or JavaScript hooks.</td>
+</tr>
+<tr>
+<td><code>class_name</code></td>
+<td>Appended to <code>class="..."</code></td>
+<td>Framework classes come first, then your Tailwind or custom classes.</td>
+</tr>
+<tr>
+<td><code>style</code></td>
+<td><code>style="..."</code></td>
+<td>A string is emitted as-is. A dict is joined with <code>;</code>. Numeric values receive a <code>px</code> suffix. Dict keys are literal CSS property names.</td>
+</tr>
+<tr>
+<td><code>hidden</code></td>
+<td>No output</td>
+<td><code>hidden=True</code> removes the component and its subtree from the response; it does not render the HTML <code>hidden</code> attribute.</td>
+</tr>
+<tr>
+<td><code>**props</code></td>
+<td>HTML attributes</td>
+<td><code>snake_case</code> becomes <code>kebab-case</code>; <code>data_*</code> becomes <code>data-*</code>.</td>
+</tr>
+<tr>
+<td><code>on_*</code></td>
+<td>HTMX attributes</td>
+<td>Event handlers are converted to <code>hx-*</code> attributes and are never emitted as inline JavaScript.</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Section</span><span class="p">,</span> <span class="n">P</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">Section</span><span class="p">(</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">"Rendered with a custom class and inline width."</span><span class="p">),</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nb">id</span><span class="o">=</span><span class="s2">"quality-panel"</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"pdu-p-lg bg-slate-50"</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"max-width"</span><span class="p">:</span> <span class="s2">"48rem"</span><span class="p">,</span> <span class="s2">"margin-top"</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>The numeric <code>16</code> becomes <code>16px</code>.</p>
+<h3 id="attribute-normalization">Attribute Normalization</h3>
+<table>
+<thead>
+<tr>
+<th>Python input</th>
+<th>HTML output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aria_label="Quality"</code></td>
+<td><code>aria-label="Quality"</code></td>
+</tr>
+<tr>
+<td><code>data_action="refresh"</code></td>
+<td><code>data-action="refresh"</code></td>
+</tr>
+<tr>
+<td><code>data_testid=True</code></td>
+<td><code>data-testid=""</code></td>
+</tr>
+<tr>
+<td><code>disabled=True</code></td>
+<td><code>disabled</code></td>
+</tr>
+<tr>
+<td><code>disabled=False</code></td>
+<td>Omitted</td>
+</tr>
+<tr>
+<td><code>required=True</code></td>
+<td><code>required</code></td>
+</tr>
+<tr>
+<td><code>class_name="mt-4"</code></td>
+<td>Appended to the generated class list</td>
+</tr>
+</tbody>
+</table>
+<p>Boolean HTML attributes are emitted correctly instead of becoming <code>disabled="False"</code>. Supported boolean attributes include <code>disabled</code>, <code>required</code>, <code>readonly</code>, <code>checked</code>, <code>selected</code>, <code>autofocus</code>, <code>multiple</code>, <code>hidden</code>, <code>open</code>, <code>novalidate</code>, <code>defer</code>, <code>async</code>, <code>loop</code>, <code>autoplay</code>, <code>controls</code>, and <code>muted</code>.</p>
+<p><code>None</code> and <code>False</code> prop values are omitted. Strings and other values are escaped before being written into attributes.</p>
+<hr />
+<h2 id="4-semantic-html-tags">4. Semantic HTML Tags</h2>
+<p>Import tags from <code>pydataui.html</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Section</span><span class="p">,</span> <span class="n">Header</span><span class="p">,</span> <span class="n">Nav</span><span class="p">,</span> <span class="n">Main</span><span class="p">,</span> <span class="n">Article</span><span class="p">,</span> <span class="n">Aside</span><span class="p">,</span> <span class="n">Footer</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Div</span><span class="p">,</span> <span class="n">Span</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">H1</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">H3</span><span class="p">,</span> <span class="n">H4</span><span class="p">,</span> <span class="n">H5</span><span class="p">,</span> <span class="n">H6</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">A</span><span class="p">,</span> <span class="n">Ul</span><span class="p">,</span> <span class="n">Ol</span><span class="p">,</span> <span class="n">Li</span><span class="p">,</span> <span class="n">Strong</span><span class="p">,</span> <span class="n">Em</span><span class="p">,</span> <span class="n">CodeTag</span><span class="p">,</span> <span class="n">Pre</span><span class="p">,</span> <span class="n">Hr</span><span class="p">,</span> <span class="n">Br</span>
+</span></code></pre></div>
+<h3 id="structure-and-text">Structure and Text</h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Element</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Div</code></td>
+<td><code>&lt;div&gt;</code></td>
+<td>Generic block container</td>
+</tr>
+<tr>
+<td><code>Span</code></td>
+<td><code>&lt;span&gt;</code></td>
+<td>Generic inline container</td>
+</tr>
+<tr>
+<td><code>Section</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td>Thematic section</td>
+</tr>
+<tr>
+<td><code>Article</code></td>
+<td><code>&lt;article&gt;</code></td>
+<td>Self-contained content</td>
+</tr>
+<tr>
+<td><code>Header</code></td>
+<td><code>&lt;header&gt;</code></td>
+<td>Introductory content</td>
+</tr>
+<tr>
+<td><code>Footer</code></td>
+<td><code>&lt;footer&gt;</code></td>
+<td>Footer content</td>
+</tr>
+<tr>
+<td><code>Main</code></td>
+<td><code>&lt;main&gt;</code></td>
+<td>Primary page content</td>
+</tr>
+<tr>
+<td><code>Nav</code></td>
+<td><code>&lt;nav&gt;</code></td>
+<td>Navigation links</td>
+</tr>
+<tr>
+<td><code>Aside</code></td>
+<td><code>&lt;aside&gt;</code></td>
+<td>Complementary content</td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td><code>&lt;p&gt;</code></td>
+<td>Paragraph</td>
+</tr>
+<tr>
+<td><code>H1</code>–<code>H6</code></td>
+<td><code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code></td>
+<td>Heading levels</td>
+</tr>
+<tr>
+<td><code>Strong</code></td>
+<td><code>&lt;strong&gt;</code></td>
+<td>Important text</td>
+</tr>
+<tr>
+<td><code>Em</code></td>
+<td><code>&lt;em&gt;</code></td>
+<td>Emphasized text</td>
+</tr>
+<tr>
+<td><code>CodeTag</code></td>
+<td><code>&lt;code&gt;</code></td>
+<td>Inline code</td>
+</tr>
+<tr>
+<td><code>Pre</code></td>
+<td><code>&lt;pre&gt;</code></td>
+<td>Preformatted block</td>
+</tr>
+<tr>
+<td><code>Hr</code></td>
+<td><code>&lt;hr&gt;</code></td>
+<td>Thematic break</td>
+</tr>
+<tr>
+<td><code>Br</code></td>
+<td><code>&lt;br&gt;</code></td>
+<td>Line break</td>
+</tr>
+</tbody>
+</table>
+<h3 id="links-and-lists">Links and Lists</h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Element</th>
+<th>Special arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td><code>&lt;a&gt;</code></td>
+<td><code>href</code> (defaults to <code>"#"</code>)</td>
+</tr>
+<tr>
+<td><code>Ul</code></td>
+<td><code>&lt;ul&gt;</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>Ol</code></td>
+<td><code>&lt;ol&gt;</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>Li</code></td>
+<td><code>&lt;li&gt;</code></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">A</span><span class="p">(</span><span class="s2">"View catalog"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/catalog"</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">"_blank"</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="s2">"noopener"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="svg">SVG</h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Element</th>
+<th>Special arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Svg</code></td>
+<td><code>&lt;svg&gt;</code></td>
+<td><code>viewBox</code> (default <code>"0 0 24 24"</code>), <code>fill</code> (default <code>"none"</code>), <code>stroke</code> (default <code>"currentColor"</code>)</td>
+</tr>
+<tr>
+<td><code>Path</code></td>
+<td><code>&lt;path&gt;</code></td>
+<td><code>d</code></td>
+</tr>
+<tr>
+<td><code>Circle</code></td>
+<td><code>&lt;circle&gt;</code></td>
+<td><code>cx</code>, <code>cy</code>, <code>r</code></td>
+</tr>
+<tr>
+<td><code>Rect</code></td>
+<td><code>&lt;rect&gt;</code></td>
+<td><code>x</code>, <code>y</code>, <code>width</code>, <code>height</code></td>
+</tr>
+<tr>
+<td><code>Line</code></td>
+<td><code>&lt;line&gt;</code></td>
+<td><code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code></td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Svg</span><span class="p">,</span> <span class="n">Path</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">icon</span> <span class="o">=</span> <span class="n">Svg</span><span class="p">(</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="s2">"M13 10V3L4 14h7v7l9-11h-7z"</span><span class="p">),</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"h-6 w-6 text-amber-500"</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>The optional <code>Path</code>, <code>Circle</code>, <code>Rect</code>, and <code>Line</code> coordinates are only added when truthy. Values such as <code>viewBox</code> are preserved with their HTML attribute casing.</p>
+<h3 id="forms">Forms</h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Element</th>
+<th>Special arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FormTag</code></td>
+<td><code>&lt;form&gt;</code></td>
+<td>None; pass <code>method</code>, <code>action</code>, etc. as props</td>
+</tr>
+<tr>
+<td><code>ButtonTag</code></td>
+<td><code>&lt;button&gt;</code></td>
+<td><code>type</code> (default <code>"button"</code>)</td>
+</tr>
+<tr>
+<td><code>InputTag</code></td>
+<td><code>&lt;input&gt;</code></td>
+<td><code>type</code> (default <code>"text"</code>); void element</td>
+</tr>
+<tr>
+<td><code>LabelTag</code></td>
+<td><code>&lt;label&gt;</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>TextareaTag</code></td>
+<td><code>&lt;textarea&gt;</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>SelectTag</code></td>
+<td><code>&lt;select&gt;</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>OptionTag</code></td>
+<td><code>&lt;option&gt;</code></td>
+<td><code>value</code></td>
+</tr>
+</tbody>
+</table>
+<p>For <code>for</code> on a label, use a dict because <code>for</code> is a Python keyword:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">LabelTag</span><span class="p">(</span><span class="s2">"Search"</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s2">"for"</span><span class="p">:</span> <span class="s2">"catalog-search"</span><span class="p">})</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">InputTag</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"catalog-search"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"search"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"q"</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">"Search tables"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="tables">Tables</h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TableTag</code></td>
+<td><code>&lt;table&gt;</code></td>
+</tr>
+<tr>
+<td><code>TheadTag</code></td>
+<td><code>&lt;thead&gt;</code></td>
+</tr>
+<tr>
+<td><code>TbodyTag</code></td>
+<td><code>&lt;tbody&gt;</code></td>
+</tr>
+<tr>
+<td><code>TrTag</code></td>
+<td><code>&lt;tr&gt;</code></td>
+</tr>
+<tr>
+<td><code>ThTag</code></td>
+<td><code>&lt;th&gt;</code></td>
+</tr>
+<tr>
+<td><code>TdTag</code></td>
+<td><code>&lt;td&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Use <code>scope="col"</code> or <code>scope="row"</code> on header cells for accessible tables.</p>
+<hr />
+<h2 id="5-children-values-and-escaping">5. Children, Values, and Escaping</h2>
+<p>Children can be components, strings, numbers, lists, tuples, <code>None</code>, <code>StateVarRef</code> values, or callables that accept the state snapshot.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Article</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">P</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">Article</span><span class="p">(</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">H2</span><span class="p">(</span><span class="s2">"Orders"</span><span class="p">),</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="s2">"Today's volume: "</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="mi">1250</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">"Compared with yesterday: "</span><span class="p">,</span> <span class="n">order_delta</span><span class="p">),</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Rendering rules:</p>
+<ul>
+<li><code>None</code> children are skipped.</li>
+<li>Nested lists and tuples are flattened one level.</li>
+<li>Component children render recursively.</li>
+<li>User-provided text is escaped with <code>html.escape(..., quote=True)</code>.</li>
+<li>Attribute values are escaped before output.</li>
+<li>Callable children are invoked with the state snapshot.</li>
+<li><code>StateVarRef</code> children resolve against the current state snapshot.</li>
+</ul>
+<p>This means this input:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">P</span><span class="p">(</span><span class="s2">"Use &lt;table&gt; &amp; &lt;script&gt; safely"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>produces escaped text content, not executable markup:</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-..."</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu"</span><span class="p">&gt;</span>Use <span class="ni">&amp;lt;</span>table<span class="ni">&amp;gt;</span> <span class="ni">&amp;amp;</span> <span class="ni">&amp;lt;</span>script<span class="ni">&amp;gt;</span> safely<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<h3 id="raw-html">Raw HTML</h3>
+<p><code>RawHtml</code> and its alias <code>Html</code> bypass escaping:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Html</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">Html</span><span class="p">(</span><span class="s1">'&lt;div class="trusted-embed"&gt;...&lt;/div&gt;'</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Only use these for trusted templates, pre-sanitized content, or third-party embeds you control. Do not pass user input directly to <code>RawHtml</code>. Prefer normal components for user-derived values.</p>
+<hr />
+<h2 id="6-complete-rendered-example">6. Complete Rendered Example</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Section</span><span class="p">,</span> <span class="n">H1</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">ButtonTag</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">Section</span><span class="p">(</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">H1</span><span class="p">(</span><span class="s2">"Quality overview"</span><span class="p">),</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">"All checks passed."</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-muted-foreground"</span><span class="p">),</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">A</span><span class="p">(</span><span class="s2">"Open catalog"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/catalog"</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">"_blank"</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="s2">"noopener"</span><span class="p">),</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">ButtonTag</span><span class="p">(</span><span class="s2">"Refresh"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"button"</span><span class="p">,</span> <span class="n">data_action</span><span class="o">=</span><span class="s2">"refresh"</span><span class="p">,</span> <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"pdu-p-lg"</span><span class="p">,</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"max-width"</span><span class="p">:</span> <span class="s2">"48rem"</span><span class="p">},</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Representative output (IDs vary per instance):</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">&lt;</span><span class="nt">section</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-55a67749"</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu pdu-p-lg"</span> <span class="na">style</span><span class="o">=</span><span class="s">"max-width: 48rem"</span><span class="p">&gt;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-66d947a8"</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu"</span><span class="p">&gt;</span>Quality overview<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  <span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-ab69fb02"</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu text-muted-foreground"</span><span class="p">&gt;</span>All checks passed.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  <span class="p">&lt;</span><span class="nt">a</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-f024984e"</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu"</span> <span class="na">target</span><span class="o">=</span><span class="s">"_blank"</span> <span class="na">rel</span><span class="o">=</span><span class="s">"noopener"</span> <span class="na">href</span><span class="o">=</span><span class="s">"/catalog"</span><span class="p">&gt;</span>Open catalog<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">id</span><span class="o">=</span><span class="s">"pdu-ed1fcf83"</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu"</span> <span class="na">data-action</span><span class="o">=</span><span class="s">"refresh"</span> <span class="na">type</span><span class="o">=</span><span class="s">"button"</span><span class="p">&gt;</span>Refresh<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<p>Every component receives the base <code>pdu</code> class. Framework components append their own classes, and <code>class_name</code> is appended last.</p>
+<hr />
+<h2 id="7-state-and-event-attributes">7. State and Event Attributes</h2>
+<p>State values can appear in text, props, and attributes:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">State</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">P</span><span class="p">,</span> <span class="n">ButtonTag</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">CounterState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">P</span><span class="p">(</span><span class="s2">"Count: "</span><span class="p">,</span> <span class="n">CounterState</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="n">ButtonTag</span><span class="p">(</span><span class="s2">"Increment"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">CounterState</span><span class="o">.</span><span class="n">increment</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Event handlers render as HTMX attributes:</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">&lt;</span><span class="nt">button</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  <span class="na">id</span><span class="o">=</span><span class="s">"pdu-e918535d"</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  <span class="na">class</span><span class="o">=</span><span class="s">"pdu"</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  <span class="na">hx-post</span><span class="o">=</span><span class="s">"/_pdu/event/CounterState/increment"</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  <span class="na">hx-target</span><span class="o">=</span><span class="s">"#pdu-root"</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  <span class="na">hx-swap</span><span class="o">=</span><span class="s">"innerHTML"</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  <span class="na">hx-trigger</span><span class="o">=</span><span class="s">"click"</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  <span class="na">hx-include</span><span class="o">=</span><span class="s">"#pdu-root"</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  <span class="na">type</span><span class="o">=</span><span class="s">"button"</span><span class="p">&gt;</span>Increment<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<p>Do not hand-write these <code>hx-*</code> attributes for state methods. Use <code>on_click=</code>, <code>on_change=</code>, and the other supported event arguments so routing and CSRF behavior stay consistent.</p>
+<hr />
+<h2 id="8-extending-html-components">8. Extending HTML Components</h2>
+<p>Subclass <code>Component</code> to add a semantic wrapper or a project-specific primitive:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">StatusPill</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">tag</span> <span class="o">=</span> <span class="s2">"span"</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">tone</span><span class="o">=</span><span class="s2">"success"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tone</span> <span class="o">=</span> <span class="n">tone</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_classes</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>            <span class="s2">"pdu-badge"</span><span class="p">,</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>            <span class="sa">f</span><span class="s2">"pdu-badge-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tone</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>        <span class="p">]</span>
+</span></code></pre></div>
+<p>Usage:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">StatusPill</span><span class="p">(</span><span class="s2">"Healthy"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Keep behavior server-side. If a component needs interactivity, express it through state methods and event handlers rather than injecting JavaScript. For a full CSS component checklist, see <a href="../CSS_REFERENCE/#13-extending-the-css-layer">Extending the CSS Layer</a>.</p>
+<hr />
+<h2 id="9-accessibility-checklist">9. Accessibility Checklist</h2>
+<ul>
+<li>Prefer semantic elements (<code>button</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>table</code>) over generic <code>div</code> structures.</li>
+<li>Always provide a <code>type</code> for <code>ButtonTag</code>; the default is <code>"button"</code>, which avoids accidental form submission.</li>
+<li>Associate labels and inputs with matching <code>id</code>/<code>for</code> values.</li>
+<li>Use table headers with <code>scope="col"</code> or <code>scope="row"</code>.</li>
+<li>Give SVGs a title or <code>aria-label</code> when they convey meaning; mark decorative SVGs with <code>aria-hidden="true"</code>.</li>
+<li>Do not put click handlers on non-interactive elements. Use a button or link.</li>
+<li>Test keyboard navigation and visible focus states after overriding framework colors.</li>
+<li>Keep <code>class_name</code> changes from removing focus outlines unless you provide a replacement.</li>
+</ul>
+<hr />
+<h2 id="10-testing-html-and-security">10. Testing HTML and Security</h2>
+<p>Unit-test rendered markup without starting a server:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">P</span><span class="p">,</span> <span class="n">Section</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_quality_section_escapes_user_text</span><span class="p">():</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">html</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s2">"&lt;script&gt;alert(1)&lt;/script&gt;"</span><span class="p">))</span><span class="o">.</span><span class="n">render</span><span class="p">({})</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="k">assert</span> <span class="s2">"&lt;script&gt;"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">html</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="k">assert</span> <span class="s2">"&amp;lt;script&amp;gt;"</span> <span class="ow">in</span> <span class="n">html</span>
+</span></code></pre></div>
+<p>Useful test patterns:</p>
+<ul>
+<li>Call <code>.render({})</code> and assert on stable IDs, classes, and escaped content.</li>
+<li>Pass an explicit <code>id</code> when asserting on a specific element.</li>
+<li>Test <code>hidden=True</code>, boolean attributes, and <code>data_*</code> conversion.</li>
+<li>Add browser coverage for layout, HTMX swaps, and responsive behavior.</li>
+<li>Never use <code>RawHtml</code> with untrusted test fixtures unless the test is specifically verifying sanitization.</li>
+</ul>
+<hr />
+<h2 id="11-source-map">11. Source Map</h2>
+<table>
+<thead>
+<tr>
+<th>What you need to change</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attribute escaping or child rendering</td>
+<td><code>pydataui/components/base.py</code></td>
+</tr>
+<tr>
+<td>New semantic tag or SVG helper</td>
+<td><code>pydataui/components/html.py</code></td>
+</tr>
+<tr>
+<td>Public tag exports</td>
+<td><code>pydataui/html.py</code></td>
+</tr>
+<tr>
+<td>Document shell or Tailwind config</td>
+<td><code>pydataui/compiler/templates.py</code></td>
+</tr>
+<tr>
+<td>Page vs. fragment responses</td>
+<td><code>pydataui/compiler/renderer.py</code></td>
+</tr>
+<tr>
+<td>CSS classes and tokens</td>
+<td><code>pydataui/styling/css/pydataui.css</code></td>
+</tr>
+<tr>
+<td>CSS reference documentation</td>
+<td><code>docs/CSS_REFERENCE.md</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

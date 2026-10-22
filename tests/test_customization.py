@@ -1,3 +1,5 @@
+from pathlib import Path as FilePath
+
 import pytest
 from pydataui import App, Component, Html, RawHtml
 from pydataui.html import Div, Span, Section, Header, Footer, Nav, Svg, Path, P, H1, H2, A, Main, FormTag, InputTag, ButtonTag
@@ -36,6 +38,13 @@ def test_html_tags_rendering():
     assert "<a " in rendered
     assert 'href="/start"' in rendered
     assert "<footer" in rendered
+
+def test_framework_css_dark_tokens_apply_to_dark_class():
+    css = (FilePath(__file__).resolve().parents[1] / "pydataui/styling/css/pydataui.css").read_text()
+    selector = "[data-theme='dark'], .dark {"
+    assert selector in css
+    dark_block = css.split(selector, 1)[1].split("\n}", 1)[0]
+    assert ":root" not in dark_block
 
 def test_svg_rendering():
     icon = Svg(

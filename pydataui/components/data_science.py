@@ -109,9 +109,9 @@ class MetricCard(Component):
             except (ValueError, TypeError):
                 display = str(self.value)
 
-        icon_html = (f'<span class="text-2xl leading-none text-muted-foreground">{self.icon}</span>'
+        icon_html = (f'<span class="text-2xl leading-none text-muted-foreground">{escape_html(self.icon)}</span>'
                      if self.icon else '')
-        delta_html = (f'<p class="text-xs {delta_cls} mt-1 flex items-center gap-1">{self.delta}</p>'
+        delta_html = (f'<p class="text-xs {delta_cls} mt-1 flex items-center gap-1">{escape_html(self.delta)}</p>'
                       if self.delta else '')
         desc_html = (f'<p class="text-xs text-muted-foreground mt-1">{escape_html(self.description)}</p>'
                      if self.description else '')

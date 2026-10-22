@@ -2,6 +2,8 @@
 
 PyDataUI provides first-class native components built specifically for data professionals. Rather than wiring together complex frontend widgets, you can pass Python data structures, pandas DataFrames, and Plotly charts directly to PyDataUI components.
 
+For complete page layouts, see [Data Team Page Templates](DATA_TEMPLATES.md), which compose these components into analyst, data-quality, pipeline-operations, and ML-registry pages.
+
 ---
 
 ## Table of Contents

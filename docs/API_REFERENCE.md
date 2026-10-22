@@ -133,6 +133,15 @@ Provides one-click public internet forwarding (like Gradio's `share=True`).
 - `FileDownload(filename, content, label="Download")`: Data URI file exporter button.
 - `DataUpload(accept=".csv,.json", on_upload="")`: File drag-and-drop target.
 
+### Data Team Templates (`pydataui.templates`)
+- `analyst_dashboard(...)`: KPI cards, filters, chart, records table, and export.
+- `data_quality_dashboard(...)`: Quality score, catalog, schema, issues, and upload.
+- `pipeline_operations(...)`: Pipeline steps, inventory, activity, and run history.
+- `model_registry(...)`: Selected model metrics, confusion matrix, feature importance, and registry.
+- Aliases: `quality_dashboard`, `pipeline_dashboard`, `ml_registry`.
+
+See [Data Team Page Templates](DATA_TEMPLATES.md) for the full parameters and examples.
+
 ### shadcn/ui Styled Components (`pydataui.components.shadcn`)
 - `ShadButton(*children, variant="default", size="default", full_width=False)`
 - `ShadCard(*children)` / `ShadCardHeader` / `ShadCardTitle` / `ShadCardDescription` / `ShadCardContent` / `ShadCardFooter`

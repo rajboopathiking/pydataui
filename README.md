@@ -419,6 +419,8 @@ python benchmarks/run_benchmark.py --requests 5000 --concurrency 100
 - ⚡ [Performance & Benchmarks Guide](docs/BENCHMARKS.md)
 - 📘 [Full Documentation](docs/README.md)
 - 🎨 [UI Customization Guide (Tailwind, shadcn & HTML)](docs/CUSTOMIZATION.md)
+- [HTML Reference for Developers](docs/HTML_REFERENCE.md)
+- [CSS Reference for Developers](docs/CSS_REFERENCE.md)
 - 🛠️ [Troubleshooting & Architecture Guide](docs/TROUBLESHOOTING.md)
 - 🔒 [Authentication & Security Guide](docs/AUTHENTICATION.md)
 - 📊 [Data Science & Engineering Components](docs/DATA_COMPONENTS.md)

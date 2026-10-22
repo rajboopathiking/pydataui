@@ -2,6 +2,9 @@
 
 PyDataUI gives you complete design freedom. Whether you prefer utility-first styling with **Tailwind CSS**, pre-built **shadcn/ui** components, semantic **HTML tags in pure Python**, or direct **raw HTML/SVG templates**, you can build any interface without feeling boxed into rigid defaults.
 
+!!! tip "Developer references"
+    For the full tag and attribute contract, see the [HTML Reference](HTML_REFERENCE.md). For framework tokens, class names, dark mode, and cascade rules, see the [CSS Reference](CSS_REFERENCE.md).
+
 ---
 
 ## 1. Quick Overview

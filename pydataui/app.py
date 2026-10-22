@@ -66,6 +66,7 @@ class App:
             version=version,
             docs_url=docs_url,
             openapi_url=openapi_url,
+            max_request_size=self.config.max_request_size,
         )
         self.auth = None
         self._page_security = {}

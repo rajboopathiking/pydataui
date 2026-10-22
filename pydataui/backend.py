@@ -12,25 +12,82 @@ from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse, R
 import httpx
 
 
+DEFAULT_MAX_REQUEST_SIZE = 10 * 1024 * 1024
+
+
+def _body_limit_response() -> bytes:
+    return b"Request body too large"
+
+
+async def _send_body_limit_exceeded(send: Callable) -> None:
+    body = _body_limit_response()
+    await send({
+        "type": "http.response.start",
+        "status": 413,
+        "headers": [
+            (b"content-type", b"text/plain; charset=utf-8"),
+            (b"content-length", str(len(body)).encode("ascii")),
+            (b"connection", b"close"),
+        ],
+    })
+    await send({
+        "type": "http.response.body",
+        "body": body,
+        "more_body": False,
+    })
+
+
+def _scope_content_length(scope: Dict[str, Any]) -> Optional[int]:
+    for key, value in scope.get("headers") or []:
+        if isinstance(key, bytes):
+            is_match = key.lower() == b"content-length"
+        else:
+            is_match = str(key).lower() == "content-length"
+        if not is_match:
+            continue
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+    return None
+
+
 class BodyBufferASGIMiddleware:
-    """Buffers the HTTP request body and caches it in scope for sync/async access."""
-    def __init__(self, app: Any):
+    """Buffers the HTTP request body with a hard size limit."""
+    def __init__(self, app: Any, max_request_size: int = DEFAULT_MAX_REQUEST_SIZE):
         self.app = app
+        self.max_request_size = int(max_request_size)
 
     async def __call__(self, scope: Dict[str, Any], receive: Callable, send: Callable) -> None:
-        if scope.get("type") != "http" or scope.get("method") in ("GET", "HEAD"):
+        if scope.get("type") != "http":
+            await self.app(scope, receive, send)
+            return
+
+        content_length = _scope_content_length(scope)
+        if content_length is not None and content_length > self.max_request_size:
+            await _send_body_limit_exceeded(send)
+            return
+
+        if scope.get("method") in ("GET", "HEAD"):
             scope["_cached_body"] = b""
             scope["_cached_json"] = {}
             await self.app(scope, receive, send)
             return
 
-        body = b""
+        buffer = bytearray()
         more_body = True
         while more_body:
             message = await receive()
-            body += message.get("body", b"")
+            if message.get("type") == "http.disconnect":
+                return
+            chunk = message.get("body", b"")
+            if len(buffer) + len(chunk) > self.max_request_size:
+                await _send_body_limit_exceeded(send)
+                return
+            buffer.extend(chunk)
             more_body = message.get("more_body", False)
 
+        body = bytes(buffer)
         scope["_cached_body"] = body
         if body:
             try:
@@ -95,6 +152,7 @@ class FastAPIEngine:
         version: str = "0.3.0",
         docs_url: Optional[str] = None,
         openapi_url: Optional[str] = None,
+        max_request_size: int = DEFAULT_MAX_REQUEST_SIZE,
         **kwargs
     ):
         from fastapi import FastAPI
@@ -103,6 +161,7 @@ class FastAPIEngine:
         self.version = version
         self.docs_url = docs_url
         self.openapi_url = openapi_url
+        self.max_request_size = int(max_request_size)
         self.auth = None
 
         self.app = FastAPI(
@@ -113,7 +172,10 @@ class FastAPIEngine:
             redoc_url=None,
             openapi_url=None,
         )
-        self.app.add_middleware(BodyBufferASGIMiddleware)
+        self.app.add_middleware(
+            BodyBufferASGIMiddleware,
+            max_request_size=self.max_request_size,
+        )
 
     def get(self, path: str, **kwargs):
         def decorator(func: Callable):
@@ -272,6 +334,7 @@ def create_engine(backend: str = "fastapi", **kwargs) -> Any:
     if backend_norm == "fastapi":
         return FastAPIEngine(**kwargs)
     elif backend_norm in ("pyrustapi", "rustapi"):
+        kwargs.pop("max_request_size", None)
         return RustAPIEngine(**kwargs)
     else:
         raise ValueError(

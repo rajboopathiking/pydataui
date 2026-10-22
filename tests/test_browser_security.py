@@ -29,7 +29,13 @@ from urllib.request import ProxyHandler, build_opener
 
 import pytest
 
-playwright = pytest.importorskip("playwright.sync_api")
+try:
+    from playwright.sync_api import sync_playwright
+except Exception as exc:
+    sync_playwright = None
+    _PLAYWRIGHT_IMPORT_ERROR = exc
+else:
+    _PLAYWRIGHT_IMPORT_ERROR = None
 
 PROJECT = Path(__file__).resolve().parents[1]
 EGOLITE_MAC = "/Applications/ego lite.app/Contents/MacOS/ego lite"
@@ -155,6 +161,10 @@ def build_app():
     def public():
         return Container(Heading("Public Page"))
 
+    @app.api("/favicon.ico", public=True)
+    def favicon():
+        return {"status": "ok"}
+
     return app
 
 
@@ -210,6 +220,14 @@ def _browser_unavailable(reason: str) -> None:
     pytest.skip(reason)
 
 
+def _require_playwright() -> None:
+    if sync_playwright is None:
+        _browser_unavailable(
+            "Playwright is not installed or failed to import: "
+            f"{_PLAYWRIGHT_IMPORT_ERROR}"
+        )
+
+
 def _browser_executable() -> str | None:
     explicit = os.environ.get("PYDATAUI_BROWSER_EXECUTABLE")
     if explicit:
@@ -234,6 +252,7 @@ def _browser_executable() -> str | None:
 
 @pytest.fixture(scope="module")
 def browser():
+    _require_playwright()
     executable = _browser_executable()
     cdp_endpoint = os.environ.get("PYDATAUI_BROWSER_CDP_ENDPOINT")
     if not executable and not cdp_endpoint:
@@ -249,7 +268,7 @@ def browser():
             )
 
     try:
-        pw = playwright.sync_playwright().start()
+        pw = sync_playwright().start()
     except Exception as exc:
         _browser_unavailable(f"Playwright could not start: {exc}")
 
@@ -282,8 +301,12 @@ def browser():
         pw.stop()
 
 
+def _real_styles_required() -> bool:
+    return os.environ.get("PYDATAUI_REQUIRE_REAL_STYLES") == "1"
+
+
 @contextmanager
-def isolated_page(browser, viewport=None):
+def isolated_page(browser, viewport=None, intercept_external=True):
     context = browser.new_context(viewport=viewport)
     page = context.new_page()
     errors = {"console": [], "page": [], "failed": [], "http": []}
@@ -306,7 +329,8 @@ def isolated_page(browser, viewport=None):
         if response.status >= 400 and not response.url.endswith("/favicon.ico"):
             errors["http"].append((response.status, response.url))
 
-    page.route("https://**", route_external)
+    if intercept_external:
+        page.route("https://**", route_external)
     page.on("console", on_console)
     page.on("pageerror", lambda exc: errors["page"].append(str(exc)))
     page.on("requestfailed", lambda req: errors["failed"].append(
@@ -424,6 +448,19 @@ def test_require_browser_flag_turns_missing_browser_into_failure(monkeypatch):
     monkeypatch.setenv("PYDATAUI_REQUIRE_BROWSER", "1")
     with pytest.raises(pytest.fail.Exception):
         _browser_unavailable("no browser available")
+
+
+def test_require_browser_flag_fails_when_playwright_is_missing(monkeypatch):
+    module = sys.modules[__name__]
+    monkeypatch.setattr(module, "sync_playwright", None)
+    monkeypatch.setattr(module, "_PLAYWRIGHT_IMPORT_ERROR", ImportError("missing"))
+    monkeypatch.setenv("PYDATAUI_REQUIRE_BROWSER", "1")
+    with pytest.raises(pytest.fail.Exception):
+        _require_playwright()
+
+    monkeypatch.delenv("PYDATAUI_REQUIRE_BROWSER")
+    with pytest.raises(pytest.skip.Exception):
+        _require_playwright()
 
 
 def test_browser_login_invalid_credentials_protected_access_and_logout(
@@ -727,6 +764,59 @@ def test_browser_markdown_formatting_and_active_content_rejection(
             for href in links
         )
         assert page.evaluate("window.__pwned") is None
+        assert_clean(errors)
+
+
+def test_browser_real_tailwind_styles_are_applied(browser, default_server):
+    with isolated_page(
+        browser,
+        viewport={"width": 1280, "height": 800},
+        intercept_external=False,
+    ) as (page, errors):
+        page.goto(default_server.base + "/login")
+        try:
+            page.wait_for_function(
+                "() => window.tailwind && "
+                "getComputedStyle(document.querySelector("
+                "'div.min-h-screen.flex')).display === 'flex'",
+                timeout=20000,
+            )
+        except Exception as exc:
+            message = (
+                "Real Tailwind styles did not load: "
+                f"{exc}; failed={errors['failed']}; "
+                f"console={errors['console']}"
+            )
+            if _real_styles_required():
+                pytest.fail(message)
+            pytest.skip(message)
+
+        layout = page.locator("div.min-h-screen.flex")
+        assert layout.evaluate("el => getComputedStyle(el).display") == "flex"
+        assert layout.evaluate("el => getComputedStyle(el).alignItems") == "center"
+        assert layout.evaluate("el => getComputedStyle(el).justifyContent") == "center"
+
+        card = page.locator("div.max-w-md")
+        assert card.evaluate("el => getComputedStyle(el).maxWidth") == "448px"
+        assert card.evaluate("el => getComputedStyle(el).borderRadius") == "12px"
+
+        sign_in = page.get_by_role("button", name="Sign In", exact=True)
+        assert sign_in.evaluate("el => getComputedStyle(el).height") == "40px"
+        assert sign_in.evaluate(
+            "el => getComputedStyle(el).backgroundColor"
+        ) != "rgba(0, 0, 0, 0)"
+        assert_no_horizontal_overflow(page)
+
+        login(page, default_server)
+        increment = page.get_by_role("button", name="Increment", exact=True)
+        assert increment.is_visible()
+        assert_no_horizontal_overflow(page)
+
+        page.set_viewport_size({"width": 390, "height": 844})
+        assert_no_horizontal_overflow(page)
+        page.goto(default_server.base + "/login")
+        assert_no_horizontal_overflow(page)
+        assert page.locator("form").is_visible()
         assert_clean(errors)
 
 

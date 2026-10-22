@@ -1,5 +1,10 @@
 # PyDataUI Production Readiness & Architecture Assessment
 
+> **Version note:** This assessment was written for **v0.2.1**. The current
+> v0.3.0 release defaults to FastAPI, with PyRustAPI available as an optional
+> backend. Validate engine-specific statements against the current
+> [API reference](API_REFERENCE.md) and release notes.
+
 This document provides a candid, authoritative engineering assessment of **PyDataUI v0.2.1** for production deployments, its security guarantees, remaining architectural boundaries, and how it compares to **Django, Streamlit, Gradio, and Reflex**.
 
 ---
@@ -45,6 +50,9 @@ The v0.2.1 update resolved all architectural vulnerabilities from early prototyp
 5. **Clean Browser Flow on 401**:
    - Unauthenticated browser navigations (`Accept: text/html`) receive an **HTTP 303 Redirect to `/login?next=...`** rather than raw JSON errors.
    - Automated REST API callers continue to receive clean `401 Unauthorized` JSON responses.
+6. **Request Body Limits**:
+   - `App(max_request_size=...)` caps buffered request bodies at 10 MiB by default.
+   - Oversized requests are rejected with **HTTP 413**; a declared oversized `Content-Length` is rejected without reading the body.
 
 ---
 

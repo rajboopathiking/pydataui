@@ -319,6 +319,97 @@ async def test_global_api_disable_and_readonly_login_state():
 
 
 @pytest.mark.anyio
+async def test_request_body_limit_returns_413():
+    app = App(max_request_size=32)
+
+    @app.api('/echo', method='POST', public=True)
+    def echo(request):
+        return request.json()
+
+    status, body, _ = await call(
+        app, 'POST', '/echo', {'value': 'x' * 100}
+    )
+    assert status == 413
+    assert 'too large' in body
+
+    status, body, _ = await call(app, 'POST', '/echo', {'value': 'ok'})
+    assert status == 200
+    assert body == {'value': 'ok'}
+
+
+@pytest.mark.anyio
+async def test_request_body_limit_uses_content_length_without_reading():
+    app = App(max_request_size=8)
+    messages = []
+    reads = []
+
+    async def receive():
+        reads.append(True)
+        return {'type': 'http.request', 'body': b'x' * 100}
+
+    async def send(message):
+        messages.append(message)
+
+    scope = {
+        'type': 'http',
+        'asgi': {'version': '3.0'},
+        'http_version': '1.1',
+        'method': 'POST',
+        'scheme': 'http',
+        'path': '/',
+        'raw_path': b'/',
+        'query_string': b'',
+        'root_path': '',
+        'headers': [(b'content-length', b'100')],
+        'client': ('127.0.0.1', 1234),
+        'server': ('testserver', 80),
+    }
+    await app.asgi_app(scope, receive, send)
+
+    assert reads == []
+    start = next(m for m in messages if m.get('type') == 'http.response.start')
+    assert start['status'] == 413
+    assert (b'connection', b'close') in start['headers']
+
+
+@pytest.mark.anyio
+async def test_request_body_limit_streams_without_content_length():
+    app = App(max_request_size=8)
+    messages = []
+    chunks = [b'a' * 5, b'b' * 5]
+
+    async def receive():
+        body = chunks.pop(0)
+        return {
+            'type': 'http.request',
+            'body': body,
+            'more_body': bool(chunks),
+        }
+
+    async def send(message):
+        messages.append(message)
+
+    scope = {
+        'type': 'http',
+        'asgi': {'version': '3.0'},
+        'http_version': '1.1',
+        'method': 'POST',
+        'scheme': 'http',
+        'path': '/',
+        'raw_path': b'/',
+        'query_string': b'',
+        'root_path': '',
+        'headers': [],
+        'client': ('127.0.0.1', 1234),
+        'server': ('testserver', 80),
+    }
+    await app.asgi_app(scope, receive, send)
+
+    start = next(m for m in messages if m.get('type') == 'http.response.start')
+    assert start['status'] == 413
+
+
+@pytest.mark.anyio
 async def test_login_next_redirect_rejects_external_targets():
     app = make_app(auth=True)
     for next_value, expected in [
@@ -411,6 +502,27 @@ print("safe")
     assert 'onerror' not in html
     assert 'onclick' not in html
     assert 'javascript:' not in html.lower()
+
+
+def test_markdown_malformed_link_does_not_raise():
+    from pydataui.components.advanced import Markdown
+    html = Markdown('[broken](http://[)').render({})
+    assert 'broken' in html
+    assert 'href=' not in html
+
+
+@pytest.mark.anyio
+async def test_markdown_malformed_link_page_renders():
+    from pydataui.components.advanced import Markdown
+    app = App()
+
+    @app.page('/markdown', public=True)
+    def markdown_page():
+        return Markdown('[broken](http://[)')
+
+    status, body, _ = await call(app, 'GET', '/markdown')
+    assert status == 200
+    assert 'broken' in body
 
 
 def test_sanitize_html_drops_unsafe_attributes_and_schemes():

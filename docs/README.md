@@ -173,11 +173,12 @@ from pydataui import App
 app = App(
     title="Data Hub",              # Browser & Swagger UI title
     description="Corporate Portal",# OpenAPI description
-    version="0.2.0",               # Semantic version
+    version="0.3.0",               # Semantic version
     debug=True,                    # Verbose logs
     host="127.0.0.1",              # Host interface
     port=8000,                     # Port
     session_max_age=86400,         # Session timeout in seconds (24h)
+    max_request_size=10*1024*1024, # Reject larger bodies with HTTP 413
 )
 ```
 

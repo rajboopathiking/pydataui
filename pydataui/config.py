@@ -14,6 +14,7 @@ class AppConfig:
     reload: bool = False
     session_secret: str = secrets.token_hex(32)
     session_max_age: int = 3600  # seconds
+    max_request_size: int = 10 * 1024 * 1024  # bytes
     api_prefix: str = '/api'
     internal_prefix: str = '/_pdu'
     theme: str = 'light'

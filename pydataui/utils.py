@@ -110,7 +110,10 @@ def _is_safe_url(value: str, tag: str) -> bool:
     candidate = re.sub(r'[\x00-\x20\x7f]+', '', str(value))
     if not candidate:
         return False
-    parsed = urlsplit(candidate)
+    try:
+        parsed = urlsplit(candidate)
+    except ValueError:
+        return False
     scheme = parsed.scheme.lower()
     if not scheme:
         return True

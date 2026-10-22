@@ -103,12 +103,18 @@ On macOS with EgoLite installed:
 ```bash
 PYDATAUI_BROWSER_EXECUTABLE="/Applications/ego lite.app/Contents/MacOS/ego lite" \
 PYDATAUI_REQUIRE_BROWSER=1 \
+PYDATAUI_REQUIRE_REAL_STYLES=1 \
   pytest tests/test_browser_security.py -v
 ```
 
+`PYDATAUI_REQUIRE_REAL_STYLES=1` requires the real Tailwind Play CDN stylesheet
+and fails the run if it cannot load; without it, that one test skips. Most other
+browser tests stub the CDN so they can run offline.
+
 `PYDATAUI_BROWSER_CDP_ENDPOINT` can connect Playwright to a Chromium instance
 already running with remote debugging on localhost. Without a browser the
-tests skip; set `PYDATAUI_REQUIRE_BROWSER=1` to fail instead.
+tests skip; set `PYDATAUI_REQUIRE_BROWSER=1` to fail instead. CI installs the
+`browser` extra and runs the browser suite with both requirement flags enabled.
 
 ---
 

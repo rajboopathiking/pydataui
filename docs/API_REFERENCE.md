@@ -20,8 +20,12 @@ Complete reference for classes, functions, decorators, components, and CLI tools
 
 ## 1. App & Configuration
 
-### `class App(title="PyDataUI App", description="", version="0.2.1", debug=False, **kwargs)`
-The central application object integrating routing, state snapshots, REST APIs, and the pyrustapi HTTP server.
+### `class App(title="PyDataUI App", description="", version="0.3.0", debug=False, **kwargs)`
+The central application object integrating routing, state snapshots, REST APIs, and the HTTP server.
+
+Request bodies are capped by `max_request_size` (default `10 * 1024 * 1024` bytes).
+Oversized bodies are rejected with HTTP `413` before routing; requests that
+declare an oversized `Content-Length` are rejected without being read.
 
 #### Methods:
 - `app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)`

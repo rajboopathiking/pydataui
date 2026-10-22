@@ -1385,6 +1385,12 @@
 
 
 <h1 id="pydataui-production-readiness-architecture-assessment">PyDataUI Production Readiness &amp; Architecture Assessment</h1>
+<blockquote>
+<p><strong>Version note:</strong> This assessment was written for <strong>v0.2.1</strong>. The current
+v0.3.0 release defaults to FastAPI, with PyRustAPI available as an optional
+backend. Validate engine-specific statements against the current
+<a href="../API_REFERENCE/">API reference</a> and release notes.</p>
+</blockquote>
 <p>This document provides a candid, authoritative engineering assessment of <strong>PyDataUI v0.2.1</strong> for production deployments, its security guarantees, remaining architectural boundaries, and how it compares to <strong>Django, Streamlit, Gradio, and Reflex</strong>.</p>
 <hr />
 <h2 id="1-executive-verdict-is-pydataui-production-ready">1. Executive Verdict: Is PyDataUI Production-Ready?</h2>
@@ -1462,6 +1468,9 @@
 <li><strong>Clean Browser Flow on 401</strong>:</li>
 <li>Unauthenticated browser navigations (<code>Accept: text/html</code>) receive an <strong>HTTP 303 Redirect to <code>/login?next=...</code></strong> rather than raw JSON errors.</li>
 <li>Automated REST API callers continue to receive clean <code>401 Unauthorized</code> JSON responses.</li>
+<li><strong>Request Body Limits</strong>:</li>
+<li><code>App(max_request_size=...)</code> caps buffered request bodies at 10 MiB by default.</li>
+<li>Oversized requests are rejected with <strong>HTTP 413</strong>; a declared oversized <code>Content-Length</code> is rejected without reading the body.</li>
 </ol>
 <hr />
 <h2 id="3-production-deployment-architecture-storage-engine">3. Production Deployment Architecture &amp; Storage Engine</h2>

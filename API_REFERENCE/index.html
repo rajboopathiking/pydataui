@@ -800,15 +800,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-apptitlepydataui-app-description-version021-debugfalse-kwargs" class="md-nav__link">
+  <a href="#class-apptitlepydataui-app-description-version030-debugfalse-kwargs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class App(title="PyDataUI App", description="", version="0.2.1", debug=False, **kwargs)
+        class App(title="PyDataUI App", description="", version="0.3.0", debug=False, **kwargs)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="class App(title=&#34;PyDataUI App&#34;, description=&#34;&#34;, version=&#34;0.2.1&#34;, debug=False, **kwargs)">
+    <nav class="md-nav" aria-label="class App(title=&#34;PyDataUI App&#34;, description=&#34;&#34;, version=&#34;0.3.0&#34;, debug=False, **kwargs)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1177,15 +1177,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-apptitlepydataui-app-description-version021-debugfalse-kwargs" class="md-nav__link">
+  <a href="#class-apptitlepydataui-app-description-version030-debugfalse-kwargs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class App(title="PyDataUI App", description="", version="0.2.1", debug=False, **kwargs)
+        class App(title="PyDataUI App", description="", version="0.3.0", debug=False, **kwargs)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="class App(title=&#34;PyDataUI App&#34;, description=&#34;&#34;, version=&#34;0.2.1&#34;, debug=False, **kwargs)">
+    <nav class="md-nav" aria-label="class App(title=&#34;PyDataUI App&#34;, description=&#34;&#34;, version=&#34;0.3.0&#34;, debug=False, **kwargs)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1470,8 +1470,11 @@
 </ol>
 <hr />
 <h2 id="1-app-configuration">1. App &amp; Configuration</h2>
-<h3 id="class-apptitlepydataui-app-description-version021-debugfalse-kwargs"><code>class App(title="PyDataUI App", description="", version="0.2.1", debug=False, **kwargs)</code></h3>
-<p>The central application object integrating routing, state snapshots, REST APIs, and the pyrustapi HTTP server.</p>
+<h3 id="class-apptitlepydataui-app-description-version030-debugfalse-kwargs"><code>class App(title="PyDataUI App", description="", version="0.3.0", debug=False, **kwargs)</code></h3>
+<p>The central application object integrating routing, state snapshots, REST APIs, and the HTTP server.</p>
+<p>Request bodies are capped by <code>max_request_size</code> (default <code>10 * 1024 * 1024</code> bytes).
+Oversized bodies are rejected with HTTP <code>413</code> before routing; requests that
+declare an oversized <code>Content-Length</code> are rejected without being read.</p>
 <h4 id="methods">Methods:</h4>
 <ul>
 <li><code>app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)</code>

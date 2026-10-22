@@ -28,6 +28,9 @@ def test_button_event_handler():
 def test_container():
     c = Container(Text("A"), Text("B"))
     assert len(c.children) == 2
+    html = c.render({})
+    assert "pdu-container-lg" in html
+    assert "pdu-max-w-lg" not in html
 
 def test_flex_layout():
     f = Flex(Text("1"), Text("2"), direction="column", gap="lg")

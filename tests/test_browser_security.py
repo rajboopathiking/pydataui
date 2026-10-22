@@ -44,9 +44,13 @@ EGOLITE_MAC = "/Applications/ego lite.app/Contents/MacOS/ego lite"
 APP = r'''
 import os
 from pydataui import App, State, AuthManager
-from pydataui.components import Container, Heading, Button, Text
+from pydataui.components import Container, Heading, Button, Text, BarChart
 from pydataui.components.advanced import Chat, Markdown
 from pydataui.components.data_science import DataUpload
+from pydataui.templates import (
+    analyst_dashboard, data_quality_dashboard, model_registry,
+    pipeline_operations,
+)
 from pydataui.auth import LoginPage, UserMenu, current_user
 
 
@@ -74,6 +78,20 @@ class UploadState(State):
     def note_upload(self, file=None):
         self.last_name = getattr(file, "filename", "")
         self.last_size = getattr(file, "size", 0)
+
+
+class TemplateRunState(State):
+    runs = [
+        {"Run": "run_1042", "Duration": "8m 12s", "Status": "success"},
+        {"Run": "run_1041", "Duration": "0m 41s", "Status": "failed"},
+    ]
+
+    def trigger(self):
+        next_run = f"run_{len(self.runs) + 1041}"
+        self.runs = [
+            {"Run": next_run, "Duration": "running", "Status": "running"},
+            *self.runs[:2],
+        ]
 
 
 MARKDOWN_TEXT = """# Safe heading
@@ -156,6 +174,90 @@ def build_app():
     @app.page("/markdown")
     def markdown():
         return Container(Heading("Markdown Safety"), Markdown(MARKDOWN_TEXT))
+
+    @app.page("/templates/analyst")
+    def template_analyst():
+        return analyst_dashboard(
+            title="Analyst Dashboard",
+            subtitle="Weekly performance",
+            metrics={"Revenue": "$48,250", "Orders": "1,284", "Conversion": "4.8%"},
+            chart=BarChart(labels=["Mon", "Tue", "Wed"], data=[120, 180, 160]),
+            table=[
+                {"Region": "North", "Revenue": "$12,400"},
+                {"Region": "South", "Revenue": "$9,850"},
+            ],
+        )
+
+    @app.page("/templates/quality")
+    def template_quality():
+        return data_quality_dashboard(
+            title="Quality Catalog",
+            score=97.5,
+            datasets=[
+                {"Dataset": "orders", "Owner": "finance", "Status": "Healthy"},
+                {"Dataset": "events", "Owner": "growth", "Status": "Stale"},
+            ],
+            schema={"user_id": "int64", "email": "varchar(255)"},
+            issues=[
+                {"Dataset": "events", "Check": "freshness", "Severity": "high", "Status": "open"},
+            ],
+            upload=DataUpload(accept=".csv", on_upload="/upload"),
+        )
+
+    @app.page("/templates/pipelines")
+    def template_pipelines():
+        return pipeline_operations(
+            title="Pipeline Operations",
+            metrics={"Success rate": "99.8%"},
+            pipeline={
+                "name": "warehouse_daily",
+                "status": "running",
+                "schedule": "02:00 UTC",
+                "steps": [
+                    {"name": "Extract Postgres", "status": "success"},
+                    {"name": "Transform with dbt", "status": "running"},
+                ],
+            },
+            events=[
+                {"time": "02:00", "label": "warehouse_daily started", "status": "running"},
+            ],
+        )
+
+    @app.page("/templates/reactive")
+    def template_reactive():
+        return pipeline_operations(
+            title="Reactive Pipeline",
+            metrics={"Tracked runs": len(TemplateRunState.runs)},
+            pipeline={
+                "name": "warehouse_daily",
+                "status": "running",
+                "steps": [{"name": "Transform with dbt", "status": "running"}],
+            },
+            runs=TemplateRunState.runs,
+            actions=[
+                Button("Trigger template run", on_click=TemplateRunState.trigger),
+            ],
+        )
+
+    @app.page("/templates/models")
+    def template_models():
+        return model_registry(
+            title="Model Registry",
+            model={
+                "name": "churn_classifier",
+                "version": "v12",
+                "stage": "production",
+                "metrics": {"AUC": 0.985, "F1": 0.942},
+            },
+            confusion_matrix={
+                "matrix": [[100, 10], [5, 85]],
+                "labels": ["Retained", "Churned"],
+            },
+            feature_importance={"tenure": 0.45, "support_calls": 0.35},
+            models=[
+                {"Model": "churn_classifier", "Version": "v12", "Stage": "production"},
+            ],
+        )
 
     @app.page("/public", public=True)
     def public():
@@ -817,6 +919,49 @@ def test_browser_real_tailwind_styles_are_applied(browser, default_server):
         page.goto(default_server.base + "/login")
         assert_no_horizontal_overflow(page)
         assert page.locator("form").is_visible()
+        assert_clean(errors)
+
+
+def test_browser_data_team_templates_render_and_stay_responsive(
+    browser, default_server
+):
+    cases = [
+        ("/templates/analyst", "Analyst Dashboard", ["$48,250", "North"]),
+        ("/templates/quality", "Quality Catalog", ["97.5%", "freshness", "varchar(255)"]),
+        ("/templates/pipelines", "Pipeline Operations", ["warehouse_daily", "Transform with dbt"]),
+        ("/templates/models", "Model Registry", ["churn_classifier", "0.9850", "Churned"]),
+    ]
+    with isolated_page(
+        browser, viewport={"width": 1280, "height": 800}
+    ) as (page, errors):
+        login(page, default_server)
+        for path, heading, markers in cases:
+            page.goto(default_server.base + path)
+            page.get_by_role("heading", name=heading, exact=True).wait_for()
+            for marker in markers:
+                page.get_by_text(marker, exact=True).first.wait_for()
+            assert_no_horizontal_overflow(page)
+
+        page.goto(default_server.base + "/templates/reactive")
+        page.get_by_role("heading", name="Reactive Pipeline", exact=True).wait_for()
+        page.get_by_text("run_1042", exact=True).wait_for()
+        with page.expect_response(
+            lambda response: response.url.endswith(
+                "/_pdu/event/TemplateRunState/trigger"
+            )
+        ) as response_info:
+            page.get_by_role(
+                "button", name="Trigger template run", exact=True
+            ).click()
+        assert response_info.value.status == 200
+        page.get_by_text("run_1043", exact=True).wait_for()
+        page.get_by_text("3", exact=True).first.wait_for()
+
+        page.set_viewport_size({"width": 390, "height": 844})
+        for path, heading, _ in cases:
+            page.goto(default_server.base + path)
+            page.get_by_role("heading", name=heading, exact=True).wait_for()
+            assert_no_horizontal_overflow(page)
         assert_clean(errors)
 
 

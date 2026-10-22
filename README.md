@@ -38,6 +38,7 @@ Build dashboards, dataset explorers, AI agent interfaces, and microservice workf
 - ⚡ **Reactive SSR via HTMX**: Server re-renders page fragments on state mutation without client-side JavaScript.
 - 🤖 **AI & Agent Ready**: Built-in `Chat`, `Markdown`, and `CodeEditor` components compatible with LangGraph, UnifiedNexus, and LLMs.
 - 🔒 **Auth & API Keys**: JWT authentication, RBAC, and `pdu_live_...` API keys for ETL automation.
+- **Data Team Templates**: Ready-made analyst, data-quality, pipeline, and ML registry pages via `pydataui.templates`.
 - 🌐 **One-Click Sharing (`share=True`)**: Create public internet tunnels instantly for demos.
 
 ---
@@ -421,6 +422,8 @@ python benchmarks/run_benchmark.py --requests 5000 --concurrency 100
 - 🛠️ [Troubleshooting & Architecture Guide](docs/TROUBLESHOOTING.md)
 - 🔒 [Authentication & Security Guide](docs/AUTHENTICATION.md)
 - 📊 [Data Science & Engineering Components](docs/DATA_COMPONENTS.md)
+- [Data Team Page Templates](docs/DATA_TEMPLATES.md)
+- [Data Team Template Gallery (HTML)](https://rajboopathiking.github.io/pydataui/TEMPLATE_GALLERY/)
 - 📖 [Complete API Reference](docs/API_REFERENCE.md)
 - 🚀 [Production & Cloud Deployment](docs/DEPLOYMENT.md)
 - 🛡️ [Production Readiness Assessment](docs/PRODUCTION_READINESS.md)

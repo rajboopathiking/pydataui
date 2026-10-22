@@ -28,6 +28,7 @@ from .dx import (
     chat, page, run, get_app, get_default_app
 )
 from . import html
+from . import templates
 
 __version__ = '0.3.0'
 
@@ -96,5 +97,6 @@ __all__ = [
     'get_app',
     'get_default_app',
     'html',
+    'templates',
     '__version__',
 ]

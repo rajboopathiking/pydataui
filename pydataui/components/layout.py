@@ -19,7 +19,7 @@ class Container(Component):
         self.center = center
     
     def _get_classes(self) -> List[str]:
-        classes = super()._get_classes() + ['pdu-container', f'pdu-max-w-{self.max_width}', f'pdu-p-{self.padding}']
+        classes = super()._get_classes() + ['pdu-container', f'pdu-container-{self.max_width}', f'pdu-p-{self.padding}']
         if self.center:
             classes.append('pdu-mx-auto')
         return classes

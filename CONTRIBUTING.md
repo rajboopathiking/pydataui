@@ -87,6 +87,29 @@ When creating a new component:
   ```
 - Any new features (components, auth logic, CLI options) must be accompanied by new test coverage.
 
+### Browser Tests
+
+`tests/test_browser_security.py` uses Playwright from the `browser` extra but
+does not download Chromium. Point it at an installed Chromium-compatible
+executable:
+
+```bash
+PYDATAUI_BROWSER_EXECUTABLE="/path/to/chrome-or-chromium" \
+  pytest tests/test_browser_security.py -v
+```
+
+On macOS with EgoLite installed:
+
+```bash
+PYDATAUI_BROWSER_EXECUTABLE="/Applications/ego lite.app/Contents/MacOS/ego lite" \
+PYDATAUI_REQUIRE_BROWSER=1 \
+  pytest tests/test_browser_security.py -v
+```
+
+`PYDATAUI_BROWSER_CDP_ENDPOINT` can connect Playwright to a Chromium instance
+already running with remote debugging on localhost. Without a browser the
+tests skip; set `PYDATAUI_REQUIRE_BROWSER=1` to fail instead.
+
 ---
 
 ## 📦 Pull Request Process

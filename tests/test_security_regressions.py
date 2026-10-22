@@ -319,6 +319,35 @@ async def test_global_api_disable_and_readonly_login_state():
 
 
 @pytest.mark.anyio
+async def test_login_next_redirect_rejects_external_targets():
+    app = make_app(auth=True)
+    for next_value, expected in [
+        ('/dashboard', '/dashboard'),
+        ('//evil.example', '/'),
+        ('https://evil.example', '/'),
+        ('/\\evil.example', '/'),
+        ('%2F%2Fevil.example', '/'),
+        ('/%09/evil.example', '/'),
+        ('/%0D%0A/evil.example', '/'),
+        ('/%5Cevil.example', '/'),
+        ('/%00/evil.example', '/'),
+    ]:
+        headers = await browser(app, '/login')
+        headers['hx-current-url'] = (
+            'http://localhost/login?next=' + next_value
+        )
+        status, _, response = await call(
+            app,
+            'POST',
+            '/_pdu/event/LoginState/login',
+            {'username': 'alice', 'password': 'test-password'},
+            headers,
+        )
+        assert status == 200
+        assert response['hx-redirect'] == expected
+
+
+@pytest.mark.anyio
 async def test_context_uses_each_apps_auth_manager():
     first = make_app(auth=True)
     second = make_app(auth=True)
@@ -349,6 +378,66 @@ def test_auth_components_escape_user_data():
     user = auth.add_user('<img src=x onerror=alert(1)>', 'pw')
     html = UserMenu(user).render({})
     assert '<img' not in html and '&lt;img' in html
+
+
+def test_markdown_renders_formatting_and_strips_active_content():
+    from pydataui.components.advanced import Markdown
+    source = """# Heading
+
+This is **bold** and *italic* with `inline code`.
+
+```python
+print("safe")
+```
+
+[good](https://example.com)
+
+[bad](javascript:window.__pwned=4)
+
+<img src="javascript:window.__pwned=6" onerror="window.__pwned=1">
+
+<script>window.__pwned=2</script>
+
+<button onclick="window.__pwned=3">raw button</button>
+"""
+    html = Markdown(source).render({})
+    assert '<h1>Heading</h1>' in html
+    assert '<strong>bold</strong>' in html
+    assert '<em>italic</em>' in html
+    assert '<pre><code class="language-python">' in html
+    assert 'href="https://example.com"' in html
+    assert '<script' not in html
+    assert '<button' not in html
+    assert 'onerror' not in html
+    assert 'onclick' not in html
+    assert 'javascript:' not in html.lower()
+
+
+def test_sanitize_html_drops_unsafe_attributes_and_schemes():
+    from pydataui.utils import sanitize_html
+    cleaned = sanitize_html(
+        '<p style="color:red" onclick="bad()">ok</p>'
+        '<a href="java\nscript:alert(1)">bad</a>'
+        '<a href="https://example.com" target="_blank">good</a>'
+        '<iframe src="https://example.com">frame</iframe>'
+    )
+    assert 'style=' not in cleaned
+    assert 'onclick' not in cleaned
+    assert 'javascript' not in cleaned.lower()
+    assert 'href="https://example.com"' in cleaned
+    assert '<iframe' not in cleaned
+    assert '>ok<' in cleaned
+
+    cleaned = sanitize_html(
+        '<input onfocus="bad()">'
+        '<p>after input</p>'
+        '<form><input><button>hidden</button></form>'
+        '<p>after form</p>'
+    )
+    assert 'after input' in cleaned
+    assert 'after form' in cleaned
+    assert '<form' not in cleaned and '<button' not in cleaned
+    assert 'hidden' not in cleaned
 
 
 @pytest.mark.anyio

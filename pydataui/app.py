@@ -224,6 +224,40 @@ class App:
         request._pdu_session = session
         return session
         
+    def _request_root_path(self, request: Any) -> str:
+        scope = getattr(request, 'scope', None) or {}
+        return (scope.get('root_path', '') or getattr(self.config, 'root_path', '') or '').rstrip('/')
+
+    def _post_login_target(self, request: Any) -> str:
+        """Return a mount-aware, same-origin post-login redirect target."""
+        from urllib.parse import urlparse, parse_qs
+        headers = getattr(request, 'headers', {}) or {}
+        current = (headers.get('hx-current-url') or headers.get('HX-Current-URL')
+                   or headers.get('referer') or headers.get('Referer') or '')
+        try:
+            requested = (parse_qs(urlparse(str(current)).query).get('next') or [''])[0]
+        except ValueError:
+            requested = ''
+        requested = str(requested)
+        if any(ord(ch) < 0x20 or ord(ch) == 0x7f for ch in requested):
+            requested = '/'
+        if (not requested.startswith('/') or requested.startswith('//')
+                or '\\' in requested or '://' in requested):
+            requested = '/'
+        root = self._request_root_path(request)
+        if root and (requested == root or requested.startswith(root + '/')):
+            return requested
+        return (root + requested) or '/'
+
+    def _login_redirect(self, request: Any, session: Session, path: str) -> Any:
+        from urllib.parse import quote
+        root = self._request_root_path(request)
+        return RedirectResponse(
+            f'{root}/login?next={quote(path, safe="/")}',
+            status_code=303,
+            headers={'Set-Cookie': self._session_cookie(session)},
+        )
+
     def _build_state_snapshot(self, session: Session) -> Dict[str, Dict[str, Any]]:
         from .auth.manager import current_user
         user = current_user.get()
@@ -421,10 +455,7 @@ class App:
                             and ('text/html' in str(accept).lower() or accept == 'document')
                             and self._page_router.get_page('/login')
                             and path != '/login'):
-                        from .responses import RedirectResponse
-                        cookie_header = self._session_cookie(session)
-                        return RedirectResponse(f'/login?next={path}', status_code=303,
-                                                headers={'Set-Cookie': cookie_header})
+                        return self._login_redirect(request, session, path)
                     return denied
                 with self._request_context(request):
                     return await render_page_async(request, session)
@@ -442,10 +473,7 @@ class App:
                                 and ('text/html' in str(accept).lower() or accept == 'document')
                                 and self._page_router.get_page('/login')
                                 and path != '/login'):
-                            from .responses import RedirectResponse
-                            cookie_header = self._session_cookie(session)
-                            return RedirectResponse(f'/login?next={path}', status_code=303,
-                                                    headers={'Set-Cookie': cookie_header})
+                            return self._login_redirect(request, session, path)
                         return denied
                     with self._request_context(request):
                         return render_page(request, session)
@@ -697,12 +725,14 @@ class App:
                     user = self.auth.verify_token(state_instance.token)
                     session.data['auth_user_id'] = user.id
                     return HTMLResponse('', headers={'Set-Cookie': self._session_cookie(session),
-                                                      'HX-Redirect': '/', 'Cache-Control': 'no-store'})
+                                                      'HX-Redirect': self._post_login_target(request),
+                                                      'Cache-Control': 'no-store'})
                 if method_name == 'logout':
                     self.auth.revoke_token(session.data.get('auth_token', ''))
                     self._session_manager.delete_session(session.session_id)
                     return HTMLResponse('', headers={'Set-Cookie': 'pdu-session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0',
-                                                      'HX-Redirect': '/login', 'Cache-Control': 'no-store'})
+                                                      'HX-Redirect': self._request_root_path(request) + '/login',
+                                                      'Cache-Control': 'no-store'})
 
             # Re-render the current page fragment
             headers_req = getattr(request, 'headers', {})

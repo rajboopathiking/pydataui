@@ -426,7 +426,9 @@ def get_base_html(
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {tw_config_json};
+        if (window.tailwind) {{
+            tailwind.config = {tw_config_json};
+        }}
     </script>
     <style>
         {css_variables}

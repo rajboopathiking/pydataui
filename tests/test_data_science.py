@@ -95,3 +95,43 @@ def test_schema_viewer_dict():
     assert "user_id" in html
     assert "varchar(255)" in html
     assert "timestamp" in html
+
+
+def test_data_upload_url_callback_contract():
+    html = DataUpload(
+        accept=".csv,.json", on_upload="/api/data/upload"
+    ).render({})
+    assert 'type="file"' in html
+    assert 'name="file"' in html
+    assert 'accept=".csv,.json"' in html
+    assert 'hx-post="/api/data/upload"' in html
+    assert 'hx-encoding="multipart/form-data"' in html
+    assert 'hx-trigger="change"' in html
+    assert 'hx-swap="none"' in html
+
+
+def test_data_upload_prefixes_mount_urls_and_supports_handlers():
+    from pydataui import State
+    from pydataui.state import _current_root_path
+
+    class UploadState(State):
+        last_name: str = ''
+
+        def note_upload(self, file=None):
+            self.last_name = getattr(file, 'filename', '')
+
+    token = _current_root_path.set('/ops')
+    try:
+        url_html = DataUpload(on_upload='/upload').render({})
+        handler_html = DataUpload(
+            on_upload=UploadState.note_upload, target='#result'
+        ).render({})
+    finally:
+        _current_root_path.reset(token)
+
+    assert 'hx-post="/ops/upload"' in url_html
+    assert 'hx-post="/ops/_pdu/event/UploadState/note_upload"' in handler_html
+    assert 'hx-encoding="multipart/form-data"' in handler_html
+    assert 'hx-trigger="change"' in handler_html
+    assert 'hx-target="#result"' in handler_html
+    assert 'hx-swap="click"' not in handler_html

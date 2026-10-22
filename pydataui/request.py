@@ -3,8 +3,69 @@ from __future__ import annotations
 from collections.abc import Mapping
 import inspect
 import json
+from email import policy
+from email.parser import BytesParser
 from typing import Any, Dict, Optional
 from urllib.parse import parse_qs
+
+
+class UploadedFile:
+    """Small synchronous file wrapper for multipart uploads on event routes."""
+
+    def __init__(self, filename: str, content: bytes, content_type: str = ''):
+        self.filename = filename
+        self.content = content
+        self.content_type = content_type
+        self.size = len(content)
+        self._position = 0
+
+    def read(self, size: int = -1) -> bytes:
+        if size is None or size < 0:
+            data = self.content[self._position:]
+            self._position = len(self.content)
+            return data
+        data = self.content[self._position:self._position + size]
+        self._position += len(data)
+        return data
+
+    def seek(self, offset: int, whence: int = 0) -> int:
+        if whence == 1:
+            offset += self._position
+        elif whence == 2:
+            offset += len(self.content)
+        self._position = max(0, min(offset, len(self.content)))
+        return self._position
+
+    def close(self) -> None:
+        return None
+
+
+def _parse_multipart(body: bytes, content_type: str) -> Optional[Dict[str, Any]]:
+    """Parse a cached multipart body without requiring an async request."""
+    if 'boundary=' not in content_type.lower():
+        return None
+    try:
+        message = BytesParser(policy=policy.default).parsebytes(
+            b'Content-Type: ' + content_type.encode('latin-1') +
+            b'\r\nMIME-Version: 1.0\r\n\r\n' + body
+        )
+    except Exception:
+        return None
+    if not message.is_multipart():
+        return None
+    result: Dict[str, Any] = {}
+    for part in message.iter_parts():
+        name = part.get_param('name', header='content-disposition')
+        if not name:
+            continue
+        payload = part.get_payload(decode=True) or b''
+        filename = part.get_filename()
+        if filename is not None:
+            result[name] = UploadedFile(filename, payload, part.get_content_type())
+        else:
+            charset = part.get_content_charset() or 'utf-8'
+            result[name] = payload.decode(charset, errors='replace')
+    return result
 
 
 class QueryParamsDict(dict):
@@ -115,6 +176,13 @@ class RequestContext:
 
         b = self.body()
         if b:
+            headers = getattr(self._request, 'headers', {}) or {}
+            content_type = headers.get('content-type') or headers.get('Content-Type') or ''
+            if 'multipart/form-data' in str(content_type).lower():
+                parsed = _parse_multipart(b, str(content_type))
+                if parsed is not None:
+                    self._cached_form = parsed
+                    return self._cached_form
             try:
                 b_str = b.decode("utf-8", errors="ignore").strip()
                 if b_str and not b_str.startswith("{") and not b_str.startswith("[") and "=" in b_str:

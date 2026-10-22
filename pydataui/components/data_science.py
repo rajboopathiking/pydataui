@@ -340,18 +340,59 @@ class DataUpload(Component):
     """
     Drag-and-drop file upload area.
 
+    ``on_upload`` may be a URL string (for example ``"/api/data/upload"``) or
+    an event handler such as ``MyState.handle_file``. Uploads are sent as
+    multipart form data to that target.
+
     Usage::
 
-        DataUpload(accept=".csv,.json,.parquet", on_upload=MyState.handle_file)
+        DataUpload(accept=".csv,.json,.parquet", on_upload="/api/data/upload")
+        DataUpload(accept=".csv", on_upload=MyState.handle_file)
     """
 
-    def __init__(self, accept: str = '.csv,.json', **kwargs):
+    def __init__(self, accept: str = '.csv,.json', on_upload: Any = None,
+                 name: str = 'file', target: Optional[str] = None, **kwargs):
         super().__init__(**kwargs)
         self.accept = accept
+        self.name = name
+        self.target = target
+        self.on_upload = on_upload
+        if self.on_upload is None:
+            self.on_upload = self._event_props.get('on_change')
+
+    def _prefixed_url(self, url: str) -> str:
+        from ..state import _current_root_path
+        prefix = _current_root_path.get().rstrip('/')
+        if prefix and url.startswith('/') and not url.startswith('//'):
+            if url != prefix and not url.startswith(prefix + '/'):
+                return prefix + url
+        return url
+
+    def _upload_attrs(self) -> str:
+        upload = self.on_upload
+        if not upload:
+            return ''
+        if isinstance(upload, str):
+            attrs = {
+                'hx-post': self._prefixed_url(upload),
+                'hx-encoding': 'multipart/form-data',
+                'hx-trigger': 'change',
+            }
+            if self.target:
+                attrs['hx-target'] = self.target
+                attrs['hx-swap'] = 'innerHTML'
+            else:
+                attrs['hx-swap'] = 'none'
+        else:
+            attrs = self._get_event_htmx_attrs('on_change', upload)
+            attrs['hx-encoding'] = 'multipart/form-data'
+            if self.target:
+                attrs['hx-target'] = self.target
+        return ' '.join(f'{key}="{escape_html(str(value))}"' for key, value in attrs.items())
 
     def render(self, state_snapshot=None) -> str:
-        # Event props handled by base class via on_change/on_submit
         uid = self.id
+        upload_attrs = self._upload_attrs()
         return (f'<div id="{uid}" class="flex items-center justify-center w-full">'
                 f'<label class="flex flex-col items-center justify-center w-full h-48 border-2 '
                 f'border-dashed rounded-lg cursor-pointer bg-muted/50 border-muted-foreground/25 '
@@ -367,7 +408,8 @@ class DataUpload(Component):
                 f'<span class="font-semibold">Click to upload</span> or drag and drop</p>'
                 f'<p class="text-xs text-muted-foreground/75">Accepted: {escape_html(self.accept)}</p>'
                 f'</div>'
-                f'<input type="file" class="hidden" accept="{escape_html(self.accept)}" />'
+                f'<input type="file" class="hidden" name="{escape_html(self.name)}" '
+                f'accept="{escape_html(self.accept)}" {upload_attrs} />'
                 f'</label></div>')
 
 

@@ -417,6 +417,8 @@ python benchmarks/run_benchmark.py --requests 5000 --concurrency 100
 
 ## 📚 In-Depth Guides
 
+- 🌐 [Interactive Full HTML Documentation Suite](docs/FULL_HTML_DOCUMENTATION.md) (Standalone: [Full Manual](docs/full-documentation.html) | [Mobile Guide](docs/mobile-desktop-guide.html) | [API Explorer](docs/api-reference.html))
+- 📱 [Mobile & Desktop App Guide (PWA, Capacitor & Tauri)](docs/MOBILE_AND_DESKTOP.md)
 - ⚡ [Performance & Benchmarks Guide](docs/BENCHMARKS.md)
 - 📘 [Full Documentation](docs/README.md)
 - 🎨 [UI Customization Guide (Tailwind, shadcn & HTML)](docs/CUSTOMIZATION.md)

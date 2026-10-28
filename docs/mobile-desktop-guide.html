@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyDataUI Mobile &amp; Desktop Complete Build Guide</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M16 42l10-12 8 7 14-19' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              500: '#3b82f6',
+              600: '#2563eb',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #3b82f6;
+    }
+  </style>
+</head>
+<body class="bg-[#090d16] text-slate-200 antialiased min-h-screen">
+
+  <!-- TOP BAR -->
+  <header class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <a href="full-documentation.html" class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+        </div>
+        <div>
+          <span class="text-lg font-extrabold text-white">PyDataUI Mobile &amp; Desktop Guide</span>
+          <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-mono">v0.3.5</span>
+        </div>
+      </a>
+    </div>
+    <div class="flex items-center space-x-3">
+      <a href="full-documentation.html" class="text-xs text-slate-400 hover:text-white transition">← Full Developer Manual</a>
+      <a href="https://github.com/rajboopathiking/pydataui" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white border border-slate-700 transition">GitHub</a>
+    </div>
+  </header>
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- HERO INTRO -->
+    <div class="mb-12 text-center max-w-3xl mx-auto">
+      <span class="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30 text-xs font-semibold mb-3">
+        ⚡ Zero Swift &amp; Zero Kotlin Required
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+        Native Android APK &amp; iOS IPA Build Pipeline
+      </h1>
+      <p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+        Package any 100% Python PyDataUI application into installable mobile packages and native desktop executables. Direct CLI export with automatic Wi-Fi server bridging.
+      </p>
+    </div>
+
+    <!-- ARCHITECTURE DIAGRAM IN HTML -->
+    <div class="mb-12 p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-6 flex items-center gap-2">
+        <span>🌐</span> Mobile-to-Python Wi-Fi Architecture
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <!-- NODE 1: Physical Phone -->
+        <div class="p-5 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+          <div class="text-3xl mb-2">📱</div>
+          <div class="font-bold text-white text-sm">Physical Phone (Android/iOS)</div>
+          <div class="text-xs text-blue-400 font-mono mt-1">Capacitor Native Shell</div>
+          <p class="text-[11px] text-slate-400 mt-2">
+            Loads HTML/CSS assets from internal storage and connects via HTTP.
+          </p>
+        </div>
+
+        <!-- CONNECTOR ARROW -->
+        <div class="flex flex-col items-center justify-center text-center">
+          <div class="hidden md:flex items-center w-full">
+            <div class="h-0.5 flex-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+            <span class="px-2 py-1 rounded bg-blue-900/60 text-blue-300 text-[10px] font-mono border border-blue-700">Wi-Fi LAN / HTTP</span>
+            <div class="h-0.5 flex-1 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-2">
+            Auto-detected IP (e.g. <code>192.168.1.50:8000</code>)
+          </div>
+        </div>
+
+        <!-- NODE 2: Mac/Workstation -->
+        <div class="p-5 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+          <div class="text-3xl mb-2">💻</div>
+          <div class="font-bold text-white text-sm">Python Workstation (Mac / PC)</div>
+          <div class="text-xs text-emerald-400 font-mono mt-1">PyDataUI Server (Port 8000)</div>
+          <p class="text-[11px] text-slate-400 mt-2">
+            Processes reactive events, renders HTMX fragments, commits state.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLATFORM TABS -->
+    <div class="mb-8">
+      <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+        <button class="tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-700 transition" onclick="switchTab('tab-android')">
+          🤖 Android (.APK)
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-700 transition text-slate-400 hover:text-white" onclick="switchTab('tab-ios')">
+          🍏 iOS (.IPA &amp; Sideloading)
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-700 transition text-slate-400 hover:text-white" onclick="switchTab('tab-simulator')">
+          📲 Browser Simulator
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-700 transition text-slate-400 hover:text-white" onclick="switchTab('tab-desktop')">
+          🖥️ Desktop (Tauri &amp; Window)
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: ANDROID -->
+    <div id="tab-android" class="tab-pane space-y-8">
+      <div>
+        <h2 class="text-xl font-bold text-white mb-2">Compiling Standalone Android APK</h2>
+        <p class="text-sm text-slate-400 mb-4">
+          PyDataUI automatically configures Gradle, updates Android assets, bridges your local Wi-Fi IP, and outputs <code>app-debug.apk</code>.
+        </p>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+          <h3 class="font-bold text-white text-sm">Install Prerequisites (JDK 17 or 21)</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          Ensure you have a modern Java Development Kit installed and set as default:
+        </p>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-blue-300">
+          brew install openjdk@21<br>
+          export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">2</span>
+          <h3 class="font-bold text-white text-sm">Accept Android SDK Licenses</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          If you encounter "License for package Android SDK Build-Tools not accepted", execute:
+        </p>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-emerald-300">
+          export ANDROID_HOME=/usr/local/share/android-commandlinetools<br>
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">3</span>
+          <h3 class="font-bold text-white text-sm">Build the Standalone APK</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          Run the build command from your repository root:
+        </p>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-blue-300 mb-3">
+          pydataui mobile build --platform android
+        </div>
+        <div class="text-xs text-slate-400">
+          Output artifacts:
+          <ul class="list-disc list-inside mt-1 space-y-1 text-slate-300">
+            <li><code>./app-debug.apk</code> (Workspace root)</li>
+            <li><code>dist/app-debug.apk</code></li>
+            <li><code>android/app/build/outputs/apk/debug/app-debug.apk</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">4</span>
+          <h3 class="font-bold text-white text-sm">Install to Physical Phone via ADB</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          Connect your Android phone with USB Debugging enabled:
+        </p>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-blue-300">
+          # Install via PyDataUI CLI:<br>
+          pydataui mobile install --platform android<br><br>
+          # Or directly using adb:<br>
+          adb install -r app-debug.apk
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: IOS -->
+    <div id="tab-ios" class="tab-pane hidden space-y-8">
+      <div>
+        <h2 class="text-xl font-bold text-white mb-2">Compiling &amp; Sideloading iOS IPA</h2>
+        <p class="text-sm text-slate-400 mb-4">
+          Package your application into <code>app-debug.ipa</code> for sideloading on any iPhone or iPad without needing a $99/year Apple Developer program.
+        </p>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+          <h3 class="font-bold text-white text-sm">Generate the Unsigned IPA Bundle</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          Execute the iOS build command on your Mac:
+        </p>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-indigo-300 mb-3">
+          pydataui mobile build --platform ios
+        </div>
+        <div class="text-xs text-slate-400">
+          Output: <code>./app-debug.ipa</code> (195 KB) and <code>dist/app-debug.ipa</code>.
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">2</span>
+          <h3 class="font-bold text-white text-sm">Sideload with Sideloadly or AltStore</h3>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          Install the IPA onto your physical iOS device:
+        </p>
+        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-300">
+          <li>Download and install <strong>Sideloadly</strong> (macOS/Windows).</li>
+          <li>Plug your iPhone into your computer via Lightning/USB-C.</li>
+          <li>Drag <code>app-debug.ipa</code> into Sideloadly.</li>
+          <li>Enter your standard free Apple ID and click <strong>Start</strong>.</li>
+          <li>On your phone, go to <strong>Settings ➡️ Privacy &amp; Security ➡️ Developer Mode</strong> and turn it ON.</li>
+          <li>Under <strong>Settings ➡️ General ➡️ VPN &amp; Device Management</strong>, tap your Apple ID and select <strong>Trust</strong>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: SIMULATOR -->
+    <div id="tab-simulator" class="tab-pane hidden space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-white mb-2">In-Browser Mobile Device Simulator</h2>
+        <p class="text-sm text-slate-400 mb-4">
+          Test mobile layouts instantly without touching native compilers:
+        </p>
+      </div>
+
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-blue-300">
+        pydataui mobile preview app.py
+      </div>
+
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <h3 class="font-bold text-white text-sm mb-2">Key Simulator Features:</h3>
+        <ul class="list-disc list-inside space-y-2 text-xs text-slate-300">
+          <li><strong>Device Chassis</strong>: iPhone 15 Pro, Google Pixel 8, iPad Mini.</li>
+          <li><strong>Orientation</strong>: Instant toggle between Portrait and Landscape.</li>
+          <li><strong>Live QR Code</strong>: Scan with your camera to open the live app on real hardware over Wi-Fi.</li>
+          <li><strong>Hot Reloading</strong>: Edits in Python instantly update the phone frame.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: DESKTOP -->
+    <div id="tab-desktop" class="tab-pane hidden space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-white mb-2">Desktop Apps: Native Window &amp; Tauri 2.0</h2>
+        <p class="text-sm text-slate-400 mb-4">
+          Distribute native desktop applications for macOS, Windows, and Linux.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+          <h3 class="font-bold text-white text-sm mb-2">1. Lightweight Window (0s Setup)</h3>
+          <p class="text-xs text-slate-400 mb-3">Launches standard OS webview window immediately:</p>
+          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-blue-300">
+            pydataui run app.py --desktop
+          </div>
+        </div>
+        <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+          <h3 class="font-bold text-white text-sm mb-2">2. Tauri 2.0 Binary (Production)</h3>
+          <p class="text-xs text-slate-400 mb-3">Compiles stand-alone sandboxed desktop binary:</p>
+          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-orange-300">
+            pydataui desktop build
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('active');
+        el.classList.add('text-slate-400');
+      });
+      document.getElementById(tabId).classList.remove('hidden');
+      event.currentTarget.classList.add('active');
+      event.currentTarget.classList.remove('text-slate-400');
+    }
+  </script>
+</body>
+</html>

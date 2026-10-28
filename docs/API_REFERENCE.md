@@ -20,7 +20,7 @@ Complete reference for classes, functions, decorators, components, and CLI tools
 
 ## 1. App & Configuration
 
-### `class App(title="PyDataUI App", description="", version="0.3.1", debug=False, **kwargs)`
+### `class App(title="PyDataUI App", description="", version="0.3.2", debug=False, **kwargs)`
 The central application object integrating routing, state snapshots, REST APIs, and the HTTP server.
 
 Request bodies are capped by `max_request_size` (default `10 * 1024 * 1024` bytes).

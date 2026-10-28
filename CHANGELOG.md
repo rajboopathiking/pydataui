@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.3.1] - 2026-10-28
+## [0.3.2] - 2026-10-28
 
 - Add In-Browser Mobile Device Simulator (`/_pdu/preview`, `pydataui mobile preview`, `--mobile-preview`) with iPhone 15 Pro, Pixel 8, and iPad Mini frames, fast reload, and real physical device testing via instant QR code without Xcode or Android Studio.
 - Add Progressive Web App (PWA) manifest and service worker generation (`/_pdu/manifest.json`, `/_pdu/sw.js`, `viewport-fit=cover`).

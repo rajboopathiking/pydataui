@@ -35,6 +35,12 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 
+[project.urls]
+Homepage = "https://github.com/rajboopathiking/pydataui"
+Documentation = "https://rajboopathiking.github.io/pydataui"
+Repository = "https://github.com/rajboopathiking/pydataui"
+"Bug Tracker" = "https://github.com/rajboopathiking/pydataui/issues"
+
 [project.optional-dependencies]
 pyrustapi = ["pyrustapi>=1.8.9,<2"]
 browser = ["playwright>=1.49,<2"]

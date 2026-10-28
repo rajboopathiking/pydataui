@@ -437,6 +437,8 @@
       
         
       
+        
+      
     
     
     
@@ -500,6 +502,34 @@
     
   
     Full HTML Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_OPTIMIZATION_AND_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Optimization & Architecture
   
 
     
@@ -2423,15 +2453,29 @@ The compiled platform binary is generated in <code>src-tauri/target/release/bund
 <hr />
 <h2 id="best-practices-for-mobile-ui-in-pydataui">💡 Best Practices for Mobile UI in PyDataUI</h2>
 <ol>
-<li><strong>Use Responsive Containers</strong>:
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Grid</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">Container</span><span class="p">(</span>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>    <span class="n">Grid</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">md_cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lg_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>    <span class="n">max_width</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span>
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>    <span class="n">padding</span><span class="o">=</span><span class="s2">"md"</span>
-</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="p">)</span>
-</span></code></pre></div></li>
+<li>
+<p><strong>Enable Mobile Mode Preset</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Mobile App"</span><span class="p">,</span> <span class="n">mobile_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Or via environment variable:</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># PYDATAUI_MOBILE_MODE=1</span>
+</span></code></pre></div>
+   Automatically activates Starlette <code>GZipMiddleware</code>, strips web PWA service-worker boilerplate, and activates dirty-tracked component subtree updates.</p>
+</li>
+<li>
+<p><strong>In-Process JNI Bridge (Chaquopy)</strong>:
+   In Capacitor mobile apps, PyDataUI supports zero-socket native execution via <code>PyDataUIWebViewInterceptor</code> and <code>pydataui.shell.bridge.dispatch_in_process</code>. The native Android webview catches all <code>/_pdu/*</code> calls before hitting the network stack and executes the ASGI app in-process in memory, cutting latency by 5–15 ms per request and eliminating Uvicorn daemon threads.</p>
+</li>
+<li>
+<p><strong>Use Responsive Containers</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Grid</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">Container</span><span class="p">(</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    <span class="n">Grid</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">md_cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lg_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="n">max_width</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    <span class="n">padding</span><span class="o">=</span><span class="s2">"md"</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="p">)</span>
+</span></code></pre></div></p>
+</li>
 <li><strong>Touch-friendly tap targets</strong>:
    Use <code>size="lg"</code> or <code>full_width=True</code> on buttons for easy mobile tapping.</li>
 <li><strong>Bottom navigation bar</strong>:

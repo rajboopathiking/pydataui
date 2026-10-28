@@ -1,7 +1,7 @@
 # PyDataUI Documentation
 
-> **The Production-Grade Full-Stack Python Framework for Data Roles.**  
-> Powered by `pyrustapi` (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.
+> **The Production-Grade Full-Stack Python Framework for Web, Mobile & Desktop.**  
+> Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.
 
 <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;" markdown="1">
 
@@ -47,14 +47,22 @@ Or browse the [Full HTML Documentation Suite](FULL_HTML_DOCUMENTATION.md) direct
 
 ## 1. Overview
 
-**PyDataUI** is a modern full-stack web framework designed for Data Engineers, Data Analysts, AI/ML Engineers, and Python developers. It bridges the gap between simple toy prototype libraries (Gradio, Streamlit) and complex multi-language web stacks (React + TypeScript + FastAPI).
+**PyDataUI** is a modern full-stack web, mobile, and desktop framework designed for Data Engineers, Data Analysts, AI/ML Engineers, and Python developers. It bridges the gap between toy prototype libraries (Streamlit, Gradio) and complex multi-language web stacks (React + TypeScript + FastAPI).
 
 With PyDataUI:
-- You write **100% Python**.
-- The backend runs on **pyrustapi**, an asynchronous HTTP core written in Rust (Tokio & Hyper) delivering lower latency and higher throughput than standard Python servers like Uvicorn.
-- The UI is styled with **Tailwind CSS** and **shadcn/ui** design patterns, including full dark mode support.
-- Reactivity is powered by **HTMX** server-side rendering (SSR): when state changes, minimal HTML fragments are sent to the browser and swapped into place with zero client JavaScript.
-- Every state class automatically creates an OpenAPI-documented REST API for data integration.
+- 🐍 **100% Python Code**: Build responsive web, mobile (Android/iOS), and desktop apps without writing JavaScript, Swift, or Kotlin.
+- ⚡ **FastAPI Default Engine**: Native ASGI foundation running on standard FastAPI and Uvicorn with zero C/Rust compilation requirements.
+- 🦀 **Optional PyRustAPI Core**: Seamlessly switch to an ultra-high-throughput compiled Rust HTTP engine (Tokio & Hyper) delivering up to 34,000+ req/sec for hyper-scale workloads.
+- 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards, admin consoles, and AI tools directly inside existing FastAPI backends via `mount(api, app, path="/dashboard")`.
+- 🪄 **Dual Developer Experience**: Use the rapid procedural API (`import pydataui as ui; ui.title(...); ui.run()`) for instant scripts, or the declarative Component & State system for large-scale enterprise applications.
+- 📱 **Cross-Platform Mobile & Desktop**: Built-in Progressive Web App (PWA), Capacitor mobile shell (Android `.apk` and iOS `.ipa`), and standalone desktop apps (`--desktop` or Tauri 2.0).
+- 🎨 **Tailwind CSS + shadcn/ui**: Modern design system with dark mode, CSS variables, and accessible components.
+- ⚡ **Reactive SSR via HTMX**: State changes trigger hypermedia fragment responses that update the DOM dynamically without client-side virtual DOM overhead.
+- 🤖 **AI & Agent Ready**: Built-in `Chat`, `Markdown`, and `CodeEditor` components compatible with LangGraph, UnifiedNexus, and LLMs.
+- 🔒 **Auth & API Keys**: Built-in JWT authentication, RBAC (`@require_auth(roles=[...])`), and secure API keys (`pdu_live_...`).
+- 📊 **Enterprise Page Templates**: Pre-packaged analyst, data quality, pipeline, and ML model registry templates via `pydataui.templates`.
+- 🌐 **One-Click Sharing (`share=True`)**: Create public internet tunnels instantly via Cloudflare or ngrok for remote client demos.
+- 📖 **Automatic REST APIs**: Every reactive State class automatically creates OpenAPI-documented REST endpoints for external data integration.
 
 ---
 
@@ -62,17 +70,22 @@ With PyDataUI:
 
 ### Comparison with Existing Frameworks
 
-| Capability | PyDataUI | Streamlit | Gradio | FastAPI + React |
+| Capability | PyDataUI (v0.3.5) | Streamlit | Gradio | FastAPI + React |
 |---|---|---|---|---|
-| **Programming Language** | 100% Python | 100% Python | 100% Python | Python + TypeScript |
-| **HTTP Engine** | 🦀 **Rust (pyrustapi)** | 🐍 Tornado | 🐍 Uvicorn | 🐍 Uvicorn + Node |
-| **P99 Latency** | **< 1.2ms** | > 25ms | > 15ms | ~ 5ms |
-| **Multi-User Session Isolation** | ✅ Per-user session cookies | ❌ Script reruns | ❌ Global state issues | ✅ Full JWT / sessions |
-| **Auto-Generated REST APIs** | ✅ Full CRUD per State | ❌ None | ❌ Limited | ⚠️ Manual routes |
-| **UI Design System** | ✅ Tailwind + shadcn/ui | ⚠️ Custom opinionated | ⚠️ Block-based | ⚠️ Manual CSS |
-| **Port Forwarding (`share=True`)** | ✅ Built-in tunnel | ❌ None | ✅ ngrok tunnel | ❌ Manual setup |
-| **Data Components** | ✅ DF, Metrics, ML, SQL | ⚠️ Basic | ⚠️ Basic | ❌ Build from scratch |
-| **Built-in RBAC & API Keys** | ✅ Yes | ❌ None | ❌ None | ⚠️ Manual |
+| **Programming Language** | **100% Python** | 100% Python | 100% Python | Python + TypeScript |
+| **Default HTTP Engine** | ⚡ **FastAPI ASGI** | 🐍 Tornado | 🐍 Uvicorn | 🐍 Uvicorn + Node |
+| **High-Throughput Option** | 🦀 **Rust (PyRustAPI Tokio/Hyper)** | ❌ None | ❌ None | ❌ None |
+| **Mount in FastAPI App** | ✅ **Native (`mount()`)** | ❌ Separate process | ⚠️ Mount as WSGI/ASGI | ✅ Native |
+| **Streamlit-like DX (`ui.*`)** | ✅ **Yes (`import pydataui as ui`)** | ✅ Yes | ⚠️ Blocks | ❌ No |
+| **Mobile Apps (APK & IPA)** | ✅ **Native (Capacitor 8.x) + PWA** | ❌ None | ❌ None | ⚠️ React Native rewrite |
+| **Desktop Executables** | ✅ **Tauri 2.0 & Native Window** | ❌ None | ❌ None | ⚠️ Electron rewrite |
+| **P99 Latency** | **< 1.2ms** (Rust) / ~2.5ms (FastAPI) | > 25ms | > 15ms | ~ 5ms |
+| **Multi-User Session Isolation** | ✅ **Per-user session state** | ❌ Script reruns | ❌ Global state issues | ✅ Full JWT / sessions |
+| **Auto-Generated REST APIs** | ✅ **Full OpenAPI CRUD per State** | ❌ None | ❌ Limited | ⚠️ Manual routes |
+| **UI Design System** | ✅ **Tailwind + shadcn/ui** | ⚠️ Custom opinionated | ⚠️ Block-based | ⚠️ Manual CSS |
+| **Port Forwarding (`share=True`)** | ✅ **Built-in tunnel** | ❌ None | ✅ ngrok tunnel | ❌ Manual setup |
+| **Data & AI Components** | ✅ **Chat, Code, DF, Metrics, Charts** | ⚠️ Basic | ⚠️ Basic | ❌ Build from scratch |
+| **Built-in RBAC & API Keys** | ✅ **Yes** | ❌ None | ❌ None | ⚠️ Manual |
 
 ---
 
@@ -80,19 +93,22 @@ With PyDataUI:
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
-│                                BROWSER                                    │
-│  - Loads Tailwind CSS Play CDN + shadcn variables                         │
+│                    CLIENT: BROWSER / MOBILE / DESKTOP                     │
+│  - Web Browser / PWA (Standalone Display)                                 │
+│  - Native Mobile Webview (Capacitor 8.x: Android APK / iOS IPA)           │
+│  - Native Desktop Window (Tauri 2.0 or OS Webview)                        │
 │  - Executes HTMX engine (bundled locally via /_pdu/static/htmx.min.js)     │
 └─────────────────────┬───────────────────────────────▲─────────────────────┘
                       │                               │
-       Initial Page   │ GET /                         │ HTML Document (SSR)
+       Initial Page   │ GET / or GET /dashboard       │ HTML Document (SSR)
        or User Event  │ POST /_pdu/event/State/method │ HTML Partial (Fragment)
                       ▼                               │
 ┌─────────────────────────────────────────────────────┴─────────────────────┐
 │                          PYDATAUI SERVER                                  │
 │                                                                           │
 │   ┌───────────────────────────────────────────────────────────────────┐   │
-│   │                 pyrustapi HTTP Engine (Rust/Tokio)                │   │
+│   │   FastAPI ASGI Engine (Default) or PyRustAPI Engine (Rust/Tokio)  │   │
+│   │   Supports standalone App() or mounted inside existing FastAPI    │   │
 │   └─────────────────┬───────────────────────────────▲─────────────────┘   │
 │                     │                               │                     │
 │                     ▼                               │                     │
@@ -273,6 +289,34 @@ curl http://localhost:8000/api
 Interactive Swagger UI:
 - `http://localhost:8000/docs`
 - `http://localhost:8000/api/docs`
+
+### Native FastAPI Mounting & Conflict Handling
+
+You can mount any PyDataUI application directly into an existing FastAPI application with a single line of code:
+
+```python
+from fastapi import FastAPI
+from pydataui import App, mount
+
+api = FastAPI(title="Production API")
+dashboard = App(title="Internal Dashboard")
+
+@dashboard.page("/")
+def home():
+    return "Operations Control Center"
+
+mount(api, dashboard, path="/dashboard")
+# or: dashboard.mount_to(api, path="/dashboard")
+```
+
+#### How PyDataUI Resolves & Prevents Conflicts:
+- **Route Collisions**: Parent FastAPI routes (e.g. `/users`) and PyDataUI routes (e.g. `/dashboard/users`) live in isolated routing subtrees with zero collisions.
+- **OpenAPI / Swagger Separation**: Parent API keeps its root `/docs`; PyDataUI automatically serves its dedicated interactive docs at `/dashboard/docs`.
+- **Static Asset Sandboxing**: PyDataUI isolates internal Tailwind CSS & HTMX under `/_pdu/static/*`, never clashing with parent `/static/*`.
+- **Session & Cookie Isolation**: PyDataUI uses a distinct signed cookie (`pdu-session`). Parent JWT or session cookies are never touched.
+- **Multiple Sub-Apps**: You can mount multiple distinct PyDataUI apps (`/admin`, `/portal`, `/analytics`) on one FastAPI app with zero state leakage.
+
+> 📖 **Full Architectural Guide**: See [FastAPI Mounting & Conflicts](FASTAPI_MOUNTING_AND_CONFLICTS.md).
 
 ---
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PyDataUI Full Developer Documentation &amp; Architecture Manual</title>
+  <title>PyDataUI Developer Manual &amp; Component Reference</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M16 42l10-12 8 7 14-19' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -35,6 +35,9 @@
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
     :root {
+      --sidebar-width: 270px;
+      --header-height: 60px;
+      --layout-gap: 32px;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -49,87 +52,154 @@
 
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
       background: rgba(15, 23, 42, 0.4);
     }
     ::-webkit-scrollbar-thumb {
       background: #334155;
-      border-radius: 4px;
+      border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #475569;
     }
 
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    /* Core Layout Architecture (Flex with explicit gap to prevent hero overlap) */
+    .docs-layout {
+      display: flex;
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 0 24px;
+      gap: var(--layout-gap);
+      position: relative;
+      min-height: calc(100vh - var(--header-height));
     }
 
-    .nav-pill.active {
-      background: #2563eb;
+    /* Sticky sidebar staying in normal document flow */
+    .docs-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      height: calc(100vh - var(--header-height));
+      position: sticky;
+      top: var(--header-height);
+      overflow-y: auto;
+      padding: 24px 16px 48px 0;
+      border-right: 1px solid #1e293b;
+    }
+
+    /* Main content flex item */
+    .docs-main {
+      flex: 1;
+      min-width: 0;
+      padding: 24px 0 80px 0;
+      max-width: 980px;
+    }
+
+    /* Hero section guaranteed inside container */
+    .docs-hero {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Sidebar nav links */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      color: #94a3b8;
+      transition: all 0.15s ease-in-out;
+    }
+    .nav-item:hover {
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      background: rgba(30, 41, 59, 0.7);
+    }
+    .nav-item.active {
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.12);
+      font-weight: 600;
     }
 
-    .code-block-header {
-      background: #1e293b;
-      border-top-left-radius: 0.75rem;
-      border-top-right-radius: 0.75rem;
-      border-bottom: 1px solid #334155;
+    /* Responsive Mobile Breakpoint */
+    @media (max-width: 1024px) {
+      .docs-layout {
+        display: block;
+        padding: 0 16px;
+        gap: 0;
+      }
+      .docs-sidebar {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        background: #0f172a;
+        width: 280px;
+        padding: 24px 20px;
+        border-right: 1px solid #334155;
+        transform: translateX(-100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.6);
+      }
+      .docs-sidebar.open {
+        transform: translateX(0);
+      }
+      .docs-main {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 0 60px 0;
+      }
     }
   </style>
 </head>
 <body class="bg-[#090d16] text-slate-200 antialiased selection:bg-blue-600 selection:text-white min-h-screen">
 
-  <!-- TOP HEADER (Clean, fixed-free, modern) -->
-  <header class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 h-[60px] bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
     <div class="flex items-center space-x-3">
+      <!-- Mobile Drawer Hamburger Button -->
+      <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg focus:outline-none" title="Toggle Navigation Sidebar">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+
+      <!-- Logo & Version -->
       <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <svg class="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         </div>
         <div>
           <span class="text-base sm:text-lg font-extrabold tracking-tight text-white flex items-center gap-2">
             PyDataUI
-            <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">v0.3.5</span>
+            <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Docs</span>
           </span>
-          <span class="hidden md:block text-xs text-slate-400 font-medium">Developer Documentation &amp; Architecture Manual</span>
         </div>
       </div>
     </div>
 
     <!-- SEARCH & ACTION LINKS -->
-    <div class="flex items-center space-x-2 sm:space-x-3">
-      <!-- Quick Table of Contents Button -->
-      <button id="toc-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-200 border border-slate-700 hover:text-white hover:border-slate-600 transition" title="Open Table of Contents">
-        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-        <span>Contents</span>
+    <div class="flex items-center space-x-3">
+      <!-- Search Input Trigger Button (Command-K) -->
+      <button id="search-trigger" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-400 hover:text-white hover:border-slate-600 transition w-44 sm:w-64 justify-between">
+        <div class="flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <span>Search docs...</span>
+        </div>
+        <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-slate-800 rounded border border-slate-700 text-slate-400">⌘K</kbd>
       </button>
 
-      <div class="relative hidden sm:block w-48 md:w-64 lg:w-72">
-        <input type="text" id="doc-search" placeholder="Search documentation..." 
-          class="w-full bg-slate-900 border border-slate-700/80 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
-        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-      </div>
-
-      <a href="mobile-desktop-guide.html" class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/20 transition">
-        📱 Mobile Guide
+      <a href="mobile-desktop-guide.html" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/20 transition">
+        📱 Mobile &amp; APK
       </a>
 
       <a href="api-reference.html" class="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/30 hover:bg-purple-500/20 transition">
         🧩 API Explorer
       </a>
 
-      <a href="examples/data-team-gallery.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white hover:border-slate-600 transition">
-        📊 Gallery
-      </a>
-
+      <!-- Theme Switcher -->
       <button id="theme-toggle" class="p-2 text-slate-400 hover:text-white rounded-lg bg-slate-800/60 border border-slate-700/60 focus:outline-none" title="Toggle Light/Dark Theme">
         <svg id="theme-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
       </button>
@@ -140,924 +210,831 @@
     </div>
   </header>
 
-  <!-- STICKY HORIZONTAL CATEGORY NAVIGATION BAR (Replaces sidebar clutter) -->
-  <nav class="sticky top-[53px] z-40 bg-[#090d16]/95 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto no-scrollbar">
-    <div class="flex items-center gap-2 max-w-6xl mx-auto min-w-max text-xs font-semibold">
-      <a href="#overview" class="nav-pill active px-3 py-1.5 rounded-lg bg-blue-600 text-white transition">01. Overview</a>
-      <a href="#quickstart" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">02. Quickstart</a>
-      <a href="#reactive-state" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">03. Reactive State</a>
-      <a href="#components" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">04. UI Components</a>
-      <a href="#data-science" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">05. Data Science</a>
-      <a href="#mobile-guide" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">06. Mobile (APK &amp; IPA)</a>
-      <a href="#desktop-guide" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">07. Desktop</a>
-      <a href="#templates" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">08. Templates</a>
-      <a href="#auth-security" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">09. Auth &amp; Security</a>
-      <a href="#cli-reference" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">10. CLI Manual</a>
-      <a href="#styling-theming" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">11. Styling</a>
-      <a href="#deployment" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">12. Deployment</a>
-      <a href="#troubleshooting" class="nav-pill px-3 py-1.5 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80 transition">13. FAQ</a>
-    </div>
-  </nav>
+  <!-- MOBILE SIDEBAR BACKDROP -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden backdrop-blur-sm"></div>
 
-  <!-- TABLE OF CONTENTS MODAL (Clean, accessible, zero layout displacement) -->
-  <div id="toc-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
-      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <span>📚</span> Complete Table of Contents
-        </h3>
-        <button id="toc-close-btn" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-      </div>
-      <div class="p-6 overflow-y-auto space-y-1.5 text-sm">
-        <a href="#overview" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>01. Overview &amp; Architecture</span>
-          <span class="text-xs text-blue-400 font-mono">ASGI &amp; Rust</span>
-        </a>
-        <a href="#quickstart" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>02. Installation &amp; Quickstart</span>
-          <span class="text-xs text-blue-400 font-mono">60s Setup</span>
-        </a>
-        <a href="#reactive-state" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>03. Reactive State Engine</span>
-          <span class="text-xs text-blue-400 font-mono">HTMX Swapping</span>
-        </a>
-        <a href="#components" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>04. Core UI Components</span>
-          <span class="text-xs text-blue-400 font-mono">40+ Elements</span>
-        </a>
-        <a href="#data-science" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>05. Data Science &amp; Charts</span>
-          <span class="text-xs text-blue-400 font-mono">Chart.js &amp; Table</span>
-        </a>
-        <a href="#mobile-guide" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>06. Mobile Apps (Android &amp; iOS)</span>
-          <span class="text-xs text-blue-400 font-mono">APK / IPA</span>
-        </a>
-        <a href="#desktop-guide" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>07. Desktop Apps</span>
-          <span class="text-xs text-blue-400 font-mono">Tauri 2.0</span>
-        </a>
-        <a href="#templates" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>08. AI &amp; Data Team Templates</span>
-          <span class="text-xs text-blue-400 font-mono">4 Enterprise Pages</span>
-        </a>
-        <a href="#auth-security" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>09. Authentication &amp; Security</span>
-          <span class="text-xs text-blue-400 font-mono">JWT &amp; RBAC</span>
-        </a>
-        <a href="#cli-reference" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>10. CLI Reference Manual</span>
-          <span class="text-xs text-blue-400 font-mono">pydataui run</span>
-        </a>
-        <a href="#styling-theming" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>11. Styling &amp; Design Tokens</span>
-          <span class="text-xs text-blue-400 font-mono">Tailwind &amp; shadcn</span>
-        </a>
-        <a href="#deployment" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>12. Production Deployment</span>
-          <span class="text-xs text-blue-400 font-mono">Docker &amp; Cloud</span>
-        </a>
-        <a href="#troubleshooting" class="toc-item flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
-          <span>13. Troubleshooting &amp; FAQ</span>
-          <span class="text-xs text-blue-400 font-mono">Resolved Fixes</span>
-        </a>
-      </div>
-    </div>
-  </div>
+  <!-- MAIN TWO-COLUMN FLEX CONTAINER (GUARANTEES 32PX GAP AND ZERO HERO OVERLAP) -->
+  <div class="docs-layout">
 
-  <!-- MAIN DOCUMENTATION CONTAINER (Clean, fully responsive, zero nested sidebar issues) -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- DEVELOPER-FIRST HIERARCHICAL SIDEBAR -->
+    <aside id="sidebar" class="docs-sidebar">
+      <div class="space-y-6">
 
-    <!-- HERO BANNER -->
-    <section class="mb-14">
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-slate-900 border border-blue-500/20 p-8 sm:p-10 shadow-2xl">
-        <div class="relative z-10 max-w-3xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold mb-4">
-            <span>🚀</span> Modern Full-Stack Python Framework
-          </div>
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            PyDataUI Developer Manual &amp; Comprehensive Reference
-          </h1>
-          <p class="text-base sm:text-lg text-slate-300 leading-relaxed mb-6">
-            Build reactive, data-dense web, mobile, and desktop applications in pure Python.
-            Powered by an ultra-fast compiled Rust HTTP core (PyRustAPI) / FastAPI, HTMX hypermedia swapping, and Tailwind CSS design tokens.
-          </p>
-          <div class="flex flex-wrap gap-3">
-            <a href="#quickstart" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-lg shadow-blue-500/30 transition">
-              ⚡ Get Started in 60s
+        <!-- GROUP: GETTING STARTED -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-2.5">Getting Started</div>
+          <div class="space-y-0.5">
+            <a href="#overview" class="nav-item active">
+              <span>Introduction &amp; Architecture</span>
             </a>
-            <a href="mobile-desktop-guide.html" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition">
-              📱 Mobile Build Guide
+            <a href="#quickstart" class="nav-item">
+              <span>Installation &amp; 60s Start</span>
             </a>
-            <a href="api-reference.html" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition">
-              🧩 API Explorer
+            <a href="#reactive-state" class="nav-item">
+              <span>Reactive State &amp; HTMX</span>
+            </a>
+            <a href="#fastapi-mounting" class="nav-item">
+              <span>FastAPI Mounting &amp; Conflicts</span>
+              <span class="ml-auto text-[10px] text-cyan-400 font-mono">Core</span>
+            </a>
+            <a href="#developer-experience" class="nav-item">
+              <span>Developer Experience (DX)</span>
+              <span class="ml-auto text-[10px] text-emerald-400 font-mono">Why PyDataUI</span>
+            </a>
+            <a href="#build-production" class="nav-item">
+              <span>Build &amp; Containers</span>
+              <span class="ml-auto text-[10px] text-amber-400 font-mono">Docker</span>
             </a>
           </div>
         </div>
-        <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      </div>
-    </section>
 
-    <!-- 01. OVERVIEW & ARCHITECTURE -->
-    <section id="overview" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">01</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Overview &amp; Architecture</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        Traditional web frameworks force data science and backend engineering teams to maintain dual codebases: a Python backend (FastAPI/Django) and an intricate JavaScript frontend (React, Vue, Webpack, Node). 
-        <strong>PyDataUI eliminates this friction</strong> by rendering reactive HTML server-side and swapping elements dynamically using HTMX over ASGI.
-      </p>
-
-      <!-- ARCHITECTURE CARDS -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/40 transition">
-          <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mb-3 text-lg font-bold">🦀</div>
-          <h3 class="text-base font-bold text-white mb-2">High-Throughput ASGI Core</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Drop-in support for both standard <code>FastAPI</code> and high-concurrency compiled Rust HTTP engine (<code>PyRustAPI</code>) delivering up to 34,000+ req/sec.
-          </p>
-        </div>
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/40 transition">
-          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3 text-lg font-bold">⚡</div>
-          <h3 class="text-base font-bold text-white mb-2">HTMX Differential Swapping</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            No heavy Virtual DOM or JSON serialization bundles. State changes trigger hypermedia fragment responses that morph into the browser with zero lag.
-          </p>
-        </div>
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/40 transition">
-          <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center mb-3 text-lg font-bold">📱</div>
-          <h3 class="text-base font-bold text-white mb-2">Unified Cross-Platform</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Deploy identical Python code across Web, Mobile PWA, native Android APK, iOS IPA (via Capacitor), and Desktop native apps (via Tauri 2.0).
-          </p>
-        </div>
-      </div>
-
-      <!-- LIFECYCLE FLOW -->
-      <div class="p-6 rounded-xl bg-slate-900/80 border border-slate-800 mb-6">
-        <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <span>🔄</span> PyDataUI Request-Response Cycle
-        </h4>
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center text-xs">
-          <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700">
-            <div class="font-bold text-blue-400 mb-1">1. User Event</div>
-            <p class="text-slate-400">Click, submit, or filter triggers an <code>hx-post</code> or <code>hx-get</code>.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700">
-            <div class="font-bold text-indigo-400 mb-1">2. ASGI Handler</div>
-            <p class="text-slate-400">PyDataUI decodes state and invokes Python handler method.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700">
-            <div class="font-bold text-purple-400 mb-1">3. Server Render</div>
-            <p class="text-slate-400">Component renders clean HTML string in microseconds.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700">
-            <div class="font-bold text-emerald-400 mb-1">4. Target Swap</div>
-            <p class="text-slate-400">HTMX replaces <code>#pdu-root</code> or specific target ID.</p>
+        <!-- GROUP: COMPONENTS -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-2.5">Components</div>
+          <div class="space-y-0.5">
+            <a href="#comp-button" class="nav-item">
+              <span>Button</span>
+              <span class="ml-auto text-[10px] text-blue-400 font-mono">Action</span>
+            </a>
+            <a href="#comp-card" class="nav-item">
+              <span>Card &amp; Container</span>
+              <span class="ml-auto text-[10px] text-slate-500 font-mono">Layout</span>
+            </a>
+            <a href="#comp-forms" class="nav-item">
+              <span>Forms &amp; Input Controls</span>
+              <span class="ml-auto text-[10px] text-indigo-400 font-mono">Input</span>
+            </a>
+            <a href="#comp-modal" class="nav-item">
+              <span>Modal &amp; Drawer</span>
+              <span class="ml-auto text-[10px] text-amber-400 font-mono">Overlay</span>
+            </a>
+            <a href="#comp-tabs" class="nav-item">
+              <span>Tabs &amp; Accordion</span>
+              <span class="ml-auto text-[10px] text-slate-500 font-mono">Nav</span>
+            </a>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- 02. INSTALLATION & QUICKSTART -->
-    <section id="quickstart" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">02</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Installation &amp; Quickstart</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-4">
-        PyDataUI requires Python 3.9 or newer. Install it via pip:
-      </p>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">Terminal</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="pip install pydataui">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
+        <!-- GROUP: DATA SCIENCE & AI -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-2.5">Data Science &amp; AI</div>
+          <div class="space-y-0.5">
+            <a href="#comp-metriccard" class="nav-item">
+              <span>MetricCard (KPI)</span>
+              <span class="ml-auto text-[10px] text-emerald-400 font-mono">Data</span>
+            </a>
+            <a href="#comp-datatable" class="nav-item">
+              <span>DataTable (Sorting/Paging)</span>
+              <span class="ml-auto text-[10px] text-emerald-400 font-mono">Data</span>
+            </a>
+            <a href="#comp-chart" class="nav-item">
+              <span>Chart (Chart.js Engine)</span>
+              <span class="ml-auto text-[10px] text-emerald-400 font-mono">Viz</span>
+            </a>
+            <a href="#templates" class="nav-item">
+              <span>Enterprise Page Templates</span>
+              <span class="ml-auto text-[10px] text-purple-400 font-mono">Templates</span>
+            </a>
+          </div>
         </div>
-        <pre class="p-4 text-xs sm:text-sm text-blue-300 overflow-x-auto"><code>pip install pydataui</code></pre>
+
+        <!-- GROUP: MOBILE & DESKTOP -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-2.5">Mobile &amp; Desktop</div>
+          <div class="space-y-0.5">
+            <a href="#mobile-guide" class="nav-item">
+              <span>Android APK Pipeline</span>
+            </a>
+            <a href="#mobile-guide" class="nav-item">
+              <span>iOS IPA &amp; Sideloading</span>
+            </a>
+            <a href="#desktop-guide" class="nav-item">
+              <span>Tauri 2.0 &amp; Desktop Window</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- GROUP: REFERENCE -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-2.5">Reference</div>
+          <div class="space-y-0.5">
+            <a href="#auth-security" class="nav-item">
+              <span>Authentication &amp; JWT</span>
+            </a>
+            <a href="#cli-reference" class="nav-item">
+              <span>CLI Command Reference</span>
+            </a>
+            <a href="#styling-theming" class="nav-item">
+              <span>Tailwind &amp; Design Tokens</span>
+            </a>
+            <a href="#deployment" class="nav-item">
+              <span>Production Deployment</span>
+            </a>
+            <a href="#troubleshooting" class="nav-item">
+              <span>Troubleshooting &amp; FAQ</span>
+            </a>
+          </div>
+        </div>
+
       </div>
+    </aside>
 
-      <h3 class="text-lg font-bold text-white mb-3">Your First Reactive PyDataUI Application</h3>
-      <p class="text-slate-300 text-sm mb-4">Create a file named <code>app.py</code>:</p>
+    <!-- MAIN CONTENT (Separated by 32px gap from sidebar, never overlaps) -->
+    <main class="docs-main">
 
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">app.py</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="from pydataui import App, State
-from pydataui.components import Container, Card, Heading, Text, Button, Row
+      <!-- HERO SECTION (Full width within docs-main, properly box-sized) -->
+      <section class="docs-hero mb-12">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-slate-900 border border-blue-500/20 p-8 sm:p-10 shadow-2xl">
+          <div class="relative z-10 max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold mb-4">
+              <span>⚡</span> Developer-First Full-Stack Python
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
+              PyDataUI Component &amp; Developer Manual
+            </h1>
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Build high-performance, data-dense applications with zero JavaScript.
+              Server-rendered components powered by HTMX, Tailwind CSS tokens, standard FastAPI ASGI, and an optional compiled Rust HTTP core.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a href="#quickstart" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-lg shadow-blue-500/30 transition">
+                ⚡ 60-Second Setup
+              </a>
+              <a href="#comp-button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+                🧩 Component Catalog
+              </a>
+              <a href="mobile-desktop-guide.html" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+                📱 Android &amp; iOS Guide
+              </a>
+            </div>
+          </div>
+          <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+      </section>
+
+      <!-- 01. OVERVIEW & ARCHITECTURE -->
+      <section id="overview" class="doc-section mb-14 scroll-mt-24">
+        <div class="flex items-center gap-2.5 mb-3">
+          <span class="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">01</span>
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">Overview &amp; Architecture</h2>
+        </div>
+        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+          <strong>PyDataUI</strong> is a modern full-stack web, mobile, and desktop framework designed for Data Engineers, Data Analysts, AI/ML Engineers, and Python developers.
+          It eliminates the friction between toy prototype libraries (Streamlit, Gradio) and complex multi-language web stacks (React + TypeScript + FastAPI).
+        </p>
+        <p class="text-slate-400 text-xs leading-relaxed mb-6">
+          Write 100% Python. PyDataUI runs on standard <strong>FastAPI / Starlette ASGI</strong> by default with zero C/Rust compilation requirements, while providing an optional compiled <strong>PyRustAPI (Hyper/Tokio)</strong> engine delivering up to 34,000+ req/sec for hyper-scale production workloads.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-blue-400 font-bold text-sm mb-1">⚡ FastAPI Default</div>
+            <p class="text-xs text-slate-400">Native ASGI on FastAPI/Uvicorn. Mount directly inside existing FastAPI apps via <code>mount()</code>.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-orange-400 font-bold text-sm mb-1">🦀 PyRustAPI Engine</div>
+            <p class="text-xs text-slate-400">Optional compiled Rust HTTP engine (Tokio &amp; Hyper) delivering &lt;1.2ms P99 latency.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-emerald-400 font-bold text-sm mb-1">⚡ HTMX Differential Swaps</div>
+            <p class="text-xs text-slate-400">Zero client JavaScript or Virtual DOM. State changes stream hypermedia fragment diffs to the DOM.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-purple-400 font-bold text-sm mb-1">📱 Cross-Platform Native</div>
+            <p class="text-xs text-slate-400">Instant PWA, Capacitor Android APK &amp; iOS IPA, and desktop binaries via Tauri 2.0.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02. INSTALLATION & QUICKSTART -->
+      <section id="quickstart" class="doc-section mb-14 scroll-mt-24">
+        <div class="flex items-center gap-2.5 mb-3">
+          <span class="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">02</span>
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">Installation &amp; Quickstart</h2>
+        </div>
+        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+          Install PyDataUI in your Python 3.9+ virtual environment:
+        </p>
+
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono">Terminal</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="pip install pydataui">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-blue-300">pip install pydataui</pre>
+        </div>
+
+        <h3 class="text-base font-bold text-white mb-2">Create a Reactive Counter (`app.py`)</h3>
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono">app.py</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="from pydataui import App, State
+from pydataui.components import Container, Card, Heading, Button, Row
 
 class Counter(State):
     count: int = 0
+    def inc(self): self.count += 1
+    def dec(self): self.count -= 1
 
-    def increment(self):
-        self.count += 1
-
-    def decrement(self):
-        self.count -= 1
-
-app = App(title=&quot;PyDataUI Counter&quot;, theme=&quot;dark&quot;, pwa=True)
+app = App(title=&quot;Counter&quot;, theme=&quot;dark&quot;, pwa=True)
 
 @app.page(&quot;/&quot;)
 def index(state: Counter):
     return Container(
         Card(
-            Heading(f&quot;Counter: {state.count}&quot;, level=2, class_name=&quot;text-3xl font-bold mb-4 text-white&quot;),
-            Text(&quot;Click buttons below to trigger instant hypermedia state updates.&quot;, class_name=&quot;text-slate-400 mb-6&quot;),
+            Heading(f&quot;Count: {state.count}&quot;, level=2, class_name=&quot;text-2xl font-bold mb-4&quot;),
             Row(
-                Button(&quot;- Decrement&quot;, on_click=state.decrement, variant=&quot;secondary&quot;),
-                Button(&quot;+ Increment&quot;, on_click=state.increment, variant=&quot;primary&quot;),
+                Button(&quot;- Dec&quot;, on_click=state.dec, variant=&quot;secondary&quot;),
+                Button(&quot;+ Inc&quot;, on_click=state.inc, variant=&quot;primary&quot;),
                 spacing=&quot;md&quot;
             ),
-            class_name=&quot;p-8 max-w-md mx-auto text-center mt-12 bg-slate-900 border-slate-800 shadow-2xl&quot;
+            class_name=&quot;p-6 max-w-sm mx-auto text-center mt-12 bg-slate-900 border-slate-800&quot;
         )
     )
 
 if __name__ == &quot;__main__&quot;:
     app.run(port=8000)">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto"><code class="language-python"><span class="text-purple-400">from</span> pydataui <span class="text-purple-400">import</span> App, State
-<span class="text-purple-400">from</span> pydataui.components <span class="text-purple-400">import</span> Container, Card, Heading, Text, Button, Row
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200 overflow-x-auto"><span class="text-purple-400">from</span> pydataui <span class="text-purple-400">import</span> App, State
+<span class="text-purple-400">from</span> pydataui.components <span class="text-purple-400">import</span> Container, Card, Heading, Button, Row
 
 <span class="text-blue-400">class</span> <span class="text-amber-300">Counter</span>(State):
     count: <span class="text-emerald-400">int</span> = <span class="text-emerald-400">0</span>
+    <span class="text-blue-400">def</span> <span class="text-indigo-400">inc</span>(self): self.count += <span class="text-emerald-400">1</span>
+    <span class="text-blue-400">def</span> <span class="text-indigo-400">dec</span>(self): self.count -= <span class="text-emerald-400">1</span>
 
-    <span class="text-blue-400">def</span> <span class="text-indigo-400">increment</span>(self):
-        self.count += <span class="text-emerald-400">1</span>
-
-    <span class="text-blue-400">def</span> <span class="text-indigo-400">decrement</span>(self):
-        self.count -= <span class="text-emerald-400">1</span>
-
-app = App(title=<span class="text-emerald-300">"PyDataUI Counter"</span>, theme=<span class="text-emerald-300">"dark"</span>, pwa=<span class="text-purple-400">True</span>)
+app = App(title=<span class="text-emerald-300">"Counter"</span>, theme=<span class="text-emerald-300">"dark"</span>, pwa=<span class="text-purple-400">True</span>)
 
 <span class="text-indigo-400">@app.page</span>(<span class="text-emerald-300">"/"</span>)
 <span class="text-blue-400">def</span> <span class="text-indigo-400">index</span>(state: Counter):
     <span class="text-purple-400">return</span> Container(
         Card(
-            Heading(<span class="text-emerald-300">f"Counter: {state.count}"</span>, level=<span class="text-emerald-400">2</span>, class_name=<span class="text-emerald-300">"text-3xl font-bold mb-4 text-white"</span>),
-            Text(<span class="text-emerald-300">"Click buttons below to trigger instant hypermedia state updates."</span>, class_name=<span class="text-emerald-300">"text-slate-400 mb-6"</span>),
+            Heading(<span class="text-emerald-300">f"Count: {state.count}"</span>, level=<span class="text-emerald-400">2</span>, class_name=<span class="text-emerald-300">"text-2xl font-bold mb-4"</span>),
             Row(
-                Button(<span class="text-emerald-300">"- Decrement"</span>, on_click=state.decrement, variant=<span class="text-emerald-300">"secondary"</span>),
-                Button(<span class="text-emerald-300">"+ Increment"</span>, on_click=state.increment, variant=<span class="text-emerald-300">"primary"</span>),
+                Button(<span class="text-emerald-300">"- Dec"</span>, on_click=state.dec, variant=<span class="text-emerald-300">"secondary"</span>),
+                Button(<span class="text-emerald-300">"+ Inc"</span>, on_click=state.inc, variant=<span class="text-emerald-300">"primary"</span>),
                 spacing=<span class="text-emerald-300">"md"</span>
             ),
-            class_name=<span class="text-emerald-300">"p-8 max-w-md mx-auto text-center mt-12 bg-slate-900 border-slate-800 shadow-2xl"</span>
+            class_name=<span class="text-emerald-300">"p-6 max-w-sm mx-auto text-center mt-12 bg-slate-900 border-slate-800"</span>
         )
     )
 
 <span class="text-purple-400">if</span> __name__ == <span class="text-emerald-300">"__main__"</span>:
-    app.run(port=<span class="text-emerald-400">8000</span>)</code></pre>
-      </div>
-
-      <p class="text-slate-300 text-sm mb-3">Run the app from your terminal with auto-reload:</p>
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">Terminal</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="pydataui run app.py --reload">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
+    app.run(port=<span class="text-emerald-400">8000</span>)</pre>
         </div>
-        <pre class="p-4 text-xs sm:text-sm text-blue-300 overflow-x-auto"><code>pydataui run app.py --reload</code></pre>
-      </div>
-    </section>
+      </section>
 
-    <!-- 03. REACTIVE STATE ENGINE -->
-    <section id="reactive-state" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">03</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Reactive State Engine</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-4">
-        State in PyDataUI is defined by subclassing <code>pydataui.State</code>. Every field is type-annotated and automatically synced with browser sessions via signed secure cookies or session stores.
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-blue-400 mb-2">⚡ Automatic Event Binding</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Passing a state method to <code>on_click=state.my_method</code> creates a signed hypermedia action endpoint. PyDataUI executes the method, commits state mutations, and returns the updated component fragment.
-          </p>
+      <!-- 03. REACTIVE STATE ENGINE -->
+      <section id="reactive-state" class="doc-section mb-14 scroll-mt-24">
+        <div class="flex items-center gap-2.5 mb-3">
+          <span class="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">03</span>
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">Reactive State Engine</h2>
         </div>
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-emerald-400 mb-2">🛡️ Type Safety &amp; Validation</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Powered by Pydantic v2 underneath, input values are strictly parsed and coerced to your Python types (integers, datetimes, dataclasses, lists, dicts).
-          </p>
-        </div>
-      </div>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">state_example.py</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="class TodoState(State):
-    tasks: list[str] = [&quot;Inspect data&quot;, &quot;Run model&quot;]
-    new_task: str = &quot;&quot;
-
-    def add_task(self):
-        if self.new_task.strip():
-            self.tasks.append(self.new_task.strip())
-            self.new_task = &quot;&quot;
-
-    def delete_task(self, index: int):
-        if 0 <= index < len(self.tasks):
-            self.tasks.pop(index)">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto"><code class="language-python"><span class="text-blue-400">class</span> <span class="text-amber-300">TodoState</span>(State):
-    tasks: <span class="text-emerald-400">list</span>[<span class="text-emerald-400">str</span>] = [<span class="text-emerald-300">"Inspect data"</span>, <span class="text-emerald-300">"Run model"</span>]
-    new_task: <span class="text-emerald-400">str</span> = <span class="text-emerald-300">""</span>
-
-    <span class="text-blue-400">def</span> <span class="text-indigo-400">add_task</span>(self):
-        <span class="text-purple-400">if</span> self.new_task.strip():
-            self.tasks.append(self.new_task.strip())
-            self.new_task = <span class="text-emerald-300">""</span>
-
-    <span class="text-blue-400">def</span> <span class="text-indigo-400">delete_task</span>(self, index: <span class="text-emerald-400">int</span>):
-        <span class="text-purple-400">if</span> <span class="text-emerald-400">0</span> &lt;= index &lt; <span class="text-emerald-400">len</span>(self.tasks):
-            self.tasks.pop(index)</code></pre>
-      </div>
-    </section>
-
-    <!-- 04. CORE UI COMPONENTS -->
-    <section id="components" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">04</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Core UI Components</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        PyDataUI includes over 40+ production-grade, accessible components pre-styled with shadcn/ui design tokens.
-      </p>
-
-      <!-- COMPONENT MATRIX TABLE -->
-      <div class="overflow-x-auto rounded-xl border border-slate-800 mb-8 bg-slate-900/60">
-        <table class="w-full text-left text-xs sm:text-sm text-slate-300">
-          <thead class="bg-slate-800/80 text-slate-200 uppercase text-[11px] tracking-wider border-b border-slate-700">
-            <tr>
-              <th class="py-3 px-4">Component</th>
-              <th class="py-3 px-4">Category</th>
-              <th class="py-3 px-4">Key Parameters</th>
-              <th class="py-3 px-4">HTML Tag</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800">
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Container</td>
-              <td class="py-3 px-4">Layout</td>
-              <td class="py-3 px-4 text-xs font-mono">max_width, centered, padding</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;div&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Row / Column</td>
-              <td class="py-3 px-4">Flexbox</td>
-              <td class="py-3 px-4 text-xs font-mono">spacing, justify, align, wrap</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;div class="flex..."&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Card</td>
-              <td class="py-3 px-4">Surfaces</td>
-              <td class="py-3 px-4 text-xs font-mono">title, subtitle, footer, elevation</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;div class="card"&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Button</td>
-              <td class="py-3 px-4">Actions</td>
-              <td class="py-3 px-4 text-xs font-mono">label, on_click, variant, size, loading</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;button&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Input / Textarea</td>
-              <td class="py-3 px-4">Forms</td>
-              <td class="py-3 px-4 text-xs font-mono">name, placeholder, value, on_change</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;input&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Select / Switch</td>
-              <td class="py-3 px-4">Controls</td>
-              <td class="py-3 px-4 text-xs font-mono">options, selected, checked, on_change</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;select&gt;, &lt;input checkbox&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Modal / Drawer</td>
-              <td class="py-3 px-4">Overlays</td>
-              <td class="py-3 px-4 text-xs font-mono">title, is_open, on_close, dismissible</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;dialog&gt; / overlay</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Tabs / Accordion</td>
-              <td class="py-3 px-4">Navigation</td>
-              <td class="py-3 px-4 text-xs font-mono">tabs, active_tab, items, multiple</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;div role="tablist"&gt;</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4 font-mono font-bold text-blue-400">Badge / Alert</td>
-              <td class="py-3 px-4">Feedback</td>
-              <td class="py-3 px-4 text-xs font-mono">variant, icon, title, dismissible</td>
-              <td class="py-3 px-4 font-mono text-slate-400">&lt;span&gt;, &lt;div role="alert"&gt;</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- INTERACTIVE LIVE COMPONENT PREVIEW -->
-      <div class="p-6 rounded-xl bg-slate-900 border border-slate-800 mb-6">
-        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
-          <span>✨</span> Live Component Render Showcase
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700">
-            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 mb-2">Button Variants</span>
-            <div class="flex flex-col gap-2">
-              <button class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition">Primary</button>
-              <button class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium text-xs transition">Secondary</button>
-              <button class="px-3 py-1.5 rounded-lg bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600/30 font-medium text-xs transition">Destructive</button>
-            </div>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700">
-            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 mb-2">Badges &amp; Status</span>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-2 py-1 rounded-md text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">● Healthy (99.9%)</span>
-              <span class="px-2 py-1 rounded-md text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">▲ Warning</span>
-              <span class="px-2 py-1 rounded-md text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">★ v0.3.5</span>
-            </div>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700">
-            <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400 mb-2">Reactive Form Control</span>
-            <input type="text" placeholder="Type reactive input..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 mb-2 focus:outline-none focus:border-blue-500">
-            <div class="text-[11px] text-slate-400">Auto-triggers <code>hx-post</code> on change.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 05. DATA SCIENCE & CHARTS -->
-    <section id="data-science" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">05</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Data Science &amp; Charts</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        PyDataUI provides first-class data analytics components capable of rendering millions of data points effortlessly.
-      </p>
-
-      <!-- DATA COMPONENTS SHOWCASE -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-blue-400 mb-2 flex items-center gap-2">
-            <span>📈</span> MetricCard Component
-          </h4>
-          <p class="text-xs text-slate-400 mb-4">
-            Display KPIs with historical trends, percentage differentials, and color-coded delta indicators.
-          </p>
-          <div class="p-4 rounded-lg bg-slate-800/80 border border-slate-700 flex justify-between items-center">
-            <div>
-              <div class="text-xs text-slate-400">Model Inference Latency</div>
-              <div class="text-2xl font-bold text-white">4.82 ms</div>
-            </div>
-            <div class="text-right">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">▼ 18.4%</span>
-              <div class="text-[11px] text-slate-500 mt-0.5">vs last 24h</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-emerald-400 mb-2 flex items-center gap-2">
-            <span>📊</span> Reactive DataTable
-          </h4>
-          <p class="text-xs text-slate-400 mb-4">
-            Sort, filter, and paginate large Pandas DataFrames or Python dictionaries without JavaScript data-tables libraries.
-          </p>
-          <div class="rounded-lg border border-slate-700 overflow-hidden text-xs">
-            <div class="bg-slate-800 px-3 py-2 font-mono text-slate-300 flex justify-between">
-              <span>Model Name</span>
-              <span>F1-Score</span>
-            </div>
-            <div class="bg-slate-900/80 px-3 py-2 text-slate-400 flex justify-between border-t border-slate-800">
-              <span class="text-white font-medium">Llama-3-70B-Instruct</span>
-              <span class="text-emerald-400 font-mono">0.942</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">charts_example.py</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="from pydataui.components import Chart, MetricCard, Row
-
-Row(
-    MetricCard(title=&quot;Daily Active Users&quot;, value=&quot;14,892&quot;, delta=&quot;+12.4%&quot;, delta_type=&quot;increase&quot;),
-    MetricCard(title=&quot;Error Rate&quot;, value=&quot;0.04%&quot;, delta=&quot;-0.02%&quot;, delta_type=&quot;decrease&quot;),
-    spacing=&quot;md&quot;
-)
-
-Chart(
-    type=&quot;line&quot;,
-    labels=[&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot;],
-    datasets=[
-        {&quot;label&quot;: &quot;Inference (req/s)&quot;, &quot;data&quot;: [120, 190, 300, 500, 480, 620, 750], &quot;borderColor&quot;: &quot;#3b82f6&quot;}
-    ],
-    responsive=True
-)">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto"><code class="language-python"><span class="text-purple-400">from</span> pydataui.components <span class="text-purple-400">import</span> Chart, MetricCard, Row
-
-Row(
-    MetricCard(title=<span class="text-emerald-300">"Daily Active Users"</span>, value=<span class="text-emerald-300">"14,892"</span>, delta=<span class="text-emerald-300">"+12.4%"</span>, delta_type=<span class="text-emerald-300">"increase"</span>),
-    MetricCard(title=<span class="text-emerald-300">"Error Rate"</span>, value=<span class="text-emerald-300">"0.04%"</span>, delta=<span class="text-emerald-300">"-0.02%"</span>, delta_type=<span class="text-emerald-300">"decrease"</span>),
-    spacing=<span class="text-emerald-300">"md"</span>
-)
-
-Chart(
-    type=<span class="text-emerald-300">"line"</span>,
-    labels=[<span class="text-emerald-300">"Mon"</span>, <span class="text-emerald-300">"Tue"</span>, <span class="text-emerald-300">"Wed"</span>, <span class="text-emerald-300">"Thu"</span>, <span class="text-emerald-300">"Fri"</span>, <span class="text-emerald-300">"Sat"</span>, <span class="text-emerald-300">"Sun"</span>],
-    datasets=[
-        {<span class="text-emerald-300">"label"</span>: <span class="text-emerald-300">"Inference (req/s)"</span>, <span class="text-emerald-300">"data"</span>: [<span class="text-emerald-400">120</span>, <span class="text-emerald-400">190</span>, <span class="text-emerald-400">300</span>, <span class="text-emerald-400">500</span>, <span class="text-emerald-400">480</span>, <span class="text-emerald-400">620</span>, <span class="text-emerald-400">750</span>], <span class="text-emerald-300">"borderColor"</span>: <span class="text-emerald-300">"#3b82f6"</span>}
-    ],
-    responsive=<span class="text-purple-400">True</span>
-)</code></pre>
-      </div>
-    </section>
-
-    <!-- 06. MOBILE APPS (ANDROID & IOS) -->
-    <section id="mobile-guide" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">06</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Mobile Apps: Android APK &amp; iOS IPA</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        PyDataUI allows you to generate installable native packages (<strong>Android APK</strong> and <strong>iOS IPA</strong>) directly from the command line without opening Android Studio or Xcode.
-      </p>
-
-      <!-- PREREQUISITES & ARCHITECTURE CALLOUT -->
-      <div class="p-6 rounded-2xl bg-gradient-to-r from-blue-950/60 to-indigo-950/40 border border-blue-500/30 mb-8">
-        <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-          <span>🌐</span> Wi-Fi Backend Auto-Detection &amp; Cleartext Traffic
-        </h3>
-        <p class="text-sm text-slate-300 leading-relaxed mb-4">
-          When building for mobile, PyDataUI automatically detects your workstation's LAN IP address (e.g. <code>http://192.168.1.50:8000</code>) and bakes it into the Capacitor native config. 
-          Furthermore, <code>android:usesCleartextTraffic="true"</code> is injected into <code>AndroidManifest.xml</code> so the mobile OS allows instant HTTP communication back to your Python server over Wi-Fi.
+        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+          State in PyDataUI is defined by subclassing <code>pydataui.State</code>. When a user interacts with a component, the bound Python method executes, mutates state attributes, and PyDataUI automatically sends back the updated HTML fragment.
         </p>
-        <div class="flex flex-wrap gap-2 text-xs font-mono">
-          <span class="px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40">✓ Wi-Fi LAN Auto-Bridge</span>
-          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">✓ Cleartext HTTP Enabled</span>
-          <span class="px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40">✓ Headless Gradle / Xcode</span>
-        </div>
-      </div>
+      </section>
 
-      <!-- ANDROID SDK REQUIREMENTS -->
-      <h3 class="text-lg font-bold text-white mb-3">1. Android Build Requirements &amp; License Acceptance</h3>
-      <p class="text-slate-300 text-sm mb-4">
-        To compile Android APKs, ensure JDK 17 or JDK 21 is installed along with Android SDK Command-line Tools:
-      </p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">JDK Matrix (macOS / Linux)</h4>
-          <pre class="text-xs text-blue-300 font-mono">brew install openjdk@21
-sudo ln -sfn /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk \
-  /Library/Java/JavaVirtualMachines/openjdk-21.jdk
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)</pre>
-        </div>
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">Accept Android SDK Licenses</h4>
-          <pre class="text-xs text-emerald-300 font-mono">export ANDROID_HOME=/usr/local/share/android-commandlinetools
-yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses</pre>
-        </div>
-      </div>
-
-      <!-- ANDROID CLI COMMANDS -->
-      <h3 class="text-lg font-bold text-white mb-3">2. Compiling &amp; Installing the Android APK</h3>
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">Terminal</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="# Build headless standalone APK:
-pydataui mobile build --platform android
-
-# Or specify a custom backend host or production URL:
-pydataui mobile build --platform android --server-url http://192.168.1.50:8000
-
-# Install directly to USB/Wi-Fi connected device via ADB:
-pydataui mobile install --platform android">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-blue-300 overflow-x-auto"><code><span class="text-slate-500"># 1. Compile standalone Android APK (exports to ./app-debug.apk and dist/):</span>
-pydataui mobile build --platform android
-
-<span class="text-slate-500"># 2. Or override target backend server:</span>
-pydataui mobile build --platform android --server-url http://192.168.1.50:8000
-
-<span class="text-slate-500"># 3. Directly install to connected Android device over USB/Wi-Fi via ADB:</span>
-pydataui mobile install --platform android</code></pre>
-      </div>
-
-      <!-- IOS IPA SIDELOADING -->
-      <h3 class="text-lg font-bold text-white mb-3">3. iOS IPA Packaging &amp; Sideloading (No Paid Apple Developer Account)</h3>
-      <p class="text-slate-300 text-sm mb-4">
-        PyDataUI automatically bundles your iOS app into a standard <code>app-debug.ipa</code> inside the workspace root and <code>dist/</code>:
-      </p>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">Terminal</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="pydataui mobile build --platform ios">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-blue-300 overflow-x-auto"><code>pydataui mobile build --platform ios</code></pre>
-      </div>
-
-      <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 mb-6">
-        <h4 class="text-sm font-bold text-indigo-400 mb-2">📲 How to install app-debug.ipa on iPhone/iPad:</h4>
-        <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-slate-300">
-          <li>Download <a href="https://sideloadly.io" target="_blank" class="text-blue-400 underline">Sideloadly</a> or <a href="https://altstore.io" target="_blank" class="text-blue-400 underline">AltStore</a> (macOS or Windows).</li>
-          <li>Connect your iPhone via USB.</li>
-          <li>Drag and drop <code>app-debug.ipa</code> into Sideloadly, enter your free Apple ID, and click <strong>Start</strong>.</li>
-          <li>On your iPhone, go to <strong>Settings ➡️ General ➡️ VPN &amp; Device Management</strong> and tap <strong>Trust</strong>.</li>
-        </ol>
-      </div>
-
-      <!-- MOBILE SIMULATOR -->
-      <h3 class="text-lg font-bold text-white mb-3">4. In-Browser Device Simulator</h3>
-      <p class="text-slate-300 text-sm mb-4">
-        Don't have a phone handy? Test inside an interactive browser phone chassis (iPhone 15 Pro, Pixel 8) with instant orientation toggling:
-      </p>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">Terminal</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="pydataui mobile preview app.py">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-blue-300 overflow-x-auto"><code>pydataui mobile preview app.py</code></pre>
-      </div>
-    </section>
-
-    <!-- 07. DESKTOP APPS -->
-    <section id="desktop-guide" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">07</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Desktop Apps: Tauri 2.0 &amp; Native Window</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        PyDataUI supports two modes for running on desktop (macOS, Windows, Linux):
-      </p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
-            <span class="text-blue-400">🪟</span> 1. Instant Native Window Mode
-          </h4>
-          <p class="text-xs text-slate-400 mb-4">
-            Launches an OS webview window immediately without compiling Rust or installing Cargo.
+      <!-- 04. FASTAPI MOUNTING & CONFLICT HANDLING -->
+      <section id="fastapi-mounting" class="doc-section mb-16 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/20">04</span>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">FastAPI Mounting &amp; Conflict Handling</h2>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            PyDataUI is a pure ASGI application built natively on FastAPI and Starlette. You can mount PyDataUI dashboards, admin consoles, and AI tools into any existing FastAPI backend using a single line of code with zero route, cookie, or documentation collisions.
           </p>
-          <pre class="p-3 rounded-lg bg-slate-950 text-xs font-mono text-blue-300">pydataui run app.py --desktop</pre>
         </div>
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
-            <span class="text-orange-400">🦀</span> 2. Tauri 2.0 Production Binary
-          </h4>
-          <p class="text-xs text-slate-400 mb-4">
-            Compiles a standalone, sandboxed macOS <code>.dmg</code>, Windows <code>.msi</code>, or Linux <code>.deb</code>.
+
+        <!-- CODE EXAMPLE: MOUNTING -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono text-cyan-400 font-semibold">FastAPI + PyDataUI Native Mount</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition text-[11px]" data-code="from fastapi import FastAPI
+from pydataui import App, State, mount
+from pydataui.components import Container, Heading, MetricCard, Button
+
+api = FastAPI(title=&quot;Enterprise Core API&quot;)
+
+@api.get(&quot;/api/v1/orders&quot;)
+def list_orders():
+    return [{&quot;id&quot;: 101, &quot;amount&quot;: 450.0}]
+
+dashboard = App(title=&quot;Operations Dashboard&quot;, theme=&quot;dark&quot;)
+
+@dashboard.page(&quot;/&quot;)
+def home():
+    return Container(
+        Heading(&quot;Operations Control Center&quot;, level=1),
+        MetricCard(title=&quot;Active Orders&quot;, value=142)
+    )
+
+# Attach PyDataUI to existing FastAPI at /dashboard
+mount(api, dashboard, path=&quot;/dashboard&quot;)
+# or: dashboard.mount_to(api, path=&quot;/dashboard&quot;)">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200 overflow-x-auto"><span class="text-purple-400">from</span> fastapi <span class="text-purple-400">import</span> FastAPI
+<span class="text-purple-400">from</span> pydataui <span class="text-purple-400">import</span> App, State, mount
+<span class="text-purple-400">from</span> pydataui.components <span class="text-purple-400">import</span> Container, Heading, MetricCard, Button
+
+<span class="text-slate-500"># 1. Existing FastAPI Backend Microservice</span>
+api = FastAPI(title=<span class="text-emerald-300">"Enterprise Core API"</span>)
+
+<span class="text-indigo-400">@api.get</span>(<span class="text-emerald-300">"/api/v1/orders"</span>)
+<span class="text-blue-400">def</span> <span class="text-indigo-400">list_orders</span>():
+    <span class="text-purple-400">return</span> [{<span class="text-emerald-300">"id"</span>: <span class="text-emerald-400">101</span>, <span class="text-emerald-300">"amount"</span>: <span class="text-emerald-400">450.0</span>}]
+
+<span class="text-slate-500"># 2. PyDataUI Application</span>
+dashboard = App(title=<span class="text-emerald-300">"Operations Dashboard"</span>, theme=<span class="text-emerald-300">"dark"</span>)
+
+<span class="text-indigo-400">@dashboard.page</span>(<span class="text-emerald-300">"/"</span>)
+<span class="text-blue-400">def</span> <span class="text-indigo-400">home</span>():
+    <span class="text-purple-400">return</span> Container(
+        Heading(<span class="text-emerald-300">"Operations Control Center"</span>, level=<span class="text-emerald-400">1</span>),
+        MetricCard(title=<span class="text-emerald-300">"Active Orders"</span>, value=<span class="text-emerald-400">142</span>)
+    )
+
+<span class="text-slate-500"># 3. Mount PyDataUI cleanly under /dashboard</span>
+mount(api, dashboard, path=<span class="text-emerald-300">"/dashboard"</span>)
+<span class="text-slate-500"># or: dashboard.mount_to(api, path="/dashboard")</span></pre>
+        </div>
+
+        <!-- CONFLICT HANDLING ARCHITECTURE -->
+        <h3 class="text-lg font-bold text-white mb-3">How PyDataUI Handles &amp; Prevents Conflicts</h3>
+        <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+          When mounting into an existing enterprise codebase, PyDataUI applies strict namespace sandboxing across routes, documentation, static files, and cookies:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Route Collisions</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              If parent FastAPI has <code>/users</code> and PyDataUI has <code>@app.page("/users")</code>, there is <strong>zero clash</strong>. PyDataUI routes are strictly nested under <code>/dashboard/users</code> via Starlette ASGI delegation.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Swagger / OpenAPI Separation</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Parent API keeps its root Swagger UI at <code>/docs</code>. PyDataUI automatically serves its dedicated OpenAPI schema and explorer at <code>/dashboard/docs</code> without overwriting parent schemas.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Static Asset Sandboxing</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              PyDataUI bundles all internal Tailwind CSS, HTMX, and icons under <code>/_pdu/static/*</code>. It never interferes with parent FastAPI <code>app.mount("/static", ...)</code> directories.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Session &amp; Cookie Scoping</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              PyDataUI state sessions use a dedicated, signed cookie <code>pdu-session</code> with <code>HttpOnly</code> and <code>SameSite=Lax</code>. Parent JWT tokens or custom auth cookies are never overwritten.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05. DEVELOPER EXPERIENCE (DX) VS ALTERNATIVES -->
+      <section id="developer-experience" class="doc-section mb-16 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">05</span>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Python Developer Experience (DX) vs Alternatives</h2>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Why do Python engineers, Data Scientists, and AI teams build 5x-10x faster with PyDataUI compared to Streamlit, Gradio, Dash, or full React stacks?
           </p>
-          <pre class="p-3 rounded-lg bg-slate-950 text-xs font-mono text-orange-300">pydataui desktop build</pre>
         </div>
-      </div>
-    </section>
 
-    <!-- 08. AI & DATA TEAM TEMPLATES -->
-    <section id="templates" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">08</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">AI &amp; Data Team Templates</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        PyDataUI comes pre-packaged with 4 high-value enterprise templates in <code>pydataui.templates</code>:
-      </p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition">
-          <div class="font-bold text-white text-sm mb-1">🤖 Model Evaluation Leaderboard</div>
-          <p class="text-xs text-slate-400">Benchmark LLMs and regression models across latency, tokens/sec, and F1 accuracy.</p>
+        <!-- DX MATRIX TABLE -->
+        <div class="overflow-x-auto rounded-xl border border-slate-800 mb-6 bg-slate-900/40">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-900 border-b border-slate-800 text-slate-400 font-mono uppercase">
+              <tr>
+                <th class="py-3 px-4">Feature / Metric</th>
+                <th class="py-3 px-4 text-emerald-400 font-bold">PyDataUI</th>
+                <th class="py-3 px-4">Streamlit</th>
+                <th class="py-3 px-4">Gradio</th>
+                <th class="py-3 px-4">React + FastAPI</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-slate-300">
+              <tr>
+                <td class="py-3 px-4 font-semibold text-white">Language Stack</td>
+                <td class="py-3 px-4 text-emerald-400 font-semibold">100% Python</td>
+                <td class="py-3 px-4">100% Python</td>
+                <td class="py-3 px-4">100% Python</td>
+                <td class="py-3 px-4 text-rose-400">Python + TypeScript + JSX + Node</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-semibold text-white">Execution Model</td>
+                <td class="py-3 px-4 text-emerald-400 font-semibold">Event-Driven SSR (HTMX)</td>
+                <td class="py-3 px-4 text-rose-400">Reruns script from line 1 on every click</td>
+                <td class="py-3 px-4">Block queues</td>
+                <td class="py-3 px-4">Client SPA + JSON APIs</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-semibold text-white">FastAPI Native Mount</td>
+                <td class="py-3 px-4 text-emerald-400 font-semibold">✅ Native mount()</td>
+                <td class="py-3 px-4 text-rose-400">❌ Impossible (separate server)</td>
+                <td class="py-3 px-4 text-amber-400">⚠️ ASGI mount (heavy)</td>
+                <td class="py-3 px-4 text-amber-400">⚠️ API only (need static bundle)</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-semibold text-white">UI Customization</td>
+                <td class="py-3 px-4 text-emerald-400 font-semibold">Tailwind CSS + shadcn/ui</td>
+                <td class="py-3 px-4 text-rose-400">Rigid default layout</td>
+                <td class="py-3 px-4 text-rose-400">Fixed ML blocks</td>
+                <td class="py-3 px-4">Full custom (high effort)</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-semibold text-white">Mobile APK / IPA / Simulator</td>
+                <td class="py-3 px-4 text-emerald-400 font-semibold">✅ Headless build + live simulator</td>
+                <td class="py-3 px-4 text-rose-400">❌ None</td>
+                <td class="py-3 px-4 text-rose-400">❌ None</td>
+                <td class="py-3 px-4 text-amber-400">⚠️ Complex Capacitor/React Native</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition">
-          <div class="font-bold text-white text-sm mb-1">📊 Metric Monitor &amp; Ops Dashboard</div>
-          <p class="text-xs text-slate-400">Real-time throughput metrics, server health, error budgets, and alerting thresholds.</p>
+      </section>
+
+      <!-- 06. BUILD & CONTAINERIZATION -->
+      <section id="build-production" class="doc-section mb-16 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">06</span>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Production Build &amp; Containerization</h2>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Package your application into self-contained Docker containers and production assets with <code>pydataui build</code>:
+          </p>
         </div>
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition">
-          <div class="font-bold text-white text-sm mb-1">🔍 Dataset Explorer &amp; Profiler</div>
-          <p class="text-xs text-slate-400">Instant summary statistics, missing value heatmaps, and column correlation matrices.</p>
+
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono text-amber-400 font-semibold">Production Packaging Pipeline</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition text-[11px]" data-code="# Compile production build with offline assets and Dockerfile:
+pydataui build app.py --output dist
+
+# Run production container with Docker Compose:
+cd dist && docker compose up --build -d">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200 overflow-x-auto"><span class="text-slate-500"># 1. Package production bundle with offline static files &amp; Dockerfile:</span>
+pydataui build app.py --output dist
+
+<span class="text-slate-500"># 2. Deploy containerized service with Docker Compose:</span>
+<span class="text-purple-400">cd</span> dist &amp;&amp; docker compose up --build -d</pre>
         </div>
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition">
-          <div class="font-bold text-white text-sm mb-1">⚙️ ETL Pipeline Status Tracker</div>
-          <p class="text-xs text-slate-400">DAG execution stages, run duration breakdown, retry counters, and log streaming.</p>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- DEVELOPER-FIRST COMPONENT PREVIEWS & REFERENCE -->
+      <!-- ============================================== -->
+
+      <!-- COMPONENT: BUTTON -->
+      <section id="comp-button" class="doc-section mb-16 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Components / Actions</span>
+          <h2 class="text-2xl font-extrabold text-white mt-1">Button</h2>
+          <p class="text-slate-400 text-sm mt-1">Trigger server-side actions, HTMX swaps, and handle client click events using Python.</p>
         </div>
-      </div>
 
-      <a href="examples/data-team-gallery.html" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition">
-        <span>Open Full Interactive Template Gallery</span>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-      </a>
-    </section>
-
-    <!-- 09. AUTHENTICATION & SECURITY -->
-    <section id="auth-security" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">09</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Authentication &amp; Security</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        PyDataUI includes built-in JWT authentication, route guarding, and automatic XSS escaping:
-      </p>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">auth_example.py</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="from pydataui import App, require_auth
-
-app = App(auth_secret=&quot;your-production-secret-key-32-bytes&quot;)
-
-@app.page(&quot;/dashboard&quot;)
-@require_auth(roles=[&quot;admin&quot;, &quot;analyst&quot;])
-def protected_dashboard(user):
-    return Container(Heading(f&quot;Welcome, {user.username}!&quot;))">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
-        </div>
-        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto"><code class="language-python"><span class="text-purple-400">from</span> pydataui <span class="text-purple-400">import</span> App, require_auth
-
-app = App(auth_secret=<span class="text-emerald-300">"your-production-secret-key-32-bytes"</span>)
-
-<span class="text-indigo-400">@app.page</span>(<span class="text-emerald-300">"/dashboard"</span>)
-<span class="text-indigo-400">@require_auth</span>(roles=[<span class="text-emerald-300">"admin"</span>, <span class="text-emerald-300">"analyst"</span>])
-<span class="text-blue-400">def</span> <span class="text-indigo-400">protected_dashboard</span>(user):
-    <span class="text-purple-400">return</span> Container(Heading(<span class="text-emerald-300">f"Welcome, {user.username}!"</span>))</code></pre>
-      </div>
-    </section>
-
-    <!-- 10. CLI REFERENCE MANUAL -->
-    <section id="cli-reference" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">10</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">CLI Reference Manual</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-6">
-        The <code>pydataui</code> command-line interface provides complete control over development, testing, compilation, and cloud tunnels.
-      </p>
-
-      <div class="space-y-4 mb-6">
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <div class="font-mono font-bold text-blue-400 text-sm mb-1">pydataui run [FILE] [OPTIONS]</div>
-          <p class="text-xs text-slate-400 mb-2">Run the development or production server.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono text-slate-300">
-            <div><code>--port, -p INTEGER</code> : Port (default: 8000)</div>
-            <div><code>--host, -h TEXT</code> : Host (default: 127.0.0.1)</div>
-            <div><code>--reload / --no-reload</code> : Auto-reload on change</div>
-            <div><code>--mobile-preview</code> : In-browser phone chassis</div>
-            <div><code>--desktop</code> : Launch native webview window</div>
-            <div><code>--share</code> : Tunnel URL (Cloudflare/ngrok)</div>
+        <!-- LIVE COMPONENT PREVIEW (Stainless / shadcn Style) -->
+        <div class="mb-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">Live Interactive Preview</div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow transition">Primary</button>
+            <button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs transition">Secondary</button>
+            <button class="px-4 py-2 rounded-lg bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600/30 font-medium text-xs transition">Destructive</button>
+            <button class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 font-medium text-xs transition">Outline</button>
+            <button class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs opacity-75 cursor-not-allowed flex items-center gap-1.5" disabled>
+              <svg class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              <span>Loading...</span>
+            </button>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <div class="font-mono font-bold text-emerald-400 text-sm mb-1">pydataui mobile [init | preview | build | install] [OPTIONS]</div>
-          <p class="text-xs text-slate-400 mb-2">Manage Capacitor native mobile apps.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono text-slate-300">
-            <div><code>--platform [android|ios]</code> : Target OS</div>
-            <div><code>--server-url TEXT</code> : Custom server endpoint</div>
-            <div><code>--port INTEGER</code> : Port for local Wi-Fi detection</div>
+        <!-- PYTHON CODE BLOCK WITH COPY -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono">Python</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="Button(&quot;Save Changes&quot;, on_click=state.save_data, variant=&quot;primary&quot;, size=&quot;md&quot;)">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200 overflow-x-auto"><span class="text-blue-400">Button</span>(
+    <span class="text-emerald-300">"Save Changes"</span>,
+    on_click=state.save_data,
+    variant=<span class="text-emerald-300">"primary"</span>,  <span class="text-slate-500"># 'primary' | 'secondary' | 'danger' | 'outline'</span>
+    size=<span class="text-emerald-300">"md"</span>,            <span class="text-slate-500"># 'sm' | 'md' | 'lg'</span>
+    loading=<span class="text-purple-400">False</span>
+)</pre>
+        </div>
+
+        <!-- API PARAMETERS TABLE -->
+        <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/40">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-800/60 uppercase text-[10px] tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-4 font-mono">Parameter</th>
+                <th class="py-2.5 px-4 font-mono">Type</th>
+                <th class="py-2.5 px-4 font-mono">Default</th>
+                <th class="py-2.5 px-4">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60">
+              <tr>
+                <td class="py-2.5 px-4 font-mono font-semibold text-blue-400">label</td>
+                <td class="py-2.5 px-4 font-mono text-slate-400">str</td>
+                <td class="py-2.5 px-4 font-mono text-slate-500">Required</td>
+                <td class="py-2.5 px-4">Text or child components rendered inside button.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-4 font-mono font-semibold text-blue-400">on_click</td>
+                <td class="py-2.5 px-4 font-mono text-slate-400">Callable | str</td>
+                <td class="py-2.5 px-4 font-mono text-slate-500">None</td>
+                <td class="py-2.5 px-4">Python State method handler or custom URL endpoint.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-4 font-mono font-semibold text-blue-400">variant</td>
+                <td class="py-2.5 px-4 font-mono text-slate-400">str</td>
+                <td class="py-2.5 px-4 font-mono text-slate-500">"primary"</td>
+                <td class="py-2.5 px-4">Style preset: <code>primary</code>, <code>secondary</code>, <code>danger</code>, <code>outline</code>, <code>ghost</code>.</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-4 font-mono font-semibold text-blue-400">size</td>
+                <td class="py-2.5 px-4 font-mono text-slate-400">str</td>
+                <td class="py-2.5 px-4 font-mono text-slate-500">"md"</td>
+                <td class="py-2.5 px-4">Dimensions: <code>sm</code> (compact), <code>md</code> (standard), <code>lg</code> (prominent).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- COMPONENT: METRICCARD (DATA SCIENCE) -->
+      <section id="comp-metriccard" class="doc-section mb-16 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-wider">Components / Data Science</span>
+          <h2 class="text-2xl font-extrabold text-white mt-1">MetricCard</h2>
+          <p class="text-slate-400 text-sm mt-1">Display key metrics, KPIs, and differentials with color-coded trend indicators.</p>
+        </div>
+
+        <!-- LIVE PREVIEW -->
+        <div class="mb-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">Live Interactive Preview</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-5 rounded-xl bg-slate-800/80 border border-slate-700">
+              <div class="text-xs font-medium text-slate-400">Model Inference Latency</div>
+              <div class="text-2xl font-extrabold text-white mt-1">4.82 ms</div>
+              <div class="flex items-center gap-1.5 mt-2 text-xs text-emerald-400 font-semibold">
+                <span class="px-1.5 py-0.5 rounded bg-emerald-500/20">▼ -18.4%</span>
+                <span class="text-slate-400 font-normal">vs last 24 hours</span>
+              </div>
+            </div>
+            <div class="p-5 rounded-xl bg-slate-800/80 border border-slate-700">
+              <div class="text-xs font-medium text-slate-400">Token Throughput</div>
+              <div class="text-2xl font-extrabold text-white mt-1">1,480 tok/s</div>
+              <div class="flex items-center gap-1.5 mt-2 text-xs text-blue-400 font-semibold">
+                <span class="px-1.5 py-0.5 rounded bg-blue-500/20">▲ +32.1%</span>
+                <span class="text-slate-400 font-normal">v0.3.5 compiled core</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <div class="font-mono font-bold text-purple-400 text-sm mb-1">pydataui desktop [init | run | build] [OPTIONS]</div>
-          <p class="text-xs text-slate-400 mb-2">Manage Tauri 2.0 Rust desktop binaries.</p>
+        <!-- PYTHON CODE BLOCK -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono">Python</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="MetricCard(
+    title=&quot;Model Inference Latency&quot;,
+    value=&quot;4.82 ms&quot;,
+    delta=&quot;-18.4%&quot;,
+    delta_type=&quot;decrease&quot;,
+    subtitle=&quot;vs last 24 hours&quot;
+)">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200 overflow-x-auto"><span class="text-blue-400">MetricCard</span>(
+    title=<span class="text-emerald-300">"Model Inference Latency"</span>,
+    value=<span class="text-emerald-300">"4.82 ms"</span>,
+    delta=<span class="text-emerald-300">"-18.4%"</span>,
+    delta_type=<span class="text-emerald-300">"decrease"</span>,  <span class="text-slate-500"># 'increase' | 'decrease' | 'neutral'</span>
+    subtitle=<span class="text-emerald-300">"vs last 24 hours"</span>
+)</pre>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 11. STYLING & THEMING -->
-    <section id="styling-theming" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">11</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Styling &amp; Design Tokens</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-4">
-        PyDataUI supports Tailwind CSS utilities out of the box, styled according to the shadcn design token schema:
-      </p>
-
-      <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs sm:text-sm font-mono text-slate-300 mb-6">
-        <div class="text-slate-500 mb-2">/* Design tokens injected into :root */</div>
-        <div>--background: 240 10% 3.9%;</div>
-        <div>--foreground: 0 0% 98%;</div>
-        <div>--card: 240 10% 3.9%;</div>
-        <div>--primary: 240 5.9% 10%;</div>
-        <div>--border: 240 3.7% 15.9%;</div>
-        <div>--radius: 0.5rem;</div>
-      </div>
-    </section>
-
-    <!-- 12. PRODUCTION DEPLOYMENT -->
-    <section id="deployment" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">12</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Production Deployment</h2>
-      </div>
-      <p class="text-slate-300 leading-relaxed mb-4">
-        PyDataUI apps can be deployed anywhere Python runs. Here is a production-ready <code>Dockerfile</code>:
-      </p>
-
-      <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
-        <div class="code-block-header px-4 py-2.5 flex items-center justify-between text-xs text-slate-400">
-          <span class="font-mono font-semibold">Dockerfile</span>
-          <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="FROM python:3.11-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-EXPOSE 8000
-CMD [&quot;pydataui&quot;, &quot;run&quot;, &quot;app.py&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;]">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy</span>
-          </button>
+      <!-- COMPONENT: DATATABLE (DATA SCIENCE) -->
+      <section id="comp-datatable" class="doc-section mb-16 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-wider">Components / Data Science</span>
+          <h2 class="text-2xl font-extrabold text-white mt-1">DataTable</h2>
+          <p class="text-slate-400 text-sm mt-1">Render structured tabular data directly from Python dicts or Pandas DataFrames with automatic sorting and pagination.</p>
         </div>
-        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto"><code class="language-dockerfile"><span class="text-blue-400">FROM</span> python:3.11-slim
-<span class="text-blue-400">WORKDIR</span> /app
-<span class="text-blue-400">COPY</span> requirements.txt .
-<span class="text-blue-400">RUN</span> pip install --no-cache-dir -r requirements.txt
-<span class="text-blue-400">COPY</span> . .
-<span class="text-blue-400">EXPOSE</span> 8000
-<span class="text-blue-400">CMD</span> [<span class="text-emerald-300">"pydataui"</span>, <span class="text-emerald-300">"run"</span>, <span class="text-emerald-300">"app.py"</span>, <span class="text-emerald-300">"--host"</span>, <span class="text-emerald-300">"0.0.0.0"</span>, <span class="text-emerald-300">"--port"</span>, <span class="text-emerald-300">"8000"</span>]</code></pre>
-      </div>
-    </section>
 
-    <!-- 13. TROUBLESHOOTING & FAQ -->
-    <section id="troubleshooting" class="doc-section mb-16 scroll-mt-28">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">13</div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Troubleshooting &amp; FAQ</h2>
-      </div>
-
-      <div class="space-y-4">
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-white mb-2">Q: "Warning: License for package Android SDK Build-Tools not accepted"</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Run: <code>yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses</code> to accept all Google Android SDK build licenses.
-          </p>
+        <!-- LIVE PREVIEW -->
+        <div class="mb-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">Live Interactive Preview</div>
+          <div class="overflow-x-auto rounded-lg border border-slate-700 bg-slate-900">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-800 text-slate-200 uppercase font-mono text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-4">Model Name</th>
+                  <th class="py-2.5 px-4">Architecture</th>
+                  <th class="py-2.5 px-4">F1 Score</th>
+                  <th class="py-2.5 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 font-mono">
+                <tr>
+                  <td class="py-2 px-4 font-semibold text-white">Llama-3-70B-Instruct</td>
+                  <td class="py-2 px-4 text-slate-400">Decoder Transformer</td>
+                  <td class="py-2 px-4 text-emerald-400">0.942</td>
+                  <td class="py-2 px-4"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px]">Production</span></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-4 font-semibold text-white">Mistral-Large-2</td>
+                  <td class="py-2 px-4 text-slate-400">Sparse MoE</td>
+                  <td class="py-2 px-4 text-emerald-400">0.928</td>
+                  <td class="py-2 px-4"><span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px]">Staging</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-white mb-2">Q: "Mobile APK connects to phone's localhost instead of Mac"</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            PyDataUI v0.3.5 auto-detects your workstation Wi-Fi IP. Ensure your phone and workstation are on the same Wi-Fi router, or specify: <code>pydataui mobile build --platform android --server-url http://YOUR_MAC_IP:8000</code>.
-          </p>
+
+        <!-- PYTHON CODE BLOCK -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono">Python</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="DataTable(
+    data=[
+        {&quot;Model&quot;: &quot;Llama-3-70B&quot;, &quot;F1&quot;: 0.942, &quot;Status&quot;: &quot;Active&quot;},
+        {&quot;Model&quot;: &quot;Mistral-Large&quot;, &quot;F1&quot;: 0.928, &quot;Status&quot;: &quot;Active&quot;}
+    ],
+    sortable=True,
+    page_size=10
+)">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200 overflow-x-auto"><span class="text-blue-400">DataTable</span>(
+    data=[
+        {<span class="text-emerald-300">"Model"</span>: <span class="text-emerald-300">"Llama-3-70B"</span>, <span class="text-emerald-300">"F1"</span>: <span class="text-emerald-400">0.942</span>, <span class="text-emerald-300">"Status"</span>: <span class="text-emerald-300">"Active"</span>},
+        {<span class="text-emerald-300">"Model"</span>: <span class="text-emerald-300">"Mistral-Large"</span>, <span class="text-emerald-300">"F1"</span>: <span class="text-emerald-400">0.928</span>, <span class="text-emerald-300">"Status"</span>: <span class="text-emerald-300">"Active"</span>}
+    ],
+    sortable=<span class="text-purple-400">True</span>,
+    page_size=<span class="text-emerald-400">10</span>
+)</pre>
         </div>
-        <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h4 class="text-sm font-bold text-white mb-2">Q: "Port 8000 already in use"</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Specify a custom port: <code>pydataui run app.py --port 8050</code>.
-          </p>
+      </section>
+
+      <!-- 06. MOBILE APPS -->
+      <section id="mobile-guide" class="doc-section mb-14 scroll-mt-24">
+        <div class="border-t border-slate-800 pt-8 mb-6">
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Mobile &amp; Desktop</span>
+          <h2 class="text-2xl font-extrabold text-white mt-1">Native Android APK &amp; iOS IPA</h2>
+          <p class="text-slate-400 text-sm mt-1">Direct CLI compilation of installable mobile packages with zero Xcode/Android Studio GUI requirements.</p>
         </div>
-      </div>
-    </section>
 
-    <!-- FOOTER -->
-    <footer class="pt-8 border-t border-slate-800 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>
-        PyDataUI Framework © 2026. Built with Python, HTMX, and Rust.
-      </div>
-      <div class="flex items-center gap-4">
-        <a href="mobile-desktop-guide.html" class="hover:text-slate-300">Mobile Guide</a>
-        <a href="api-reference.html" class="hover:text-slate-300">API Explorer</a>
-        <a href="examples/data-team-gallery.html" class="hover:text-slate-300">Template Gallery</a>
-        <a href="https://github.com/rajboopathiking/pydataui" class="hover:text-slate-300">GitHub</a>
-      </div>
-    </footer>
+        <div class="rounded-xl overflow-hidden border border-slate-800 mb-6 bg-slate-950">
+          <div class="code-block-header px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <span class="font-mono">Terminal</span>
+            <button class="copy-btn hover:text-white flex items-center gap-1.5 transition" data-code="# Compile headless Android APK:
+pydataui mobile build --platform android
 
-  </main>
+# Install directly to phone over USB via ADB:
+pydataui mobile install --platform android
 
-  <!-- INTERACTIVE SCRIPTS -->
+# Package unsigned iOS IPA for Sideloadly / AltStore:
+pydataui mobile build --platform ios">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-blue-300"><span class="text-slate-500"># 1. Compile headless Android APK (exports to ./app-debug.apk):</span>
+pydataui mobile build --platform android
+
+<span class="text-slate-500"># 2. Install to connected device via ADB:</span>
+pydataui mobile install --platform android
+
+<span class="text-slate-500"># 3. Package iOS IPA for free sideloading:</span>
+pydataui mobile build --platform ios</pre>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="pt-8 border-t border-slate-800 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>PyDataUI Framework © 2026. Built with Python, HTMX, and Rust.</div>
+        <div class="flex items-center gap-4">
+          <a href="mobile-desktop-guide.html" class="hover:text-slate-300">Mobile Guide</a>
+          <a href="api-reference.html" class="hover:text-slate-300">API Explorer</a>
+          <a href="examples/data-team-gallery.html" class="hover:text-slate-300">Template Gallery</a>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- SEARCH MODAL (COMMAND-K) -->
+  <div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-start justify-center pt-20 px-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl animate-fade-in">
+      <div class="p-4 border-b border-slate-800 flex items-center gap-3">
+        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" id="global-search-input" placeholder="Search components, parameters, guides..." class="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none">
+        <kbd class="px-2 py-0.5 text-[10px] font-mono bg-slate-800 rounded border border-slate-700 text-slate-400">ESC</kbd>
+      </div>
+      <div id="search-results" class="max-h-80 overflow-y-auto p-2 space-y-1 text-xs">
+        <a href="#fastapi-mounting" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-cyan-400">FastAPI Mounting</span>
+            <span class="text-slate-400 ml-2">Attach PyDataUI to existing FastAPI with conflict handling</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Architecture</span>
+        </a>
+        <a href="#developer-experience" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-emerald-400">Developer Experience (DX)</span>
+            <span class="text-slate-400 ml-2">Comparison vs Streamlit, Gradio, Dash &amp; React</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Why PyDataUI</span>
+        </a>
+        <a href="#comp-button" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-blue-400">Button</span>
+            <span class="text-slate-400 ml-2">Action trigger &amp; HTMX event handler</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Component</span>
+        </a>
+        <a href="#comp-metriccard" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-emerald-400">MetricCard</span>
+            <span class="text-slate-400 ml-2">KPI metrics with trends &amp; percentage delta</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Data Science</span>
+        </a>
+        <a href="#comp-datatable" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-emerald-400">DataTable</span>
+            <span class="text-slate-400 ml-2">Paginated and sortable table from dicts/DataFrames</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Data Science</span>
+        </a>
+        <a href="#mobile-guide" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-purple-400">Mobile Build</span>
+            <span class="text-slate-400 ml-2">Android APK and iOS IPA compilation</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Mobile</span>
+        </a>
+        <a href="#reactive-state" class="search-item flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/80 text-slate-200 transition">
+          <div>
+            <span class="font-bold text-amber-400">Reactive State</span>
+            <span class="text-slate-400 ml-2">Pydantic-backed state classes and mutation</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Core</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT HANDLERS -->
   <script>
-    // Copy code button handler
+    // 1. Copy Code Handler
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const code = btn.getAttribute('data-code');
@@ -1074,67 +1051,70 @@ CMD [&quot;pydataui&quot;, &quot;run&quot;, &quot;app.py&quot;, &quot;--host&quo
       });
     });
 
-    // TOC Modal Handler
-    const tocBtn = document.getElementById('toc-btn');
-    const tocCloseBtn = document.getElementById('toc-close-btn');
-    const tocModal = document.getElementById('toc-modal');
-    if (tocBtn && tocModal) {
-      tocBtn.addEventListener('click', () => {
-        tocModal.classList.remove('hidden');
-        tocModal.classList.add('flex');
+    // 2. Mobile Drawer Toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    function toggleDrawer() {
+      if (!sidebar) return;
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('hidden');
+    }
+    if (menuBtn) menuBtn.addEventListener('click', toggleDrawer);
+    if (backdrop) backdrop.addEventListener('click', toggleDrawer);
+
+    // 3. Command-K Global Search
+    const searchTrigger = document.getElementById('search-trigger');
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('global-search-input');
+    function openSearch() {
+      if (!searchModal) return;
+      searchModal.classList.remove('hidden');
+      searchModal.classList.add('flex');
+      if (searchInput) searchInput.focus();
+    }
+    function closeSearch() {
+      if (!searchModal) return;
+      searchModal.classList.add('hidden');
+      searchModal.classList.remove('flex');
+    }
+    if (searchTrigger) searchTrigger.addEventListener('click', openSearch);
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+      if (e.key === 'Escape') closeSearch();
+    });
+    if (searchModal) {
+      searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) closeSearch();
       });
     }
-    if (tocCloseBtn && tocModal) {
-      tocCloseBtn.addEventListener('click', () => {
-        tocModal.classList.add('hidden');
-        tocModal.classList.remove('flex');
-      });
-    }
-    document.querySelectorAll('.toc-item').forEach(item => {
-      item.addEventListener('click', () => {
-        if (tocModal) {
-          tocModal.classList.add('hidden');
-          tocModal.classList.remove('flex');
-        }
-      });
+    document.querySelectorAll('.search-item').forEach(item => {
+      item.addEventListener('click', closeSearch);
     });
 
-    // Scroll active link spy for horizontal pills
+    // 4. Active Scroll Spy for Sidebar Links
     const sections = document.querySelectorAll('.doc-section');
-    const navPills = document.querySelectorAll('.nav-pill');
+    const navItems = document.querySelectorAll('.nav-item');
     window.addEventListener('scroll', () => {
       let current = '';
-      sections.forEach(section => {
-        const top = section.offsetTop;
-        if (window.scrollY >= top - 140) {
-          current = section.getAttribute('id');
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        if (window.scrollY >= top - 120) {
+          current = sec.getAttribute('id');
         }
       });
-      navPills.forEach(pill => {
-        pill.classList.remove('active', 'bg-blue-600', 'text-white');
-        pill.classList.add('bg-slate-800/80', 'text-slate-300');
-        if (pill.getAttribute('href') === `#${current}`) {
-          pill.classList.add('active', 'bg-blue-600', 'text-white');
-          pill.classList.remove('bg-slate-800/80', 'text-slate-300');
-          // auto scroll pill into view
-          pill.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === `#${current}`) {
+          item.classList.add('active');
         }
       });
     });
 
-    // Search filter
-    const searchInput = document.getElementById('doc-search');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        sections.forEach(sec => {
-          const text = sec.textContent.toLowerCase();
-          sec.style.display = text.includes(q) ? 'block' : 'none';
-        });
-      });
-    }
-
-    // Theme Toggle
+    // 5. Theme Toggle
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {

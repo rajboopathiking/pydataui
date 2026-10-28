@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyDataUI API &amp; Component Reference Explorer</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M16 42l10-12 8 7 14-19' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              500: '#3b82f6',
+              600: '#2563eb',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#090d16] text-slate-200 antialiased min-h-screen">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <a href="full-documentation.html" class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+        </div>
+        <div>
+          <span class="text-lg font-extrabold text-white">PyDataUI Interactive API Explorer</span>
+          <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-mono">v0.3.5</span>
+        </div>
+      </a>
+    </div>
+    <div class="flex items-center space-x-3">
+      <a href="full-documentation.html" class="text-xs text-slate-400 hover:text-white transition">← Full Manual</a>
+      <a href="mobile-desktop-guide.html" class="text-xs text-slate-400 hover:text-white transition">📱 Mobile Guide</a>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- SEARCH & CATEGORY FILTER -->
+    <div class="mb-8">
+      <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
+        <div class="w-full sm:w-96 relative">
+          <input type="text" id="api-search" placeholder="Filter components (e.g. Button, DataTable, Chart, Modal)..."
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500">
+          <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <div class="flex flex-wrap gap-2" id="filter-buttons">
+          <button class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 text-white" data-cat="all">All</button>
+          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="layout">Layout</button>
+          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="forms">Forms &amp; Input</button>
+          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="data">Data Science</button>
+          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="feedback">Feedback</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPONENT CARDS LIST -->
+    <div class="grid grid-cols-1 gap-6" id="components-list">
+
+      <!-- COMPONENT: App -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="layout" data-name="app">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-purple-400">App(*args, title="PyDataUI", theme="light", pwa=True, backend="fastapi", **kwargs)</h3>
+            <p class="text-xs text-slate-400 mt-1">Root application container and ASGI routing engine.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-300 text-xs font-semibold">Core Root</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          app = App(title="My Analytics App", theme="dark", pwa=True, backend="fastapi")<br>
+          @app.page("/")<br>
+          def home(state): return Container(...)
+        </div>
+      </div>
+
+      <!-- COMPONENT: Container -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="layout" data-name="container">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-blue-400">Container(*children, max_width="max-w-7xl", centered=True, padding="p-4", class_name="")</h3>
+            <p class="text-xs text-slate-400 mt-1">Responsive layout wrapper with standardized max-width and margins.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-300 text-xs font-semibold">Layout</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          Container(Heading("Dashboard"), Row(...), max_width="max-w-6xl", centered=True)
+        </div>
+      </div>
+
+      <!-- COMPONENT: DataTable -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="data" data-name="datatable">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-emerald-400">DataTable(data, columns=None, page_size=10, searchable=True, sortable=True)</h3>
+            <p class="text-xs text-slate-400 mt-1">Interactive data table supporting lists of dictionaries or Pandas DataFrames.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Data Science</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          DataTable(data=[{"model": "GPT-4o", "score": 92.4}, {"model": "Claude 3.5", "score": 93.1}], sortable=True)
+        </div>
+      </div>
+
+      <!-- COMPONENT: MetricCard -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="data" data-name="metriccard">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-emerald-400">MetricCard(title, value, delta=None, delta_type="increase", subtitle=None)</h3>
+            <p class="text-xs text-slate-400 mt-1">KPI display card with percentage differential and status color indicator.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Data Science</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          MetricCard(title="Revenue", value="$48,250", delta="+14.2%", delta_type="increase")
+        </div>
+      </div>
+
+      <!-- COMPONENT: Chart -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="data" data-name="chart">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-emerald-400">Chart(type="line"|"bar"|"pie"|"doughnut", labels=[], datasets=[], responsive=True)</h3>
+            <p class="text-xs text-slate-400 mt-1">Declarative Chart.js wrapper rendering responsive HTML5 canvas graphs.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Data Science</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          Chart(type="bar", labels=["A", "B", "C"], datasets=[{"label": "Samples", "data": [10, 25, 40]}])
+        </div>
+      </div>
+
+      <!-- COMPONENT: Button -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="forms" data-name="button">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-indigo-400">Button(label, on_click=None, variant="primary"|"secondary"|"danger"|"outline", size="md")</h3>
+            <p class="text-xs text-slate-400 mt-1">Hypermedia action trigger bound to reactive Python state handlers.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-indigo-500/20 text-indigo-300 text-xs font-semibold">Forms &amp; Input</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          Button("Save Changes", on_click=state.save_data, variant="primary")
+        </div>
+      </div>
+
+      <!-- COMPONENT: Modal -->
+      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="feedback" data-name="modal">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="text-xl font-bold font-mono text-amber-400">Modal(*children, title="Dialog", is_open=False, on_close=None)</h3>
+            <p class="text-xs text-slate-400 mt-1">Accessible dialog overlay with backdrop and escape keyboard dismissal.</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-amber-500/20 text-amber-300 text-xs font-semibold">Feedback</span>
+        </div>
+        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
+          Modal(Text("Are you sure?"), Button("Confirm", on_click=state.confirm), is_open=state.show_modal)
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Live Search
+    const searchInput = document.getElementById('api-search');
+    const cards = document.querySelectorAll('.component-card');
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    });
+
+    // Category Filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-purple-600', 'text-white');
+          b.classList.add('bg-slate-800', 'text-slate-400');
+        });
+        btn.classList.add('bg-purple-600', 'text-white');
+        btn.classList.remove('bg-slate-800', 'text-slate-400');
+
+        const cat = btn.getAttribute('data-cat');
+        cards.forEach(card => {
+          if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

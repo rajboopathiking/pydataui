@@ -269,7 +269,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../MOBILE_AND_DESKTOP/" class="md-tabs__link">
+        <a href="../FULL_HTML_DOCUMENTATION/" class="md-tabs__link">
           
   
   
@@ -433,6 +433,8 @@
       
         
       
+        
+      
     
     
     
@@ -480,6 +482,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FULL_HTML_DOCUMENTATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full HTML Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -747,6 +777,17 @@
     <span class="md-ellipsis">
       
         3. Interactive Component Mockups &amp; Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-standalone-full-html-documents-docshtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Standalone Full HTML Documents (docs/*.html)
       
     </span>
   </a>
@@ -1495,6 +1536,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#4-standalone-full-html-documents-docshtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Standalone Full HTML Documents (docs/*.html)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1721,6 +1773,40 @@ Always add <code>markdown="1"</code> to block-level HTML tags (<code>&lt;div&gt;
 </span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>  <span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
 </span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
 </span></code></pre></div>
+<h3 id="4-standalone-full-html-documents-docshtml">4. Standalone Full HTML Documents (<code>docs/*.html</code>)</h3>
+<p>In addition to Markdown, PyDataUI provides standalone full HTML documentation pages that function completely offline and can be viewed directly in any browser:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">File</th>
+<th style="text-align: left;">Purpose</th>
+<th style="text-align: left;">Key Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>docs/full-documentation.html</code></td>
+<td style="text-align: left;">Master Developer Manual</td>
+<td style="text-align: left;">14 in-depth chapters, search bar, dark/light toggle, 1-click code copying, live UI demos.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>docs/mobile-desktop-guide.html</code></td>
+<td style="text-align: left;">Mobile &amp; Desktop Native Guide</td>
+<td style="text-align: left;">Interactive tabs for Android APK, iOS IPA, Sideloadly, ADB commands, &amp; Tauri.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>docs/api-reference.html</code></td>
+<td style="text-align: left;">Interactive API Explorer</td>
+<td style="text-align: left;">Real-time component filtering by category, parameter type signatures, code generator.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>docs/examples/data-team-gallery.html</code></td>
+<td style="text-align: left;">Enterprise Template Gallery</td>
+<td style="text-align: left;">Live interactive templates with Chart.js charts, KPIs, and data tables.</td>
+</tr>
+</tbody>
+</table>
+<p>When you run <code>mkdocs build</code>, MkDocs automatically copies all <code>.html</code> files in <code>docs/</code> directly to <code>site/</code> so they are immediately available at the root URL (e.g. <code>https://rajboopathiking.github.io/pydataui/full-documentation.html</code>).</p>
 <hr />
 <h2 id="github-pages-deployment-workflow">🚀 GitHub Pages Deployment Workflow</h2>
 <h3 id="automated-cicd-pipeline">Automated CI/CD Pipeline</h3>

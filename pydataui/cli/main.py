@@ -50,6 +50,27 @@ def _load_app(file_path_str: str):
         
     return app_instance
 
+def _app_factory():
+    """ASGI Application Factory for Uvicorn auto-reload and multi-worker execution."""
+    app_file = os.environ.get("PYDATAUI_APP_FILE")
+    if not app_file:
+        raise RuntimeError("PYDATAUI_APP_FILE environment variable is required for Uvicorn factory.")
+    
+    app_path = Path(app_file).resolve()
+    if not app_path.exists():
+        raise RuntimeError(f"PyDataUI application file '{app_file}' not found.")
+        
+    mobile_preview = os.environ.get("PYDATAUI_MOBILE_PREVIEW") == "1"
+    reload_flag = os.environ.get("PYDATAUI_RELOAD") == "1"
+    
+    app = _load_app(str(app_path))
+    if mobile_preview:
+        app.config.mobile_preview = True
+    if reload_flag:
+        app.config.reload = True
+    app._register_api_endpoints()
+    return app.asgi_app
+
 def create_project(args):
     project_name = args.project_name
     template = args.template
@@ -72,15 +93,25 @@ def create_project(args):
     print(f"   pydataui dev app.py\n")
 
 def dev_server(args):
-    app = _load_app(args.file)
+    file_path = Path(args.file).resolve()
+    os.environ["PYDATAUI_APP_FILE"] = str(file_path)
     mobile_preview = getattr(args, "mobile_preview", False)
+    if mobile_preview:
+        os.environ["PYDATAUI_MOBILE_PREVIEW"] = "1"
+    if getattr(args, "reload", False):
+        os.environ["PYDATAUI_RELOAD"] = "1"
+    app = _load_app(str(file_path))
     print(f"\n🚀 Starting PyDataUI development server for '{args.file}' on {args.host}:{args.port} (reload={args.reload})...")
     app.run(host=args.host, port=args.port, reload=args.reload, workers=1, mobile_preview=mobile_preview)
 
 def run_server(args):
-    app = _load_app(args.file)
+    file_path = Path(args.file).resolve()
+    os.environ["PYDATAUI_APP_FILE"] = str(file_path)
     desktop = getattr(args, "desktop", False)
     mobile_preview = getattr(args, "mobile_preview", False)
+    if mobile_preview:
+        os.environ["PYDATAUI_MOBILE_PREVIEW"] = "1"
+    app = _load_app(str(file_path))
     if desktop:
         print(f"\n🖥️  Starting PyDataUI desktop application for '{args.file}' on {args.host}:{args.port}...")
     elif mobile_preview:
@@ -124,13 +155,22 @@ def mobile_cmd(args):
             from pydataui.shell.tauri import run_tauri_dev
             run_tauri_dev(app_file=args.file, port=args.port, target=args.platform)
     elif args.action == "preview":
-        app = _load_app(args.file)
-        print(f"\n📱 Starting PyDataUI Mobile Simulator for '{args.file}' on {args.host}:{args.port}...")
-        app.run(host=args.host, port=args.port, reload=args.reload, mobile_preview=True)
+        file_path = Path(args.file).resolve()
+        os.environ["PYDATAUI_APP_FILE"] = str(file_path)
+        os.environ["PYDATAUI_MOBILE_PREVIEW"] = "1"
+        reload_enabled = getattr(args, "reload", True)
+        if reload_enabled:
+            os.environ["PYDATAUI_RELOAD"] = "1"
+        app = _load_app(str(file_path))
+        print(f"\n📱 Starting PyDataUI Mobile Simulator for '{args.file}' on {args.host}:{args.port} (reload={reload_enabled})...")
+        app.run(host=args.host, port=args.port, reload=reload_enabled, mobile_preview=True)
     elif args.action == "build":
         if engine == "capacitor":
             from pydataui.shell.capacitor import build_mobile
-            build_mobile(platform=args.platform)
+            server_url = getattr(args, "server_url", None)
+            port = getattr(args, "port", 8000)
+            app_file = getattr(args, "file", None)
+            build_mobile(platform=args.platform, server_url=server_url, port=port, app_file=app_file)
         else:
             from pydataui.shell.tauri import build_tauri
             build_tauri(target=args.platform)
@@ -293,6 +333,9 @@ def main():
     m_build = mobile_subs.add_parser("build", help="Build release APK or mobile packages without opening Android Studio/Xcode")
     m_build.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")
     m_build.add_argument("--engine", choices=["tauri", "capacitor"], default="capacitor", help="Mobile shell engine")
+    m_build.add_argument("--server-url", default=None, help="Backend server URL (defaults to auto-detected local Wi-Fi IP)")
+    m_build.add_argument("--port", type=int, default=8000, help="Backend server port (default: 8000)")
+    m_build.add_argument("--file", default=None, help="App file (e.g. app.py)")
 
     m_install = mobile_subs.add_parser("install", help="Directly install compiled app on mobile device without IDE")
     m_install.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")

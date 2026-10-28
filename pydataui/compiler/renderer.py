@@ -28,6 +28,9 @@ class Renderer:
         pwa = getattr(self.config, 'pwa', True)
         manifest_url = f'{prefix}{self.config.internal_prefix}/manifest.json' if pwa else None
         sw_url = f'{prefix}{self.config.internal_prefix}/sw.js' if pwa else None
+        health_url = f'{prefix}{self.config.internal_prefix}/health'
+        import os
+        is_reload = bool(getattr(self.config, 'reload', False) or os.environ.get("PYDATAUI_RELOAD") == "1")
         from ..middleware.security import csrf_token
         session = _current_session.get()
         return get_base_html(
@@ -45,6 +48,8 @@ class Renderer:
             extra_head=getattr(self.config, 'head', '') or '',
             pwa_manifest_url=manifest_url,
             pwa_sw_url=sw_url,
+            live_reload=is_reload,
+            health_url=health_url,
         )
         
     def render_fragment(self, page_func: Callable, state_snapshot: StateSnapshot) -> str:

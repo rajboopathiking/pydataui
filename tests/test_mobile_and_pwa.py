@@ -204,3 +204,53 @@ def test_headless_build_and_install_mobile(tmp_path):
     code_install = install_mobile(project_dir=str(tmp_path), platform="android")
     assert code_install == 0
 
+
+@pytest.mark.anyio
+async def test_live_auto_reload_and_factory(tmp_path):
+    import os
+    from pydataui.cli.main import _app_factory
+
+    app_file = tmp_path / "sample_app.py"
+    app_file.write_text("""from pydataui import App
+from pydataui.components import Heading
+
+app = App(title="Live Reload App", reload=True)
+
+@app.page("/")
+def home():
+    return Heading("Live Reload Works!")
+""")
+
+    os.environ["PYDATAUI_APP_FILE"] = str(app_file)
+    os.environ["PYDATAUI_MOBILE_PREVIEW"] = "1"
+    os.environ["PYDATAUI_RELOAD"] = "1"
+
+    asgi_app = _app_factory()
+    assert asgi_app is not None
+
+    transport = httpx.ASGITransport(app=asgi_app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        # Check health returns boot_id
+        res_health = await client.get("/_pdu/health")
+        assert res_health.status_code == 200
+        data = res_health.json()
+        assert data["status"] == "ok"
+        assert "boot_id" in data
+        assert len(data["boot_id"]) > 0
+
+        # Check preview page has auto-reload toolbar and polling script
+        res_preview = await client.get("/_pdu/preview")
+        assert res_preview.status_code == 200
+        preview_html = res_preview.text
+        assert "Auto-Reload: ON" in preview_html
+        assert "reload-badge" in preview_html
+        assert "checkServerHealth" in preview_html
+        assert "reload-toast" in preview_html
+
+        # Check main page has dev auto-reload script
+        res_page = await client.get("/")
+        assert res_page.status_code == 200
+        page_html = res_page.text
+        assert "PyDataUI Dev Auto-Reload Watcher" in page_html
+        assert "/_pdu/health" in page_html
+

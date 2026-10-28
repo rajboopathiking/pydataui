@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from contextlib import contextmanager
 import secrets
 import inspect
@@ -87,6 +88,7 @@ class App:
                     self.config.session_secret = shared_secret
 
         self._session_manager = SessionManager(secret=self.config.session_secret, max_age=self.config.session_max_age, store=session_store)
+        self._boot_id = f"{int(time.time())}_{secrets.token_hex(4)}"
         self._api_generator = APIGenerator(self.config, self)
         self._custom_api_routes = []
         self._setup_internal_routes()
@@ -432,7 +434,11 @@ class App:
 
         @self._engine.get(f'{self.config.internal_prefix}/health')
         def internal_health(request):
-            return {"status": "ok"}
+            return {
+                "status": "ok",
+                "boot_id": getattr(self, "_boot_id", "default"),
+                "version": self.config.version,
+            }
 
         @self._engine.get(f'{self.config.internal_prefix}/manifest.json')
         def pwa_manifest_handler(request):
@@ -1042,6 +1048,10 @@ self.addEventListener('fetch', (event) => {
 
     def run(self, host: Optional[str] = None, port: Optional[int] = None, reload: bool = False, workers: int = 1, share: bool = False, auth: Optional[Any] = None, desktop: bool = False, mobile_preview: bool = False):
         """Run the application."""
+        if reload:
+            self.config.reload = True
+            os.environ["PYDATAUI_RELOAD"] = "1"
+
         if auth:
             self.setup_auth(auth)
             

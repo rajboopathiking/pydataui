@@ -113,6 +113,71 @@ def get_preview_html(
         .btn-primary:hover {{
             background: var(--primary-hover);
         }}
+        .badge-live {{
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #34d399;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 9999px;
+            padding: 5px 11px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }}
+        .badge-live:hover {{
+            background: rgba(16, 185, 129, 0.2);
+        }}
+        .badge-live.paused {{
+            color: #fbbf24;
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.3);
+        }}
+        .dot {{
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            animation: live-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }}
+        .badge-live.paused .dot {{
+            background: #f59e0b;
+            box-shadow: none;
+            animation: none;
+        }}
+        @keyframes live-pulse {{
+            0%, 100% {{ opacity: 1; transform: scale(1); }}
+            50% {{ opacity: 0.5; transform: scale(0.85); }}
+        }}
+        .toast {{
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: #18181b;
+            color: #38bdf8;
+            border: 1px solid #0284c7;
+            border-radius: 9999px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        .toast.show {{
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }}
         /* Main Preview Canvas */
         .canvas {{
             flex: 1;
@@ -249,9 +314,13 @@ def get_preview_html(
             <button class="btn" onclick="toggleOrientation()" title="Rotate Device">
                 🔄 Rotate
             </button>
-            <button class="btn" onclick="reloadFrame()" title="Reload Mobile App">
+            <button class="btn" onclick="reloadFrame(true)" title="Reload Mobile App">
                 ⚡ Fast Reload
             </button>
+            <div id="reload-badge" class="badge-live" onclick="toggleAutoReload()" title="Click to toggle live auto-reload">
+                <span class="dot"></span>
+                <span id="reload-badge-text">Auto-Reload: ON</span>
+            </div>
             <select id="scale-select" class="select-input" onchange="changeScale()">
                 <option value="1">100%</option>
                 <option value="0.85" selected>85%</option>
@@ -280,6 +349,9 @@ def get_preview_html(
             <div class="home-indicator"></div>
         </div>
     </main>
+
+    <!-- Auto-Reload Toast Notification -->
+    <div id="reload-toast" class="toast">⚡ Code changed — reloaded preview</div>
 
     <!-- QR Code Modal for Physical Phone Testing -->
     <div id="qr-modal" class="modal-overlay" onclick="closeQrModal(event)">
@@ -339,10 +411,81 @@ def get_preview_html(
             updateDeviceDisplay();
         }}
 
-        function reloadFrame() {{
-            const frame = document.getElementById("mobile-frame");
-            frame.src = frame.src;
+        let currentBootId = null;
+        let isFirstCheck = true;
+        let isReconnecting = false;
+        let autoReloadActive = true;
+        let toastTimer = null;
+
+        function showToast(msg) {{
+            const toast = document.getElementById("reload-toast");
+            if (!toast) return;
+            toast.textContent = msg || "⚡ Code changed — reloaded preview";
+            toast.classList.add("show");
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {{
+                toast.classList.remove("show");
+            }}, 2000);
         }}
+
+        function reloadFrame(showNotice = false) {{
+            const frame = document.getElementById("mobile-frame");
+            if (frame) {{
+                try {{
+                    frame.contentWindow.location.reload();
+                }} catch (e) {{
+                    frame.src = frame.src;
+                }}
+            }}
+            if (showNotice) {{
+                showToast("⚡ Code changed — reloaded preview");
+            }}
+        }}
+
+        function toggleAutoReload() {{
+            autoReloadActive = !autoReloadActive;
+            const badge = document.getElementById("reload-badge");
+            const text = document.getElementById("reload-badge-text");
+            if (badge && text) {{
+                if (autoReloadActive) {{
+                    badge.classList.remove("paused");
+                    text.textContent = "Auto-Reload: ON";
+                    showToast("🟢 Auto-Reload enabled");
+                }} else {{
+                    badge.classList.add("paused");
+                    text.textContent = "Auto-Reload: PAUSED";
+                    showToast("⏸️ Auto-Reload paused");
+                }}
+            }}
+        }}
+
+        async function checkServerHealth() {{
+            if (!autoReloadActive) return;
+            try {{
+                const res = await fetch("/_pdu/health", {{ cache: "no-store" }});
+                if (res.ok) {{
+                    const data = await res.json();
+                    const serverBootId = data.boot_id;
+                    if (isFirstCheck) {{
+                        currentBootId = serverBootId;
+                        isFirstCheck = false;
+                    }} else if (serverBootId && serverBootId !== currentBootId) {{
+                        currentBootId = serverBootId;
+                        isReconnecting = false;
+                        reloadFrame(true);
+                    }} else if (isReconnecting) {{
+                        isReconnecting = false;
+                        reloadFrame(true);
+                    }}
+                }}
+            }} catch (err) {{
+                // Server process is restarting
+                isReconnecting = true;
+            }}
+        }}
+
+        // Poll every 500ms for instant auto-reload
+        setInterval(checkServerHealth, 500);
 
         function openQrModal() {{
             document.getElementById("qr-modal").style.display = "flex";

@@ -1,10 +1,10 @@
 {
   "appId": "com.pydataui.app",
   "appName": "PyDataUI App",
-  "webDir": "dist",
+  "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
-    "url": "http://10.0.2.2:8000",
+    "url": "http://192.168.31.205:8000",
     "cleartext": true
   }
 }

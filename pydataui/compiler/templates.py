@@ -324,6 +324,8 @@ def get_base_html(
     csrf_token: str = "",
     pwa_manifest_url: Optional[str] = None,
     pwa_sw_url: Optional[str] = None,
+    live_reload: bool = False,
+    health_url: str = '/_pdu/health',
 ) -> str:
     """Generate the full HTML shell with HTMX, Tailwind, and theme customization."""
     theme_lower = theme.lower().strip()
@@ -441,6 +443,38 @@ def get_base_html(
     </script>
 '''
 
+    live_reload_script = ""
+    if live_reload:
+        live_reload_script = f'''    <!-- PyDataUI Dev Auto-Reload Watcher -->
+    <script>
+        (function() {{
+            let currentBootId = null;
+            let initial = true;
+            let isReconnecting = false;
+            async function pingHealth() {{
+                try {{
+                    const r = await fetch('{health_url}', {{ cache: 'no-store' }});
+                    if (r.ok) {{
+                        const d = await r.json();
+                        if (initial) {{
+                            currentBootId = d.boot_id;
+                            initial = false;
+                        }} else if (d.boot_id && d.boot_id !== currentBootId) {{
+                            window.location.reload();
+                        }} else if (isReconnecting) {{
+                            isReconnecting = false;
+                            window.location.reload();
+                        }}
+                    }}
+                }} catch (e) {{
+                    isReconnecting = true;
+                }}
+            }}
+            setInterval(pingHealth, 600);
+        }})();
+    </script>
+'''
+
     return f'''<!DOCTYPE html>
 <html lang="en" class="{theme_class}">
 <head>
@@ -480,6 +514,7 @@ def get_base_html(
     {scripts_html}
     {pwa_sw_script}
     {extra_body}
+    {live_reload_script}
 </body>
 </html>'''
 

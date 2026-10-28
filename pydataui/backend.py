@@ -279,6 +279,31 @@ class FastAPIEngine:
     def run(self, host: str = "127.0.0.1", port: int = 8000, reload: bool = False, workers: int = 1):
         import uvicorn
         if workers > 1 or reload:
+            import os
+            from pathlib import Path
+            app_file = os.environ.get("PYDATAUI_APP_FILE")
+            if not app_file:
+                import sys
+                main_mod = sys.modules.get("__main__")
+                if main_mod and hasattr(main_mod, "__file__") and main_mod.__file__:
+                    app_file = os.path.abspath(main_mod.__file__)
+                    os.environ["PYDATAUI_APP_FILE"] = app_file
+
+            if app_file and os.path.exists(app_file):
+                app_path = Path(app_file).resolve()
+                watch_dirs = [str(app_path.parent), os.getcwd()]
+                unique_dirs = list(dict.fromkeys(watch_dirs))
+                uvicorn.run(
+                    "pydataui.cli.main:_app_factory",
+                    host=host,
+                    port=port,
+                    reload=reload,
+                    reload_dirs=unique_dirs if reload else None,
+                    factory=True,
+                    workers=workers,
+                )
+                return
+
             import sys
             main_mod = sys.modules.get("__main__")
             app_attr = None

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -267,7 +267,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="AUTHENTICATION/" class="md-tabs__link">
+        <a href="MOBILE_AND_DESKTOP/" class="md-tabs__link">
           
   
   
@@ -710,6 +710,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -754,6 +758,62 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="MOBILE_AND_DESKTOP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile & Desktop Apps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="DOCS_DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation & HTML Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -979,6 +1039,8 @@
       
         
       
+        
+      
     
     
     
@@ -1171,6 +1233,34 @@
   
   
     <li class="md-nav__item">
+      <a href="MIGRATION_0_3_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="MIGRATION_0_2_1/" class="md-nav__link">
         
   
@@ -1178,7 +1268,7 @@
   <span class="md-ellipsis">
     
   
-    Migration Guide
+    Migration Guide (v0.2.1)
   
 
     
@@ -1512,6 +1602,8 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 <li><a href="CUSTOMIZATION/">UI Customization Guide (Tailwind, shadcn &amp; HTML)</a></li>
 <li><a href="PRODUCTION_READINESS/">Production Readiness &amp; Architecture Assessment</a></li>
 <li><a href="BENCHMARKS/">Performance &amp; Real Benchmarks Guide (PyDataUI vs FastAPI)</a></li>
+<li><a href="MOBILE_AND_DESKTOP/">Mobile &amp; Desktop App Guide (PWA, Capacitor &amp; Tauri)</a></li>
+<li><a href="DOCS_DEVELOPER_GUIDE/">Documentation Developer Guide (Markdown, HTML &amp; GitHub Pages)</a></li>
 </ol>
 <hr />
 <h2 id="1-overview">1. Overview</h2>
@@ -1694,7 +1786,7 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Data Hub"</span><span class="p">,</span>              <span class="c1"># Browser &amp; Swagger UI title</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">"Corporate Portal"</span><span class="p">,</span><span class="c1"># OpenAPI description</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">version</span><span class="o">=</span><span class="s2">"0.3.0"</span><span class="p">,</span>               <span class="c1"># Semantic version</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">version</span><span class="o">=</span><span class="s2">"0.3.1"</span><span class="p">,</span>               <span class="c1"># Semantic version</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                    <span class="c1"># Verbose logs</span>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">host</span><span class="o">=</span><span class="s2">"127.0.0.1"</span><span class="p">,</span>              <span class="c1"># Host interface</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span>                     <span class="c1"># Port</span>
@@ -1932,10 +2024,10 @@ Or via CLI:
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

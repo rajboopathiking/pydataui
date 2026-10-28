@@ -77,7 +77,7 @@ def init_capacitor(
     if not pkg_json.exists() or overwrite:
         pkg_data = {
             "name": app_name.lower().replace(" ", "-"),
-            "version": "0.3.0",
+            "version": "0.3.3",
             "private": True,
             "scripts": {
                 "cap": "cap"
@@ -155,6 +155,27 @@ def run_capacitor_dev(
             server_proc.kill()
 
 
+def find_android_sdk() -> Optional[str]:
+    """Find installed Android SDK directory across standard system locations."""
+    for var in ("ANDROID_HOME", "ANDROID_SDK_ROOT"):
+        val = os.environ.get(var)
+        if val and os.path.isdir(val):
+            return val
+
+    candidates = [
+        os.path.expanduser("~/Library/Android/sdk"),
+        "/usr/local/share/android-commandlinetools",
+        "/usr/local/share/android-sdk",
+        "/opt/homebrew/share/android-commandlinetools",
+        "/opt/homebrew/share/android-sdk",
+        os.path.join(os.path.expanduser("~"), "AppData", "Local", "Android", "Sdk"),
+    ]
+    for c in candidates:
+        if c and os.path.isdir(c):
+            return c
+    return None
+
+
 def build_mobile(
     project_dir: str = ".",
     platform: str = "android",
@@ -182,6 +203,42 @@ def build_mobile(
     if platform == "android":
         gradlew = root / "android" / "gradlew"
         if gradlew.exists():
+            # Check if Java runtime is available
+            java_ok = False
+            try:
+                check_res = subprocess.run(["java", "-version"], capture_output=True)
+                java_ok = (check_res.returncode == 0)
+            except Exception:
+                java_ok = False
+
+            if not java_ok:
+                print("\n⚠️  Java Runtime is not installed on this machine.")
+                print("   Android Gradle requires Java (JDK) to compile .apk binaries locally.\n")
+                print("💡 You do NOT need to install heavy Java! You have 3 zero-Java alternatives:")
+                print("   1. 📱 Instant PWA (Recommended): Open app on phone browser & tap 'Add to Home Screen'.")
+                print("      Runs in full-screen standalone mode with native app icon, zero installation needed.")
+                print("   2. ☁️ Cloud GitHub Actions: Push to GitHub and let cloud runners compile your APK for free.")
+                print("   3. 📦 PWABuilder (by Microsoft): Drop your PWA URL at https://www.pwabuilder.com to get an APK.\n")
+                return 0
+
+            # Check / Configure Android SDK location
+            local_props = root / "android" / "local.properties"
+            sdk_path = find_android_sdk()
+            if sdk_path and not local_props.exists():
+                local_props.write_text(f"sdk.dir={sdk_path}\n", encoding="utf-8")
+                print(f"🔧 Configured Android SDK location: {sdk_path}")
+
+            if not sdk_path and not local_props.exists():
+                print("\n⚠️  Android SDK not found on this machine.")
+                print("   Gradle requires the Android SDK (API 34 + Build Tools) to compile .apk binaries locally.\n")
+                print("🛠️  To build locally:")
+                print("   1. Install Android Studio: https://developer.android.com/studio (installs SDK to ~/Library/Android/sdk)")
+                print("   2. Or install command line tools: brew install --cask android-commandlinetools\n")
+                print("☁️  Zero-Install Alternatives (Recommended):")
+                print("   1. 📱 Instant PWA: Scan QR code at http://localhost:8000/_pdu/preview & tap 'Add to Home Screen'.")
+                print("   2. ☁️ Cloud GitHub Actions: Push to GitHub - our .github/workflows/build-apk.yml builds the APK in the cloud!\n")
+                return 0
+
             target_task = "assembleDebug" if mode == "debug" else "assembleRelease"
             print(f"📦 Compiling Android APK via Gradle ({target_task})...")
             # Make gradlew executable

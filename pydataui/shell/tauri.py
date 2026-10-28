@@ -106,7 +106,7 @@ def init_tauri(
     # 2. Cargo.toml
     cargo_toml = f"""[package]
 name = "{identifier.split('.')[-1].lower()}-shell"
-version = "0.3.0"
+version = "0.3.3"
 description = "{app_name} Native Desktop & Mobile Application Shell"
 authors = ["Boopathi Raj <rajboopathiking@gmail.com>"]
 edition = "2021"
@@ -179,7 +179,7 @@ fn main() {
     tauri_conf = {
         "$schema": "https://schema.tauri.app/config/2",
         "productName": app_name,
-        "version": "0.3.0",
+        "version": "0.3.3",
         "identifier": identifier,
         "build": {
             "beforeDevCommand": "",

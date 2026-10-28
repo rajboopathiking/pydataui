@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PyDataUI App</string>
+    <string name="title_activity_main">PyDataUI App</string>
+    <string name="package_name">com.pydataui.app</string>
+    <string name="custom_url_scheme">com.pydataui.app</string>
+</resources>

@@ -9,6 +9,10 @@ build/
 *.egg
 .eggs/
 
+# Node & JavaScript
+node_modules/
+npm-debug.log*
+
 # Virtual environments
 venv/
 .venv/
@@ -48,3 +52,12 @@ site/
 # Tooling
 .scopeforge/
 uv.lock
+
+# Android & iOS Mobile Builds
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+ios/DerivedData/
+ios/build/
+ios/Pods/

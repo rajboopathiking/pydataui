@@ -56,7 +56,7 @@ With PyDataUI:
 
 ### Comparison with Existing Frameworks
 
-| Capability | PyDataUI (v0.3.5) | Streamlit | Gradio | FastAPI + React |
+| Capability | PyDataUI (v1.0.0 Stable) | Streamlit | Gradio | FastAPI + React |
 |---|---|---|---|---|
 | **Programming Language** | **100% Python** | 100% Python | 100% Python | Python + TypeScript |
 | **Default HTTP Engine** | ⚡ **FastAPI ASGI** | 🐍 Tornado | 🐍 Uvicorn | 🐍 Uvicorn + Node |

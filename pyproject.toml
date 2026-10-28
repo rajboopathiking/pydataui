@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pydataui"
-version = "0.3.5"
+version = "1.0.0"
 description = "A full-stack Python framework for data and AI applications."
 readme = "README.md"
 license = {text = "MIT"}
@@ -20,7 +20,7 @@ dependencies = [
     "markdown>=3.4",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering :: Information Analysis",

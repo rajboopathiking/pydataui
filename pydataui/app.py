@@ -26,7 +26,7 @@ class App:
         self,
         title: str = 'PyDataUI App',
         description: str = '',
-        version: str = '0.3.5',
+        version: str = '1.0.0',
         debug: bool = False,
         theme: str = 'light',
         palette: str = 'zinc',

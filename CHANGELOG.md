@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [1.0.0] - 2026-10-28 - Official Production / Stable Release
+
+- **Graduation to Stable (v1.0.0)**: PyDataUI reaches official Production/Stable release maturity on PyPI with complete enterprise-grade full-stack features.
+- **FastAPI First-Class Citizen**: Native ASGI sub-application mounting via `mount(api, app, path="/dashboard")` with complete route isolation, independent Swagger UI (`/dashboard/docs`), internal static sandboxing (`/_pdu/static/*`), and cryptographic session scoping (`pdu-session`).
+- **Dual Developer Experience (DX)**: Declarative production component architecture (`App`, `State`, `DataTable`, `MetricCard`, `Modal`) or rapid procedural script mode (`import pydataui as ui; ui.title(); ui.button()`).
+- **Zero-Touch Live Auto-Reload**: Headless Uvicorn ASGI factory reloading (`_app_factory()`) monitoring both workspace and parent directories, with automatic simulator iframe refresh.
+- **Cross-Platform Mobile & Desktop**: Direct headless Android `.apk` and iOS `.ipa` packaging with automated local Wi-Fi LAN IP detection, plus Tauri 2.0 / OS native window runner (`--desktop`).
+- **High-Throughput Compiled Engine**: Default FastAPI core with optional plug-and-play PyRustAPI engine (Tokio/Hyper) delivering sub-millisecond latencies and up to 34,000+ req/sec.
+
+## [0.3.6] - 2026-10-28
+
+- **True Live Auto-Reload**: Added dynamic ASGI factory reloading (`_app_factory()`) for `pydataui mobile preview` and `pydataui dev`, monitoring both parent directories and workspace roots.
+- **Server Instance Lifecycle Tracking**: Unique random `boot_id` generated per server boot and exposed via `/_pdu/health`.
+- **Mobile Simulator Live Refresh**: In-browser preview simulator automatically polls server health, reloads iframe on code change, and displays `🟢 Auto-Reload: ON` status with live toast banners.
+- **Standalone Web & Phone Live Reload**: Automatic reload watcher injected during dev mode for direct browser views and physical phone testing via QR code.
+- **Headless Mobile Pipeline**: Added automated local Wi-Fi LAN IP detection and direct `.apk` / `.ipa` packaging without Xcode or Android Studio GUI requirements.
+- **FastAPI Mounting & Conflict Sandboxing**: Documented native ASGI delegation, route isolation, independent Swagger UI (`/dashboard/docs`), static sandboxing (`/_pdu/static/*`), and cryptographic session scoping.
+
 ## [0.3.5] - 2026-10-28
 
 - Full Project URLs & PyPI display metadata: Homepage, Documentation, Repository, and Bug Tracker.

@@ -7,7 +7,7 @@ import importlib.util
 from pathlib import Path
 from pydataui.cli.templates import TEMPLATES
 
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 
 def _load_app(file_path_str: str):
     """Dynamically load and locate the PyDataUI App instance in a given file."""

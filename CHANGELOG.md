@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.5] - 2026-10-28
+
+- Full Project URLs & PyPI display metadata: Homepage, Documentation, Repository, and Bug Tracker.
+- Modernized Groovy DSL syntax in `android/app/build.gradle` and silenced deprecation warnings with `org.gradle.warning.mode=none`.
+- Clean APK verification and ADB mobile device installation flow.
+
 ## [0.3.4] - 2026-10-28
 
 - Robust Android Gradle builds: automated JDK 17/21 discovery (`find_java_home()`), explicit `-Dorg.gradle.java.home` routing to prevent Class 69 incompatibilities on Java 25+, and automatic Gradle `afterEvaluate` compileOptions override.

@@ -31,7 +31,9 @@ jobs:
         run: npm install
 
       - name: Sync Android Assets
-        run: npx cap sync android
+        run: |
+          mkdir -p android/app/src/main/assets www
+          npx cap sync android
 
       - name: Build APK with Gradle
         run: |

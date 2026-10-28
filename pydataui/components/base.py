@@ -192,6 +192,9 @@ class Component:
                 from ..dx import register_callback
                 action_name = register_callback(handler)
                 attrs = EH('ActionState', action_name).get_htmx_attrs(trigger=trigger)
+        include_val = self.props.get('hx-include') or self.props.get('include')
+        if include_val and attrs:
+            attrs['hx-include'] = include_val
         return attrs
     
     def _get_classes(self) -> List[str]:

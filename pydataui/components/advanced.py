@@ -187,6 +187,8 @@ class Chat(Component):
         htmx_post = ""
         if send_handler:
             htmx_attrs = self._get_event_htmx_attrs("click", send_handler)
+            if "hx-include" not in htmx_attrs:
+                htmx_attrs["hx-include"] = f"#{chat_id}-input"
             htmx_post = " ".join(f'{k}="{v}"' for k, v in htmx_attrs.items())
 
         return f'''<div class="chat-container rounded-xl border bg-card text-card-foreground shadow-sm flex flex-col h-[500px] overflow-hidden" id="{chat_id}">
@@ -198,7 +200,7 @@ class Chat(Component):
     {bubbles_html}
   </div>
   <div class="p-3 border-t bg-background flex gap-2">
-    <input type="text" name="message" id="{chat_id}-input" placeholder="{html.escape(self.placeholder)}" class="chat-input flex-1 h-10 px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary" />
+    <input type="text" name="message" id="{chat_id}-input" placeholder="{html.escape(self.placeholder)}" class="chat-input flex-1 h-10 px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary" onkeydown="if(event.key==='Enter'){{event.preventDefault();this.nextElementSibling.click();}}" />
     <button type="button" class="h-10 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition shadow-sm" {htmx_post}>Send</button>
   </div>
 </div>'''

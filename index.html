@@ -575,6 +575,34 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#native-fastapi-mounting-conflict-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native FastAPI Mounting &amp; Conflict Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Native FastAPI Mounting &amp; Conflict Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-pydataui-resolves-prevents-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How PyDataUI Resolves &amp; Prevents Conflicts:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -727,6 +755,8 @@
       
         
       
+        
+      
     
     
     
@@ -787,6 +817,34 @@
     
   
     Full HTML Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="FASTAPI_MOUNTING_AND_CONFLICTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI Mounting & Conflicts
   
 
     
@@ -1517,6 +1575,34 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#native-fastapi-mounting-conflict-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native FastAPI Mounting &amp; Conflict Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Native FastAPI Mounting &amp; Conflict Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-pydataui-resolves-prevents-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How PyDataUI Resolves &amp; Prevents Conflicts:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1627,8 +1713,8 @@
 
 <h1 id="pydataui-documentation">PyDataUI Documentation</h1>
 <blockquote>
-<p><strong>The Production-Grade Full-Stack Python Framework for Data Roles.</strong><br />
-Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.</p>
+<p><strong>The Production-Grade Full-Stack Python Framework for Web, Mobile &amp; Desktop.</strong><br />
+Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.</p>
 </blockquote>
 <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;">
 <h3 id="standalone-full-html-documentation-available">🌐 Standalone Full HTML Documentation Available</h3>
@@ -1668,13 +1754,21 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 </ol>
 <hr />
 <h2 id="1-overview">1. Overview</h2>
-<p><strong>PyDataUI</strong> is a modern full-stack web framework designed for Data Engineers, Data Analysts, AI/ML Engineers, and Python developers. It bridges the gap between simple toy prototype libraries (Gradio, Streamlit) and complex multi-language web stacks (React + TypeScript + FastAPI).</p>
+<p><strong>PyDataUI</strong> is a modern full-stack web, mobile, and desktop framework designed for Data Engineers, Data Analysts, AI/ML Engineers, and Python developers. It bridges the gap between toy prototype libraries (Streamlit, Gradio) and complex multi-language web stacks (React + TypeScript + FastAPI).</p>
 <p>With PyDataUI:
-- You write <strong>100% Python</strong>.
-- The backend runs on <strong>pyrustapi</strong>, an asynchronous HTTP core written in Rust (Tokio &amp; Hyper) delivering lower latency and higher throughput than standard Python servers like Uvicorn.
-- The UI is styled with <strong>Tailwind CSS</strong> and <strong>shadcn/ui</strong> design patterns, including full dark mode support.
-- Reactivity is powered by <strong>HTMX</strong> server-side rendering (SSR): when state changes, minimal HTML fragments are sent to the browser and swapped into place with zero client JavaScript.
-- Every state class automatically creates an OpenAPI-documented REST API for data integration.</p>
+- 🐍 <strong>100% Python Code</strong>: Build responsive web, mobile (Android/iOS), and desktop apps without writing JavaScript, Swift, or Kotlin.
+- ⚡ <strong>FastAPI Default Engine</strong>: Native ASGI foundation running on standard FastAPI and Uvicorn with zero C/Rust compilation requirements.
+- 🦀 <strong>Optional PyRustAPI Core</strong>: Seamlessly switch to an ultra-high-throughput compiled Rust HTTP engine (Tokio &amp; Hyper) delivering up to 34,000+ req/sec for hyper-scale workloads.
+- 🔌 <strong>Native FastAPI Mounting</strong>: Mount PyDataUI dashboards, admin consoles, and AI tools directly inside existing FastAPI backends via <code>mount(api, app, path="/dashboard")</code>.
+- 🪄 <strong>Dual Developer Experience</strong>: Use the rapid procedural API (<code>import pydataui as ui; ui.title(...); ui.run()</code>) for instant scripts, or the declarative Component &amp; State system for large-scale enterprise applications.
+- 📱 <strong>Cross-Platform Mobile &amp; Desktop</strong>: Built-in Progressive Web App (PWA), Capacitor mobile shell (Android <code>.apk</code> and iOS <code>.ipa</code>), and standalone desktop apps (<code>--desktop</code> or Tauri 2.0).
+- 🎨 <strong>Tailwind CSS + shadcn/ui</strong>: Modern design system with dark mode, CSS variables, and accessible components.
+- ⚡ <strong>Reactive SSR via HTMX</strong>: State changes trigger hypermedia fragment responses that update the DOM dynamically without client-side virtual DOM overhead.
+- 🤖 <strong>AI &amp; Agent Ready</strong>: Built-in <code>Chat</code>, <code>Markdown</code>, and <code>CodeEditor</code> components compatible with LangGraph, UnifiedNexus, and LLMs.
+- 🔒 <strong>Auth &amp; API Keys</strong>: Built-in JWT authentication, RBAC (<code>@require_auth(roles=[...])</code>), and secure API keys (<code>pdu_live_...</code>).
+- 📊 <strong>Enterprise Page Templates</strong>: Pre-packaged analyst, data quality, pipeline, and ML model registry templates via <code>pydataui.templates</code>.
+- 🌐 <strong>One-Click Sharing (<code>share=True</code>)</strong>: Create public internet tunnels instantly via Cloudflare or ngrok for remote client demos.
+- 📖 <strong>Automatic REST APIs</strong>: Every reactive State class automatically creates OpenAPI-documented REST endpoints for external data integration.</p>
 <hr />
 <h2 id="2-why-pydataui">2. Why PyDataUI?</h2>
 <h3 id="comparison-with-existing-frameworks">Comparison with Existing Frameworks</h3>
@@ -1682,7 +1776,7 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 <thead>
 <tr>
 <th>Capability</th>
-<th>PyDataUI</th>
+<th>PyDataUI (v0.3.5)</th>
 <th>Streamlit</th>
 <th>Gradio</th>
 <th>FastAPI + React</th>
@@ -1691,63 +1785,98 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 <tbody>
 <tr>
 <td><strong>Programming Language</strong></td>
-<td>100% Python</td>
+<td><strong>100% Python</strong></td>
 <td>100% Python</td>
 <td>100% Python</td>
 <td>Python + TypeScript</td>
 </tr>
 <tr>
-<td><strong>HTTP Engine</strong></td>
-<td>🦀 <strong>Rust (pyrustapi)</strong></td>
+<td><strong>Default HTTP Engine</strong></td>
+<td>⚡ <strong>FastAPI ASGI</strong></td>
 <td>🐍 Tornado</td>
 <td>🐍 Uvicorn</td>
 <td>🐍 Uvicorn + Node</td>
 </tr>
 <tr>
+<td><strong>High-Throughput Option</strong></td>
+<td>🦀 <strong>Rust (PyRustAPI Tokio/Hyper)</strong></td>
+<td>❌ None</td>
+<td>❌ None</td>
+<td>❌ None</td>
+</tr>
+<tr>
+<td><strong>Mount in FastAPI App</strong></td>
+<td>✅ <strong>Native (<code>mount()</code>)</strong></td>
+<td>❌ Separate process</td>
+<td>⚠️ Mount as WSGI/ASGI</td>
+<td>✅ Native</td>
+</tr>
+<tr>
+<td><strong>Streamlit-like DX (<code>ui.*</code>)</strong></td>
+<td>✅ <strong>Yes (<code>import pydataui as ui</code>)</strong></td>
+<td>✅ Yes</td>
+<td>⚠️ Blocks</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td><strong>Mobile Apps (APK &amp; IPA)</strong></td>
+<td>✅ <strong>Native (Capacitor 8.x) + PWA</strong></td>
+<td>❌ None</td>
+<td>❌ None</td>
+<td>⚠️ React Native rewrite</td>
+</tr>
+<tr>
+<td><strong>Desktop Executables</strong></td>
+<td>✅ <strong>Tauri 2.0 &amp; Native Window</strong></td>
+<td>❌ None</td>
+<td>❌ None</td>
+<td>⚠️ Electron rewrite</td>
+</tr>
+<tr>
 <td><strong>P99 Latency</strong></td>
-<td><strong>&lt; 1.2ms</strong></td>
+<td><strong>&lt; 1.2ms</strong> (Rust) / ~2.5ms (FastAPI)</td>
 <td>&gt; 25ms</td>
 <td>&gt; 15ms</td>
 <td>~ 5ms</td>
 </tr>
 <tr>
 <td><strong>Multi-User Session Isolation</strong></td>
-<td>✅ Per-user session cookies</td>
+<td>✅ <strong>Per-user session state</strong></td>
 <td>❌ Script reruns</td>
 <td>❌ Global state issues</td>
 <td>✅ Full JWT / sessions</td>
 </tr>
 <tr>
 <td><strong>Auto-Generated REST APIs</strong></td>
-<td>✅ Full CRUD per State</td>
+<td>✅ <strong>Full OpenAPI CRUD per State</strong></td>
 <td>❌ None</td>
 <td>❌ Limited</td>
 <td>⚠️ Manual routes</td>
 </tr>
 <tr>
 <td><strong>UI Design System</strong></td>
-<td>✅ Tailwind + shadcn/ui</td>
+<td>✅ <strong>Tailwind + shadcn/ui</strong></td>
 <td>⚠️ Custom opinionated</td>
 <td>⚠️ Block-based</td>
 <td>⚠️ Manual CSS</td>
 </tr>
 <tr>
 <td><strong>Port Forwarding (<code>share=True</code>)</strong></td>
-<td>✅ Built-in tunnel</td>
+<td>✅ <strong>Built-in tunnel</strong></td>
 <td>❌ None</td>
 <td>✅ ngrok tunnel</td>
 <td>❌ Manual setup</td>
 </tr>
 <tr>
-<td><strong>Data Components</strong></td>
-<td>✅ DF, Metrics, ML, SQL</td>
+<td><strong>Data &amp; AI Components</strong></td>
+<td>✅ <strong>Chat, Code, DF, Metrics, Charts</strong></td>
 <td>⚠️ Basic</td>
 <td>⚠️ Basic</td>
 <td>❌ Build from scratch</td>
 </tr>
 <tr>
 <td><strong>Built-in RBAC &amp; API Keys</strong></td>
-<td>✅ Yes</td>
+<td>✅ <strong>Yes</strong></td>
 <td>❌ None</td>
 <td>❌ None</td>
 <td>⚠️ Manual</td>
@@ -1757,35 +1886,38 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 <hr />
 <h2 id="3-architecture-request-flow">3. Architecture &amp; Request Flow</h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────┐
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                BROWSER                                    │
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  - Loads Tailwind CSS Play CDN + shadcn variables                         │
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  - Executes HTMX engine (bundled locally via /_pdu/static/htmx.min.js)     │
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└─────────────────────┬───────────────────────────────▲─────────────────────┘
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                      │                               │
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>       Initial Page   │ GET /                         │ HTML Document (SSR)
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>       or User Event  │ POST /_pdu/event/State/method │ HTML Partial (Fragment)
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                      ▼                               │
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌─────────────────────────────────────────────────────┴─────────────────────┐
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                          PYDATAUI SERVER                                  │
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                           │
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   ┌───────────────────────────────────────────────────────────────────┐   │
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │                 pyrustapi HTTP Engine (Rust/Tokio)                │   │
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └─────────────────┬───────────────────────────────▲─────────────────┘   │
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                     │                               │                     │
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                     ▼                               │                     │
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│          Session Manager &amp; Cookies             HTML Response              │
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                    CLIENT: BROWSER / MOBILE / DESKTOP                     │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  - Web Browser / PWA (Standalone Display)                                 │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  - Native Mobile Webview (Capacitor 8.x: Android APK / iOS IPA)           │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  - Native Desktop Window (Tauri 2.0 or OS Webview)                        │
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  - Executes HTMX engine (bundled locally via /_pdu/static/htmx.min.js)     │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└─────────────────────┬───────────────────────────────▲─────────────────────┘
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                      │                               │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>       Initial Page   │ GET / or GET /dashboard       │ HTML Document (SSR)
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>       or User Event  │ POST /_pdu/event/State/method │ HTML Partial (Fragment)
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                      ▼                               │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>┌─────────────────────────────────────────────────────┴─────────────────────┐
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          PYDATAUI SERVER                                  │
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                           │
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌───────────────────────────────────────────────────────────────────┐   │
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │   FastAPI ASGI Engine (Default) or PyRustAPI Engine (Rust/Tokio)  │   │
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │   Supports standalone App() or mounted inside existing FastAPI    │   │
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └─────────────────┬───────────────────────────────▲─────────────────┘   │
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                     │                               │                     │
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                     ▼                               │                     │
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│            State Mutation Handler              Renderer Engine            │
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│          (Executes Python methods)       (Component.render() to HTML)     │
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                     │                               ▲                     │
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                     └───────────────────────────────┘                     │
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                           │
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   ┌───────────────────────────────────────────────────────────────────┐   │
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │            Auto-Generated REST API (/api/{StateName})             │   │
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    GET, PUT, DELETE state &amp; POST methods as JSON endpoints        │   │
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   └───────────────────────────────────────────────────────────────────┘   │
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────┘
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│          Session Manager &amp; Cookies             HTML Response              │
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                     │                               │                     │
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                     ▼                               │                     │
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│            State Mutation Handler              Renderer Engine            │
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│          (Executes Python methods)       (Component.render() to HTML)     │
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                     │                               ▲                     │
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                     └───────────────────────────────┘                     │
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                           │
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   ┌───────────────────────────────────────────────────────────────────┐   │
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │            Auto-Generated REST API (/api/{StateName})             │   │
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │    GET, PUT, DELETE state &amp; POST methods as JSON endpoints        │   │
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   └───────────────────────────────────────────────────────────────────┘   │
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────┘
 </span></code></pre></div>
 <hr />
 <h2 id="4-installation-requirements">4. Installation &amp; Requirements</h2>
@@ -1945,30 +2077,56 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 <p>Interactive Swagger UI:
 - <code>http://localhost:8000/docs</code>
 - <code>http://localhost:8000/api/docs</code></p>
+<h3 id="native-fastapi-mounting-conflict-handling">Native FastAPI Mounting &amp; Conflict Handling</h3>
+<p>You can mount any PyDataUI application directly into an existing FastAPI application with a single line of code:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">mount</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">api</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Production API"</span><span class="p">)</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">dashboard</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Internal Dashboard"</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nd">@dashboard</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="k">return</span> <span class="s2">"Operations Control Center"</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="n">mount</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">dashboard</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">"/dashboard"</span><span class="p">)</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># or: dashboard.mount_to(api, path="/dashboard")</span>
+</span></code></pre></div>
+<h4 id="how-pydataui-resolves-prevents-conflicts">How PyDataUI Resolves &amp; Prevents Conflicts:</h4>
+<ul>
+<li><strong>Route Collisions</strong>: Parent FastAPI routes (e.g. <code>/users</code>) and PyDataUI routes (e.g. <code>/dashboard/users</code>) live in isolated routing subtrees with zero collisions.</li>
+<li><strong>OpenAPI / Swagger Separation</strong>: Parent API keeps its root <code>/docs</code>; PyDataUI automatically serves its dedicated interactive docs at <code>/dashboard/docs</code>.</li>
+<li><strong>Static Asset Sandboxing</strong>: PyDataUI isolates internal Tailwind CSS &amp; HTMX under <code>/_pdu/static/*</code>, never clashing with parent <code>/static/*</code>.</li>
+<li><strong>Session &amp; Cookie Isolation</strong>: PyDataUI uses a distinct signed cookie (<code>pdu-session</code>). Parent JWT or session cookies are never touched.</li>
+<li><strong>Multiple Sub-Apps</strong>: You can mount multiple distinct PyDataUI apps (<code>/admin</code>, <code>/portal</code>, <code>/analytics</code>) on one FastAPI app with zero state leakage.</li>
+</ul>
+<blockquote>
+<p>📖 <strong>Full Architectural Guide</strong>: See <a href="FASTAPI_MOUNTING_AND_CONFLICTS/">FastAPI Mounting &amp; Conflicts</a>.</p>
+</blockquote>
 <hr />
 <h2 id="7-tailwind-css-shadcnui-integration">7. Tailwind CSS &amp; shadcn/ui Integration</h2>
 <p>PyDataUI includes the <strong>Tailwind CSS Play CDN</strong> and pre-configured <strong>shadcn/ui CSS custom variables</strong> (<code>--primary</code>, <code>--secondary</code>, <code>--destructive</code>, <code>--background</code>, <code>--card</code>, etc.) in the HTML shell.</p>
 <h3 id="using-shadcn-components">Using shadcn Components</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadCardHeader</span><span class="p">,</span> <span class="n">ShadCardTitle</span><span class="p">,</span> <span class="n">ShadCardContent</span><span class="p">,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">ShadButton</span><span class="p">,</span> <span class="n">ShadBadge</span><span class="p">,</span> <span class="n">ShadInput</span><span class="p">,</span> <span class="n">ShadSwitch</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">)</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">ShadCard</span><span class="p">(</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">ShadCardHeader</span><span class="p">(</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="n">ShadCardTitle</span><span class="p">(</span><span class="s2">"Model Deployment"</span><span class="p">),</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="n">ShadBadge</span><span class="p">(</span><span class="s2">"Active"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="p">),</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="n">ShadCardContent</span><span class="p">(</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        <span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Deploy Model"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">"lg"</span><span class="p">)</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="p">)</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadCardHeader</span><span class="p">,</span> <span class="n">ShadCardTitle</span><span class="p">,</span> <span class="n">ShadCardContent</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">ShadButton</span><span class="p">,</span> <span class="n">ShadBadge</span><span class="p">,</span> <span class="n">ShadInput</span><span class="p">,</span> <span class="n">ShadSwitch</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">ShadCard</span><span class="p">(</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">ShadCardHeader</span><span class="p">(</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="n">ShadCardTitle</span><span class="p">(</span><span class="s2">"Model Deployment"</span><span class="p">),</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="n">ShadBadge</span><span class="p">(</span><span class="s2">"Active"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="p">),</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="n">ShadCardContent</span><span class="p">(</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Deploy Model"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">"lg"</span><span class="p">)</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="p">)</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>All standard HTML elements also support arbitrary Tailwind utility classes through the <code>class_name</code> or <code>className</code> prop:
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">Box</span><span class="p">(</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">Heading</span><span class="p">(</span><span class="s2">"Custom Styled"</span><span class="p">),</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-xl"</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">Box</span><span class="p">(</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">Heading</span><span class="p">(</span><span class="s2">"Custom Styled"</span><span class="p">),</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-xl"</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">)</span>
 </span></code></pre></div></p>
 <hr />
 <h2 id="8-components-overview">8. Components Overview</h2>
@@ -1988,44 +2146,44 @@ Powered by <code>pyrustapi</code> (Rust Tokio/Hyper Core), HTMX, Tailwind CSS, a
 <hr />
 <h2 id="9-authentication-rbac-api-keys">9. Authentication, RBAC &amp; API Keys</h2>
 <p>See the full <a href="AUTHENTICATION/">Authentication Guide</a>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthManager</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">LoginPage</span><span class="p">,</span> <span class="n">UserMenu</span><span class="p">,</span> <span class="n">require_auth</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">auth</span> <span class="o">=</span> <span class="n">AuthManager</span><span class="p">(</span><span class="n">secret_key</span><span class="o">=</span><span class="s2">"a-secure-secret-key-at-least-32-characters!"</span><span class="p">)</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">admin</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="s2">"lead_eng"</span><span class="p">,</span> <span class="s2">"secret123"</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="n">Role</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">,</span> <span class="n">Role</span><span class="o">.</span><span class="n">DATA_ENGINEER</span><span class="p">])</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">app</span><span class="o">.</span><span class="n">setup_auth</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthManager</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">LoginPage</span><span class="p">,</span> <span class="n">UserMenu</span><span class="p">,</span> <span class="n">require_auth</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">auth</span> <span class="o">=</span> <span class="n">AuthManager</span><span class="p">(</span><span class="n">secret_key</span><span class="o">=</span><span class="s2">"a-secure-secret-key-at-least-32-characters!"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">admin</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="s2">"lead_eng"</span><span class="p">,</span> <span class="s2">"secret123"</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="n">Role</span><span class="o">.</span><span class="n">ADMIN</span><span class="p">,</span> <span class="n">Role</span><span class="o">.</span><span class="n">DATA_ENGINEER</span><span class="p">])</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">app</span><span class="o">.</span><span class="n">setup_auth</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Generate programmatic keys:
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">key</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">create_api_key</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"AirflowSync"</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">admin</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">scopes</span><span class="o">=</span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span> <span class="s2">"write"</span><span class="p">])</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">key</span><span class="p">)</span> <span class="c1"># pdu_live_...</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">key</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">create_api_key</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"AirflowSync"</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">admin</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">scopes</span><span class="o">=</span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span> <span class="s2">"write"</span><span class="p">])</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">key</span><span class="p">)</span> <span class="c1"># pdu_live_...</span>
 </span></code></pre></div></p>
 <hr />
 <h2 id="10-port-forwarding-sharetrue">10. Port Forwarding (<code>share=True</code>)</h2>
 <p>Share your application with remote stakeholders, clients, or team members with a single flag:</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<p><div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 Or via CLI:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--share
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--share
 </span></code></pre></div></p>
 <p>Tunnels use <code>pyngrok</code> if installed, or fallback to encrypted SSH port-forwarding via <code>serveo.net</code>.</p>
 <hr />
 <h2 id="11-cli-tooling">11. CLI Tooling</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Create a project from starter templates</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>pydataui<span class="w"> </span>new<span class="w"> </span>analytics_hub<span class="w"> </span>--template<span class="w"> </span>ml-dashboard
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Start development server</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>pydataui<span class="w"> </span>dev<span class="w"> </span>app.py<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--reload
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Start production server with public tunnel</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span><span class="w"> </span>--share
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Validate app syntax and routes</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>pydataui<span class="w"> </span>check<span class="w"> </span>app.py
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Generate API key</span>
-</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>pydataui<span class="w"> </span>generate<span class="w"> </span>key<span class="w"> </span>--name<span class="w"> </span><span class="s2">"ProductionETL"</span>
-</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
-</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1"># Containerize build</span>
-</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>pydataui<span class="w"> </span>build<span class="w"> </span>app.py<span class="w"> </span>--output<span class="w"> </span>dist/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Create a project from starter templates</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>pydataui<span class="w"> </span>new<span class="w"> </span>analytics_hub<span class="w"> </span>--template<span class="w"> </span>ml-dashboard
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Start development server</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>pydataui<span class="w"> </span>dev<span class="w"> </span>app.py<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--reload
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Start production server with public tunnel</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span><span class="w"> </span>--share
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Validate app syntax and routes</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>pydataui<span class="w"> </span>check<span class="w"> </span>app.py
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Generate API key</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>pydataui<span class="w"> </span>generate<span class="w"> </span>key<span class="w"> </span>--name<span class="w"> </span><span class="s2">"ProductionETL"</span>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Containerize build</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>pydataui<span class="w"> </span>build<span class="w"> </span>app.py<span class="w"> </span>--output<span class="w"> </span>dist/
 </span></code></pre></div>
 <hr />
 <h2 id="12-production-deployment">12. Production Deployment</h2>

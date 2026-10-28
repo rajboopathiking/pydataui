@@ -23,24 +23,80 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
-    code, pre { font-family: 'JetBrains Mono', monospace; }
+    :root {
+      --sidebar-width: 260px;
+      --header-height: 60px;
+      --layout-gap: 32px;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    body { font-family: var(--font-sans); }
+    code, pre { font-family: var(--font-mono); }
+
+    .docs-layout {
+      display: flex;
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 0 24px;
+      gap: var(--layout-gap);
+      position: relative;
+    }
+    .docs-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      height: calc(100vh - var(--header-height));
+      position: sticky;
+      top: var(--header-height);
+      overflow-y: auto;
+      padding: 24px 16px 48px 0;
+      border-right: 1px solid #1e293b;
+    }
+    .docs-main {
+      flex: 1;
+      min-width: 0;
+      padding: 24px 0 80px 0;
+      max-width: 980px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      color: #94a3b8;
+      transition: all 0.15s ease-in-out;
+    }
+    .nav-item:hover { color: #fff; background: rgba(30, 41, 59, 0.7); }
+    .nav-item.active { color: #c084fc; background: rgba(192, 132, 252, 0.12); font-weight: 600; }
+
+    @media (max-width: 1024px) {
+      .docs-layout { display: block; padding: 0 16px; gap: 0; }
+      .docs-sidebar {
+        position: fixed; top: var(--header-height); left: 0; bottom: 0; z-index: 50;
+        background: #0f172a; width: 280px; padding: 24px 20px;
+        transform: translateX(-100%); transition: transform 0.25s ease-in-out;
+      }
+      .docs-sidebar.open { transform: translateX(0); }
+      .docs-main { width: 100%; max-width: 100%; }
+    }
   </style>
 </head>
 <body class="bg-[#090d16] text-slate-200 antialiased min-h-screen">
 
   <!-- TOP HEADER -->
-  <header class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+  <header class="sticky top-0 z-40 h-[60px] bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <a href="full-documentation.html" class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+      <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-xl bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+          <svg class="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
         </div>
-        <div>
-          <span class="text-lg font-extrabold text-white">PyDataUI Interactive API Explorer</span>
-          <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-mono">v0.3.5</span>
-        </div>
-      </a>
+        <span class="text-base sm:text-lg font-extrabold text-white">PyDataUI API Explorer</span>
+        <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-mono">v0.3.5</span>
+      </div>
     </div>
     <div class="flex items-center space-x-3">
       <a href="full-documentation.html" class="text-xs text-slate-400 hover:text-white transition">← Full Manual</a>
@@ -48,166 +104,150 @@
     </div>
   </header>
 
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden backdrop-blur-sm"></div>
 
-    <!-- SEARCH & CATEGORY FILTER -->
-    <div class="mb-8">
-      <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
-        <div class="w-full sm:w-96 relative">
-          <input type="text" id="api-search" placeholder="Filter components (e.g. Button, DataTable, Chart, Modal)..."
-            class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500">
-          <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        </div>
-        <div class="flex flex-wrap gap-2" id="filter-buttons">
-          <button class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 text-white" data-cat="all">All</button>
-          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="layout">Layout</button>
-          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="forms">Forms &amp; Input</button>
-          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="data">Data Science</button>
-          <button class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white border border-slate-700" data-cat="feedback">Feedback</button>
-        </div>
+  <!-- TWO-COLUMN LAYOUT -->
+  <div class="docs-layout">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="docs-sidebar">
+      <div class="mb-4">
+        <input type="text" id="api-filter" placeholder="Filter API... ⌘K" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
       </div>
-    </div>
-
-    <!-- COMPONENT CARDS LIST -->
-    <div class="grid grid-cols-1 gap-6" id="components-list">
-
-      <!-- COMPONENT: App -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="layout" data-name="app">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-purple-400">App(*args, title="PyDataUI", theme="light", pwa=True, backend="fastapi", **kwargs)</h3>
-            <p class="text-xs text-slate-400 mt-1">Root application container and ASGI routing engine.</p>
+      <div class="space-y-4">
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 px-2">Core &amp; Layout</div>
+          <div class="space-y-0.5">
+            <a href="#api-app" class="nav-item active"><span>App</span></a>
+            <a href="#api-container" class="nav-item"><span>Container</span></a>
+            <a href="#api-card" class="nav-item"><span>Card</span></a>
+            <a href="#api-row" class="nav-item"><span>Row / Column</span></a>
           </div>
-          <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-300 text-xs font-semibold">Core Root</span>
         </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          app = App(title="My Analytics App", theme="dark", pwa=True, backend="fastapi")<br>
-          @app.page("/")<br>
-          def home(state): return Container(...)
-        </div>
-      </div>
-
-      <!-- COMPONENT: Container -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="layout" data-name="container">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-blue-400">Container(*children, max_width="max-w-7xl", centered=True, padding="p-4", class_name="")</h3>
-            <p class="text-xs text-slate-400 mt-1">Responsive layout wrapper with standardized max-width and margins.</p>
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 px-2">Actions &amp; Forms</div>
+          <div class="space-y-0.5">
+            <a href="#api-button" class="nav-item"><span>Button</span></a>
+            <a href="#api-input" class="nav-item"><span>Input &amp; Textarea</span></a>
+            <a href="#api-select" class="nav-item"><span>Select &amp; Switch</span></a>
           </div>
-          <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-300 text-xs font-semibold">Layout</span>
         </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          Container(Heading("Dashboard"), Row(...), max_width="max-w-6xl", centered=True)
-        </div>
-      </div>
-
-      <!-- COMPONENT: DataTable -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="data" data-name="datatable">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-emerald-400">DataTable(data, columns=None, page_size=10, searchable=True, sortable=True)</h3>
-            <p class="text-xs text-slate-400 mt-1">Interactive data table supporting lists of dictionaries or Pandas DataFrames.</p>
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 px-2">Data Science &amp; Viz</div>
+          <div class="space-y-0.5">
+            <a href="#api-datatable" class="nav-item"><span>DataTable</span></a>
+            <a href="#api-metriccard" class="nav-item"><span>MetricCard</span></a>
+            <a href="#api-chart" class="nav-item"><span>Chart (Chart.js)</span></a>
           </div>
-          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Data Science</span>
         </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          DataTable(data=[{"model": "GPT-4o", "score": 92.4}, {"model": "Claude 3.5", "score": 93.1}], sortable=True)
-        </div>
-      </div>
-
-      <!-- COMPONENT: MetricCard -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="data" data-name="metriccard">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-emerald-400">MetricCard(title, value, delta=None, delta_type="increase", subtitle=None)</h3>
-            <p class="text-xs text-slate-400 mt-1">KPI display card with percentage differential and status color indicator.</p>
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 px-2">Overlays &amp; Feedback</div>
+          <div class="space-y-0.5">
+            <a href="#api-modal" class="nav-item"><span>Modal &amp; Drawer</span></a>
+            <a href="#api-badge" class="nav-item"><span>Badge &amp; Alert</span></a>
           </div>
-          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Data Science</span>
-        </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          MetricCard(title="Revenue", value="$48,250", delta="+14.2%", delta_type="increase")
         </div>
       </div>
+    </aside>
 
-      <!-- COMPONENT: Chart -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="data" data-name="chart">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-emerald-400">Chart(type="line"|"bar"|"pie"|"doughnut", labels=[], datasets=[], responsive=True)</h3>
-            <p class="text-xs text-slate-400 mt-1">Declarative Chart.js wrapper rendering responsive HTML5 canvas graphs.</p>
+    <!-- MAIN API CONTENT -->
+    <main class="docs-main">
+
+      <!-- API: BUTTON -->
+      <section id="api-button" class="mb-14 scroll-mt-24">
+        <span class="text-xs font-mono font-semibold text-blue-400 uppercase">Actions / Component</span>
+        <h2 class="text-2xl font-extrabold text-white mt-1">Button</h2>
+        <p class="text-sm text-slate-400 mt-1 mb-4">Clickable action trigger bound to Python reactive state methods via HTMX.</p>
+
+        <!-- PREVIEW -->
+        <div class="p-6 rounded-xl border border-slate-800 bg-slate-900/60 mb-4">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">Live Component Preview</div>
+          <div class="flex items-center gap-3">
+            <button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition shadow">Save changes</button>
+            <button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition">Cancel</button>
           </div>
-          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Data Science</span>
         </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          Chart(type="bar", labels=["A", "B", "C"], datasets=[{"label": "Samples", "data": [10, 25, 40]}])
-        </div>
-      </div>
 
-      <!-- COMPONENT: Button -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="forms" data-name="button">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-indigo-400">Button(label, on_click=None, variant="primary"|"secondary"|"danger"|"outline", size="md")</h3>
-            <p class="text-xs text-slate-400 mt-1">Hypermedia action trigger bound to reactive Python state handlers.</p>
+        <!-- CODE -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 mb-4">
+          <div class="bg-slate-900 px-4 py-2 flex items-center justify-between text-xs text-slate-400 border-b border-slate-800">
+            <span class="font-mono">Python</span>
+            <button class="copy-btn hover:text-white" data-code="Button(&quot;Save changes&quot;, on_click=state.save, variant=&quot;primary&quot;)">Copy</button>
           </div>
-          <span class="px-2 py-1 rounded bg-indigo-500/20 text-indigo-300 text-xs font-semibold">Forms &amp; Input</span>
+          <pre class="p-4 text-xs font-mono text-slate-200"><span class="text-blue-400">Button</span>(<span class="text-emerald-300">"Save changes"</span>, on_click=state.save, variant=<span class="text-emerald-300">"primary"</span>)</pre>
         </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          Button("Save Changes", on_click=state.save_data, variant="primary")
-        </div>
-      </div>
 
-      <!-- COMPONENT: Modal -->
-      <div class="component-card p-6 rounded-2xl bg-slate-900 border border-slate-800" data-cat="feedback" data-name="modal">
-        <div class="flex items-start justify-between mb-3">
-          <div>
-            <h3 class="text-xl font-bold font-mono text-amber-400">Modal(*children, title="Dialog", is_open=False, on_close=None)</h3>
-            <p class="text-xs text-slate-400 mt-1">Accessible dialog overlay with backdrop and escape keyboard dismissal.</p>
+        <!-- PARAMETERS -->
+        <div class="rounded-xl border border-slate-800 bg-slate-900/40 overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-800/60 font-mono text-[10px] uppercase text-slate-400 border-b border-slate-800">
+              <tr><th class="py-2.5 px-4">Parameter</th><th class="py-2.5 px-4">Type</th><th class="py-2.5 px-4">Default</th><th class="py-2.5 px-4">Description</th></tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono">
+              <tr><td class="py-2 px-4 text-purple-400">label</td><td class="py-2 px-4 text-slate-400">str</td><td class="py-2 px-4">Required</td><td class="py-2 px-4 font-sans text-slate-300">Button label text</td></tr>
+              <tr><td class="py-2 px-4 text-purple-400">on_click</td><td class="py-2 px-4 text-slate-400">Callable</td><td class="py-2 px-4">None</td><td class="py-2 px-4 font-sans text-slate-300">Bound State handler</td></tr>
+              <tr><td class="py-2 px-4 text-purple-400">variant</td><td class="py-2 px-4 text-slate-400">str</td><td class="py-2 px-4">"primary"</td><td class="py-2 px-4 font-sans text-slate-300">'primary' | 'secondary' | 'danger' | 'outline'</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- API: DATATABLE -->
+      <section id="api-datatable" class="mb-14 scroll-mt-24">
+        <span class="text-xs font-mono font-semibold text-emerald-400 uppercase">Data Science / Component</span>
+        <h2 class="text-2xl font-extrabold text-white mt-1">DataTable</h2>
+        <p class="text-sm text-slate-400 mt-1 mb-4">Paginated, sortable, and searchable reactive data table for DataFrames and dicts.</p>
+
+        <!-- CODE -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 mb-4">
+          <div class="bg-slate-900 px-4 py-2 flex items-center justify-between text-xs text-slate-400 border-b border-slate-800">
+            <span class="font-mono">Python</span>
+            <button class="copy-btn hover:text-white" data-code="DataTable(data=df, sortable=True, page_size=10)">Copy</button>
           </div>
-          <span class="px-2 py-1 rounded bg-amber-500/20 text-amber-300 text-xs font-semibold">Feedback</span>
+          <pre class="p-4 text-xs font-mono text-slate-200"><span class="text-blue-400">DataTable</span>(data=df, sortable=<span class="text-purple-400">True</span>, page_size=<span class="text-emerald-400">10</span>)</pre>
         </div>
-        <div class="text-xs font-mono text-slate-300 bg-slate-950 p-4 rounded-xl border border-slate-800 mt-3 overflow-x-auto">
-          Modal(Text("Are you sure?"), Button("Confirm", on_click=state.confirm), is_open=state.show_modal)
+      </section>
+
+      <!-- API: METRICCARD -->
+      <section id="api-metriccard" class="mb-14 scroll-mt-24">
+        <span class="text-xs font-mono font-semibold text-emerald-400 uppercase">Data Science / Component</span>
+        <h2 class="text-2xl font-extrabold text-white mt-1">MetricCard</h2>
+        <p class="text-sm text-slate-400 mt-1 mb-4">Metric KPI tile with delta trend and percentage change badges.</p>
+
+        <!-- CODE -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 mb-4">
+          <div class="bg-slate-900 px-4 py-2 flex items-center justify-between text-xs text-slate-400 border-b border-slate-800">
+            <span class="font-mono">Python</span>
+            <button class="copy-btn hover:text-white" data-code="MetricCard(title=&quot;Revenue&quot;, value=&quot;$48,250&quot;, delta=&quot;+14.2%&quot;)">Copy</button>
+          </div>
+          <pre class="p-4 text-xs font-mono text-slate-200"><span class="text-blue-400">MetricCard</span>(title=<span class="text-emerald-300">"Revenue"</span>, value=<span class="text-emerald-300">"$48,250"</span>, delta=<span class="text-emerald-300">"+14.2%"</span>)</pre>
         </div>
-      </div>
+      </section>
 
-    </div>
-
+    </main>
   </div>
 
   <script>
-    // Live Search
-    const searchInput = document.getElementById('api-search');
-    const cards = document.querySelectorAll('.component-card');
-    searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(q) ? 'block' : 'none';
-      });
-    });
-
-    // Category Filter
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => {
-          b.classList.remove('bg-purple-600', 'text-white');
-          b.classList.add('bg-slate-800', 'text-slate-400');
-        });
-        btn.classList.add('bg-purple-600', 'text-white');
-        btn.classList.remove('bg-slate-800', 'text-slate-400');
-
-        const cat = btn.getAttribute('data-cat');
-        cards.forEach(card => {
-          if (cat === 'all' || card.getAttribute('data-cat') === cat) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+    // Copy code
+    document.querySelectorAll('.copy-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        navigator.clipboard.writeText(b.getAttribute('data-code')).then(() => {
+          b.textContent = 'Copied!';
+          setTimeout(() => b.textContent = 'Copy', 1500);
         });
       });
     });
+
+    // Mobile drawer
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    function toggle() {
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('hidden');
+    }
+    if (menuBtn) menuBtn.addEventListener('click', toggle);
+    if (backdrop) backdrop.addEventListener('click', toggle);
   </script>
 </body>
 </html>

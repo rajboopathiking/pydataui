@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [0.3.1] - 2026-10-28
+
+- Add In-Browser Mobile Device Simulator (`/_pdu/preview`, `pydataui mobile preview`, `--mobile-preview`) with iPhone 15 Pro, Pixel 8, and iPad Mini frames, fast reload, and real physical device testing via instant QR code without Xcode or Android Studio.
+- Add Progressive Web App (PWA) manifest and service worker generation (`/_pdu/manifest.json`, `/_pdu/sw.js`, `viewport-fit=cover`).
+- Add Capacitor mobile integration with headless Android APK compilation (`pydataui mobile build android`) and direct device install (`pydataui mobile install android`).
+- Add Tauri 2.0 native shell scaffolding and standalone desktop window runner (`pydataui run --desktop`).
+- Add comprehensive Documentation Developer Guide for Markdown, HTML, and automated GitHub Pages deployment.
+- Add `pydataui.templates` with analyst, data-quality, pipeline-operations, and ML-registry page templates.
+- Add a deterministic static template gallery, sample data builders, and runnable four-page example app.
+- Add developer HTML and CSS references covering rendering, attributes, escaping, tokens, class names, theme layers, and testing.
+- Fix framework dark tokens so `.dark` and `[data-theme="dark"]` apply the intended values.
+- Include request-body limits, upload handling, Markdown sanitization, and browser security test hardening.
+
+
 ## [0.2.1] — 2026-10-04 (source update)
 
 - Add pluggable storage engine (`pydataui.storage`) supporting `MemoryStore` and high-performance `SQLiteStore` with Write-Ahead Logging (WAL) mode.

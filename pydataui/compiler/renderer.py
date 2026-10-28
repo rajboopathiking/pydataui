@@ -25,6 +25,9 @@ class Renderer:
         prefix = prefix.rstrip('/')
         css_url = f'{prefix}{self.config.internal_prefix}/static/pydataui.css'
         htmx_url = f'{prefix}{self.config.internal_prefix}/static/htmx.min.js'
+        pwa = getattr(self.config, 'pwa', True)
+        manifest_url = f'{prefix}{self.config.internal_prefix}/manifest.json' if pwa else None
+        sw_url = f'{prefix}{self.config.internal_prefix}/sw.js' if pwa else None
         from ..middleware.security import csrf_token
         session = _current_session.get()
         return get_base_html(
@@ -40,6 +43,8 @@ class Renderer:
             stylesheets=getattr(self.config, 'stylesheets', None) or [],
             scripts=getattr(self.config, 'scripts', None) or [],
             extra_head=getattr(self.config, 'head', '') or '',
+            pwa_manifest_url=manifest_url,
+            pwa_sw_url=sw_url,
         )
         
     def render_fragment(self, page_func: Callable, state_snapshot: StateSnapshot) -> str:

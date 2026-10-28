@@ -30,6 +30,7 @@ Build dashboards, dataset explorers, AI agent interfaces, and microservice workf
 
 **PyDataUI Core Advantages:**
 - 🐍 **100% Python Code**: Build UI, reactive state, and server logic in clean, typed Python.
+- 📱 **Cross-Platform Mobile & Desktop**: Built-in Progressive Web App (PWA), Capacitor mobile shell (iOS/Android), and standalone desktop window (`--desktop` or Tauri 2.0).
 - ⚡ **FastAPI Default Engine**: Native ASGI foundation running on standard FastAPI and Uvicorn.
 - 🦀 **Optional PyRustAPI Support**: Plug in Rust-powered `pyrustapi` for high-throughput I/O.
 - 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards inside any existing FastAPI app via `mount(api, dashboard, path="/dashboard")`.

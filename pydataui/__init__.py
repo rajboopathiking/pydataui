@@ -19,6 +19,7 @@ from .storage import (
 from .components.base import Component, RawHtml, Html
 from .components.advanced import Markdown, CodeEditor, Chat
 from .mount import mount
+from .shell import init_tauri, init_capacitor, open_desktop_window, get_preview_html
 from .responses import (
     Response, HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse, StreamingResponse
 )
@@ -30,7 +31,7 @@ from .dx import (
 from . import html
 from . import templates
 
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 __all__ = [
     'App',
@@ -96,6 +97,10 @@ __all__ = [
     'run',
     'get_app',
     'get_default_app',
+    'init_tauri',
+    'init_capacitor',
+    'open_desktop_window',
+    'get_preview_html',
     'html',
     'templates',
     '__version__',

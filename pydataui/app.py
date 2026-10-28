@@ -1,4 +1,5 @@
 import os
+import json
 from contextlib import contextmanager
 import secrets
 import inspect
@@ -24,7 +25,7 @@ class App:
         self,
         title: str = 'PyDataUI App',
         description: str = '',
-        version: str = '0.2.2',
+        version: str = '0.3.1',
         debug: bool = False,
         theme: str = 'light',
         palette: str = 'zinc',
@@ -432,6 +433,90 @@ class App:
         @self._engine.get(f'{self.config.internal_prefix}/health')
         def internal_health(request):
             return {"status": "ok"}
+
+        @self._engine.get(f'{self.config.internal_prefix}/manifest.json')
+        def pwa_manifest_handler(request):
+            from .state import _current_root_path
+            prefix = _current_root_path.get() or getattr(self.config, 'root_path', '') or ''
+            prefix = prefix.rstrip('/')
+            title = getattr(self.config, 'pwa_name', None) or self.config.title or "PyDataUI App"
+            short_name = getattr(self.config, 'pwa_short_name', None) or title[:12]
+            manifest_data = {
+                "name": title,
+                "short_name": short_name,
+                "start_url": f"{prefix}/" if prefix else "/",
+                "scope": f"{prefix}/" if prefix else "/",
+                "display": "standalone",
+                "orientation": "portrait-primary",
+                "background_color": "#09090b",
+                "theme_color": "#09090b",
+                "icons": [
+                    {
+                        "src": f"{prefix}{self.config.internal_prefix}/static/icon-192.png",
+                        "sizes": "192x192",
+                        "type": "image/png"
+                    },
+                    {
+                        "src": f"{prefix}{self.config.internal_prefix}/static/icon-512.png",
+                        "sizes": "512x512",
+                        "type": "image/png"
+                    }
+                ]
+            }
+            return Response(
+                content=json.dumps(manifest_data),
+                media_type="application/manifest+json",
+                headers={"Cache-Control": "public, max-age=3600"}
+            )
+
+        @self._engine.get(f'{self.config.internal_prefix}/sw.js')
+        def pwa_sw_handler(request):
+            sw_code = """// PyDataUI Mobile PWA Service Worker
+const CACHE_NAME = 'pydataui-cache-v1';
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
+});
+self.addEventListener('activate', (event) => {
+    event.waitUntil(clients.claim());
+});
+self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+    if (url.pathname.includes('/_pdu/static/')) {
+        event.respondWith(
+            caches.open(CACHE_NAME).then((cache) => {
+                return cache.match(event.request).then((cached) => {
+                    return cached || fetch(event.request).then((response) => {
+                        if (response.status === 200) {
+                            cache.put(event.request, response.clone());
+                        }
+                        return response;
+                    });
+                });
+            })
+        );
+    }
+});
+"""
+            return Response(
+                content=sw_code.strip(),
+                media_type="application/javascript",
+                headers={"Cache-Control": "public, max-age=3600", "Service-Worker-Allowed": "/"}
+            )
+
+        @self._engine.get(f'{self.config.internal_prefix}/preview')
+        def mobile_preview_handler(request):
+            from .shell.preview import get_preview_html
+            from .state import _current_root_path
+            prefix = _current_root_path.get() or getattr(self.config, 'root_path', '') or ''
+            prefix = prefix.rstrip('/')
+            target = f"{prefix}/" if prefix else "/"
+            title = getattr(self.config, 'pwa_name', None) or self.config.title or "PyDataUI Mobile App"
+            html_content = get_preview_html(
+                target_url=target,
+                app_title=title,
+                port=getattr(self.config, 'port', 8000),
+            )
+            return HTMLResponse(content=html_content)
             
     def _register_page_route(self, path: str):
         """Register a page route on the pyrustapi engine."""
@@ -955,7 +1040,7 @@ class App:
                 return PlainTextResponse('Key not found', status_code=404)
             return {'status': 'ok'}
 
-    def run(self, host: Optional[str] = None, port: Optional[int] = None, reload: bool = False, workers: int = 1, share: bool = False, auth: Optional[Any] = None):
+    def run(self, host: Optional[str] = None, port: Optional[int] = None, reload: bool = False, workers: int = 1, share: bool = False, auth: Optional[Any] = None, desktop: bool = False, mobile_preview: bool = False):
         """Run the application."""
         if auth:
             self.setup_auth(auth)
@@ -1006,4 +1091,38 @@ class App:
                 
         print(f'  API docs at http://{h}:{p}/docs and http://{h}:{p}{self.config.api_prefix}/docs', flush=True)
         print(f'  REST API root at http://{h}:{p}{self.config.api_prefix}\n', flush=True)
+
+        is_preview = mobile_preview or getattr(self.config, 'mobile_preview', False)
+        if is_preview:
+            print(f'  📱 Mobile Simulator: http://{h}:{p}{self.config.internal_prefix}/preview', flush=True)
+            print(f'  📲 Scan QR code on preview page to test on physical phone (No Xcode / Android Studio needed!)\n', flush=True)
+
+        if desktop:
+            import threading
+            import time
+            from .shell.window import open_desktop_window
+            from .shell.tauri import wait_for_server
+
+            server_thread = threading.Thread(
+                target=lambda: self._engine.run(host=h, port=p, reload=False, workers=1),
+                daemon=True,
+            )
+            server_thread.start()
+            wait_for_server(f"http://{h}:{p}/_pdu/health", timeout=15.0)
+
+            window_target = f"http://{h}:{p}{self.config.internal_prefix}/preview" if is_preview else f"http://{h}:{p}"
+            proc = open_desktop_window(window_target, title=self.config.title)
+            if proc:
+                try:
+                    proc.wait()
+                except KeyboardInterrupt:
+                    proc.terminate()
+            else:
+                try:
+                    while server_thread.is_alive():
+                        time.sleep(0.5)
+                except KeyboardInterrupt:
+                    pass
+            return
+
         self._engine.run(host=h, port=p, reload=reload, workers=workers)

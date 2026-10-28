@@ -64,6 +64,8 @@ nav:
   - Home: index.md
   - Benchmarks: BENCHMARKS.md
   - Guides:
+      - Mobile & Desktop Apps: MOBILE_AND_DESKTOP.md
+      - Documentation & HTML Guide: DOCS_DEVELOPER_GUIDE.md
       - Authentication & Security: AUTHENTICATION.md
       - UI Customization & Tailwind: CUSTOMIZATION.md
       - Data Science Components: DATA_COMPONENTS.md
@@ -77,4 +79,5 @@ nav:
       - CSS Reference: CSS_REFERENCE.md
       - API Reference: API_REFERENCE.md
       - Quick Reference: QUICKREF.md
-      - Migration Guide: MIGRATION_0_2_1.md
+      - Migration Guide (v0.3.0): MIGRATION_0_3_0.md
+      - Migration Guide (v0.2.1): MIGRATION_0_2_1.md

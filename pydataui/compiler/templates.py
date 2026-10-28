@@ -322,6 +322,8 @@ def get_base_html(
     extra_head: Union[str, List[str]] = '',
     extra_body: str = '',
     csrf_token: str = "",
+    pwa_manifest_url: Optional[str] = None,
+    pwa_sw_url: Optional[str] = None,
 ) -> str:
     """Generate the full HTML shell with HTMX, Tailwind, and theme customization."""
     theme_lower = theme.lower().strip()
@@ -415,13 +417,38 @@ def get_base_html(
     else:
         extra_head_str = str(extra_head or '')
 
+    # PWA & Mobile meta tags
+    pwa_meta_tags = ""
+    if pwa_manifest_url:
+        pwa_meta_tags = f'''    <!-- Mobile PWA & Native Webview Shell Capabilities -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="{title}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#09090b">
+    <link rel="manifest" href="{pwa_manifest_url}">
+'''
+
+    # PWA Service Worker registration script
+    pwa_sw_script = ""
+    if pwa_sw_url:
+        pwa_sw_script = f'''    <script>
+        if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {{
+            window.addEventListener('load', () => {{
+                navigator.serviceWorker.register('{pwa_sw_url}').catch(() => {{}});
+            }});
+        }}
+    </script>
+'''
+
     return f'''<!DOCTYPE html>
 <html lang="en" class="{theme_class}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="pdu-csrf-token" content="{csrf_token}">
     <title>{title}</title>
+    {pwa_meta_tags}
     {system_theme_script}
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -451,6 +478,7 @@ def get_base_html(
         {content}
     </div>
     {scripts_html}
+    {pwa_sw_script}
     {extra_body}
 </body>
 </html>'''

@@ -7,7 +7,7 @@ import importlib.util
 from pathlib import Path
 from pydataui.cli.templates import TEMPLATES
 
-__version__ = "0.2.2"
+__version__ = "0.3.0"
 
 def _load_app(file_path_str: str):
     """Dynamically load and locate the PyDataUI App instance in a given file."""
@@ -73,13 +73,70 @@ def create_project(args):
 
 def dev_server(args):
     app = _load_app(args.file)
+    mobile_preview = getattr(args, "mobile_preview", False)
     print(f"\n🚀 Starting PyDataUI development server for '{args.file}' on {args.host}:{args.port} (reload={args.reload})...")
-    app.run(host=args.host, port=args.port, reload=args.reload, workers=1)
+    app.run(host=args.host, port=args.port, reload=args.reload, workers=1, mobile_preview=mobile_preview)
 
 def run_server(args):
     app = _load_app(args.file)
-    print(f"\n⚡ Starting PyDataUI production server for '{args.file}' on {args.host}:{args.port} (workers={args.workers})...")
-    app.run(host=args.host, port=args.port, reload=False, workers=args.workers, share=args.share)
+    desktop = getattr(args, "desktop", False)
+    mobile_preview = getattr(args, "mobile_preview", False)
+    if desktop:
+        print(f"\n🖥️  Starting PyDataUI desktop application for '{args.file}' on {args.host}:{args.port}...")
+    elif mobile_preview:
+        print(f"\n📱 Starting PyDataUI with mobile preview for '{args.file}' on {args.host}:{args.port}...")
+    else:
+        print(f"\n⚡ Starting PyDataUI production server for '{args.file}' on {args.host}:{args.port} (workers={args.workers})...")
+    app.run(host=args.host, port=args.port, reload=False, workers=args.workers, share=args.share, desktop=desktop, mobile_preview=mobile_preview)
+
+def desktop_cmd(args):
+    from pydataui.shell.tauri import init_tauri, run_tauri_dev, build_tauri
+    if args.action == "init":
+        p = init_tauri(app_name=args.name, identifier=args.id, overwrite=args.force)
+        print(f"\n✨ Initialized Tauri 2.0 Desktop & Mobile shell in '{p}'!")
+        print("   To start desktop development:")
+        print("   pydataui desktop dev app.py\n")
+    elif args.action == "dev":
+        run_tauri_dev(app_file=args.file, port=args.port)
+    elif args.action == "build":
+        build_tauri(target=args.target)
+
+def mobile_cmd(args):
+    engine = getattr(args, "engine", "tauri")
+    if args.action == "init":
+        if engine == "capacitor":
+            from pydataui.shell.capacitor import init_capacitor
+            c = init_capacitor(app_name=args.name, app_id=args.id, overwrite=args.force)
+            print(f"\n✨ Initialized Capacitor mobile configuration in '{c}'!")
+            print("   To add platforms: npx cap add android / npx cap add ios\n")
+        else:
+            from pydataui.shell.tauri import init_tauri
+            p = init_tauri(app_name=args.name, identifier=args.id, overwrite=args.force)
+            print(f"\n✨ Initialized Tauri 2.0 Mobile shell in '{p}'!")
+            print("   To initialize mobile targets:")
+            print("   npx @tauri-apps/cli android init")
+            print("   npx @tauri-apps/cli ios init\n")
+    elif args.action == "dev":
+        if engine == "capacitor":
+            from pydataui.shell.capacitor import run_capacitor_dev
+            run_capacitor_dev(app_file=args.file, platform=args.platform, port=args.port)
+        else:
+            from pydataui.shell.tauri import run_tauri_dev
+            run_tauri_dev(app_file=args.file, port=args.port, target=args.platform)
+    elif args.action == "preview":
+        app = _load_app(args.file)
+        print(f"\n📱 Starting PyDataUI Mobile Simulator for '{args.file}' on {args.host}:{args.port}...")
+        app.run(host=args.host, port=args.port, reload=args.reload, mobile_preview=True)
+    elif args.action == "build":
+        if engine == "capacitor":
+            from pydataui.shell.capacitor import build_mobile
+            build_mobile(platform=args.platform)
+        else:
+            from pydataui.shell.tauri import build_tauri
+            build_tauri(target=args.platform)
+    elif args.action == "install":
+        from pydataui.shell.capacitor import install_mobile
+        install_mobile(platform=args.platform)
 
 def build_app(args):
     build_dir = args.output or "__pydataui_build__"
@@ -183,6 +240,7 @@ def main():
     parser_dev.add_argument("--host", default="127.0.0.1", help="Host to bind to (default: 127.0.0.1)")
     parser_dev.add_argument("--port", type=int, default=8000, help="Port to bind to (default: 8000)")
     parser_dev.add_argument("--reload", action="store_true", help="Enable auto-reload on code change")
+    parser_dev.add_argument("--mobile-preview", action="store_true", help="Launch in-browser mobile device simulator with live reload & QR code")
 
     # run
     parser_run = subparsers.add_parser("run", help="Start production server")
@@ -191,6 +249,53 @@ def main():
     parser_run.add_argument("--port", type=int, default=8000, help="Port to bind to (default: 8000)")
     parser_run.add_argument("--workers", type=int, default=1, help="Number of worker processes")
     parser_run.add_argument("--share", action="store_true", help="Create public port forwarding tunnel (like Gradio)")
+    parser_run.add_argument("--desktop", action="store_true", help="Launch in native desktop window")
+    parser_run.add_argument("--mobile-preview", action="store_true", help="Launch in-browser mobile device simulator with live reload & QR code")
+
+    # desktop
+    parser_desktop = subparsers.add_parser("desktop", help="Manage Tauri 2.0 cross-platform desktop application")
+    desktop_subs = parser_desktop.add_subparsers(dest="action", required=True)
+    
+    d_init = desktop_subs.add_parser("init", help="Scaffold Tauri 2.0 desktop & mobile shell")
+    d_init.add_argument("--name", default="PyDataUI App", help="Application display name")
+    d_init.add_argument("--id", default="com.pydataui.app", help="Application bundle identifier")
+    d_init.add_argument("--force", action="store_true", help="Overwrite existing configuration")
+    
+    d_dev = desktop_subs.add_parser("dev", help="Run desktop development window with live backend")
+    d_dev.add_argument("file", nargs="?", default="app.py", help="App entrypoint file")
+    d_dev.add_argument("--port", type=int, default=8000, help="Backend port")
+    
+    d_build = desktop_subs.add_parser("build", help="Build production native desktop installers")
+    d_build.add_argument("--target", default=None, help="Build target")
+
+    # mobile
+    parser_mobile = subparsers.add_parser("mobile", help="Manage Tauri 2.0 / Capacitor mobile application (iOS & Android)")
+    mobile_subs = parser_mobile.add_subparsers(dest="action", required=True)
+
+    m_preview = mobile_subs.add_parser("preview", help="Run mobile device simulator in the browser with live reload & QR code")
+    m_preview.add_argument("file", nargs="?", default="app.py", help="App entrypoint file")
+    m_preview.add_argument("--host", default="0.0.0.0", help="Host to bind to (default: 0.0.0.0)")
+    m_preview.add_argument("--port", type=int, default=8000, help="Port to bind to (default: 8000)")
+    m_preview.add_argument("--reload", action="store_true", default=True, help="Enable auto-reload on code change")
+
+    m_init = mobile_subs.add_parser("init", help="Scaffold mobile application shell")
+    m_init.add_argument("--name", default="PyDataUI App", help="Application display name")
+    m_init.add_argument("--id", default="com.pydataui.app", help="Application bundle identifier")
+    m_init.add_argument("--engine", choices=["tauri", "capacitor"], default="tauri", help="Mobile shell engine (default: tauri)")
+    m_init.add_argument("--force", action="store_true", help="Overwrite existing configuration")
+    
+    m_dev = mobile_subs.add_parser("dev", help="Run mobile app in simulator or device")
+    m_dev.add_argument("file", nargs="?", default="app.py", help="App entrypoint file")
+    m_dev.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform (android or ios)")
+    m_dev.add_argument("--engine", choices=["tauri", "capacitor"], default="tauri", help="Mobile shell engine")
+    m_dev.add_argument("--port", type=int, default=8000, help="Backend port")
+    
+    m_build = mobile_subs.add_parser("build", help="Build release APK or mobile packages without opening Android Studio/Xcode")
+    m_build.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")
+    m_build.add_argument("--engine", choices=["tauri", "capacitor"], default="capacitor", help="Mobile shell engine")
+
+    m_install = mobile_subs.add_parser("install", help="Directly install compiled app on mobile device without IDE")
+    m_install.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")
 
     # build
     parser_build = subparsers.add_parser("build", help="Build static assets and Docker configuration")
@@ -221,6 +326,10 @@ def main():
         dev_server(args)
     elif args.command == "run":
         run_server(args)
+    elif args.command == "desktop":
+        desktop_cmd(args)
+    elif args.command == "mobile":
+        mobile_cmd(args)
     elif args.command == "build":
         build_app(args)
     elif args.command == "version":

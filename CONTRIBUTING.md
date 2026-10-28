@@ -118,6 +118,40 @@ tests skip; set `PYDATAUI_REQUIRE_BROWSER=1` to fail instead. CI installs the
 
 ---
 
+## 📚 Documentation, Markdown & HTML Guidelines
+
+PyDataUI documentation is built using **Material for MkDocs** and published to **GitHub Pages** via GitHub Actions.
+
+For complete styling patterns and HTML/Markdown embedding rules, see [Documentation Developer Guide](docs/DOCS_DEVELOPER_GUIDE.md).
+
+### 1. Previewing Docs Locally
+Install documentation dependencies:
+```bash
+pip install mkdocs mkdocs-material pymdown-extensions
+```
+Start the live hot-reloading server:
+```bash
+mkdocs serve
+```
+Open `http://127.0.0.1:8000/` in your browser.
+
+### 2. Markdown & HTML Rules
+- **Markdown (`.md`)**: Use standard GFM, admonitions (`!!! note`), tabbed code blocks (`=== "Python"`), and Mermaid diagrams (````mermaid ... ````).
+- **HTML (`.html`)**: Raw HTML tags are supported via `md_in_html`. When putting Markdown inside an HTML block (like `<div style="...">...</div>`), always add the `markdown="1"` attribute.
+- **Navigation**: If you add a new `.md` document under `docs/`, register it in [`mkdocs.yml`](mkdocs.yml) under `nav:`.
+
+### 3. Verify Before Committing
+Run a strict build to ensure no broken links or orphaned pages:
+```bash
+mkdocs build --strict
+```
+
+### 4. GitHub Pages Deployment
+- Merging or pushing to `main` with changes in `docs/**` or `mkdocs.yml` automatically triggers [`.github/workflows/deploy-docs.yml`](.github/workflows/deploy-docs.yml).
+- GitHub Actions builds the site and pushes it to the `gh-pages` branch, serving it live at [https://rajboopathiking.github.io/pydataui/](https://rajboopathiking.github.io/pydataui/).
+
+---
+
 ## 📦 Pull Request Process
 
 1. Fork the repo and create your branch from `main`:

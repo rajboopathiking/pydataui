@@ -28,6 +28,8 @@
 14. [UI Customization Guide (Tailwind, shadcn & HTML)](CUSTOMIZATION.md)
 15. [Production Readiness & Architecture Assessment](PRODUCTION_READINESS.md)
 16. [Performance & Real Benchmarks Guide (PyDataUI vs FastAPI)](BENCHMARKS.md)
+17. [Mobile & Desktop App Guide (PWA, Capacitor & Tauri)](MOBILE_AND_DESKTOP.md)
+18. [Documentation Developer Guide (Markdown, HTML & GitHub Pages)](DOCS_DEVELOPER_GUIDE.md)
 
 ---
 
@@ -173,7 +175,7 @@ from pydataui import App
 app = App(
     title="Data Hub",              # Browser & Swagger UI title
     description="Corporate Portal",# OpenAPI description
-    version="0.3.0",               # Semantic version
+    version="0.3.1",               # Semantic version
     debug=True,                    # Verbose logs
     host="127.0.0.1",              # Host interface
     port=8000,                     # Port

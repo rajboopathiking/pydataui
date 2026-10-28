@@ -403,7 +403,18 @@ The compiled platform binary is generated in `src-tauri/target/release/bundle/`.
 
 ## 💡 Best Practices for Mobile UI in PyDataUI
 
-1. **Use Responsive Containers**:
+1. **Enable Mobile Mode Preset**:
+   ```python
+   app = App(title="Mobile App", mobile_mode=True)
+   # Or via environment variable:
+   # PYDATAUI_MOBILE_MODE=1
+   ```
+   Automatically activates Starlette `GZipMiddleware`, strips web PWA service-worker boilerplate, and activates dirty-tracked component subtree updates.
+
+2. **In-Process JNI Bridge (Chaquopy)**:
+   In Capacitor mobile apps, PyDataUI supports zero-socket native execution via `PyDataUIWebViewInterceptor` and `pydataui.shell.bridge.dispatch_in_process`. The native Android webview catches all `/_pdu/*` calls before hitting the network stack and executes the ASGI app in-process in memory, cutting latency by 5–15 ms per request and eliminating Uvicorn daemon threads.
+
+3. **Use Responsive Containers**:
    ```python
    from pydataui.components import Container, Grid
    
@@ -413,7 +424,7 @@ The compiled platform binary is generated in `src-tauri/target/release/bundle/`.
        padding="md"
    )
    ```
-2. **Touch-friendly tap targets**:
+4. **Touch-friendly tap targets**:
    Use `size="lg"` or `full_width=True` on buttons for easy mobile tapping.
-3. **Bottom navigation bar**:
+5. **Bottom navigation bar**:
    Combine `Flex` with Tailwind classes `fixed bottom-0 left-0 right-0 z-50 bg-background border-t` for mobile tab navigation.

@@ -69,6 +69,7 @@ class App:
             docs_url=docs_url,
             openapi_url=openapi_url,
             max_request_size=self.config.max_request_size,
+            gzip=self.config.gzip,
         )
         self.auth = None
         self._page_security = {}
@@ -93,7 +94,13 @@ class App:
         self._custom_api_routes = []
         self._setup_internal_routes()
         self._register_api_endpoints()
+        App._active_instance = self
         
+    @classmethod
+    def get_active_app(cls) -> Optional['App']:
+        """Return the most recently created App instance."""
+        return getattr(cls, '_active_instance', None)
+
     @property
     def title(self) -> str:
         """Application title."""
@@ -868,7 +875,18 @@ self.addEventListener('fetch', (event) => {
                 if isinstance(component, (Response, HTMLResponse, PlainTextResponse,
                                           RedirectResponse, JSONResponse, StreamingResponse)):
                     return component
-                content = self._renderer.render_fragment(lambda: component, snapshot)
+
+                target_header = (headers_req.get('hx-target') or headers_req.get('HX-Target') or '').strip()
+                target_comp = None
+                if target_header and target_header not in ('pdu-root', '#pdu-root'):
+                    from .components.base import find_component_by_id
+                    target_comp = find_component_by_id(component, target_header)
+
+                if target_comp is not None:
+                    # Targeted partial re-render: render only the modified component subtree
+                    content = target_comp.render(snapshot)
+                else:
+                    content = self._renderer.render_fragment(lambda: component, snapshot)
             except Exception as e:
                 import traceback
                 print(f"\n[PyDataUI Render Error] While re-rendering page fragment '{page_path}': {e}")
@@ -900,6 +918,10 @@ self.addEventListener('fetch', (event) => {
 
             cookie_val = self._session_manager.get_session_cookie_value(session)
             resp_headers = {"Set-Cookie": self._session_cookie(session), "Cache-Control": "no-store"}
+            if hasattr(state_instance, 'get_dirty_fields'):
+                dirty = state_instance.get_dirty_fields()
+                if dirty:
+                    resp_headers["X-PDU-Dirty"] = ",".join(sorted(dirty))
             return HTMLResponse(content=content, status_code=200, headers=resp_headers)
         finally:
             _current_session.reset(token_sess)

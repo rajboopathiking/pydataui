@@ -67,11 +67,11 @@ class Input(Component):
         if on_change:
             self._event_props['on_change'] = on_change
             self.props['hx-trigger'] = self.props.get('hx-trigger', 'change')
-            self.props['hx-include'] = self.props.get('hx-include', '#pdu-root')
+            self.props['hx-include'] = self.props.get('hx-include', 'this')
         if on_input:
             self._event_props['on_input'] = on_input
             self.props['hx-trigger'] = self.props.get('hx-trigger', 'input delay:300ms')
-            self.props['hx-include'] = self.props.get('hx-include', '#pdu-root')
+            self.props['hx-include'] = self.props.get('hx-include', 'this')
 
     @property
     def placeholder(self) -> str:
@@ -198,7 +198,7 @@ class Checkbox(Component):
         self.on_change = on_change
         if on_change:
             self.input_props['hx-trigger'] = 'change'
-            self.input_props['hx-include'] = '#pdu-root'
+            self.input_props['hx-include'] = 'this'
             
     def _get_classes(self) -> List[str]:
         return super()._get_classes() + ['pdu-checkbox-wrapper']

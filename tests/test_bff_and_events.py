@@ -51,7 +51,9 @@ async def test_bff_and_static_routes():
     s, b, h = await app._engine.dispatch_request('GET', '/', '', {}, '')
     assert s == 200
     assert '/_pdu/static/htmx.min.js' in b
-    assert 'hx-include="#pdu-root"' in b
+    # Minimal payloads: buttons outside forms do NOT pollute DOM with global hx-include="#pdu-root"
+    assert 'hx-include="#pdu-root"' not in b
+    assert 'hx-post="/_pdu/event/DemoCounterState/increment"' in b
     assert 'closest form' not in b
 
     # Continue the browser session and send the token embedded by the renderer.

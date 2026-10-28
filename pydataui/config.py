@@ -7,7 +7,7 @@ class AppConfig:
     
     title: str = 'PyDataUI App'
     description: str = ''
-    version: str = '0.3.5'
+    version: str = '1.1.0'
     debug: bool = False
     host: str = '127.0.0.1'
     port: int = 8000
@@ -35,6 +35,9 @@ class AppConfig:
     pwa_name: Optional[str] = None
     pwa_short_name: Optional[str] = None
     mobile_preview: bool = False
+    mobile_mode: bool = False
+    gzip: bool = False
+    partial_re_render: bool = False
     
     def __init__(self, **kwargs: Any):
         self.session_secret = secrets.token_hex(32)
@@ -45,6 +48,14 @@ class AppConfig:
         # Override with kwargs
         for k, v in kwargs.items():
             setattr(self, k, v)
+        if self.mobile_mode:
+            # "Mobile mode" preset: gzip on, no PWA boilerplate, partial re-rendering
+            if 'gzip' not in kwargs:
+                self.gzip = True
+            if 'pwa' not in kwargs:
+                self.pwa = False
+            if 'partial_re_render' not in kwargs:
+                self.partial_re_render = True
                 
     def _load_from_env(self) -> None:
         """Load configuration from environment variables prefixed with PYDATAUI_."""

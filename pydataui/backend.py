@@ -153,6 +153,7 @@ class FastAPIEngine:
         docs_url: Optional[str] = None,
         openapi_url: Optional[str] = None,
         max_request_size: int = DEFAULT_MAX_REQUEST_SIZE,
+        gzip: bool = False,
         **kwargs
     ):
         from fastapi import FastAPI
@@ -163,6 +164,7 @@ class FastAPIEngine:
         self.openapi_url = openapi_url
         self.max_request_size = int(max_request_size)
         self.auth = None
+        self.gzip = gzip
 
         self.app = FastAPI(
             title=title,
@@ -172,6 +174,9 @@ class FastAPIEngine:
             redoc_url=None,
             openapi_url=None,
         )
+        if self.gzip:
+            from starlette.middleware.gzip import GZipMiddleware
+            self.app.add_middleware(GZipMiddleware, minimum_size=500)
         self.app.add_middleware(
             BodyBufferASGIMiddleware,
             max_request_size=self.max_request_size,

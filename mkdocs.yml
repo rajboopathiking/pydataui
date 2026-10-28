@@ -65,6 +65,7 @@ nav:
   - Benchmarks: BENCHMARKS.md
   - Guides:
       - Full HTML Documentation: FULL_HTML_DOCUMENTATION.md
+      - Mobile Optimization & Architecture: MOBILE_OPTIMIZATION_AND_ARCHITECTURE.md
       - FastAPI Mounting & Conflicts: FASTAPI_MOUNTING_AND_CONFLICTS.md
       - Mobile & Desktop Apps: MOBILE_AND_DESKTOP.md
       - Documentation & HTML Guide: DOCS_DEVELOPER_GUIDE.md

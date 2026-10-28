@@ -192,8 +192,6 @@ class Component:
                 from ..dx import register_callback
                 action_name = register_callback(handler)
                 attrs = EH('ActionState', action_name).get_htmx_attrs(trigger=trigger)
-        if attrs and 'hx-include' not in attrs:
-            attrs['hx-include'] = '#pdu-root'
         return attrs
     
     def _get_classes(self) -> List[str]:
@@ -235,3 +233,21 @@ class RawHtml(Component):
 
 # Friendly alias
 Html = RawHtml
+
+
+def find_component_by_id(root: Any, target_id: str) -> Optional[Component]:
+    """Recursively search a component tree for a Component with the specified ID."""
+    clean_id = target_id.lstrip('#')
+    if isinstance(root, Component):
+        if getattr(root, 'id', None) == clean_id:
+            return root
+        for child in getattr(root, 'children', []):
+            found = find_component_by_id(child, clean_id)
+            if found is not None:
+                return found
+    elif isinstance(root, (list, tuple)):
+        for item in root:
+            found = find_component_by_id(item, clean_id)
+            if found is not None:
+                return found
+    return None

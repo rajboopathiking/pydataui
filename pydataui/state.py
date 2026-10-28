@@ -191,7 +191,10 @@ class StateVar:
         return obj.__dict__.get(self._name, self.default)
         
     def __set__(self, obj: Any, value: Any):
+        old = obj.__dict__.get(self._name, self.default)
         obj.__dict__[self._name] = value
+        if hasattr(obj, '_mark_dirty') and old != value:
+            obj._mark_dirty(self._name)
 
 class EventHandler:
     """Reference to a state method, used for event binding in components.
@@ -203,9 +206,21 @@ class EventHandler:
     right server endpoint.
     """
 
-    def __init__(self, state_cls_name: str, method_name: str) -> None:
+    def __init__(
+        self,
+        state_cls_name: str,
+        method_name: str,
+        target: Optional[str] = None,
+        swap: Optional[str] = None,
+    ) -> None:
         self.state_cls_name = state_cls_name
         self.method_name = method_name
+        self.target = target or '#pdu-root'
+        self.swap = swap or 'innerHTML'
+
+    def target_to(self, target: str, swap: str = 'innerHTML') -> 'EventHandler':
+        """Return a new EventHandler targeted to a specific element ID for minimal updates."""
+        return EventHandler(self.state_cls_name, self.method_name, target=target, swap=swap)
 
     def get_endpoint(self) -> str:
         """Return the internal PyDataUI event endpoint path."""
@@ -215,14 +230,14 @@ class EventHandler:
     def get_htmx_attrs(
         self,
         trigger: str = 'click',
-        target: str = '#pdu-root',
-        swap: str = 'innerHTML',
+        target: Optional[str] = None,
+        swap: Optional[str] = None,
     ) -> Dict[str, str]:
         """Return HTMX attributes dict for embedding in HTML elements."""
         return {
             'hx-post': self.get_endpoint(),
-            'hx-target': target,
-            'hx-swap': swap,
+            'hx-target': target or self.target,
+            'hx-swap': swap or self.swap,
             'hx-trigger': trigger,
         }
 
@@ -253,7 +268,7 @@ class EventHandler:
 
     def with_args(self, **kwargs: Any) -> Any:
         from .event import EventSpec
-        return EventSpec(self, args=kwargs)
+        return EventSpec(self, args=kwargs, target=self.target, swap=self.swap)
 
 
 # ---------------------------------------------------------------------------
@@ -405,9 +420,32 @@ class State(metaclass=StateMeta):
     """
 
     def __init__(self) -> None:
+        self._dirty_fields: set[str] = set()
         for name, var in self.get_state_vars().items():
             # Use object.__setattr__ to bypass descriptors during init
             self.__dict__[name] = copy.deepcopy(var.default) if isinstance(var.default, (list, dict, set)) else var.default
+
+    def _mark_dirty(self, field_name: str) -> None:
+        if not hasattr(self, '_dirty_fields'):
+            self._dirty_fields = set()
+        self._dirty_fields.add(field_name)
+
+    def mark_dirty(self, field_name: str) -> None:
+        """Explicitly mark a state variable as dirty (e.g. after mutating a mutable object in place)."""
+        self._mark_dirty(field_name)
+
+    def get_dirty_fields(self) -> set[str]:
+        """Return the set of modified field names."""
+        return set(getattr(self, '_dirty_fields', set()))
+
+    def clear_dirty(self) -> None:
+        """Clear the set of modified field names."""
+        if hasattr(self, '_dirty_fields'):
+            self._dirty_fields.clear()
+
+    def is_dirty(self) -> bool:
+        """Check if any state variables have been modified."""
+        return bool(getattr(self, '_dirty_fields', False))
 
     @hybridmethod
     def to_dict(self_or_cls: Any, include_private: bool = False) -> Dict[str, Any]:

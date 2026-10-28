@@ -295,7 +295,7 @@ class ShadCheckbox(Component):
             inp_attrs.append('disabled="disabled"')
         if self.on_change:
             inp_attrs.append('hx-trigger="change"')
-            inp_attrs.append('hx-include="#pdu-root"')
+            inp_attrs.append('hx-include="this"')
             htmx = self._get_event_htmx_attrs('on_change', self.on_change)
             for k, v in htmx.items():
                 inp_attrs.append(f'{k}="{escape_html(str(v))}"')
@@ -344,7 +344,7 @@ class ShadSelect(Component):
         if on_change:
             self._event_props['on_change'] = on_change
             self.props['hx-trigger'] = 'change'
-            self.props['hx-include'] = '#pdu-root'
+            self.props['hx-include'] = 'this'
 
     def _get_classes(self) -> List[str]:
         return [('flex h-10 w-full items-center justify-between rounded-md border border-input '

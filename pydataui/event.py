@@ -37,7 +37,9 @@ class EventSpec:
         throttle: Optional[int] = None,
         prevent_default: bool = False,
         stop_propagation: bool = False,
-        confirm: Optional[str] = None
+        confirm: Optional[str] = None,
+        target: Optional[str] = None,
+        swap: Optional[str] = None,
     ):
         self.handler = handler
         self.args = args or {}
@@ -46,9 +48,18 @@ class EventSpec:
         self.prevent_default = prevent_default
         self.stop_propagation = stop_propagation
         self.confirm = confirm
+        self.target = target or getattr(handler, 'target', '#pdu-root')
+        self.swap = swap or getattr(handler, 'swap', 'innerHTML')
+
+    def target_to(self, target: str, swap: Optional[str] = None) -> 'EventSpec':
+        """Fluent helper to target a specific DOM element ID for minimal updates."""
+        self.target = target
+        if swap:
+            self.swap = swap
+        return self
         
     def get_htmx_attrs(self, trigger: str = 'click') -> Dict[str, str]:
-        attrs = self.handler.get_htmx_attrs(trigger=trigger)
+        attrs = self.handler.get_htmx_attrs(trigger=trigger, target=self.target, swap=self.swap)
         
         trigger_val = attrs.get('hx-trigger', trigger)
         
@@ -65,6 +76,11 @@ class EventSpec:
             
         if self.confirm:
             attrs['hx-confirm'] = self.confirm
+
+        if self.target:
+            attrs['hx-target'] = self.target
+        if self.swap:
+            attrs['hx-swap'] = self.swap
             
         if self.args:
             import json

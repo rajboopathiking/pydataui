@@ -52,6 +52,13 @@ def prepare_mobile_assets(
             shutil.copy2(js_src, www_dir / "_pdu" / "static" / "js" / "htmx.min.js")
             (www_dir / "_pdu" / "static").mkdir(parents=True, exist_ok=True)
             shutil.copy2(js_src, www_dir / "_pdu" / "static" / "htmx.min.js")
+        bridge_js = pkg_dir / "styling" / "js" / "pdu-bridge.js"
+        if bridge_js.exists():
+            shutil.copy2(bridge_js, www_dir / "pdu-bridge.js")
+            (www_dir / "_pdu" / "static" / "js").mkdir(parents=True, exist_ok=True)
+            shutil.copy2(bridge_js, www_dir / "_pdu" / "static" / "js" / "pdu-bridge.js")
+            (www_dir / "_pdu" / "static").mkdir(parents=True, exist_ok=True)
+            shutil.copy2(bridge_js, www_dir / "_pdu" / "static" / "pdu-bridge.js")
     except Exception:
         pass
 
@@ -240,7 +247,7 @@ def init_capacitor(
     if not pkg_json.exists() or overwrite:
         pkg_data = {
             "name": app_name.lower().replace(" ", "-"),
-            "version": "0.3.5",
+            "version": "1.1.0",
             "private": True,
             "scripts": {
                 "cap": "cap"

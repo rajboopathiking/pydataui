@@ -77,7 +77,7 @@ def init_capacitor(
     if not pkg_json.exists() or overwrite:
         pkg_data = {
             "name": app_name.lower().replace(" ", "-"),
-            "version": "0.3.3",
+            "version": "0.3.4",
             "private": True,
             "scripts": {
                 "cap": "cap"
@@ -153,6 +153,63 @@ def run_capacitor_dev(
             server_proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
             server_proc.kill()
+
+
+def find_java_home() -> Optional[str]:
+    """
+    Find a compatible Java Home (JDK 17 or 21) suitable for Gradle Android builds.
+    Avoids Java 25+ which causes Gradle 8 'Unsupported class file major version 69'.
+    """
+    env_jh = os.environ.get("JAVA_HOME")
+    if env_jh and os.path.isdir(env_jh):
+        try:
+            ver_proc = subprocess.run([os.path.join(env_jh, "bin", "java"), "-version"], capture_output=True, text=True)
+            ver_str = ver_proc.stderr + ver_proc.stdout
+            if "17." in ver_str or "21." in ver_str:
+                return env_jh
+        except Exception:
+            pass
+
+    if sys.platform == "darwin":
+        for ver in ("17", "21"):
+            try:
+                res = subprocess.run(["/usr/libexec/java_home", "-v", ver], capture_output=True, text=True)
+                if res.returncode == 0 and res.stdout.strip():
+                    path = res.stdout.strip()
+                    if os.path.isdir(path):
+                        return path
+            except Exception:
+                pass
+
+    standard_paths = [
+        "/usr/lib/jvm/java-17-openjdk",
+        "/usr/lib/jvm/java-17-openjdk-amd64",
+        "/usr/lib/jvm/java-21-openjdk",
+        "/usr/lib/jvm/java-21-openjdk-amd64",
+        os.path.expanduser("~/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"),
+        os.path.expanduser("~/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home"),
+        "/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home",
+        "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home",
+    ]
+    for p in standard_paths:
+        if os.path.isdir(p):
+            return p
+
+    return env_jh if (env_jh and os.path.isdir(env_jh)) else None
+
+
+def find_adb() -> Optional[str]:
+    """Find installed ADB executable across PATH and Android SDK directory."""
+    which_adb = shutil.which("adb")
+    if which_adb:
+        return which_adb
+    sdk = find_android_sdk()
+    if sdk:
+        for sub in ("platform-tools", "cmdline-tools/bin", "tools/bin"):
+            cand = Path(sdk) / sub / ("adb.exe" if sys.platform == "win32" else "adb")
+            if cand.exists():
+                return str(cand)
+    return None
 
 
 def find_android_sdk() -> Optional[str]:
@@ -239,38 +296,48 @@ def build_mobile(
                 print("   2. ☁️ Cloud GitHub Actions: Push to GitHub - our .github/workflows/build-apk.yml builds the APK in the cloud!\n")
                 return 0
 
+            # Clean up any stale APK from previous builds
+            apk_path = root / "android" / "app" / "build" / "outputs" / "apk" / mode / f"app-{mode}.apk"
+            if apk_path.exists():
+                try:
+                    apk_path.unlink()
+                except Exception:
+                    pass
+
             target_task = "assembleDebug" if mode == "debug" else "assembleRelease"
             print(f"📦 Compiling Android APK via Gradle ({target_task})...")
 
-            # Route to Java 17/21 if available on macOS to avoid Class 69 error
+            # Route to compatible Java 17/21 to avoid Class 69 error on newer default JREs
             gradle_env = dict(os.environ)
-            if sys.platform == "darwin":
-                for ver in ("17", "21"):
+            target_jh = find_java_home()
+            if target_jh:
+                gradle_env["JAVA_HOME"] = target_jh
+                gradle_env["PATH"] = f"{target_jh}/bin:" + gradle_env.get("PATH", "")
+
+            # Patch Capacitor compatibility if compiling with Java 17
+            for gfile in (root / "android").rglob("*.gradle"):
+                if gfile.is_file():
                     try:
-                        jh_res = subprocess.run(["/usr/libexec/java_home", "-v", ver], capture_output=True, text=True)
-                        if jh_res.returncode == 0 and jh_res.stdout.strip():
-                            target_jh = jh_res.stdout.strip()
-                            gradle_env["JAVA_HOME"] = target_jh
-                            gradle_env["PATH"] = f"{target_jh}/bin:" + gradle_env.get("PATH", "")
-                            break
+                        c_txt = gfile.read_text(encoding="utf-8")
+                        if "VERSION_21" in c_txt:
+                            gfile.write_text(c_txt.replace("VERSION_21", "VERSION_17"), encoding="utf-8")
                     except Exception:
                         pass
 
-            # Patch Capacitor compatibility if compiling with Java 17
-            cap_build_gradle = root / "android" / "app" / "capacitor.build.gradle"
-            if cap_build_gradle.exists():
-                c_txt = cap_build_gradle.read_text(encoding="utf-8")
-                if "VERSION_21" in c_txt and "17" in gradle_env.get("JAVA_HOME", ""):
-                    cap_build_gradle.write_text(c_txt.replace("VERSION_21", "VERSION_17"), encoding="utf-8")
-
             # Make gradlew executable
             os.chmod(str(gradlew), 0o755)
-            cmd = [str(gradlew), target_task]
+            cmd = [str(gradlew)]
+            if target_jh:
+                cmd.append(f"-Dorg.gradle.java.home={target_jh}")
+            cmd.append(target_task)
+
             res = subprocess.call(cmd, cwd=str(root / "android"), env=gradle_env)
-            apk_path = root / "android" / "app" / "build" / "outputs" / "apk" / mode / f"app-{mode}.apk"
-            if apk_path.exists():
+            if res == 0 and apk_path.exists():
                 print(f"\n🎉 Standalone APK built successfully: {apk_path}")
-            return res
+                return 0
+            else:
+                print(f"\n❌ Android APK compilation failed (Gradle exit code: {res}).")
+                return res if res != 0 else 1
         else:
             print("💡 Capacitor Android assets synced. To compile APK manually: cd android && ./gradlew assembleDebug")
             return 0
@@ -306,15 +373,50 @@ def install_mobile(
     root = Path(project_dir).resolve()
     if platform == "android":
         apk_path = root / "android" / "app" / "build" / "outputs" / "apk" / "debug" / "app-debug.apk"
-        if shutil.which("adb") and apk_path.exists():
-            print(f"📲 Installing {apk_path.name} to connected Android device via ADB...")
-            return subprocess.call(["adb", "install", "-r", str(apk_path)])
-        
+        adb = find_adb()
+
+        # Check for connected devices via ADB if ADB is available
+        connected_devices = []
+        if adb:
+            try:
+                res = subprocess.run([adb, "devices"], capture_output=True, text=True)
+                lines = [line.strip() for line in res.stdout.strip().splitlines() if line.strip()]
+                connected_devices = [l for l in lines[1:] if "\tdevice" in l]
+            except Exception:
+                pass
+
+        if adb and not connected_devices:
+            print("\n⚠️  No connected Android devices or emulators found.")
+            print("💡 To install your app on a physical Android phone:")
+            print("   1. Connect your phone via USB cable.")
+            print("   2. Enable 'USB Debugging' in Settings -> Developer Options.")
+            print("   3. Or scan the QR code from 'pydataui run --mobile-preview' to install instantly as a PWA!\n")
+            return 0
+
+        if not apk_path.exists():
+            print("📦 No compiled APK found. Compiling first...")
+            b_code = build_mobile(project_dir=project_dir, platform="android", mode="debug")
+            if b_code != 0 or not apk_path.exists():
+                print("❌ Failed to compile APK before install.")
+                return 1
+
+        if adb and connected_devices:
+            print(f"📲 Installing {apk_path.name} to {len(connected_devices)} connected device(s)...")
+            return subprocess.call([adb, "install", "-r", str(apk_path)])
+
         gradlew = root / "android" / "gradlew"
         if gradlew.exists():
             print("📲 Installing to connected Android device via Gradle installDebug...")
             os.chmod(str(gradlew), 0o755)
-            return subprocess.call([str(gradlew), "installDebug"], cwd=str(root / "android"))
+            cmd = [str(gradlew)]
+            target_jh = find_java_home()
+            if target_jh:
+                cmd.append(f"-Dorg.gradle.java.home={target_jh}")
+            cmd.append("installDebug")
+            gradle_env = dict(os.environ)
+            if target_jh:
+                gradle_env["JAVA_HOME"] = target_jh
+            return subprocess.call(cmd, cwd=str(root / "android"), env=gradle_env)
 
         print("💡 To install on Android: connect device via USB with USB Debugging enabled, or scan QR code to install PWA.")
         return 0

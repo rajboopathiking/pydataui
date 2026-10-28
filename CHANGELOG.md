@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.3.4] - 2026-10-28
+
+- Robust Android Gradle builds: automated JDK 17/21 discovery (`find_java_home()`), explicit `-Dorg.gradle.java.home` routing to prevent Class 69 incompatibilities on Java 25+, and automatic Gradle `afterEvaluate` compileOptions override.
+- Headless Android APK generation: dynamic patching of Capacitor 7's generated `JavaVersion.VERSION_21` down to `VERSION_17`.
+- Enhanced `pydataui mobile install`: automatic `adb` discovery across Android SDK directories and clear detection of connected devices with actionable developer feedback.
+- Clean stale APK handling: prevents false success reporting on failed Gradle compilation passes.
+
 ## [0.3.3] - 2026-10-28
 
 - Add In-Browser Mobile Device Simulator (`/_pdu/preview`, `pydataui mobile preview`, `--mobile-preview`) with iPhone 15 Pro, Pixel 8, and iPad Mini frames, fast reload, and real physical device testing via instant QR code without Xcode or Android Studio.

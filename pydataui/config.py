@@ -7,7 +7,7 @@ class AppConfig:
     
     title: str = 'PyDataUI App'
     description: str = ''
-    version: str = '0.3.3'
+    version: str = '0.3.4'
     debug: bool = False
     host: str = '127.0.0.1'
     port: int = 8000

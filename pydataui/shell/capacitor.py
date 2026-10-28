@@ -241,10 +241,32 @@ def build_mobile(
 
             target_task = "assembleDebug" if mode == "debug" else "assembleRelease"
             print(f"📦 Compiling Android APK via Gradle ({target_task})...")
+
+            # Route to Java 17/21 if available on macOS to avoid Class 69 error
+            gradle_env = dict(os.environ)
+            if sys.platform == "darwin":
+                for ver in ("17", "21"):
+                    try:
+                        jh_res = subprocess.run(["/usr/libexec/java_home", "-v", ver], capture_output=True, text=True)
+                        if jh_res.returncode == 0 and jh_res.stdout.strip():
+                            target_jh = jh_res.stdout.strip()
+                            gradle_env["JAVA_HOME"] = target_jh
+                            gradle_env["PATH"] = f"{target_jh}/bin:" + gradle_env.get("PATH", "")
+                            break
+                    except Exception:
+                        pass
+
+            # Patch Capacitor compatibility if compiling with Java 17
+            cap_build_gradle = root / "android" / "app" / "capacitor.build.gradle"
+            if cap_build_gradle.exists():
+                c_txt = cap_build_gradle.read_text(encoding="utf-8")
+                if "VERSION_21" in c_txt and "17" in gradle_env.get("JAVA_HOME", ""):
+                    cap_build_gradle.write_text(c_txt.replace("VERSION_21", "VERSION_17"), encoding="utf-8")
+
             # Make gradlew executable
             os.chmod(str(gradlew), 0o755)
             cmd = [str(gradlew), target_task]
-            res = subprocess.call(cmd, cwd=str(root / "android"))
+            res = subprocess.call(cmd, cwd=str(root / "android"), env=gradle_env)
             apk_path = root / "android" / "app" / "build" / "outputs" / "apk" / mode / f"app-{mode}.apk"
             if apk_path.exists():
                 print(f"\n🎉 Standalone APK built successfully: {apk_path}")

@@ -2,6 +2,10 @@
 
 ## [1.1.0] - 2026-10-29 - High-Performance Mobile & Native Architecture Release
 
+- **Native Offline Parity (Standalone Mobile Default)**: Decoupled Standalone mode from Wi-Fi sync in `pydataui.shell.capacitor`. By default, builds omit the `server` block from `capacitor.config.json`, serving bundled assets (`assets/public/`) directly from device flash memory at `https://localhost/` with <150 ms cold start. Completely eliminates `net::ERR_CONNECTION_REFUSED` ("Web page not available") in Airplane mode and offline environments.
+- **Automated Native Android Scaffolding**: Added `install_android_scaffolding()` which automatically installs `PyDataUIBridgePlugin.java`, `PyDataUIWebViewInterceptor.java`, and `MainActivity.java` into Android native projects during `pydataui mobile build`.
+- **Standalone vs Live-Sync CLI**: Added `--standalone` (default: True) and `--live-sync` flags to `pydataui mobile build`.
+- **Module Auto-Discovery in JNI Bridge**: Added entry point auto-discovery (`mobile_app`, `app`, `main`) in `pydataui.shell.bridge.JNIBridge.get_app()`, guaranteeing automatic app instance resolution inside Chaquopy APKs.
 - **PEP 562 Lazy Package Imports**: Completely eliminated eager top-level dependency loading in `pydataui/__init__.py`. Top-level cold-start import time dropped from **562.89 ms** down to **10.68 ms** (**−98.1% / 52× faster**), cutting mobile Chaquopy startup by ~2–3 seconds while maintaining complete static typing and autocompletion via `TYPE_CHECKING`.
 - **Component-Level Dirty Tracking & Partial SSR Re-rendering**: Added reactive mutation tracking (`_mark_dirty`, `is_dirty()`, `get_dirty_fields()`, `clear_dirty()`) and fluent event targeting (`target_to()`). Subtree searches via `find_component_by_id` render only modified component fragments rather than full-page `#pdu-root` replacements, with `X-PDU-Dirty` mutation telemetry.
 - **Auto-Generated Minimal Payloads**: Eliminated global `hx-include="#pdu-root"` DOM serialization across buttons, cards, and containers. Form inputs are now scoped strictly to `hx-include="this"`, reducing network interaction payloads from tens of kilobytes down to bytes.

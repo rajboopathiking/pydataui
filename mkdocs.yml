@@ -64,6 +64,7 @@ nav:
   - Home: index.md
   - Benchmarks: BENCHMARKS.md
   - Guides:
+      - Native Offline & Standalone Mobile: NATIVE_OFFLINE_AND_STANDALONE.md
       - Full HTML Documentation: FULL_HTML_DOCUMENTATION.md
       - Mobile Optimization & Architecture: MOBILE_OPTIMIZATION_AND_ARCHITECTURE.md
       - FastAPI Mounting & Conflicts: FASTAPI_MOUNTING_AND_CONFLICTS.md

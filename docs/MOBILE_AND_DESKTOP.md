@@ -71,13 +71,22 @@ pydataui run app.py --mobile-preview
 When you have finalized your app and want an installable Android APK, build it directly from your terminal:
 
 ```bash
-# Compile standalone Android APK without opening Android Studio GUI:
+# Compile 100% offline standalone Android APK (React Native Parity, default):
 pydataui mobile build --platform android
+
+# Compile for live Wi-Fi development / hot reload:
+pydataui mobile build --platform android --live-sync
+
+# Connect to a remote production API:
+pydataui mobile build --platform android --server-url https://api.mycompany.com
 
 # Directly install to connected Android device over USB/Wi-Fi via ADB:
 pydataui mobile install --platform android
 ```
-The compiled APK is output to `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+The compiled APK is output to `android/app/build/outputs/apk/debug/app-debug.apk` and `./app-debug.apk`.
+
+> 📘 **Deep Dive Guide**: See [Native Offline & Standalone Mobile Architecture](NATIVE_OFFLINE_AND_STANDALONE.md) for full details on asset bundling, in-process JNI dispatch, and eliminating `net::ERR_CONNECTION_REFUSED`.
 
 ---
 

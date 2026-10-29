@@ -342,7 +342,7 @@ def main():
     m_build = mobile_subs.add_parser("build", help="Build release APK or mobile packages without opening Android Studio/Xcode")
     m_build.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")
     m_build.add_argument("--engine", choices=["tauri", "capacitor"], default="capacitor", help="Mobile shell engine")
-    m_build.add_argument("--standalone", action="store_true", default=True, help="Build 100% offline standalone APK with bundled assets (default)")
+    m_build.add_argument("--standalone", action="store_true", default=True, help="Build 100%% offline standalone APK with bundled assets (default)")
     m_build.add_argument("--live-sync", action="store_true", default=False, help="Connect mobile app over Wi-Fi to running local Python dev server")
     m_build.add_argument("--server-url", default=None, help="Explicit backend server URL (e.g. https://my-api.com)")
     m_build.add_argument("--port", type=int, default=8000, help="Backend server port (default: 8000)")

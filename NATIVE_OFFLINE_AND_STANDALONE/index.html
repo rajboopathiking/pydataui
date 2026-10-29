@@ -1,0 +1,1818 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Full-Stack Python Framework for Data and AI Applications with a Compiled Rust HTTP Core">
+      
+      
+        <meta name="author" content="Boopathi Raj">
+      
+      
+        <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/NATIVE_OFFLINE_AND_STANDALONE/">
+      
+      
+        <link rel="prev" href="../BENCHMARKS/">
+      
+      
+        <link rel="next" href="../FULL_HTML_DOCUMENTATION/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Native Offline & Standalone Mobile - PyDataUI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#native-offline-parity-standalone-mobile-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PyDataUI" class="md-header__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyDataUI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Native Offline & Standalone Mobile
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../BENCHMARKS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../TEMPLATE_GALLERY/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PyDataUI" class="md-nav__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyDataUI
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Native Offline & Standalone Mobile
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Native Offline & Standalone Mobile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-problem-statement-why-web-page-not-available-occurred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Problem Statement: Why "Web Page Not Available" Occurred
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Problem Statement: Why &#34;Web Page Not Available&#34; Occurred">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-three-framework-bottlenecks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Framework Bottlenecks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-target-architecture-react-native-parity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Target Architecture: React Native Parity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cli-commands-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CLI Commands &amp; Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. CLI Commands &amp; Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-build-a-100-offline-standalone-apk-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Build a 100% Offline Standalone APK (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-build-for-live-wi-fi-sync-development-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Build for Live Wi-Fi Sync (Development Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-build-against-a-remote-production-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Build Against a Remote Production API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-in-process-jni-bridge-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. In-Process JNI Bridge Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. In-Process JNI Bridge Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-client-side-bridge-pdu-bridgejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Client-Side Bridge (pdu-bridge.js)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Client-Side Bridge (pdu-bridge.js)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-how-to-verify-a-standalone-apk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. How to Verify a Standalone APK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-installing-directly-on-device-via-adb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Installing Directly on Device via ADB
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FULL_HTML_DOCUMENTATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full HTML Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_OPTIMIZATION_AND_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Optimization & Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FASTAPI_MOUNTING_AND_CONFLICTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI Mounting & Conflicts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_AND_DESKTOP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile & Desktop Apps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DOCS_DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation & HTML Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTHENTICATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CUSTOMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_TEMPLATES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Team Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRODUCTION_READINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TROUBLESHOOTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TEMPLATE_GALLERY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Gallery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HTML_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTML Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CSS_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSS Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QUICKREF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_3_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_2_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.2.1)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-problem-statement-why-web-page-not-available-occurred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Problem Statement: Why "Web Page Not Available" Occurred
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Problem Statement: Why &#34;Web Page Not Available&#34; Occurred">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-three-framework-bottlenecks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Framework Bottlenecks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-target-architecture-react-native-parity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Target Architecture: React Native Parity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cli-commands-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CLI Commands &amp; Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. CLI Commands &amp; Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-build-a-100-offline-standalone-apk-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Build a 100% Offline Standalone APK (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-build-for-live-wi-fi-sync-development-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Build for Live Wi-Fi Sync (Development Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-build-against-a-remote-production-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Build Against a Remote Production API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-in-process-jni-bridge-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. In-Process JNI Bridge Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. In-Process JNI Bridge Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-client-side-bridge-pdu-bridgejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Client-Side Bridge (pdu-bridge.js)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Client-Side Bridge (pdu-bridge.js)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-how-to-verify-a-standalone-apk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. How to Verify a Standalone APK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-installing-directly-on-device-via-adb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Installing Directly on Device via ADB
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="native-offline-parity-standalone-mobile-architecture">📱 Native Offline Parity &amp; Standalone Mobile Architecture</h1>
+<p>PyDataUI provides <strong>React Native-grade offline parity</strong> for mobile applications. You can compile fully self-contained Android APKs and iOS bundles that run <strong>100% offline in Airplane Mode</strong>, cold-start in <strong>&lt;150 ms</strong>, and execute state interactions directly in-process with <strong>zero TCP loopback sockets</strong>.</p>
+<hr />
+<h2 id="1-problem-statement-why-web-page-not-available-occurred">1. Problem Statement: Why "Web Page Not Available" Occurred</h2>
+<p>In traditional hybrid frameworks (and early Capacitor builds), mobile scaffolding assumes a live development server running on the developer's laptop:</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Legacy_Flawed_Model["Legacy Model (Wi-Fi Dependent)"]
+        Mac["Developer Laptop\n(192.168.31.205:8000)"]
+        Phone["Physical Phone\n(Installs APK)"]
+        CapConfig["capacitor.config.json\nserver.url: http://192.168.31.205:8000"]
+        Err["💥 net::ERR_CONNECTION_REFUSED\n'Web Page Not Available'"]
+
+        Phone --&gt; CapConfig
+        CapConfig --&gt;|Attempts connection| Mac
+        Mac -.-&gt;|Laptop off / 4G / Airplane Mode| Err
+    end</code></pre>
+<h3 id="the-three-framework-bottlenecks">The Three Framework Bottlenecks</h3>
+<ol>
+<li><strong>Unconditional LAN IP Injection</strong>: Build tools would automatically detect the local machine's Wi-Fi IP and hardcode <code>"url": "http://192.168.x.x:8000"</code> into <code>capacitor.config.json</code>.</li>
+<li><strong>Emulator Loopback Defaults</strong>: Scaffolding tools often defaulted to <code>http://10.0.2.2:8000</code>. On a physical phone, <code>10.0.2.2</code> does not exist, causing instant connection refusal.</li>
+<li><strong>Empty Scaffolding</strong>: Standard <code>npx cap add android</code> creates a blank <code>MainActivity.java</code> with no in-process dispatcher or offline request interceptor.</li>
+</ol>
+<hr />
+<h2 id="2-target-architecture-react-native-parity">2. Target Architecture: React Native Parity</h2>
+<p>In React Native and Flutter, <strong>Standalone/Release Mode</strong> and <strong>Live-Sync Dev Mode</strong> are strictly decoupled:</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Mode_A["Mode A: Standalone Mode (Default)"]
+        APK1["Standalone APK / IPA"]
+        Assets1["assets/public/index.html\n(Bundled in device flash storage)"]
+        Scheme1["https://localhost/\n(&lt;150 ms cold start)"]
+        JNI1["In-Process JNI Bridge\n(Chaquopy ASGI Dispatcher)"]
+
+        APK1 --&gt; Assets1 --&gt; Scheme1 --&gt; JNI1
+    end
+
+    subgraph Mode_B["Mode B: Live-Sync Mode (Dev)"]
+        APK2["Dev APK"]
+        ServerURL["capacitor.config.json\nserver.url: http://192.168.x.x:8000"]
+        Laptop["Developer Machine\n(Hot Reload &amp; Instant Iteration)"]
+
+        APK2 --&gt; ServerURL --&gt; Laptop
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Mode A: Standalone (Default)</th>
+<th style="text-align: left;">Mode B: Live-Sync (Dev)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>External Network Required</strong></td>
+<td style="text-align: left;">❌ <strong>Zero</strong> (100% Offline &amp; Airplane Mode)</td>
+<td style="text-align: left;">✅ Requires same local Wi-Fi or tunnel</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Asset Location</strong></td>
+<td style="text-align: left;">Bundled inside APK (<code>assets/public/</code>)</td>
+<td style="text-align: left;">Served live from laptop PyDataUI port</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Capacitor Scheme</strong></td>
+<td style="text-align: left;"><code>https://localhost/</code></td>
+<td style="text-align: left;"><code>http://192.168.x.x:8000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Cold Start</strong></td>
+<td style="text-align: left;"><strong>&lt; 150 ms</strong> (from device flash memory)</td>
+<td style="text-align: left;">~800–2,000 ms (network handshake)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>State Handling</strong></td>
+<td style="text-align: left;">In-Process JNI Bridge (<code>PyDataUIWebViewInterceptor</code>)</td>
+<td style="text-align: left;">TCP Loopback Socket / HTTP Requests</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Use Case</strong></td>
+<td style="text-align: left;">Production distribution, Store releases, Field apps</td>
+<td style="text-align: left;">Fast local UI iteration, Hot-reloading</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-cli-commands-workflow">3. CLI Commands &amp; Workflow</h2>
+<h3 id="a-build-a-100-offline-standalone-apk-default">A. Build a 100% Offline Standalone APK (Default)</h3>
+<p>To build a standalone APK ready for distribution or offline testing:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>android
+</span></code></pre></div>
+<ul>
+<li>Omit <code>--server-url</code> and <code>--live-sync</code>.</li>
+<li>The framework automatically builds <code>www/</code> with all precompiled CSS, HTMX, and bridge scripts.</li>
+<li><code>capacitor.config.json</code> contains <strong>zero remote IP references</strong>.</li>
+<li>Output binary: <code>android/app/build/outputs/apk/debug/app-debug.apk</code> and <code>./app-debug.apk</code>.</li>
+</ul>
+<h3 id="b-build-for-live-wi-fi-sync-development-mode">B. Build for Live Wi-Fi Sync (Development Mode)</h3>
+<p>If you are actively styling your app and want changes to reflect on your physical phone over Wi-Fi without rebuilding the APK:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>android<span class="w"> </span>--live-sync
+</span></code></pre></div>
+<ul>
+<li>Automatically detects your Mac/PC's local Wi-Fi IP (e.g. <code>192.168.1.100:8000</code>) and injects it into <code>capacitor.config.json</code>.</li>
+<li>Requires phone and computer to be connected to the same Wi-Fi network.</li>
+</ul>
+<h3 id="c-build-against-a-remote-production-api">C. Build Against a Remote Production API</h3>
+<p>If your mobile app connects to a cloud-hosted PyDataUI backend:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>android<span class="w"> </span>--server-url<span class="w"> </span>https://api.mycompany.com
+</span></code></pre></div>
+<hr />
+<h2 id="4-in-process-jni-bridge-architecture">4. In-Process JNI Bridge Architecture</h2>
+<p>To eliminate the need for a background Python daemon process or TCP loopback sockets on Android, PyDataUI provides native Java interceptors:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant WebView as Android WebView (Chromium)
+    participant Interceptor as PyDataUIWebViewInterceptor (Java)
+    participant Plugin as PyDataUIBridgePlugin (Capacitor)
+    participant JNI as Chaquopy JNI Runtime
+    participant App as PyDataUI ASGI Engine (Python)
+
+    WebView-&gt;&gt;Interceptor: Request /_pdu/event/State/method
+    Note over Interceptor: Intercepts request before network socket opens
+    Interceptor-&gt;&gt;JNI: callAttr("dispatch_in_process", method, url, headers, body)
+    JNI-&gt;&gt;App: dispatch_request(method, path, headers, body)
+    App--&gt;&gt;JNI: (status_code, body_bytes, headers)
+    JNI--&gt;&gt;Interceptor: PyObject result
+    Interceptor--&gt;&gt;WebView: WebResourceResponse (200 OK, HTML fragment)</code></pre>
+<h3 id="components">Components</h3>
+<ol>
+<li><strong><a href="file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/android/app/src/main/java/com/pydataui/app/PyDataUIWebViewInterceptor.java"><code>PyDataUIWebViewInterceptor.java</code></a></strong>:</li>
+<li>Attached to the WebView via <code>BridgeWebViewClient.shouldInterceptRequest(...)</code>.</li>
+<li>Intercepts any request directed to <code>/_pdu/*</code> or <code>/api/*</code>.</li>
+<li>Dispatches in-memory directly to Python via Chaquopy JNI, returning a synthetic <code>WebResourceResponse</code> with <code>&lt;1 ms</code> latency.</li>
+<li><strong><a href="file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/android/app/src/main/java/com/pydataui/app/PyDataUIBridgePlugin.java"><code>PyDataUIBridgePlugin.java</code></a></strong>:</li>
+<li>Capacitor plugin exposing <code>window.Capacitor.Plugins.PyDataUIBridge.dispatch(...)</code> to JavaScript.</li>
+<li><strong>Module Auto-Discovery in <code>bridge.py</code></strong>:</li>
+<li>Automatically detects active <code>App</code> instances across standard entry points (<code>mobile_app</code>, <code>app</code>, <code>main</code>), ensuring zero configuration when launched inside Android.</li>
+</ol>
+<hr />
+<h2 id="5-client-side-bridge-pdu-bridgejs">5. Client-Side Bridge (<code>pdu-bridge.js</code>)</h2>
+<p>The client-side bridge script (<a href="file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/pydataui/styling/js/pdu-bridge.js"><code>pydataui/styling/js/pdu-bridge.js</code></a>) guarantees sub-16 ms UI interactions:</p>
+<h3 id="features">Features</h3>
+<ol>
+<li><strong>Instant Client-Side Tab Switcher</strong>:
+   <div class="language-javascript highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">window</span><span class="p">.</span><span class="nx">switchTabMobile</span><span class="p">(</span><span class="s1">'transfers'</span><span class="p">);</span>
+</span></code></pre></div></li>
+<li>Toggles visibility classes (<code>hidden</code> / <code>block</code>) on <code>.tab-panel</code> containers in <code>0 ms</code>.</li>
+<li>Automatically preserves the active tab across HTMX partial re-renders via <code>localStorage</code>.</li>
+<li><strong>Payload Scoping</strong>:</li>
+<li>Automatically strips legacy blanket <code>#pdu-root</code> includes on client actions, keeping network and JNI payloads minimal (~0–12 bytes).</li>
+<li><strong>Micro-Latency Telemetry</strong>:</li>
+<li>Measures and logs exact round-trip times for every user interaction:
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>⚡ [PyDataUI] Action round-trip: 12ms
+</span></code></pre></div></li>
+<li><strong>Offline Resilience &amp; Error Toast</strong>:</li>
+<li>Catches network interruptions and displays a smooth in-app toast (<code>⚡ Offline Mode — Local Cache Active</code>) instead of letting the WebView display a crash screen.</li>
+<li><strong>Runtime Backend Host Switcher</strong>:</li>
+<li>Allows users or testers to switch between Offline Mode and a Remote Server URL at runtime:
+   <div class="language-javascript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">window</span><span class="p">.</span><span class="nx">promptBackendConfig</span><span class="p">();</span>
+</span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="6-how-to-verify-a-standalone-apk">6. How to Verify a Standalone APK</h2>
+<p>After building your APK, verify that zero remote IP addresses leaked into the bundle:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Inspect the embedded Capacitor configuration inside the APK</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>unzip<span class="w"> </span>-p<span class="w"> </span>app-debug.apk<span class="w"> </span>assets/capacitor.config.json
+</span></code></pre></div>
+<p><strong>Expected Standalone Output:</strong>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">"appId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.pydataui.app"</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">"appName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PyDataUI App"</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">"webDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"www"</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">"bundledWebRuntime"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<em>(Notice the complete absence of a <code>"server"</code> block).</em></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 2. Verify all offline public assets are bundled</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>unzip<span class="w"> </span>-l<span class="w"> </span>app-debug.apk<span class="w"> </span><span class="s2">"assets/public/*"</span>
+</span></code></pre></div>
+<p><strong>Expected Assets:</strong>
+- <code>assets/public/index.html</code> (~100 KB pre-rendered app shell)
+- <code>assets/public/pydataui.css</code> (precompiled stylesheet)
+- <code>assets/public/htmx.min.js</code> (offline interaction runtime)
+- <code>assets/public/pdu-bridge.js</code> (client bridge)</p>
+<hr />
+<h2 id="7-installing-directly-on-device-via-adb">7. Installing Directly on Device via ADB</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List connected devices</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>adb<span class="w"> </span>devices
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Install standalone APK directly</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>adb<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>android/app/build/outputs/apk/debug/app-debug.apk
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Launch app</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>adb<span class="w"> </span>shell<span class="w"> </span>am<span class="w"> </span>start<span class="w"> </span>-n<span class="w"> </span>com.pydataui.app/.MainActivity
+</span></code></pre></div>
+<p>Turn on <strong>Airplane Mode</strong> on your physical phone and open the app:
+* App opens instantly (&lt;150 ms).
+* All styles, navigation, tabs, and client interactions function cleanly without an internet connection.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

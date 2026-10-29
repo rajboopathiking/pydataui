@@ -269,7 +269,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../FULL_HTML_DOCUMENTATION/" class="md-tabs__link">
+        <a href="../NATIVE_OFFLINE_AND_STANDALONE/" class="md-tabs__link">
           
   
   
@@ -439,6 +439,8 @@
       
         
       
+        
+      
     
     
     
@@ -486,6 +488,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NATIVE_OFFLINE_AND_STANDALONE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Native Offline & Standalone Mobile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2118,13 +2148,22 @@ or via the run command:
 <hr />
 <h3 id="2-headless-android-apk-build-direct-device-install">2. Headless Android APK Build &amp; Direct Device Install</h3>
 <p>When you have finalized your app and want an installable Android APK, build it directly from your terminal:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Compile standalone Android APK without opening Android Studio GUI:</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Compile 100% offline standalone Android APK (React Native Parity, default):</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>android
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Directly install to connected Android device over USB/Wi-Fi via ADB:</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>install<span class="w"> </span>--platform<span class="w"> </span>android
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Compile for live Wi-Fi development / hot reload:</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>android<span class="w"> </span>--live-sync
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Connect to a remote production API:</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>android<span class="w"> </span>--server-url<span class="w"> </span>https://api.mycompany.com
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Directly install to connected Android device over USB/Wi-Fi via ADB:</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>install<span class="w"> </span>--platform<span class="w"> </span>android
 </span></code></pre></div>
-The compiled APK is output to <code>android/app/build/outputs/apk/debug/app-debug.apk</code>.</p>
+<p>The compiled APK is output to <code>android/app/build/outputs/apk/debug/app-debug.apk</code> and <code>./app-debug.apk</code>.</p>
+<blockquote>
+<p>📘 <strong>Deep Dive Guide</strong>: See <a href="../NATIVE_OFFLINE_AND_STANDALONE/">Native Offline &amp; Standalone Mobile Architecture</a> for full details on asset bundling, in-process JNI dispatch, and eliminating <code>net::ERR_CONNECTION_REFUSED</code>.</p>
+</blockquote>
 <hr />
 <h2 id="tier-1-instant-mobile-pwa-zero-setup">📱 Tier 1: Instant Mobile PWA (Zero Setup)</h2>
 <p>Every PyDataUI application includes automatic Progressive Web App (PWA) support enabled by default.</p>

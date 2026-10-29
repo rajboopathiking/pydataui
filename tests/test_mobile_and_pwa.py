@@ -94,12 +94,25 @@ def test_capacitor_scaffolding(tmp_path):
     )
     assert Path(config_file).exists()
 
-    # Verify capacitor.config.json
+    # Verify standalone capacitor.config.json has NO server.url (React Native / Offline Parity)
     with open(config_file, "r", encoding="utf-8") as f:
         config = json.load(f)
     assert config["appId"] == "io.pydataui.analytics"
     assert config["appName"] == "Analytics Mobile"
-    assert "8050" in config["server"]["url"]
+    assert config["webDir"] == "www"
+    assert "server" not in config
+
+    # Verify live-sync / remote server configuration attaches server.url
+    config_live = init_capacitor(
+        project_dir=str(tmp_path),
+        app_name="Analytics Mobile",
+        app_id="io.pydataui.analytics",
+        server_url="http://192.168.1.100:8050",
+        overwrite=True
+    )
+    with open(config_live, "r", encoding="utf-8") as f:
+        config_l = json.load(f)
+    assert config_l["server"]["url"] == "http://192.168.1.100:8050"
 
     # Verify package.json
     pkg_file = tmp_path / "package.json"

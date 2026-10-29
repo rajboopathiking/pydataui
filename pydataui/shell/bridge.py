@@ -49,6 +49,17 @@ class JNIBridge:
                 self._app = loaded
                 return loaded
 
+        # Auto-import standard entry points if not already loaded (e.g. inside Chaquopy APK)
+        for candidate in ("mobile_app", "app", "main"):
+            try:
+                mod = __import__(candidate)
+                active = getattr(mod, "app", None) or App.get_active_app()
+                if active is not None:
+                    self._app = active
+                    return active
+            except Exception:
+                pass
+
         raise RuntimeError(
             "PyDataUI In-Process JNI Bridge: No active App instance found. "
             "Initialize an App instance before dispatching JNI requests."

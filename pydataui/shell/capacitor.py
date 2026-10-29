@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -86,6 +87,22 @@ def prepare_mobile_assets(
 
     index_html = www_dir / "index.html"
     if rendered_html:
+        # Strip external Tailwind CDN script to guarantee full offline independence
+        rendered_html = re.sub(r'<script[^>]*src="https://cdn\.tailwindcss\.com"[^>]*></script>', '', rendered_html)
+        # Normalize HTMX script link to bundled local asset
+        rendered_html = re.sub(r'<script[^>]*src="[^"]*htmx[^"]*"[^>]*></script>', '<script src="htmx.min.js"></script>', rendered_html)
+        # Make CSS and manifest links local/relative
+        rendered_html = rendered_html.replace('href="/_pdu/static/pydataui.css"', 'href="pydataui.css"')
+        rendered_html = rendered_html.replace('href="/_pdu/static/css/pydataui.css"', 'href="pydataui.css"')
+        rendered_html = rendered_html.replace('href="/_pdu/manifest.json"', 'href="manifest.json"')
+        rendered_html = rendered_html.replace('src="/_pdu/', 'src="_pdu/').replace('href="/_pdu/', 'href="_pdu/')
+        # Ensure client bridge is attached
+        if "pdu-bridge.js" not in rendered_html:
+            bridge_tag = '<script src="pdu-bridge.js"></script>'
+            if "</body>" in rendered_html:
+                rendered_html = rendered_html.replace("</body>", f"    {bridge_tag}\n</body>")
+            else:
+                rendered_html += f"\n{bridge_tag}\n"
         index_html.write_text(rendered_html, encoding="utf-8")
     elif not index_html.exists():
         index_html.write_text(f"""<!DOCTYPE html>
@@ -194,6 +211,22 @@ self.addEventListener('fetch', (e) => {
 });
 """, encoding="utf-8")
 
+    # Mirror assets directly into Android public assets directory if it exists
+    android_public = root / "android" / "app" / "src" / "main" / "assets" / "public"
+    if android_public.exists():
+        for asset in (
+            www_dir / "index.html",
+            www_dir / "pydataui.css",
+            www_dir / "htmx.min.js",
+            www_dir / "pdu-bridge.js",
+            www_dir / "manifest.json",
+        ):
+            if asset.exists():
+                try:
+                    shutil.copy2(asset, android_public / asset.name)
+                except Exception:
+                    pass
+
     return www_dir
 
 
@@ -225,6 +258,41 @@ def package_ios_ipa(project_dir: str = ".", mode: str = "debug") -> Optional[Pat
     return ipa_path
 
 
+def install_android_scaffolding(project_dir: str = ".") -> None:
+    """
+    Ensure Android native project is wired with PyDataUI In-Process JNI bridge
+    and custom WebViewClient interceptor.
+    """
+    root = Path(project_dir).resolve()
+    android_app = root / "android" / "app"
+    if not android_app.exists():
+        return
+
+    # Java source target
+    target_pkg = android_app / "src" / "main" / "java" / "com" / "pydataui" / "app"
+    target_pkg.mkdir(parents=True, exist_ok=True)
+
+    templates_dir = Path(__file__).parent / "templates" / "android"
+    files_to_sync = [
+        "PyDataUIBridgePlugin.java",
+        "PyDataUIWebViewInterceptor.java",
+        "MainActivity.java",
+    ]
+    for fname in files_to_sync:
+        src = templates_dir / fname
+        dst = target_pkg / fname
+        if src.exists() and (not dst.exists() or fname != "MainActivity.java"):
+            try:
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+        elif src.exists() and fname == "MainActivity.java" and not dst.exists():
+            try:
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+
+
 def init_capacitor(
     project_dir: str = ".",
     app_name: str = "PyDataUI App",
@@ -232,9 +300,12 @@ def init_capacitor(
     port: int = 8000,
     server_url: Optional[str] = None,
     overwrite: bool = False,
+    standalone: bool = True,
 ) -> str:
     """
     Scaffold a Capacitor mobile project inside the target directory.
+    In standalone mode (default), the app bundles all assets into www/
+    and runs 100% offline with zero external network dependencies.
     """
     root = Path(project_dir).resolve()
     cap_config = root / "capacitor.config.json"
@@ -262,27 +333,36 @@ def init_capacitor(
         pkg_json.write_text(json.dumps(pkg_data, indent=2), encoding="utf-8")
 
     # 2. capacitor.config.json
-    url_target = server_url or f"http://10.0.2.2:{port}"
     config_data = {
         "appId": app_id,
         "appName": app_name,
         "webDir": "www",
         "bundledWebRuntime": False,
-        "server": {
-            "url": url_target,
+    }
+    if server_url:
+        config_data["server"] = {
+            "url": server_url,
             "cleartext": True,
         }
-    }
+    elif not standalone:
+        config_data["server"] = {
+            "url": f"http://10.0.2.2:{port}",
+            "cleartext": True,
+        }
 
     if not cap_config.exists() or overwrite:
         cap_config.write_text(json.dumps(config_data, indent=2), encoding="utf-8")
     else:
-        # Ensure webDir is pointing to www
+        # Ensure webDir is pointing to www and clean up server block if standalone
         try:
             curr = json.loads(cap_config.read_text(encoding="utf-8"))
             if curr.get("webDir") != "www":
                 curr["webDir"] = "www"
-                cap_config.write_text(json.dumps(curr, indent=2), encoding="utf-8")
+            if server_url:
+                curr["server"] = {"url": server_url, "cleartext": True}
+            elif standalone and "server" in curr:
+                del curr["server"]
+            cap_config.write_text(json.dumps(curr, indent=2), encoding="utf-8")
         except Exception:
             pass
 
@@ -294,7 +374,10 @@ def add_platform(project_dir: str = ".", platform: str = "android") -> int:
     root = Path(project_dir).resolve()
     cap_cmd = get_cap_cmd()
     print(f"📱 Adding Capacitor platform '{platform}'...")
-    return subprocess.call(cap_cmd + ["add", platform], cwd=str(root))
+    res = subprocess.call(cap_cmd + ["add", platform], cwd=str(root))
+    if platform == "android":
+        install_android_scaffolding(str(root))
+    return res
 
 
 def run_capacitor_dev(
@@ -419,24 +502,34 @@ def build_mobile(
     server_url: Optional[str] = None,
     port: int = 8000,
     app_file: Optional[str] = None,
+    standalone: bool = True,
+    live_sync: bool = False,
 ) -> int:
     """
     Headless mobile build without opening Xcode or Android Studio GUI.
     Compiles an installable Android APK or prepares iOS distribution.
-    Connects to live Python backend via Wi-Fi/tunnel for full interactivity and styles.
+
+    Standalone Mode (Default):
+    100% offline distribution with bundled assets (www/) served from device memory
+    and state interactions handled in-process via Chaquopy JNI bridge.
+    Zero external network requirement and zero 'net::ERR_CONNECTION_REFUSED'.
+
+    Live-Sync Mode (Dev):
+    Connects to running Python backend on local Wi-Fi or tunnel URL.
     """
     root = Path(project_dir).resolve()
+    is_standalone = standalone and not live_sync and server_url is None
+
     if not (root / "package.json").exists() or not (root / "capacitor.config.json").exists():
-        init_capacitor(str(root), port=port, server_url=server_url)
+        init_capacitor(str(root), port=port, server_url=server_url, standalone=is_standalone)
     else:
         prepare_mobile_assets(str(root), app_file=app_file)
 
     # Determine backend URL:
-    # 1. If server_url is explicitly given (e.g. http://192.168.1.5:8000 or tunnel URL), use it.
-    # 2. If server_url is not specified, auto-detect local Wi-Fi IP so the physical phone or emulator
-    #    connects directly to the running PyDataUI backend on the Mac!
+    # 1. In standalone mode (default): None (omit server block completely).
+    # 2. In live-sync mode or explicit server_url: use server_url or auto-detected local Wi-Fi IP.
     target_backend_url = server_url
-    if target_backend_url is None:
+    if live_sync and target_backend_url is None:
         try:
             from pydataui.shell.preview import get_local_ip
             lip = get_local_ip()
@@ -456,7 +549,8 @@ def build_mobile(
                     "url": target_backend_url,
                     "cleartext": True,
                 }
-            elif "server" in cfg and cfg["server"].get("url", "").startswith("http://10.0.2.2"):
+            elif is_standalone and "server" in cfg:
+                # Omit server block completely in standalone mode
                 del cfg["server"]
             cap_cfg_file.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
         except Exception:
@@ -473,9 +567,15 @@ def build_mobile(
         except Exception:
             pass
 
+    # Ensure Android native scaffolding is wired up with JNI bridge
+    if platform == "android":
+        install_android_scaffolding(str(root))
+
     if target_backend_url:
-        print(f"🌐 Configured Mobile App Backend: {target_backend_url}")
+        print(f"🌐 Configured Mobile App Backend (Live-Sync): {target_backend_url}")
         print("💡 The native mobile app will connect over Wi-Fi directly to your Python backend!")
+    else:
+        print("⚡ Standalone Mode: 100% offline APK with bundled assets & in-process JNI bridge.")
 
     cap_cmd = get_cap_cmd()
 

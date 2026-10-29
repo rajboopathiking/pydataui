@@ -170,7 +170,16 @@ def mobile_cmd(args):
             server_url = getattr(args, "server_url", None)
             port = getattr(args, "port", 8000)
             app_file = getattr(args, "file", None)
-            build_mobile(platform=args.platform, server_url=server_url, port=port, app_file=app_file)
+            live_sync = getattr(args, "live_sync", False)
+            standalone = getattr(args, "standalone", True) and not live_sync and server_url is None
+            build_mobile(
+                platform=args.platform,
+                server_url=server_url,
+                port=port,
+                app_file=app_file,
+                standalone=standalone,
+                live_sync=live_sync,
+            )
         else:
             from pydataui.shell.tauri import build_tauri
             build_tauri(target=args.platform)
@@ -333,9 +342,11 @@ def main():
     m_build = mobile_subs.add_parser("build", help="Build release APK or mobile packages without opening Android Studio/Xcode")
     m_build.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")
     m_build.add_argument("--engine", choices=["tauri", "capacitor"], default="capacitor", help="Mobile shell engine")
-    m_build.add_argument("--server-url", default=None, help="Backend server URL (defaults to auto-detected local Wi-Fi IP)")
+    m_build.add_argument("--standalone", action="store_true", default=True, help="Build 100% offline standalone APK with bundled assets (default)")
+    m_build.add_argument("--live-sync", action="store_true", default=False, help="Connect mobile app over Wi-Fi to running local Python dev server")
+    m_build.add_argument("--server-url", default=None, help="Explicit backend server URL (e.g. https://my-api.com)")
     m_build.add_argument("--port", type=int, default=8000, help="Backend server port (default: 8000)")
-    m_build.add_argument("--file", default=None, help="App file (e.g. app.py)")
+    m_build.add_argument("--file", default=None, help="App entry point (e.g. mobile_app.py or app.py)")
 
     m_install = mobile_subs.add_parser("install", help="Directly install compiled app on mobile device without IDE")
     m_install.add_argument("--platform", choices=["android", "ios"], default="android", help="Target platform")

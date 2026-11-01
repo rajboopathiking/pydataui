@@ -96,7 +96,7 @@ from pydataui.shadcn import (
 
 #### Buttons
 ```python
-from pydataui.components.shadcn import ShadButton
+from pydataui.shadcn import ShadButton
 
 ShadButton("Primary Button", variant="default")
 ShadButton("Destructive Action", variant="destructive")
@@ -107,9 +107,21 @@ ShadButton("Link Style", variant="link")
 ```
 Supported sizes: `size="default"`, `size="sm"`, `size="lg"`, `size="icon"`.
 
+<div style="margin: 1rem 0 2rem 0; padding: 1.5rem; background: #09090b; border: 1px solid #27272a; border-radius: 0.75rem;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview</div>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+    <button type="button" style="background: #fafafa; color: #09090b; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">Primary Button</button>
+    <button type="button" style="background: #ef4444; color: #fafafa; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer;">Destructive Action</button>
+    <button type="button" style="background: transparent; color: #fafafa; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid #27272a; cursor: pointer;">Outline Option</button>
+    <button type="button" style="background: #27272a; color: #fafafa; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer;">Secondary</button>
+    <button type="button" style="background: transparent; color: #a1a1aa; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer;">Ghost</button>
+    <button type="button" style="background: transparent; color: #fafafa; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 0.5rem; border-radius: 0.375rem; border: none; text-decoration: underline; cursor: pointer;">Link Style</button>
+  </div>
+</div>
+
 #### Cards
 ```python
-from pydataui.components.shadcn import (
+from pydataui.shadcn import (
     ShadCard, ShadCardHeader, ShadCardTitle, ShadCardDescription,
     ShadCardContent, ShadCardFooter, ShadButton
 )
@@ -128,6 +140,26 @@ card = ShadCard(
     class_name="max-w-md shadow-md"
 )
 ```
+
+<div style="margin: 1rem 0 2rem 0; padding: 1.5rem; background: #09090b; border: 1px solid #27272a; border-radius: 0.75rem;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview</div>
+  <div style="max-width: 24rem; background: #18181b; border: 1px solid #27272a; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+      <div>
+        <h4 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: #fafafa; letter-spacing: -0.025em;">Model Deployment</h4>
+        <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #a1a1aa;">Manage endpoint scaling and compute clusters.</p>
+      </div>
+      <span style="display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);">v1.1.1</span>
+    </div>
+    <div style="padding: 1rem 0; color: #e4e4e7; font-size: 0.875rem; border-top: 1px solid #27272a; border-bottom: 1px solid #27272a; margin: 0.75rem 0;">
+      Current status: <strong style="color: #4ade80;">Healthy</strong> across 3 replicas (sub-15ms latency).
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+      <button type="button" style="background: transparent; color: #fafafa; border: 1px solid #27272a; padding: 0.375rem 0.75rem; font-size: 0.875rem; border-radius: 0.375rem; cursor: pointer;">Settings</button>
+      <button type="button" style="background: #fafafa; color: #09090b; border: none; padding: 0.375rem 0.75rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; cursor: pointer;">Scale Up</button>
+    </div>
+  </div>
+</div>
 
 #### Modals & Drawers (Dialog & Sheet)
 Driven by pure Python state without writing JavaScript:
@@ -155,7 +187,7 @@ dialog = ShadDialog(
 
 #### Inputs, Selects, Switches, & Forms
 ```python
-from pydataui.components.shadcn import (
+from pydataui.shadcn import (
     ShadInput, ShadTextarea, ShadSelect, ShadCheckbox, ShadSwitch, ShadBadge
 )
 
@@ -164,6 +196,35 @@ ShadSelect(options=["PostgreSQL", "BigQuery", "Snowflake"], bind=FormState.db_ty
 ShadSwitch(checked=FormState.enable_cache, label="Enable Query Cache")
 ShadBadge("Production", variant="default")
 ```
+
+<div style="margin: 1rem 0 2rem 0; padding: 1.5rem; background: #09090b; border: 1px solid #27272a; border-radius: 0.75rem;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview</div>
+  <div style="max-width: 24rem; display: flex; flex-direction: column; gap: 1rem;">
+    <div>
+      <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #fafafa; margin-bottom: 0.35rem;">Search Query</label>
+      <input type="text" placeholder="Search tables..." value="warehouse_analytics_prod" readonly style="width: 100%; box-sizing: border-box; background: #09090b; border: 1px solid #27272a; color: #fafafa; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.375rem; outline: none;">
+    </div>
+    <div style="display: flex; items-center; justify-content: space-between;">
+      <span style="font-size: 0.875rem; color: #fafafa;">Target Database</span>
+      <select style="background: #18181b; border: 1px solid #27272a; color: #fafafa; padding: 0.375rem 0.75rem; font-size: 0.875rem; border-radius: 0.375rem; outline: none;">
+        <option>PostgreSQL</option>
+        <option>BigQuery</option>
+        <option>Snowflake</option>
+      </select>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-size: 0.875rem; color: #fafafa;">Enable Query Cache</span>
+      <div style="width: 2.75rem; height: 1.5rem; background: #fafafa; border-radius: 9999px; position: relative; cursor: pointer;">
+        <div style="width: 1.25rem; height: 1.25rem; background: #09090b; border-radius: 9999px; position: absolute; right: 0.125rem; top: 0.125rem;"></div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+      <span style="font-size: 0.875rem; color: #a1a1aa;">Environment:</span>
+      <span style="display: inline-flex; align-items: center; padding: 0.125rem 0.6rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; background: #fafafa; color: #09090b;">Production</span>
+      <span style="display: inline-flex; align-items: center; padding: 0.125rem 0.6rem; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);">99.9% SLI</span>
+    </div>
+  </div>
+</div>
 
 ---
 
@@ -315,6 +376,14 @@ card = GlassCard(
     P("Encapsulated styling that can be reused across pages.")
 )
 ```
+
+<div style="margin: 1rem 0 2rem 0; padding: 2rem; background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #09090b 100%); border: 1px solid #27272a; border-radius: 0.75rem;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #818cf8; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview (Glassmorphism)</div>
+  <div style="max-width: 22rem; background: rgba(24, 24, 27, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1rem; padding: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);">
+    <h3 style="margin: 0; font-size: 1.125rem; font-weight: 700; color: #fafafa;">Custom Glass Component</h3>
+    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #a1a1aa; line-height: 1.4;">Encapsulated styling with blur and glowing border that can be reused across pages.</p>
+  </div>
+</div>
 
 ---
 

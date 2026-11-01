@@ -439,8 +439,6 @@
       
         
       
-        
-      
     
     
     
@@ -504,34 +502,6 @@
     
   
     Native Offline & Standalone Mobile
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../FULL_HTML_DOCUMENTATION/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Full HTML Documentation
   
 
     
@@ -974,10 +944,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-working-example" class="md-nav__link">
+  <a href="#8-advanced-animations-with-gsap-greensock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. Working Example
+        8. Advanced Animations with GSAP (GreenSock)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Advanced Animations with GSAP (GreenSock)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-gsap-in-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading GSAP in App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#staggered-entrance-micro-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staggered Entrance &amp; Micro-Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinating-gsap-with-reactive-server-state-htmx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinating GSAP with Reactive Server State (HTMX)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Working Example
       
     </span>
   </a>
@@ -1660,10 +1680,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-working-example" class="md-nav__link">
+  <a href="#8-advanced-animations-with-gsap-greensock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. Working Example
+        8. Advanced Animations with GSAP (GreenSock)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Advanced Animations with GSAP (GreenSock)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-gsap-in-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading GSAP in App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#staggered-entrance-micro-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staggered Entrance &amp; Micro-Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinating-gsap-with-reactive-server-state-htmx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinating GSAP with Reactive Server State (HTMX)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Working Example
       
     </span>
   </a>
@@ -1793,110 +1863,116 @@
 - <code>--destructive</code> &amp; <code>--destructive-foreground</code>
 - <code>--border</code>, <code>--input</code>, <code>--ring</code>, <code>--radius</code></p>
 <h3 id="built-in-shadcnui-components">Built-In shadcn/ui Components</h3>
-<p>All shadcn components can be imported from <code>pydataui.components.shadcn</code> or <code>pydataui.components</code>:</p>
+<p>All shadcn components can be imported directly from <code>pydataui.shadcn</code>, <code>pydataui.components.shadcn</code>, or <code>pydataui.components</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">ShadButton</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadCardHeader</span><span class="p">,</span> <span class="n">ShadCardTitle</span><span class="p">,</span> <span class="n">ShadCardDescription</span><span class="p">,</span> <span class="n">ShadCardContent</span><span class="p">,</span> <span class="n">ShadCardFooter</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">ShadInput</span><span class="p">,</span> <span class="n">ShadBadge</span><span class="p">,</span> <span class="n">ShadDialog</span><span class="p">,</span> <span class="n">ShadSheet</span><span class="p">,</span> <span class="n">ShadTabs</span><span class="p">,</span> <span class="n">ShadSwitch</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="buttons">Buttons</h4>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShadButton</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Primary Button"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Destructive Action"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"destructive"</span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Outline Option"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"outline"</span><span class="p">)</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Secondary"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"secondary"</span><span class="p">)</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Ghost"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"ghost"</span><span class="p">)</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Link Style"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"link"</span><span class="p">)</span>
+<p><div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShadButton</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Primary Button"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Destructive Action"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"destructive"</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Outline Option"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"outline"</span><span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Secondary"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"secondary"</span><span class="p">)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Ghost"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"ghost"</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Link Style"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"link"</span><span class="p">)</span>
 </span></code></pre></div>
 Supported sizes: <code>size="default"</code>, <code>size="sm"</code>, <code>size="lg"</code>, <code>size="icon"</code>.</p>
 <h4 id="cards">Cards</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadCardHeader</span><span class="p">,</span> <span class="n">ShadCardTitle</span><span class="p">,</span> <span class="n">ShadCardDescription</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">ShadCardContent</span><span class="p">,</span> <span class="n">ShadCardFooter</span><span class="p">,</span> <span class="n">ShadButton</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">card</span> <span class="o">=</span> <span class="n">ShadCard</span><span class="p">(</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">ShadCardHeader</span><span class="p">(</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">ShadCardTitle</span><span class="p">(</span><span class="s2">"Model Deployment"</span><span class="p">),</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="n">ShadCardDescription</span><span class="p">(</span><span class="s2">"Manage endpoint scaling and compute clusters."</span><span class="p">)</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">),</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">ShadCardContent</span><span class="p">(</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="n">Text</span><span class="p">(</span><span class="s2">"Current status: Healthy across 3 replicas."</span><span class="p">)</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="p">),</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">ShadCardFooter</span><span class="p">(</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Scale Up"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="p">),</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"max-w-md shadow-md"</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadCardHeader</span><span class="p">,</span> <span class="n">ShadCardTitle</span><span class="p">,</span> <span class="n">ShadCardDescription</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">ShadCardContent</span><span class="p">,</span> <span class="n">ShadCardFooter</span><span class="p">,</span> <span class="n">ShadButton</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">card</span> <span class="o">=</span> <span class="n">ShadCard</span><span class="p">(</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">ShadCardHeader</span><span class="p">(</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">ShadCardTitle</span><span class="p">(</span><span class="s2">"Model Deployment"</span><span class="p">),</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="n">ShadCardDescription</span><span class="p">(</span><span class="s2">"Manage endpoint scaling and compute clusters."</span><span class="p">)</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="p">),</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">ShadCardContent</span><span class="p">(</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        <span class="n">Text</span><span class="p">(</span><span class="s2">"Current status: Healthy across 3 replicas."</span><span class="p">)</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="p">),</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">ShadCardFooter</span><span class="p">(</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="n">ShadButton</span><span class="p">(</span><span class="s2">"Scale Up"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="p">),</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"max-w-md shadow-md"</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="p">)</span>
 </span></code></pre></div>
 <h4 id="modals-drawers-dialog-sheet">Modals &amp; Drawers (Dialog &amp; Sheet)</h4>
 <p>Driven by pure Python state without writing JavaScript:
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">State</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShadDialog</span><span class="p">,</span> <span class="n">ShadSheet</span><span class="p">,</span> <span class="n">ShadButton</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ModalState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">is_open</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">open_modal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_open</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">close_modal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_open</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="n">dialog</span> <span class="o">=</span> <span class="n">ShadDialog</span><span class="p">(</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">Text</span><span class="p">(</span><span class="s2">"Do you want to delete this dataset? This action cannot be undone."</span><span class="p">),</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Confirm Action"</span><span class="p">,</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">"Permanent deletion warning"</span><span class="p">,</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="nb">open</span><span class="o">=</span><span class="n">ModalState</span><span class="o">.</span><span class="n">is_open</span><span class="p">,</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="n">on_close</span><span class="o">=</span><span class="n">ModalState</span><span class="o">.</span><span class="n">close_modal</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">State</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShadDialog</span><span class="p">,</span> <span class="n">ShadSheet</span><span class="p">,</span> <span class="n">ShadButton</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ModalState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">is_open</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">open_modal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_open</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">close_modal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_open</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">dialog</span> <span class="o">=</span> <span class="n">ShadDialog</span><span class="p">(</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="n">Text</span><span class="p">(</span><span class="s2">"Do you want to delete this dataset? This action cannot be undone."</span><span class="p">),</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Confirm Action"</span><span class="p">,</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">"Permanent deletion warning"</span><span class="p">,</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="nb">open</span><span class="o">=</span><span class="n">ModalState</span><span class="o">.</span><span class="n">is_open</span><span class="p">,</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="n">on_close</span><span class="o">=</span><span class="n">ModalState</span><span class="o">.</span><span class="n">close_modal</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="p">)</span>
 </span></code></pre></div></p>
 <h4 id="inputs-selects-switches-forms">Inputs, Selects, Switches, &amp; Forms</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">ShadInput</span><span class="p">,</span> <span class="n">ShadTextarea</span><span class="p">,</span> <span class="n">ShadSelect</span><span class="p">,</span> <span class="n">ShadCheckbox</span><span class="p">,</span> <span class="n">ShadSwitch</span><span class="p">,</span> <span class="n">ShadBadge</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">)</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">ShadInput</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">FormState</span><span class="o">.</span><span class="n">search_query</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">"Search tables..."</span><span class="p">)</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">ShadSelect</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">"PostgreSQL"</span><span class="p">,</span> <span class="s2">"BigQuery"</span><span class="p">,</span> <span class="s2">"Snowflake"</span><span class="p">],</span> <span class="n">bind</span><span class="o">=</span><span class="n">FormState</span><span class="o">.</span><span class="n">db_type</span><span class="p">)</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">ShadSwitch</span><span class="p">(</span><span class="n">checked</span><span class="o">=</span><span class="n">FormState</span><span class="o">.</span><span class="n">enable_cache</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Enable Query Cache"</span><span class="p">)</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">ShadBadge</span><span class="p">(</span><span class="s2">"Production"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">ShadInput</span><span class="p">,</span> <span class="n">ShadTextarea</span><span class="p">,</span> <span class="n">ShadSelect</span><span class="p">,</span> <span class="n">ShadCheckbox</span><span class="p">,</span> <span class="n">ShadSwitch</span><span class="p">,</span> <span class="n">ShadBadge</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">ShadInput</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">FormState</span><span class="o">.</span><span class="n">search_query</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">"Search tables..."</span><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">ShadSelect</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">"PostgreSQL"</span><span class="p">,</span> <span class="s2">"BigQuery"</span><span class="p">,</span> <span class="s2">"Snowflake"</span><span class="p">],</span> <span class="n">bind</span><span class="o">=</span><span class="n">FormState</span><span class="o">.</span><span class="n">db_type</span><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">ShadSwitch</span><span class="p">(</span><span class="n">checked</span><span class="o">=</span><span class="n">FormState</span><span class="o">.</span><span class="n">enable_cache</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Enable Query Cache"</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">ShadBadge</span><span class="p">(</span><span class="s2">"Production"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"default"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h2 id="4-semantic-html-in-pure-python-pydatauihtml">4. Semantic HTML in Pure Python (<code>pydataui.html</code>)</h2>
 <p>Instead of being restricted to high-level widgets, you can compose standard semantic HTML tags directly in Python using <code>pydataui.html</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">Header</span><span class="p">,</span> <span class="n">Nav</span><span class="p">,</span> <span class="n">Main</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">Footer</span><span class="p">,</span> <span class="n">Article</span><span class="p">,</span> <span class="n">Aside</span><span class="p">,</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">Div</span><span class="p">,</span> <span class="n">Span</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">H1</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">H3</span><span class="p">,</span> <span class="n">H4</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Ul</span><span class="p">,</span> <span class="n">Li</span><span class="p">,</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">Svg</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Rect</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">)</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">page_layout</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">Header</span><span class="p">(</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">Nav</span><span class="p">(</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>            <span class="n">Span</span><span class="p">(</span><span class="s2">"My Brand"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"font-extrabold text-xl"</span><span class="p">),</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>            <span class="n">A</span><span class="p">(</span><span class="s2">"Documentation"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/docs"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-sm hover:underline"</span><span class="p">),</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>            <span class="n">class_name</span><span class="o">=</span><span class="s2">"flex justify-between items-center max-w-7xl mx-auto p-4"</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        <span class="p">),</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"border-b bg-card/80 backdrop-blur-md"</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="p">),</span>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="n">Main</span><span class="p">(</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        <span class="n">H1</span><span class="p">(</span><span class="s2">"Semantic HTML in Python"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-3xl font-bold tracking-tight"</span><span class="p">),</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>        <span class="n">P</span><span class="p">(</span><span class="s2">"Write native tags with Tailwind classes and Python reactivity."</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-muted-foreground mt-2"</span><span class="p">),</span>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"p-8 max-w-7xl mx-auto"</span>
-</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    <span class="p">),</span>
-</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    <span class="n">Footer</span><span class="p">(</span>
-</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>        <span class="n">P</span><span class="p">(</span><span class="s2">"© 2026 PyDataUI"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-center text-xs text-muted-foreground"</span><span class="p">),</span>
-</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"border-t p-4"</span>
-</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    <span class="p">),</span>
-</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"min-h-screen bg-background"</span>
-</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">Header</span><span class="p">,</span> <span class="n">Nav</span><span class="p">,</span> <span class="n">Main</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">Footer</span><span class="p">,</span> <span class="n">Article</span><span class="p">,</span> <span class="n">Aside</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">Div</span><span class="p">,</span> <span class="n">Span</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">H1</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">H3</span><span class="p">,</span> <span class="n">H4</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Ul</span><span class="p">,</span> <span class="n">Li</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">Svg</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Rect</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">page_layout</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">Header</span><span class="p">(</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="n">Nav</span><span class="p">(</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>            <span class="n">Span</span><span class="p">(</span><span class="s2">"My Brand"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"font-extrabold text-xl"</span><span class="p">),</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>            <span class="n">A</span><span class="p">(</span><span class="s2">"Documentation"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/docs"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-sm hover:underline"</span><span class="p">),</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>            <span class="n">class_name</span><span class="o">=</span><span class="s2">"flex justify-between items-center max-w-7xl mx-auto p-4"</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>        <span class="p">),</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"border-b bg-card/80 backdrop-blur-md"</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="p">),</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="n">Main</span><span class="p">(</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        <span class="n">H1</span><span class="p">(</span><span class="s2">"Semantic HTML in Python"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-3xl font-bold tracking-tight"</span><span class="p">),</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        <span class="n">P</span><span class="p">(</span><span class="s2">"Write native tags with Tailwind classes and Python reactivity."</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-muted-foreground mt-2"</span><span class="p">),</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"p-8 max-w-7xl mx-auto"</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    <span class="p">),</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    <span class="n">Footer</span><span class="p">(</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>        <span class="n">P</span><span class="p">(</span><span class="s2">"© 2026 PyDataUI"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-center text-xs text-muted-foreground"</span><span class="p">),</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"border-t p-4"</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    <span class="p">),</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"min-h-screen bg-background"</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="svg-icons-vector-graphics">SVG Icons &amp; Vector Graphics</h3>
 <p>Create clean vector icons without external asset bundles:
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Svg</span><span class="p">,</span> <span class="n">Path</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">bolt_icon</span> <span class="o">=</span> <span class="n">Svg</span><span class="p">(</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="s2">"M13 10V3L4 14h7v7l9-11h-7z"</span><span class="p">),</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">viewBox</span><span class="o">=</span><span class="s2">"0 0 24 24"</span><span class="p">,</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">fill</span><span class="o">=</span><span class="s2">"currentColor"</span><span class="p">,</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"w-6 h-6 text-amber-500"</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Svg</span><span class="p">,</span> <span class="n">Path</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">bolt_icon</span> <span class="o">=</span> <span class="n">Svg</span><span class="p">(</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="s2">"M13 10V3L4 14h7v7l9-11h-7z"</span><span class="p">),</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">viewBox</span><span class="o">=</span><span class="s2">"0 0 24 24"</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">fill</span><span class="o">=</span><span class="s2">"currentColor"</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"w-6 h-6 text-amber-500"</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">)</span>
 </span></code></pre></div></p>
 <h3 id="html5-boolean-attributes">HTML5 Boolean Attributes</h3>
 <p>PyDataUI intelligently formats HTML boolean attributes according to HTML5 standards:
@@ -1906,89 +1982,162 @@ Supported sizes: <code>size="default"</code>, <code>size="sm"</code>, <code>size
 <hr />
 <h2 id="5-raw-html-custom-templates-html-rawhtml">5. Raw HTML &amp; Custom Templates (<code>Html</code> / <code>RawHtml</code>)</h2>
 <p>If you have existing HTML snippets, complex SVG graphics, or third-party web embeds, use <code>Html</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Html</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">custom_embed</span> <span class="o">=</span> <span class="n">Html</span><span class="p">(</span><span class="s2">"""</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s2">&lt;div class="relative overflow-hidden rounded-2xl bg-slate-900 p-8 text-white shadow-2xl"&gt;</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s2">    &lt;div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-violet-600/30 blur-3xl"&gt;&lt;/div&gt;</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s2">    &lt;h3 class="text-xl font-bold"&gt;Hardware Accelerated Streaming&lt;/h3&gt;</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s2">    &lt;p class="text-slate-400 text-sm mt-2"&gt;Zero JavaScript required on the client side.&lt;/p&gt;</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s2">&lt;/div&gt;</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s2">"""</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Html</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">custom_embed</span> <span class="o">=</span> <span class="n">Html</span><span class="p">(</span><span class="s2">"""</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="s2">&lt;div class="relative overflow-hidden rounded-2xl bg-slate-900 p-8 text-white shadow-2xl"&gt;</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s2">    &lt;div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-violet-600/30 blur-3xl"&gt;&lt;/div&gt;</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s2">    &lt;h3 class="text-xl font-bold"&gt;Hardware Accelerated Streaming&lt;/h3&gt;</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s2">    &lt;p class="text-slate-400 text-sm mt-2"&gt;Zero JavaScript required on the client side.&lt;/p&gt;</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s2">&lt;/div&gt;</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="s2">"""</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h2 id="6-application-level-customization-app-configuration">6. Application-Level Customization (<code>App</code> Configuration)</h2>
 <p>Customize fonts, third-party libraries, and Tailwind themes directly when creating the <code>App</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Analytics Portal"</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">theme</span><span class="o">=</span><span class="s2">"dark"</span><span class="p">,</span>          <span class="c1"># 'light', 'dark', or 'auto'</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">palette</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span>        <span class="c1"># 'zinc', 'slate', 'blue', 'violet', 'green', 'rose', 'orange'</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="c1"># Custom Tailwind extensions</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">tailwind_config</span><span class="o">=</span><span class="p">{</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="s2">"theme"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>            <span class="s2">"extend"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>                <span class="s2">"colors"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>                    <span class="s2">"brand"</span><span class="p">:</span> <span class="s2">"#0ea5e9"</span><span class="p">,</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>                    <span class="s2">"accent-glow"</span><span class="p">:</span> <span class="s2">"#38bdf8"</span>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>                <span class="p">},</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>                <span class="s2">"fontFamily"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                    <span class="s2">"mono"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Fira Code"</span><span class="p">,</span> <span class="s2">"monospace"</span><span class="p">]</span>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>                <span class="p">}</span>
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>            <span class="p">}</span>
-</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        <span class="p">}</span>
-</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    <span class="p">},</span>
-</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
-</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    <span class="c1"># Custom Google Fonts or external CSS</span>
-</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    <span class="n">stylesheets</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>        <span class="s2">"https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&amp;display=swap"</span>
-</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    <span class="p">],</span>
-</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>
-</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    <span class="c1"># External JavaScript CDN libraries (e.g. Canvas Confetti, Lucide)</span>
-</span><span id="__span-11-29"><a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>    <span class="n">scripts</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-11-30"><a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>        <span class="s2">"https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"</span>
-</span><span id="__span-11-31"><a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>    <span class="p">],</span>
-</span><span id="__span-11-32"><a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
-</span><span id="__span-11-33"><a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>    <span class="c1"># Custom global CSS rules</span>
-</span><span id="__span-11-34"><a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>    <span class="n">custom_css</span><span class="o">=</span><span class="s2">"""</span>
-</span><span id="__span-11-35"><a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="s2">    body { font-family: 'Inter', sans-serif; }</span>
-</span><span id="__span-11-36"><a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="s2">    code, pre { font-family: 'Fira Code', monospace; }</span>
-</span><span id="__span-11-37"><a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="s2">    """</span><span class="p">,</span>
-</span><span id="__span-11-38"><a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>
-</span><span id="__span-11-39"><a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>    <span class="c1"># Custom &lt;head&gt; tags (e.g. meta tags, OpenGraph, favicon)</span>
-</span><span id="__span-11-40"><a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>    <span class="n">head</span><span class="o">=</span><span class="s2">"""</span>
-</span><span id="__span-11-41"><a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="s2">    &lt;meta name="description" content="Production Analytics Portal powered by PyDataUI"&gt;</span>
-</span><span id="__span-11-42"><a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="s2">    &lt;link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🚀&lt;/text&gt;&lt;/svg&gt;"&gt;</span>
-</span><span id="__span-11-43"><a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="s2">    """</span>
-</span><span id="__span-11-44"><a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Analytics Portal"</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">theme</span><span class="o">=</span><span class="s2">"dark"</span><span class="p">,</span>          <span class="c1"># 'light', 'dark', or 'auto'</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">palette</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span>        <span class="c1"># 'zinc', 'slate', 'blue', 'violet', 'green', 'rose', 'orange'</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="c1"># Custom Tailwind extensions</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">tailwind_config</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>        <span class="s2">"theme"</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>            <span class="s2">"extend"</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>                <span class="s2">"colors"</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>                    <span class="s2">"brand"</span><span class="p">:</span> <span class="s2">"#0ea5e9"</span><span class="p">,</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>                    <span class="s2">"accent-glow"</span><span class="p">:</span> <span class="s2">"#38bdf8"</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>                <span class="p">},</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>                <span class="s2">"fontFamily"</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>                    <span class="s2">"mono"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Fira Code"</span><span class="p">,</span> <span class="s2">"monospace"</span><span class="p">]</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>                <span class="p">}</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>            <span class="p">}</span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>        <span class="p">}</span>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="p">},</span>
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    <span class="c1"># Custom Google Fonts or external CSS</span>
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>    <span class="n">stylesheets</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>        <span class="s2">"https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&amp;display=swap"</span>
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>    <span class="p">],</span>
+</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
+</span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>    <span class="c1"># External JavaScript CDN libraries (e.g. Canvas Confetti, Lucide)</span>
+</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="n">scripts</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>        <span class="s2">"https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"</span>
+</span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>    <span class="p">],</span>
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>
+</span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>    <span class="c1"># Custom global CSS rules</span>
+</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>    <span class="n">custom_css</span><span class="o">=</span><span class="s2">"""</span>
+</span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="s2">    body { font-family: 'Inter', sans-serif; }</span>
+</span><span id="__span-12-36"><a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="s2">    code, pre { font-family: 'Fira Code', monospace; }</span>
+</span><span id="__span-12-37"><a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a><span class="s2">    """</span><span class="p">,</span>
+</span><span id="__span-12-38"><a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>
+</span><span id="__span-12-39"><a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>    <span class="c1"># Custom &lt;head&gt; tags (e.g. meta tags, OpenGraph, favicon)</span>
+</span><span id="__span-12-40"><a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>    <span class="n">head</span><span class="o">=</span><span class="s2">"""</span>
+</span><span id="__span-12-41"><a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="s2">    &lt;meta name="description" content="Production Analytics Portal powered by PyDataUI"&gt;</span>
+</span><span id="__span-12-42"><a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="s2">    &lt;link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🚀&lt;/text&gt;&lt;/svg&gt;"&gt;</span>
+</span><span id="__span-12-43"><a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="s2">    """</span>
+</span><span id="__span-12-44"><a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h2 id="7-creating-reusable-custom-components">7. Creating Reusable Custom Components</h2>
 <p>You can encapsulate your own custom UI design system components by subclassing <code>Component</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">GlassCard</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="sd">"""Reusable Glassmorphism Card with Tailwind CSS."""</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">tag</span> <span class="o">=</span> <span class="s2">"div"</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>            <span class="s2">"backdrop-blur-xl bg-card/60 border border-border/50"</span><span class="p">,</span>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>            <span class="s2">"rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300"</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>        <span class="p">]</span>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Usage:</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="n">card</span> <span class="o">=</span> <span class="n">GlassCard</span><span class="p">(</span>
-</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">H2</span><span class="p">(</span><span class="s2">"Custom Glass Component"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-lg font-bold"</span><span class="p">),</span>
-</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">"Encapsulated styling that can be reused across pages."</span><span class="p">)</span>
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">GlassCard</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="sd">"""Reusable Glassmorphism Card with Tailwind CSS."""</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">tag</span> <span class="o">=</span> <span class="s2">"div"</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>            <span class="s2">"backdrop-blur-xl bg-card/60 border border-border/50"</span><span class="p">,</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>            <span class="s2">"rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300"</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>        <span class="p">]</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Usage:</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="n">card</span> <span class="o">=</span> <span class="n">GlassCard</span><span class="p">(</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="n">H2</span><span class="p">(</span><span class="s2">"Custom Glass Component"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-lg font-bold"</span><span class="p">),</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">"Encapsulated styling that can be reused across pages."</span><span class="p">)</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="8-working-example">8. Working Example</h2>
+<h2 id="8-advanced-animations-with-gsap-greensock">8. Advanced Animations with GSAP (GreenSock)</h2>
+<p>PyDataUI has <strong>zero limitations</strong> on client-side animation and script libraries. You can integrate <strong>GSAP (GreenSock)</strong>, ScrollTrigger, Anime.js, Lucide Icons, Canvas Confetti, and Three.js with full reactive state support.</p>
+<h3 id="loading-gsap-in-app">Loading GSAP in <code>App</code></h3>
+<p>Pass the official GSAP CDN links directly to the <code>scripts</code> parameter:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"GSAP Animated App"</span><span class="p">,</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">theme</span><span class="o">=</span><span class="s2">"dark"</span><span class="p">,</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">palette</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="n">scripts</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="s2">"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"</span><span class="p">,</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="s2">"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"</span><span class="p">,</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="p">]</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="staggered-entrance-micro-interactions">Staggered Entrance &amp; Micro-Interactions</h3>
+<p>Attach standard CSS classes (<code>gsap-hero</code>, <code>gsap-card</code>) to any PyDataUI or shadcn component, and embed your animation logic using <code>Html</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Div</span><span class="p">,</span> <span class="n">H1</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Html</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadButton</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">return</span> <span class="n">Div</span><span class="p">(</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="n">H1</span><span class="p">(</span><span class="s2">"Fluid Animations"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"gsap-hero text-5xl font-extrabold tracking-tight"</span><span class="p">),</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        <span class="n">P</span><span class="p">(</span><span class="s2">"60fps physics-based motion with zero configuration."</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"gsap-hero text-muted-foreground mt-2"</span><span class="p">),</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="n">Div</span><span class="p">(</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>            <span class="n">ShadCard</span><span class="p">(</span><span class="n">H3</span><span class="p">(</span><span class="s2">"Card 1"</span><span class="p">),</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"gsap-card p-6"</span><span class="p">),</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>            <span class="n">ShadCard</span><span class="p">(</span><span class="n">H3</span><span class="p">(</span><span class="s2">"Card 2"</span><span class="p">),</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"gsap-card p-6"</span><span class="p">),</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>            <span class="n">ShadCard</span><span class="p">(</span><span class="n">H3</span><span class="p">(</span><span class="s2">"Card 3"</span><span class="p">),</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"gsap-card p-6"</span><span class="p">),</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>            <span class="n">class_name</span><span class="o">=</span><span class="s2">"grid grid-cols-3 gap-6 mt-8"</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>        <span class="p">),</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>        <span class="c1"># Embedded GSAP Script</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>        <span class="n">Html</span><span class="p">(</span><span class="s2">"""</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="s2">        &lt;script&gt;</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="s2">            function runAnimations() {</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="s2">                // Staggered hero text entrance</span>
+</span><span id="__span-15-22"><a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="s2">                gsap.from(".gsap-hero", {</span>
+</span><span id="__span-15-23"><a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="s2">                    y: -30,</span>
+</span><span id="__span-15-24"><a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="s2">                    opacity: 0,</span>
+</span><span id="__span-15-25"><a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="s2">                    duration: 0.9,</span>
+</span><span id="__span-15-26"><a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="s2">                    stagger: 0.15,</span>
+</span><span id="__span-15-27"><a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="s2">                    ease: "power4.out"</span>
+</span><span id="__span-15-28"><a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="s2">                });</span>
+</span><span id="__span-15-29"><a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
+</span><span id="__span-15-30"><a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="s2">                // Spring entrance for cards</span>
+</span><span id="__span-15-31"><a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="s2">                gsap.from(".gsap-card", {</span>
+</span><span id="__span-15-32"><a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="s2">                    scale: 0.88,</span>
+</span><span id="__span-15-33"><a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a><span class="s2">                    opacity: 0,</span>
+</span><span id="__span-15-34"><a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="s2">                    duration: 0.8,</span>
+</span><span id="__span-15-35"><a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="s2">                    delay: 0.3,</span>
+</span><span id="__span-15-36"><a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a><span class="s2">                    stagger: 0.18,</span>
+</span><span id="__span-15-37"><a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="s2">                    ease: "back.out(1.7)"</span>
+</span><span id="__span-15-38"><a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a><span class="s2">                });</span>
+</span><span id="__span-15-39"><a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="s2">            }</span>
+</span><span id="__span-15-40"><a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>
+</span><span id="__span-15-41"><a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a><span class="s2">            // Execute on initial page load</span>
+</span><span id="__span-15-42"><a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a><span class="s2">            document.addEventListener("DOMContentLoaded", runAnimations);</span>
+</span><span id="__span-15-43"><a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>
+</span><span id="__span-15-44"><a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a><span class="s2">            // Re-trigger after HTMX partial page swaps (reactive updates)</span>
+</span><span id="__span-15-45"><a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a><span class="s2">            document.addEventListener("htmx:afterSwap", runAnimations);</span>
+</span><span id="__span-15-46"><a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a><span class="s2">        &lt;/script&gt;</span>
+</span><span id="__span-15-47"><a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a><span class="s2">        """</span><span class="p">),</span>
+</span><span id="__span-15-48"><a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"min-h-screen p-12 bg-background text-foreground"</span>
+</span><span id="__span-15-49"><a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>    <span class="p">)</span>
+</span></code></pre></div>
+<h3 id="coordinating-gsap-with-reactive-server-state-htmx">Coordinating GSAP with Reactive Server State (HTMX)</h3>
+<p>When Python updates state on the server (e.g. via HTMX swaps), simply listen to <code>htmx:afterSwap</code> or <code>htmx:afterSettle</code>:
+- Initial render: <code>DOMContentLoaded</code> runs the entrance timeline.
+- Dynamic data refresh: <code>htmx:afterSwap</code> animates updated numbers, flash badges, or newly inserted list rows.</p>
+<hr />
+<h2 id="9-working-example">9. Working Example</h2>
 <p>See the full working showcase in <a href="file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/examples/custom_ui_app.py"><code>examples/custom_ui_app.py</code></a>:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>python<span class="w"> </span>examples/custom_ui_app.py
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>examples/custom_ui_app.py
 </span></code></pre></div>
 Open <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> to inspect the dark theme, violet palette, interactive progress bars, and custom SVG animations.</p>
 

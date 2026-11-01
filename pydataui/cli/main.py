@@ -253,8 +253,20 @@ def show_version(args):
 
 def open_docs(args):
     import webbrowser
-    print("Opening PyDataUI documentation in your browser...")
-    webbrowser.open("https://github.com/rajboopathiking/pydataui#readme")
+    # Check for local compiled MkDocs HTML site first
+    candidates = [
+        Path.cwd() / "site" / "index.html",
+        Path(__file__).resolve().parent.parent.parent / "site" / "index.html",
+    ]
+    for c in candidates:
+        if c.exists():
+            print(f"📖 Opening local PyDataUI documentation: file://{c}")
+            webbrowser.open(f"file://{c}")
+            return
+
+    docs_url = "https://rajboopathiking.github.io/pydataui/"
+    print(f"🌐 Opening PyDataUI documentation: {docs_url}")
+    webbrowser.open(docs_url)
 
 def check_app(args):
     print(f"Validating '{args.file}' syntax and App definitions...")

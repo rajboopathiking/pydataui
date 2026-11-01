@@ -3,16 +3,14 @@
 > **The Production-Grade Full-Stack Python Framework for Web, Mobile & Desktop.**  
 > Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.
 
-<div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;" markdown="1">
+<div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;" markdown="1">
 
-### 🌐 Standalone Full HTML Documentation Available
-Looking for standalone, offline-ready HTML documentation?
-- **[📘 Full Developer Manual (HTML)](full-documentation.html)** — Comprehensive 14-chapter architecture & API reference.
-- **[📱 Mobile & Desktop Guide (HTML)](mobile-desktop-guide.html)** — Standalone Android APK, iOS IPA, ADB, & Sideloadly guide.
-- **[🧩 Interactive API Explorer (HTML)](api-reference.html)** — Searchable component catalog with parameter specs & code copy.
-- **[📊 Interactive Template Gallery (HTML)](examples/data-team-gallery.html)** — Live showcase of enterprise data templates.
-
-Or browse the [Full HTML Documentation Suite](FULL_HTML_DOCUMENTATION.md) directly in the sidebar.
+### 📖 Featured Architecture & Implementation Guides
+- **[📱 Native Offline & Standalone Mobile](NATIVE_OFFLINE_AND_STANDALONE.md)** — React Native-parity offline builds, bundled assets, and in-process JNI routing.
+- **[🎨 UI Customization, shadcn/ui & GSAP](CUSTOMIZATION.md)** — Tailwind CSS, Radix HSL design tokens, and 60fps GSAP timelines.
+- **[🔌 FastAPI Mounting & Multi-App Routing](FASTAPI_MOUNTING_AND_CONFLICTS.md)** — Seamless mounting onto existing FastAPI/Starlette applications.
+- **[🧩 API Reference](API_REFERENCE.md)** — Complete component signatures, state management, and lifecycle hooks.
+- **[📊 Template Gallery](TEMPLATE_GALLERY.md)** — Live enterprise data dashboards and pipeline templates.
 </div>
 
 ---

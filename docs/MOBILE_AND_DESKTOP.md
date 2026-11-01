@@ -2,10 +2,10 @@
 
 PyDataUI gives you pure-Python cross-platform application development across **Web**, **Mobile (iOS & Android)**, and **Desktop (macOS, Windows, Linux)** with **zero Swift or Kotlin code required**.
 
-<div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;" markdown="1">
+<div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;" markdown="1">
 
-👉 **Prefer an interactive, standalone HTML guide?**  
-View the <a href="../mobile-desktop-guide.html" target="_blank" rel="noopener"><strong>Interactive Mobile &amp; Desktop Build Guide (HTML)</strong></a> with interactive OS tabs, ADB checklist, and Sideloadly IPA walkthrough.
+👉 **Looking for Native Offline Mobile Architecture?**  
+See [Native Offline & Standalone Architecture](NATIVE_OFFLINE_AND_STANDALONE.md) for bundling assets inside APK/IPA packages with 100% offline standalone operation and in-process JNI dispatch.
 </div>
 
 ---

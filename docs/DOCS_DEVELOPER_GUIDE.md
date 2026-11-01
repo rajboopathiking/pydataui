@@ -194,18 +194,13 @@ You can embed custom HTML tables with custom column alignments and inline badge 
 </table>
 ```
 
-### 4. Standalone Full HTML Documents (`docs/*.html`)
+### 4. Single Source of Truth Architecture
 
-In addition to Markdown, PyDataUI provides standalone full HTML documentation pages that function completely offline and can be viewed directly in any browser:
+PyDataUI uses Markdown source files (`docs/*.md`) as the single source of truth. Running `mkdocs build` compiles all documentation pages into a complete, standalone, search-indexed HTML static site in `site/`:
 
-| File | Purpose | Key Features |
-| :--- | :--- | :--- |
-| `docs/full-documentation.html` | Master Developer Manual | 14 in-depth chapters, search bar, dark/light toggle, 1-click code copying, live UI demos. |
-| `docs/mobile-desktop-guide.html` | Mobile & Desktop Native Guide | Interactive tabs for Android APK, iOS IPA, Sideloadly, ADB commands, & Tauri. |
-| `docs/api-reference.html` | Interactive API Explorer | Real-time component filtering by category, parameter type signatures, code generator. |
-| `docs/examples/data-team-gallery.html` | Enterprise Template Gallery | Live interactive templates with Chart.js charts, KPIs, and data tables. |
-
-When you run `mkdocs build`, MkDocs automatically copies all `.html` files in `docs/` directly to `site/` so they are immediately available at the root URL (e.g. `https://rajboopathiking.github.io/pydataui/full-documentation.html`).
+- **100% Offline Capable**: The output directory `site/` contains self-contained HTML, CSS, and JS that can be viewed locally in any browser (`file:///path/to/site/index.html`).
+- **Full-Text Search & Dark Mode**: Built directly into the compiled site without maintaining duplicate manual HTML files.
+- **Automated Verification**: Run `mkdocs build --strict` to validate all links and anchors.
 
 ---
 

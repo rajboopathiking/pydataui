@@ -84,7 +84,15 @@ Each palette automatically configures CSS variables for `:root` and `.dark`:
 
 ### Built-In shadcn/ui Components
 
-All shadcn components can be imported from `pydataui.components.shadcn` or `pydataui.components`:
+All shadcn components can be imported directly from `pydataui.shadcn`, `pydataui.components.shadcn`, or `pydataui.components`:
+
+```python
+from pydataui.shadcn import (
+    ShadButton,
+    ShadCard, ShadCardHeader, ShadCardTitle, ShadCardDescription, ShadCardContent, ShadCardFooter,
+    ShadInput, ShadBadge, ShadDialog, ShadSheet, ShadTabs, ShadSwitch
+)
+```
 
 #### Buttons
 ```python
@@ -310,7 +318,90 @@ card = GlassCard(
 
 ---
 
-## 8. Working Example
+## 8. Advanced Animations with GSAP (GreenSock)
+
+PyDataUI has **zero limitations** on client-side animation and script libraries. You can integrate **GSAP (GreenSock)**, ScrollTrigger, Anime.js, Lucide Icons, Canvas Confetti, and Three.js with full reactive state support.
+
+### Loading GSAP in `App`
+Pass the official GSAP CDN links directly to the `scripts` parameter:
+
+```python
+from pydataui import App
+
+app = App(
+    title="GSAP Animated App",
+    theme="dark",
+    palette="zinc",
+    scripts=[
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js",
+    ]
+)
+```
+
+### Staggered Entrance & Micro-Interactions
+Attach standard CSS classes (`gsap-hero`, `gsap-card`) to any PyDataUI or shadcn component, and embed your animation logic using `Html`:
+
+```python
+from pydataui.html import Div, H1, P, Html
+from pydataui.shadcn import ShadCard, ShadButton
+
+@app.page("/")
+def home():
+    return Div(
+        H1("Fluid Animations", class_name="gsap-hero text-5xl font-extrabold tracking-tight"),
+        P("60fps physics-based motion with zero configuration.", class_name="gsap-hero text-muted-foreground mt-2"),
+        
+        Div(
+            ShadCard(H3("Card 1"), class_name="gsap-card p-6"),
+            ShadCard(H3("Card 2"), class_name="gsap-card p-6"),
+            ShadCard(H3("Card 3"), class_name="gsap-card p-6"),
+            class_name="grid grid-cols-3 gap-6 mt-8"
+        ),
+
+        # Embedded GSAP Script
+        Html("""
+        <script>
+            function runAnimations() {
+                // Staggered hero text entrance
+                gsap.from(".gsap-hero", {
+                    y: -30,
+                    opacity: 0,
+                    duration: 0.9,
+                    stagger: 0.15,
+                    ease: "power4.out"
+                });
+
+                // Spring entrance for cards
+                gsap.from(".gsap-card", {
+                    scale: 0.88,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: 0.3,
+                    stagger: 0.18,
+                    ease: "back.out(1.7)"
+                });
+            }
+
+            // Execute on initial page load
+            document.addEventListener("DOMContentLoaded", runAnimations);
+
+            // Re-trigger after HTMX partial page swaps (reactive updates)
+            document.addEventListener("htmx:afterSwap", runAnimations);
+        </script>
+        """),
+        class_name="min-h-screen p-12 bg-background text-foreground"
+    )
+```
+
+### Coordinating GSAP with Reactive Server State (HTMX)
+When Python updates state on the server (e.g. via HTMX swaps), simply listen to `htmx:afterSwap` or `htmx:afterSettle`:
+- Initial render: `DOMContentLoaded` runs the entrance timeline.
+- Dynamic data refresh: `htmx:afterSwap` animates updated numbers, flash badges, or newly inserted list rows.
+
+---
+
+## 9. Working Example
 
 See the full working showcase in [`examples/custom_ui_app.py`](file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/examples/custom_ui_app.py):
 

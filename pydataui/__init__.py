@@ -96,6 +96,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     
     # Submodules
     'html': ('.html', None),
+    'shadcn': ('.shadcn', None),
     'templates': ('.templates', None),
     'components': ('.components', None),
     

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -519,34 +519,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../FULL_HTML_DOCUMENTATION/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Full HTML Documentation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../MOBILE_OPTIMIZATION_AND_ARCHITECTURE/" class="md-nav__link">
         
   
@@ -695,6 +667,34 @@
     
   
     UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyDataUI vs Reflex
   
 
     
@@ -1575,13 +1575,13 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"My App"</span><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My App&quot;</span><span class="p">)</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="k">return</span> <span class="n">Container</span><span class="p">(</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="n">Heading</span><span class="p">(</span><span class="n">MyState</span><span class="o">.</span><span class="n">count</span><span class="p">),</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">Button</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">MyState</span><span class="o">.</span><span class="n">increment</span><span class="p">),</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">Button</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">MyState</span><span class="o">.</span><span class="n">increment</span><span class="p">),</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="p">)</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -1590,16 +1590,16 @@
 <h2 id="state-rules">State Rules</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AppState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="c1"># Reactive variables — type-annotated</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"World"</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;World&quot;</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">items</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="c1"># Event handlers — regular methods</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">):</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">):</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 </span></code></pre></div>
 <ul>
@@ -1674,76 +1674,76 @@
 <hr />
 <h2 id="event-binding">Event Binding</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Direct method reference</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">Button</span><span class="p">(</span><span class="s2">"Click"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">MyState</span><span class="o">.</span><span class="n">do_something</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Click&quot;</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">MyState</span><span class="o">.</span><span class="n">do_something</span><span class="p">)</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># With captured argument</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">Button</span><span class="p">(</span><span class="s2">"Del"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">:</span> <span class="n">MyState</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Del&quot;</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">:</span> <span class="n">MyState</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># With options</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.event</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventSpec</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">Button</span><span class="p">(</span><span class="s2">"Save"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">EventSpec</span><span class="p">(</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">EventSpec</span><span class="p">(</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">MyState</span><span class="o">.</span><span class="n">save</span><span class="p">,</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">confirm</span><span class="o">=</span><span class="s2">"Are you sure?"</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">confirm</span><span class="o">=</span><span class="s2">&quot;Are you sure?&quot;</span><span class="p">,</span>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">debounce</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">))</span>
 </span></code></pre></div>
 <hr />
 <h2 id="component-quick-reference">Component Quick Reference</h2>
 <h3 id="layout">Layout</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">Container</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">max_width</span><span class="o">=</span><span class="s2">"lg"</span><span class="p">)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">Flex</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">"md"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">Grid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">"md"</span><span class="p">)</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">Box</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">"lg"</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="s2">"sm"</span><span class="p">)</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">HStack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">"md"</span><span class="p">)</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">VStack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">"md"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">Container</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">max_width</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">Flex</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">Grid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">Box</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">HStack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">VStack</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">Divider</span><span class="p">()</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">Spacer</span><span class="p">()</span>
 </span></code></pre></div>
 <h3 id="typography">Typography</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">Heading</span><span class="p">(</span><span class="s2">"Title"</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>       <span class="c1"># h1-h6</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">Text</span><span class="p">(</span><span class="s2">"Body text"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"muted"</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">Paragraph</span><span class="p">(</span><span class="s2">"Long text..."</span><span class="p">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">Code</span><span class="p">(</span><span class="s2">"print('hello')"</span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">Link</span><span class="p">(</span><span class="s2">"Click"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/page"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">Heading</span><span class="p">(</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>       <span class="c1"># h1-h6</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Body text&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;muted&quot;</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">Paragraph</span><span class="p">(</span><span class="s2">&quot;Long text...&quot;</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">Code</span><span class="p">(</span><span class="s2">&quot;print(&#39;hello&#39;)&quot;</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">Link</span><span class="p">(</span><span class="s2">&quot;Click&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/page&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="forms">Forms</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Button</span><span class="p">(</span><span class="s2">"Click"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Click&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># variants: primary | secondary | success | danger | warning | outline | ghost</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># sizes: xs | sm | md | lg | xl</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">Input</span><span class="p">(</span><span class="s2">"Label"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"text"</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">"..."</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;Label&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># types: text | email | password | number | date | tel | url</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">TextArea</span><span class="p">(</span><span class="s2">"Label"</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">Select</span><span class="p">(</span><span class="s2">"Label"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">"A"</span><span class="p">,</span><span class="s2">"B"</span><span class="p">,</span><span class="s2">"C"</span><span class="p">],</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">Checkbox</span><span class="p">(</span><span class="s2">"Agree"</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">agreed</span><span class="p">)</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">Switch</span><span class="p">(</span><span class="s2">"Dark Mode"</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">dark</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">TextArea</span><span class="p">(</span><span class="s2">&quot;Label&quot;</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">Select</span><span class="p">(</span><span class="s2">&quot;Label&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="p">],</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">Checkbox</span><span class="p">(</span><span class="s2">&quot;Agree&quot;</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">agreed</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">Switch</span><span class="p">(</span><span class="s2">&quot;Dark Mode&quot;</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">dark</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="data">Data</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">Table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Name"</span><span class="p">,</span><span class="s2">"Email"</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="s2">"A"</span><span class="p">,</span><span class="s2">"a@x.com"</span><span class="p">]])</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">Badge</span><span class="p">(</span><span class="s2">"Active"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"success"</span><span class="p">)</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">Stat</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Revenue"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">"$12,345"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+23%"</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s2">"up"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">Table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span><span class="s2">&quot;Email&quot;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;a@x.com&quot;</span><span class="p">]])</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">Badge</span><span class="p">(</span><span class="s2">&quot;Active&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">Stat</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Revenue&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;$12,345&quot;</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">&quot;+23%&quot;</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">)</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">Progress</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="feedback">Feedback</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">Alert</span><span class="p">(</span><span class="s2">"Message"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"success"</span><span class="p">)</span>  <span class="c1"># success | warning | danger | info</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">Spinner</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">"md"</span><span class="p">)</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">Skeleton</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"20px"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">Alert</span><span class="p">(</span><span class="s2">&quot;Message&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">)</span>  <span class="c1"># success | warning | danger | info</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">Spinner</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">Skeleton</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;100%&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;20px&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="overlay">Overlay</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">Modal</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"..."</span><span class="p">,</span> <span class="n">is_open</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">show</span><span class="p">,</span> <span class="n">on_close</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">close</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">Drawer</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"..."</span><span class="p">,</span> <span class="n">is_open</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">show</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">Modal</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">is_open</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">show</span><span class="p">,</span> <span class="n">on_close</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">close</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">Drawer</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">is_open</span><span class="o">=</span><span class="n">State</span><span class="o">.</span><span class="n">show</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
 </span></code></pre></div>
 <h3 id="charts">Charts</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">BarChart</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"Q1"</span><span class="p">,</span><span class="s2">"Q2"</span><span class="p">],</span> <span class="n">datasets</span><span class="o">=</span><span class="p">[{</span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Sales"</span><span class="p">,</span><span class="s2">"data"</span><span class="p">:[</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">]}])</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">BarChart</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span><span class="s2">&quot;Q2&quot;</span><span class="p">],</span> <span class="n">datasets</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;Sales&quot;</span><span class="p">,</span><span class="s2">&quot;data&quot;</span><span class="p">:[</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">]}])</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">LineChart</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span> <span class="n">datasets</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">PieChart</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span> <span class="n">datasets</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
 </span></code></pre></div>
 <h3 id="navigation">Navigation</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">Navbar</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"App"</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="p">[(</span><span class="s2">"Home"</span><span class="p">,</span><span class="s2">"/"</span><span class="p">),(</span><span class="s2">"API"</span><span class="p">,</span><span class="s2">"/api"</span><span class="p">)])</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">Sidebar</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="p">[(</span><span class="s2">"Dashboard"</span><span class="p">,</span><span class="s2">"/"</span><span class="p">),(</span><span class="s2">"Users"</span><span class="p">,</span><span class="s2">"/users"</span><span class="p">)])</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">Tabs</span><span class="p">(</span><span class="n">Tab</span><span class="p">(</span><span class="s2">"Tab1"</span><span class="p">,</span> <span class="n">content</span><span class="o">=...</span><span class="p">),</span> <span class="n">Tab</span><span class="p">(</span><span class="s2">"Tab2"</span><span class="p">,</span> <span class="n">content</span><span class="o">=...</span><span class="p">))</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">Breadcrumb</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[(</span><span class="s2">"Home"</span><span class="p">,</span><span class="s2">"/"</span><span class="p">),(</span><span class="s2">"Users"</span><span class="p">,</span><span class="s2">"/users"</span><span class="p">),(</span><span class="s2">"John"</span><span class="p">,</span><span class="kc">None</span><span class="p">)])</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">Navbar</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;App&quot;</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span><span class="s2">&quot;/&quot;</span><span class="p">),(</span><span class="s2">&quot;API&quot;</span><span class="p">,</span><span class="s2">&quot;/api&quot;</span><span class="p">)])</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">Sidebar</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Dashboard&quot;</span><span class="p">,</span><span class="s2">&quot;/&quot;</span><span class="p">),(</span><span class="s2">&quot;Users&quot;</span><span class="p">,</span><span class="s2">&quot;/users&quot;</span><span class="p">)])</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">Tabs</span><span class="p">(</span><span class="n">Tab</span><span class="p">(</span><span class="s2">&quot;Tab1&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=...</span><span class="p">),</span> <span class="n">Tab</span><span class="p">(</span><span class="s2">&quot;Tab2&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=...</span><span class="p">))</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">Breadcrumb</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span><span class="s2">&quot;/&quot;</span><span class="p">),(</span><span class="s2">&quot;Users&quot;</span><span class="p">,</span><span class="s2">&quot;/users&quot;</span><span class="p">),(</span><span class="s2">&quot;John&quot;</span><span class="p">,</span><span class="kc">None</span><span class="p">)])</span>
 </span></code></pre></div>
 <hr />
 <h2 id="rest-api-curl-examples">REST API (curl examples)</h2>
@@ -1755,13 +1755,13 @@
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Call method with args</span>
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/MyState/add_item<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"text": "New item"}'</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;text&quot;: &quot;New item&quot;}&#39;</span>
 </span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
 </span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Update state</span>
 </span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:8000/api/MyState<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"count": 99}'</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;count&quot;: 99}&#39;</span>
 </span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
 </span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Reset state</span>
 </span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:8000/api/MyState
@@ -1774,14 +1774,14 @@
 </span></code></pre></div>
 <hr />
 <h2 id="custom-endpoints">Custom Endpoints</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="s2">"/export"</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"GET"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="s2">&quot;/export&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">export_csv</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]}</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]}</span>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nd">@app</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="s2">"/webhook"</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"POST"</span><span class="p">)</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nd">@app</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="s2">&quot;/webhook&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">)</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">handle_webhook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"received"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;received&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 </span></code></pre></div>
 
 
@@ -1838,10 +1838,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

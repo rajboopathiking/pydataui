@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -519,34 +519,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../FULL_HTML_DOCUMENTATION/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Full HTML Documentation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../MOBILE_OPTIMIZATION_AND_ARCHITECTURE/" class="md-nav__link">
         
   
@@ -695,6 +667,34 @@
     
   
     UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyDataUI vs Reflex
   
 
     
@@ -2253,7 +2253,7 @@
 </tbody>
 </table>
 <p>Names are flat, not BEM-style. Modifiers are separate classes, not descendant selectors, so an element can combine them:</p>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu pdu-btn pdu-btn-primary pdu-btn-lg"</span><span class="p">&gt;</span>Run pipeline<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;pdu pdu-btn pdu-btn-primary pdu-btn-lg&quot;</span><span class="p">&gt;</span>Run pipeline<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </span></code></pre></div>
 <p>Do not use <code>pdu-*</code> names for application-only classes. Prefix custom classes with your product or use Tailwind utilities. This avoids collisions during framework upgrades.</p>
 <hr />
@@ -2551,15 +2551,15 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Operations Portal"</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">custom_css</span><span class="o">=</span><span class="s2">"""</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Operations Portal&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">custom_css</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">    :root {</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s2">      --pdu-color-primary: #0f766e;</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s2">      --pdu-color-primary-hover: #115e59;</span>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">      --pdu-color-primary-light: #ccfbf1;</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">      --pdu-radius-lg: 0.75rem;</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">    }</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">    """</span><span class="p">,</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>Token overrides inherit everywhere the token is referenced. Prefer this over copying and editing component rules.</p>
@@ -2588,13 +2588,13 @@
 </tbody>
 </table>
 <p><code>App(theme=...)</code> controls the shadcn/Tailwind layer:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">App</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">"light"</span><span class="p">)</span>  <span class="c1"># no dark class</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">App</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">"dark"</span><span class="p">)</span>   <span class="c1"># class="dark" on &lt;html&gt;</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">App</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">)</span>   <span class="c1"># adds class="dark" when the OS prefers dark mode</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">App</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;light&quot;</span><span class="p">)</span>  <span class="c1"># no dark class</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">App</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;dark&quot;</span><span class="p">)</span>   <span class="c1"># class=&quot;dark&quot; on &lt;html&gt;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">App</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>   <span class="c1"># adds class=&quot;dark&quot; when the OS prefers dark mode</span>
 </span></code></pre></div>
 <p><code>App(palette=...)</code> selects the shadcn token values. Available palettes are <code>zinc</code>, <code>slate</code>, <code>blue</code>, <code>violet</code>, <code>green</code>, <code>rose</code>, <code>orange</code>, and <code>emerald</code>.</p>
 <p>The framework layer activates its dark token block through either <code>.dark</code> or <code>[data-theme="dark"]</code>. This means native <code>pdu-*</code> components follow <code>App(theme="dark")</code> as well:</p>
-<div class="language-css highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="o">[</span><span class="nt">data-theme</span><span class="o">=</span><span class="s1">'dark'</span><span class="o">],</span><span class="w"> </span><span class="p">.</span><span class="nc">dark</span><span class="w"> </span><span class="p">{</span>
+<div class="language-css highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="o">[</span><span class="nt">data-theme</span><span class="o">=</span><span class="s1">&#39;dark&#39;</span><span class="o">],</span><span class="w"> </span><span class="p">.</span><span class="nc">dark</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nv">--pdu-color-bg</span><span class="p">:</span><span class="w"> </span><span class="mh">#111827</span><span class="p">;</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nv">--pdu-color-bg-secondary</span><span class="p">:</span><span class="w"> </span><span class="mh">#1f2937</span><span class="p">;</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nv">--pdu-color-text</span><span class="p">:</span><span class="w"> </span><span class="mh">#f9fafb</span><span class="p">;</span>
@@ -2603,12 +2603,12 @@
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>To override framework dark values, put the override under the same selector:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">custom_css</span><span class="o">=</span><span class="s2">"""</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">custom_css</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="s2">.dark {</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">  --pdu-color-primary: #2dd4bf;</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s2">  --pdu-color-primary-light: #134e4a;</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">}</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">"""</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">&quot;&quot;&quot;</span>
 </span></code></pre></div>
 <p>Because <code>custom_css</code> is loaded before <code>pydataui.css</code>, an equal-specificity <code>.dark</code> rule would be overwritten by the framework's dark block. Use a more specific selector or a stylesheet that loads after the framework:</p>
 <div class="language-css highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">html</span><span class="p">.</span><span class="nc">dark</span><span class="w"> </span><span class="p">{</span>
@@ -2886,7 +2886,7 @@
 </tbody>
 </table>
 <p>A complete button class list looks like:</p>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu pdu-btn pdu-btn-primary pdu-btn-md"</span><span class="p">&gt;</span>Refresh<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;pdu pdu-btn pdu-btn-primary pdu-btn-md&quot;</span><span class="p">&gt;</span>Refresh<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </span></code></pre></div>
 <h3 id="inputs">Inputs</h3>
 <table>
@@ -2978,7 +2978,7 @@
 </tbody>
 </table>
 <p>Combine modifiers on the same element:</p>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu-table pdu-table-striped pdu-table-hoverable pdu-table-compact"</span><span class="p">&gt;</span>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;pdu-table pdu-table-striped pdu-table-hoverable pdu-table-compact&quot;</span><span class="p">&gt;</span>
 </span></code></pre></div>
 <h3 id="lists-badges-and-stats">Lists, Badges, and Stats</h3>
 <table>
@@ -3044,7 +3044,7 @@
 </tbody>
 </table>
 <p>Tooltip example:</p>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu-tooltip"</span> <span class="na">data-tooltip</span><span class="o">=</span><span class="s">"Last successful run"</span><span class="p">&gt;</span>Healthy<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;pdu-tooltip&quot;</span> <span class="na">data-tooltip</span><span class="o">=</span><span class="s">&quot;Last successful run&quot;</span><span class="p">&gt;</span>Healthy<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
 </span></code></pre></div>
 <hr />
 <h2 id="9-feedback-classes">9. Feedback Classes</h2>
@@ -3119,8 +3119,8 @@
 </tbody>
 </table>
 <p>Progress markup:</p>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu-progress"</span><span class="p">&gt;</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"pdu-progress-bar"</span> <span class="na">style</span><span class="o">=</span><span class="s">"width: 72%"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;pdu-progress&quot;</span><span class="p">&gt;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;pdu-progress-bar&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width: 72%&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </span></code></pre></div>
 <hr />
@@ -3338,9 +3338,9 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">Section</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">P</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">Section</span><span class="p">(</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">H2</span><span class="p">(</span><span class="s2">"Pipeline health"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-2xl font-semibold tracking-tight"</span><span class="p">),</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">"Updated two minutes ago"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"text-sm text-muted-foreground"</span><span class="p">),</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">"pdu-p-lg max-w-3xl mx-auto bg-card border border-border rounded-xl"</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">H2</span><span class="p">(</span><span class="s2">&quot;Pipeline health&quot;</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;text-2xl font-semibold tracking-tight&quot;</span><span class="p">),</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Updated two minutes ago&quot;</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;text-sm text-muted-foreground&quot;</span><span class="p">),</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;pdu-p-lg max-w-3xl mx-auto bg-card border border-border rounded-xl&quot;</span><span class="p">,</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>Use the layers for different jobs:</p>
@@ -3378,13 +3378,13 @@
 <p><code>App(tailwind_config={...})</code> deep-merges into the default Tailwind theme used by the Play CDN:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">tailwind_config</span><span class="o">=</span><span class="p">{</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="s2">"theme"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>            <span class="s2">"extend"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>                <span class="s2">"colors"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>                    <span class="s2">"brand"</span><span class="p">:</span> <span class="s2">"#0ea5e9"</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>            <span class="s2">&quot;extend&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>                <span class="s2">&quot;colors&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>                    <span class="s2">&quot;brand&quot;</span><span class="p">:</span> <span class="s2">&quot;#0ea5e9&quot;</span><span class="p">,</span>
 </span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>                <span class="p">},</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>                <span class="s2">"fontFamily"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>                    <span class="s2">"mono"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Fira Code"</span><span class="p">,</span> <span class="s2">"monospace"</span><span class="p">],</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>                <span class="s2">&quot;fontFamily&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>                    <span class="s2">&quot;mono&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Fira Code&quot;</span><span class="p">,</span> <span class="s2">&quot;monospace&quot;</span><span class="p">],</span>
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>                <span class="p">},</span>
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>            <span class="p">}</span>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        <span class="p">}</span>
@@ -3428,16 +3428,16 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">RunState</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">tag</span> <span class="o">=</span> <span class="s2">"span"</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;span&quot;</span>
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">"success"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
 </span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
 </span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_classes</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>            <span class="s2">"pdu-run-state"</span><span class="p">,</span>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>            <span class="sa">f</span><span class="s2">"pdu-run-state-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>            <span class="s2">&quot;pdu-run-state&quot;</span><span class="p">,</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>            <span class="sa">f</span><span class="s2">&quot;pdu-run-state-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
 </span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>        <span class="p">]</span>
 </span></code></pre></div>
 <p>If the component is reusable beyond one application, add the corresponding styles to the framework stylesheet and cover them with a rendering test. If it is application-specific, keep the CSS in <code>custom_css</code> or a stylesheet passed through <code>App(stylesheets=[...])</code>.</p>
@@ -3477,7 +3477,7 @@
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>--ignore<span class="o">=</span>tests/test_browser_security.py
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Browser tests with a real browser and stylesheet</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nv">PYDATAUI_BROWSER_EXECUTABLE</span><span class="o">=</span><span class="s2">"/Applications/ego lite.app/Contents/MacOS/ego lite"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nv">PYDATAUI_BROWSER_EXECUTABLE</span><span class="o">=</span><span class="s2">&quot;/Applications/ego lite.app/Contents/MacOS/ego lite&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="nv">PYDATAUI_REQUIRE_BROWSER</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="nv">PYDATAUI_REQUIRE_REAL_STYLES</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_browser_security.py<span class="w"> </span>-q
@@ -3588,10 +3588,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

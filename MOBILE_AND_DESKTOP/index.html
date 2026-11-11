@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -504,34 +504,6 @@
     
   
     Native Offline & Standalone Mobile
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../FULL_HTML_DOCUMENTATION/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Full HTML Documentation
   
 
     
@@ -1163,6 +1135,34 @@
     
   
     UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyDataUI vs Reflex
   
 
     
@@ -2058,9 +2058,9 @@
 
 <h1 id="mobile-desktop-capabilities-in-pydataui">📱 Mobile &amp; Desktop Capabilities in PyDataUI</h1>
 <p>PyDataUI gives you pure-Python cross-platform application development across <strong>Web</strong>, <strong>Mobile (iOS &amp; Android)</strong>, and <strong>Desktop (macOS, Windows, Linux)</strong> with <strong>zero Swift or Kotlin code required</strong>.</p>
-<div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;">
-<p>👉 <strong>Prefer an interactive, standalone HTML guide?</strong><br />
-View the <a href="../mobile-desktop-guide.html" target="_blank" rel="noopener"><strong>Interactive Mobile &amp; Desktop Build Guide (HTML)</strong></a> with interactive OS tabs, ADB checklist, and Sideloadly IPA walkthrough.</p>
+<div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;">
+<p>👉 <strong>Looking for Native Offline Mobile Architecture?</strong><br />
+See <a href="../NATIVE_OFFLINE_AND_STANDALONE/">Native Offline &amp; Standalone Architecture</a> for bundling assets inside APK/IPA packages with 100% offline standalone operation and in-process JNI dispatch.</p>
 </div>
 <hr />
 <h2 id="architecture-overview">🏗️ Architecture Overview</h2>
@@ -2179,21 +2179,21 @@ or via the run command:
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Heading</span><span class="p">,</span> <span class="n">Button</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Inventory Tracker"</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Inventory Tracker&quot;</span><span class="p">,</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">pwa</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                     <span class="c1"># Enabled by default</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">pwa_name</span><span class="o">=</span><span class="s2">"Inventory Pro"</span><span class="p">,</span>     <span class="c1"># Name on mobile home screen</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">pwa_short_name</span><span class="o">=</span><span class="s2">"Inventory"</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">pwa_name</span><span class="o">=</span><span class="s2">&quot;Inventory Pro&quot;</span><span class="p">,</span>     <span class="c1"># Name on mobile home screen</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">pwa_short_name</span><span class="o">=</span><span class="s2">&quot;Inventory&quot;</span>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">)</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="k">return</span> <span class="n">Container</span><span class="p">(</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="n">Heading</span><span class="p">(</span><span class="s2">"Mobile Ready App"</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="n">Button</span><span class="p">(</span><span class="s2">"Tap Action"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">,</span> <span class="n">full_width</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="n">padding</span><span class="o">=</span><span class="s2">"md"</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="n">Heading</span><span class="p">(</span><span class="s2">&quot;Mobile Ready App&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Tap Action&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">full_width</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;md&quot;</span>
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="p">)</span>
 </span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 </span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></code></pre></div>
 <ol>
@@ -2207,7 +2207,7 @@ or via the run command:
 <p>To package your PyDataUI application as a native <code>.apk</code> or submit it to the Apple App Store, PyDataUI provides 1-command scaffolding via Capacitor.</p>
 <h3 id="1-initialize-mobile-project">1. Initialize Mobile Project</h3>
 <p>Run the following CLI command in your project directory:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>init<span class="w"> </span>--app-name<span class="w"> </span><span class="s2">"My Data App"</span><span class="w"> </span>--app-id<span class="w"> </span><span class="s2">"com.company.dataapp"</span><span class="w"> </span>--server-url<span class="w"> </span><span class="s2">"http://localhost:8000"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pydataui<span class="w"> </span>mobile<span class="w"> </span>init<span class="w"> </span>--app-name<span class="w"> </span><span class="s2">&quot;My Data App&quot;</span><span class="w"> </span>--app-id<span class="w"> </span><span class="s2">&quot;com.company.dataapp&quot;</span><span class="w"> </span>--server-url<span class="w"> </span><span class="s2">&quot;http://localhost:8000&quot;</span>
 </span></code></pre></div></p>
 <p>This automatically generates:
 - <code>capacitor.config.json</code> configured with your live server URL and mobile preferences.
@@ -2305,11 +2305,11 @@ Always use <strong>Java 17 (Recommended by Google)</strong> or <strong>Java 21</
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Set JAVA_HOME in current session &amp; ~/.zshrc</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="k">$(</span>/usr/libexec/java_home<span class="w"> </span>-v<span class="w"> </span><span class="m">17</span><span class="k">)</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'export JAVA_HOME=$(/usr/libexec/java_home -v 17)'</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export JAVA_HOME=$(/usr/libexec/java_home -v 17)&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
 </span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
 </span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Verify installation</span>
 </span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>java<span class="w"> </span>-version
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Expected: openjdk version "17.0.x"</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Expected: openjdk version &quot;17.0.x&quot;</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -2449,7 +2449,7 @@ Always use <strong>Java 17 (Recommended by Google)</strong> or <strong>Java 21</
 <h3 id="recommendation-skip-heavy-sdks-with-instant-pwa">💡 Recommendation: Skip Heavy SDKs with Instant PWA</h3>
 <p>If you do not want to manage 10GB+ of Xcode, Android Studio, and Java toolchains:</p>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 100% native feel, zero installation on your Mac:</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">pwa</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pwa_name</span><span class="o">=</span><span class="s2">"My Field App"</span><span class="p">)</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">pwa</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pwa_name</span><span class="o">=</span><span class="s2">&quot;My Field App&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 1. Run <code>pydataui run app.py</code> (or <code>pydataui mobile preview app.py</code>).
 2. Scan the QR code on your iPhone or Android.
@@ -2464,11 +2464,11 @@ Always use <strong>Java 17 (Recommended by Google)</strong> or <strong>Java 21</
 or programmatically in Python:
 <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Desktop Analytics"</span><span class="p">)</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Desktop Analytics&quot;</span><span class="p">)</span>
 </span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
 </span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># ... routes ...</span>
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 </span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">desktop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 This automatically leverages the system's native application webview window (Chromium App Mode / Edge / WebKit), launching a clean window without browser tabs or address bars.</p>
@@ -2476,7 +2476,7 @@ This automatically leverages the system's native application webview window (Chr
 <h3 id="tauri-20-high-performance-native-desktop-shell">Tauri 2.0 High-Performance Native Desktop Shell</h3>
 <p>For distribution as a compiled macOS <code>.dmg</code> / Windows <code>.msi</code> / Linux <code>.deb</code> executable:</p>
 <h3 id="1-initialize-tauri-shell">1. Initialize Tauri Shell</h3>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pydataui<span class="w"> </span>desktop<span class="w"> </span>init<span class="w"> </span>--app-name<span class="w"> </span><span class="s2">"PyDataUI Desktop"</span><span class="w"> </span>--server-url<span class="w"> </span><span class="s2">"http://localhost:8000"</span>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pydataui<span class="w"> </span>desktop<span class="w"> </span>init<span class="w"> </span>--app-name<span class="w"> </span><span class="s2">&quot;PyDataUI Desktop&quot;</span><span class="w"> </span>--server-url<span class="w"> </span><span class="s2">&quot;http://localhost:8000&quot;</span>
 </span></code></pre></div>
 This generates an optimized <code>src-tauri</code> directory with:
 - <code>Cargo.toml</code> and Tauri 2.0 dependencies.
@@ -2494,7 +2494,7 @@ The compiled platform binary is generated in <code>src-tauri/target/release/bund
 <ol>
 <li>
 <p><strong>Enable Mobile Mode Preset</strong>:
-   <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Mobile App"</span><span class="p">,</span> <span class="n">mobile_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Mobile App&quot;</span><span class="p">,</span> <span class="n">mobile_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Or via environment variable:</span>
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># PYDATAUI_MOBILE_MODE=1</span>
 </span></code></pre></div>
@@ -2510,8 +2510,8 @@ The compiled platform binary is generated in <code>src-tauri/target/release/bund
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">Container</span><span class="p">(</span>
 </span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    <span class="n">Grid</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">md_cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lg_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="n">max_width</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span>
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    <span class="n">padding</span><span class="o">=</span><span class="s2">"md"</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="n">max_width</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;md&quot;</span>
 </span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="p">)</span>
 </span></code></pre></div></p>
 </li>
@@ -2575,10 +2575,10 @@ The compiled platform binary is generated in <code>src-tauri/target/release/bund
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

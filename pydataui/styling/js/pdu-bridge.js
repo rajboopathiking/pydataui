@@ -181,5 +181,196 @@
                 });
         };
         setTimeout(window.checkBackendHealth, 1000);
+
+        // 8. Modern shadcn Sidebar & Drawer Controller (Zero-JS Full Keyboard & Mobile Support)
+        function initSidebarController() {
+            function toggleSidebar() {
+                var provider = document.querySelector('[data-sidebar-provider="true"]');
+                var sidebar = document.querySelector('aside.pdu-sidebar');
+                var backdrop = document.querySelector('[data-pdu-sidebar-backdrop="true"]');
+                if (!sidebar) return;
+
+                var isMobile = window.innerWidth < 768;
+                if (isMobile) {
+                    var mobileOpen = sidebar.getAttribute('data-mobile-open') === 'true';
+                    if (mobileOpen) {
+                        sidebar.removeAttribute('data-mobile-open');
+                        if (backdrop) backdrop.classList.add('hidden');
+                    } else {
+                        sidebar.setAttribute('data-mobile-open', 'true');
+                        if (backdrop) backdrop.classList.remove('hidden');
+                    }
+                } else {
+                    var currState = (provider ? provider.getAttribute('data-state') : sidebar.getAttribute('data-state')) || 'expanded';
+                    var nextState = currState === 'expanded' ? 'collapsed' : 'expanded';
+                    if (provider) provider.setAttribute('data-state', nextState);
+                    sidebar.setAttribute('data-state', nextState);
+                    try { localStorage.setItem('pdu-sidebar-state', nextState); } catch (e) {}
+                }
+            }
+
+            // Restore saved desktop sidebar state
+            try {
+                var savedSidebar = localStorage.getItem('pdu-sidebar-state');
+                if (savedSidebar && window.innerWidth >= 768) {
+                    var provider = document.querySelector('[data-sidebar-provider="true"]');
+                    var sidebar = document.querySelector('aside.pdu-sidebar');
+                    if (provider) provider.setAttribute('data-state', savedSidebar);
+                    if (sidebar) sidebar.setAttribute('data-state', savedSidebar);
+                }
+            } catch (e) {}
+
+            // Delegate sidebar trigger clicks
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('[data-pdu-sidebar-trigger="true"]') || e.target.closest('[data-pdu-sidebar-rail="true"]')) {
+                    e.preventDefault();
+                    toggleSidebar();
+                } else if (e.target.closest('[data-pdu-sidebar-backdrop="true"]')) {
+                    toggleSidebar();
+                }
+            });
+
+            // Keyboard shortcut: Cmd+B / Ctrl+B
+            document.addEventListener('keydown', function (e) {
+                if ((e.metaKey || e.ctrlKey) && (e.key === 'b' || e.key === 'B')) {
+                    e.preventDefault();
+                    toggleSidebar();
+                }
+            });
+        }
+        initSidebarController();
+
+        // 9. Dropdown & Popover Dismiss Controller
+        document.addEventListener('click', function (e) {
+            // Dropdown trigger
+            var dropTrig = e.target.closest('[data-pdu-dropdown-trigger="true"]');
+            if (dropTrig) {
+                e.preventDefault();
+                var dropContainer = dropTrig.closest('[data-pdu-dropdown="true"]');
+                var content = dropContainer ? dropContainer.querySelector('.pdu-dropdown-content') : null;
+                if (content) {
+                    var isOpen = content.getAttribute('data-open') === 'true';
+                    closeAllOverlays();
+                    if (!isOpen) {
+                        content.classList.remove('hidden');
+                        content.setAttribute('data-open', 'true');
+                    }
+                }
+                return;
+            }
+
+            // Popover trigger
+            var popTrig = e.target.closest('[data-pdu-popover-trigger="true"]');
+            if (popTrig) {
+                e.preventDefault();
+                var popContainer = popTrig.closest('[data-pdu-popover="true"]');
+                var popContent = popContainer ? popContainer.querySelector('.pdu-popover-content') : null;
+                if (popContent) {
+                    var isPopOpen = popContent.getAttribute('data-open') === 'true';
+                    closeAllOverlays();
+                    if (!isPopOpen) {
+                        popContent.classList.remove('hidden');
+                        popContent.setAttribute('data-open', 'true');
+                    }
+                }
+                return;
+            }
+
+            // Click outside closes open dropdowns/popovers
+            if (!e.target.closest('.pdu-dropdown-content') && !e.target.closest('.pdu-popover-content')) {
+                closeAllOverlays();
+            }
+        });
+
+        function closeAllOverlays() {
+            var drops = document.querySelectorAll('.pdu-dropdown-content');
+            for (var i = 0; i < drops.length; i++) {
+                drops[i].classList.add('hidden');
+                drops[i].removeAttribute('data-open');
+            }
+            var pops = document.querySelectorAll('.pdu-popover-content');
+            for (var j = 0; j < pops.length; j++) {
+                pops[j].classList.add('hidden');
+                pops[j].removeAttribute('data-open');
+            }
+        }
+
+        // 10. Command Palette (Cmd+K / Ctrl+K Spotlight Search)
+        function initCommandPalette() {
+            function openCommand() {
+                var dialog = document.querySelector('[data-pdu-command-dialog="true"]');
+                if (dialog) {
+                    dialog.classList.remove('hidden');
+                    var input = dialog.querySelector('[data-pdu-command-input="true"]');
+                    if (input) {
+                        input.value = '';
+                        input.focus();
+                        filterCommandItems('');
+                    }
+                }
+            }
+
+            function closeCommand() {
+                var dialog = document.querySelector('[data-pdu-command-dialog="true"]');
+                if (dialog) dialog.classList.add('hidden');
+            }
+
+            function filterCommandItems(query) {
+                var q = (query || '').toLowerCase().trim();
+                var items = document.querySelectorAll('.pdu-command-item');
+                for (var i = 0; i < items.length; i++) {
+                    var it = items[i];
+                    var val = it.getAttribute('data-value') || it.innerText.toLowerCase();
+                    if (!q || val.indexOf(q) !== -1) {
+                        it.style.display = 'flex';
+                    } else {
+                        it.style.display = 'none';
+                    }
+                }
+            }
+
+            document.addEventListener('keydown', function (e) {
+                if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+                    e.preventDefault();
+                    var dialog = document.querySelector('[data-pdu-command-dialog="true"]');
+                    if (dialog && !dialog.classList.contains('hidden')) {
+                        closeCommand();
+                    } else {
+                        openCommand();
+                    }
+                } else if (e.key === 'Escape') {
+                    closeCommand();
+                    closeAllOverlays();
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('[data-pdu-command-trigger="true"]')) {
+                    e.preventDefault();
+                    openCommand();
+                } else if (e.target.closest('[data-pdu-command-close="true"]')) {
+                    e.preventDefault();
+                    closeCommand();
+                }
+            });
+
+            document.addEventListener('input', function (e) {
+                if (e.target.matches('[data-pdu-command-input="true"]')) {
+                    filterCommandItems(e.target.value);
+                }
+            });
+        }
+        initCommandPalette();
+
+        // 11. Hyperparameter Slider Bubble Sync
+        document.addEventListener('input', function (e) {
+            if (e.target.matches('[data-pdu-slider="true"]')) {
+                var parent = e.target.closest('.w-full');
+                if (parent) {
+                    var bubble = parent.querySelector('.pdu-slider-value');
+                    if (bubble) bubble.innerText = e.target.value;
+                }
+            }
+        });
     });
 })();

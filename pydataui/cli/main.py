@@ -384,6 +384,11 @@ def main():
     parser_key = parser_gen_sub.add_parser("key", help="Generate a production API key")
     parser_key.add_argument("--name", required=True, help="Name or label for the key")
 
+    # add (shadcn component ingester)
+    parser_add = subparsers.add_parser("add", help="Add upcoming shadcn or community components directly in pure Python")
+    parser_add.add_argument("component", help="Component name (e.g. carousel, resizable) or direct JSON registry URL")
+    parser_add.add_argument("--dir", default="components/shadcn", help="Destination folder for Python component (default: components/shadcn)")
+
     args = parser.parse_args()
 
     if args.command == "new":
@@ -407,6 +412,9 @@ def main():
     elif args.command == "generate":
         if args.gen_type == "key":
             generate_key(args)
+    elif args.command == "add":
+        from pydataui.cli.add import add_component
+        add_component(args)
 
 cli = main
 

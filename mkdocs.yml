@@ -71,6 +71,7 @@ nav:
       - Documentation & HTML Guide: DOCS_DEVELOPER_GUIDE.md
       - Authentication & Security: AUTHENTICATION.md
       - UI Customization & Tailwind: CUSTOMIZATION.md
+      - PyDataUI vs Reflex: PYDATAUI_VS_REFLEX.md
       - Data Science Components: DATA_COMPONENTS.md
       - Data Team Templates: DATA_TEMPLATES.md
       - Production Deployment: DEPLOYMENT.md

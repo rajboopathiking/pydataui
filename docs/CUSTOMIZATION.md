@@ -226,9 +226,287 @@ ShadBadge("Production", variant="default")
   </div>
 </div>
 
+#### Modern Collapsible Sidebar & Dashboard Layout
+Build production AI and data portals with zero frontend plumbing. The sidebar supports icon-only collapsed state, mobile drawer auto-folding, group badges, and user snippets:
+
+```python
+from pydataui.shadcn import DashboardLayout, Sidebar, NavGroup, NavItem, Header, MetricCard
+
+@app.page("/")
+def home():
+    return DashboardLayout(
+        sidebar=Sidebar(
+            brand={"name": "NeuroNest AI", "logo": "cpu", "plan": "Enterprise"},
+            groups=[
+                NavGroup("Platform", [
+                    NavItem("Model Registry", icon="box", href="/", active=True, badge="14"),
+                    NavItem("Prompt Studio", icon="sparkles", href="/prompts"),
+                    NavItem("Evaluation", icon="activity", href="/eval"),
+                ]),
+                NavGroup("Operations", [
+                    NavItem("Telemetry", icon="activity", href="/telemetry"),
+                    NavItem("Audit Logs", icon="shield-check", href="/audit"),
+                ]),
+            ],
+            footer={"name": "Boopathi Raj", "email": "boopathi@neuronest.ai", "avatar": "BR"},
+            collapsible="icon"
+        ),
+        header=Header(
+            breadcrumbs=["Home", "Models", "Mistral-7B"],
+            search=True,
+            actions=[ShadButton("Deploy Model", variant="default")]
+        ),
+        content=[
+            MetricCard(title="Inference Latency", value="14.2 ms", delta="-3.1 ms", delta_type="decrease")
+        ]
+    )
+```
+
+<div style="margin: 1rem 0 2rem 0; padding: 1.5rem; background: #09090b; border: 1px solid #27272a; border-radius: 0.75rem; overflow: hidden;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview (Collapsible Sidebar & Shell)</div>
+  <div style="display: flex; height: 18rem; border: 1px solid #27272a; border-radius: 0.5rem; background: #121215; overflow: hidden;">
+    <!-- Sidebar -->
+    <div style="width: 14rem; background: #18181b; border-right: 1px solid #27272a; display: flex; flex-direction: column;">
+      <div style="height: 3rem; display: flex; align-items: center; gap: 0.5rem; padding: 0 1rem; border-bottom: 1px solid #27272a;">
+        <div style="width: 1.5rem; height: 1.5rem; border-radius: 0.375rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">⚡</div>
+        <span style="font-size: 0.875rem; font-weight: 600; color: #fafafa;">NeuroNest AI</span>
+        <span style="margin-left: auto; font-size: 0.625rem; font-weight: 700; background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 0.125rem 0.375rem; border-radius: 0.25rem;">ENT</span>
+      </div>
+      <div style="padding: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; flex: 1;">
+        <span style="font-size: 0.65rem; font-weight: 700; color: #71717a; text-transform: uppercase; padding: 0.25rem 0.5rem;">Platform</span>
+        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.5rem; background: #27272a; color: #fafafa; border-radius: 0.375rem; font-size: 0.8125rem; font-weight: 500;">
+          <span>📦</span><span>Model Registry</span><span style="margin-left: auto; font-size: 0.625rem; background: #3f3f46; padding: 0.125rem 0.375rem; border-radius: 9999px;">14</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.5rem; color: #a1a1aa; border-radius: 0.375rem; font-size: 0.8125rem;">
+          <span>✨</span><span>Prompt Studio</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.5rem; color: #a1a1aa; border-radius: 0.375rem; font-size: 0.8125rem;">
+          <span>📈</span><span>Telemetry & Drift</span>
+        </div>
+      </div>
+      <div style="padding: 0.75rem; border-top: 1px solid #27272a; display: flex; align-items: center; gap: 0.5rem;">
+        <div style="width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: #27272a; color: #e4e4e7; font-size: 0.65rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">BR</div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-size: 0.75rem; font-weight: 600; color: #fafafa;">Boopathi Raj</span>
+          <span style="font-size: 0.625rem; color: #71717a;">boopathi@neuronest.ai</span>
+        </div>
+      </div>
+    </div>
+    <!-- Main Shell -->
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <div style="height: 3rem; border-bottom: 1px solid #27272a; background: #141417; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #71717a;">
+          <span>Home</span><span>/</span><span>Models</span><span>/</span><strong style="color: #fafafa;">Mistral-7B</strong>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="background: #1f1f23; border: 1px solid #27272a; border-radius: 0.375rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; color: #71717a; display: flex; align-items: center; gap: 0.5rem;">
+            <span>Search actions...</span><kbd style="background: #27272a; color: #a1a1aa; padding: 0.1rem 0.25rem; border-radius: 0.25rem; font-size: 0.625rem;">⌘K</kbd>
+          </div>
+          <button style="background: #fafafa; color: #09090b; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 0.375rem; border: none; cursor: pointer;">Deploy</button>
+        </div>
+      </div>
+      <div style="flex: 1; padding: 1rem; background: #0c0c0e;">
+        <div style="background: #18181b; border: 1px solid #27272a; border-radius: 0.5rem; padding: 1rem; width: 14rem;">
+          <span style="font-size: 0.75rem; color: #a1a1aa;">Inference Latency</span>
+          <div style="font-size: 1.5rem; font-weight: 700; color: #fafafa; margin-top: 0.25rem;">14.2 ms</div>
+          <span style="font-size: 0.7rem; color: #4ade80; font-weight: 600;">↓ -3.1 ms optimal</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+#### Overlays: DropdownMenu, Popover, Tooltip, and Spotlight (Cmd+K)
+Zero JavaScript needed from you. Built-in headless dismiss, click-outside handling, and keyboard shortcuts:
+
+```python
+from pydataui.shadcn import (
+    ShadDropdownMenu, ShadDropdownItem, ShadDropdownSeparator,
+    ShadPopover, ShadTooltip, ShadCommandPalette
+)
+
+# 1. Action Dropdown
+dropdown = ShadDropdownMenu(
+    trigger=ShadButton("Actions", variant="outline"),
+    content=[
+        ShadDropdownItem("View Metrics", icon="activity", shortcut="⌘M"),
+        ShadDropdownItem("Clone Config", icon="box"),
+        ShadDropdownSeparator(),
+        ShadDropdownItem("Delete Cluster", icon="x", danger=True)
+    ]
+)
+
+# 2. Accessible Tooltip
+tooltip = ShadTooltip("GPU Cluster Online", ShadButton("Node #01", size="sm"))
+
+# 3. Spotlight Command Palette
+command = ShadCommandPalette(
+    items=[
+        {"label": "Deploy Mistral-7B", "category": "Serving", "shortcut": "⌘D"},
+        {"label": "Export Vector Embeddings", "category": "Data"},
+    ]
+)
+```
+
+<div style="margin: 1rem 0 2rem 0; padding: 1.5rem; background: #09090b; border: 1px solid #27272a; border-radius: 0.75rem;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview (Dropdown & Tooltip)</div>
+  <div style="display: flex; gap: 2rem; align-items: flex-start;">
+    <!-- Dropdown Menu -->
+    <div style="width: 13rem; background: #18181b; border: 1px solid #27272a; border-radius: 0.5rem; padding: 0.25rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);">
+      <div style="padding: 0.375rem 0.5rem; font-size: 0.8125rem; color: #fafafa; display: flex; align-items: center; justify-content: space-between; border-radius: 0.25rem; background: #27272a;">
+        <span>📊 View Metrics</span><span style="font-size: 0.65rem; color: #a1a1aa; font-family: monospace;">⌘M</span>
+      </div>
+      <div style="padding: 0.375rem 0.5rem; font-size: 0.8125rem; color: #e4e4e7; display: flex; align-items: center; border-radius: 0.25rem;">
+        <span>📦 Clone Config</span>
+      </div>
+      <div style="height: 1px; background: #27272a; margin: 0.25rem 0;"></div>
+      <div style="padding: 0.375rem 0.5rem; font-size: 0.8125rem; color: #f87171; display: flex; align-items: center; border-radius: 0.25rem;">
+        <span>🗑️ Delete Cluster</span>
+      </div>
+    </div>
+    <!-- Tooltip -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+      <div style="background: #fafafa; color: #09090b; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 0.375rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);">
+        GPU Cluster Online (8x H100)
+      </div>
+      <button type="button" style="background: #27272a; color: #fafafa; font-size: 0.8125rem; padding: 0.375rem 0.75rem; border-radius: 0.375rem; border: 1px solid #3f3f46; cursor: pointer;">Hovered Trigger</button>
+    </div>
+  </div>
+</div>
+
+#### Precision AI & ML Form Controls
+Tune generation hyperparameters, select model inference engines, and navigate tables:
+
+```python
+from pydataui.shadcn import ShadSlider, ShadRadioGroup, ShadDatePicker, ShadPagination
+
+# 1. Hyperparameter Slider with live value bubble
+temp_slider = ShadSlider(label="Temperature", min_val=0.0, max_val=2.0, step=0.05, value=0.7)
+
+# 2. Model Selection Card Group
+model_radio = ShadRadioGroup(
+    name="model",
+    value="vllm",
+    options=[
+        {"value": "vllm", "label": "vLLM Engine", "description": "High-speed PagedAttention", "badge": "Fast"},
+        {"value": "tgi", "label": "HuggingFace TGI", "description": "Tensor-parallel optimized"}
+    ]
+)
+
+# 3. Date Picker & Pagination
+date_filter = ShadDatePicker(label="Run Timestamp", value="2026-11-11")
+pagination = ShadPagination(total_pages=5, current_page=2)
+```
+
+<div style="margin: 1rem 0 2rem 0; padding: 1.5rem; background: #09090b; border: 1px solid #27272a; border-radius: 0.75rem;">
+  <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 1rem; font-weight: 700;">Rendered UI Preview (Slider & Radio Cards)</div>
+  <div style="max-width: 26rem; display: flex; flex-direction: column; gap: 1.25rem;">
+    <!-- Slider -->
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <span style="font-size: 0.875rem; font-weight: 600; color: #fafafa;">Sampling Temperature</span>
+        <span style="font-size: 0.75rem; font-family: monospace; background: #27272a; color: #a1a1aa; padding: 0.125rem 0.5rem; border-radius: 0.25rem;">0.70</span>
+      </div>
+      <input type="range" min="0" max="2" step="0.05" value="0.7" style="width: 100%; accent-color: #fafafa; cursor: pointer;">
+    </div>
+    <!-- Radio Cards -->
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <div style="border: 1px solid #fafafa; background: rgba(255,255,255,0.03); border-radius: 0.5rem; padding: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+        <input type="radio" checked style="accent-color: #fafafa; margin-top: 0.2rem;">
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 0.875rem; color: #fafafa;">vLLM Engine</strong>
+            <span style="font-size: 0.65rem; background: rgba(99,102,241,0.2); color: #818cf8; padding: 0.1rem 0.4rem; border-radius: 9999px; font-weight: bold;">FAST</span>
+          </div>
+          <p style="margin: 0.2rem 0 0 0; font-size: 0.75rem; color: #a1a1aa;">High-speed PagedAttention inference server</p>
+        </div>
+      </div>
+      <div style="border: 1px solid #27272a; border-radius: 0.5rem; padding: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+        <input type="radio" style="accent-color: #fafafa; margin-top: 0.2rem;">
+        <div style="flex: 1;">
+          <strong style="font-size: 0.875rem; color: #e4e4e7;">HuggingFace TGI</strong>
+          <p style="margin: 0.2rem 0 0 0; font-size: 0.75rem; color: #71717a;">Tensor-parallel optimized</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 ---
 
-## 4. Semantic HTML in Pure Python (`pydataui.html`)
+## 4. Universal Extensibility Engine: Ingesting Any Upcoming shadcn/ui Component
+
+> **"Can I use new or upcoming shadcn/ui and community components directly without waiting for PyDataUI framework updates?"**
+> 
+> **YES.** Because shadcn/ui is an open registry of Tailwind CSS classes and HTML elements rather than a compiled npm package, PyDataUI lets you consume new widgets through **4 direct zero-JS pathways**:
+
+### Pathway 1: Instant JSX / HTML Copy-Paste (`from_jsx` & `from_html`)
+Whenever you find a snippet on [ui.shadcn.com](https://ui.shadcn.com), [21st.dev](https://21st.dev), or GitHub, paste the raw JSX or HTML code directly into Python:
+
+```python
+from pydataui.shadcn import from_jsx
+
+# 1. Paste snippet as a docstring:
+UpcomingSparkCard = from_jsx("""
+<div className="rounded-xl border bg-card text-card-foreground p-6 shadow-sm hover:shadow-md transition-shadow">
+  <div className="flex items-center justify-between pb-2">
+    <h4 className="text-sm font-medium text-muted-foreground">{title}</h4>
+    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">{status}</span>
+  </div>
+  <div className="text-2xl font-bold">{metric}</div>
+  <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+  <div className="mt-4">{children}</div>
+</div>
+""")
+
+# 2. Use immediately with typed parameters:
+card = UpcomingSparkCard(
+    title="Daily Active Tokens",
+    status="Optimal",
+    metric="4.8M",
+    subtitle="Processed across 64 H100 nodes",
+    children=[ShadButton("View Logs", size="sm")]
+)
+```
+
+### Pathway 2: CLI Component Ingester (`pydataui add <component>`)
+Download and generate a standalone Python component file in your project from the official shadcn JSON registry or any custom URL:
+
+```bash
+# Add official upcoming shadcn component:
+pydataui add carousel
+pydataui add resizable
+
+# Add from any direct registry URL:
+pydataui add https://ui.shadcn.com/r/styles/default/animated-beam.json
+```
+Use it immediately in pure Python:
+```python
+from components.shadcn.carousel import Carousel
+
+Carousel(items=[Card(...), Card(...)])
+```
+
+### Pathway 3: Pure Python Declarative Factory (`create_shadcn_component`)
+Define custom variants in 4 lines:
+
+```python
+from pydataui.shadcn import create_shadcn_component
+
+StatusBadge = create_shadcn_component(
+    tag="span",
+    base_classes="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border",
+    variants={
+        "healthy": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+        "critical": "bg-rose-500/10 text-rose-400 border-rose-500/20",
+    },
+    default_variant="healthy"
+)
+```
+
+---
+
+## 5. Semantic HTML in Pure Python (`pydataui.html`)
 
 Instead of being restricted to high-level widgets, you can compose standard semantic HTML tags directly in Python using `pydataui.html`:
 

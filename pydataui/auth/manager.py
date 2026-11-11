@@ -10,7 +10,12 @@ from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-import jwt
+try:
+    import jwt
+    _JWTError = jwt.PyJWTError
+except ImportError:
+    jwt = None
+    _JWTError = Exception
 
 from .models import APIKey, User
 from ..exceptions import AuthenticationThrottledError
@@ -286,11 +291,15 @@ class AuthManager:
 
         user.last_login = utcnow().isoformat()
         self._store.save_user(user)
+        if jwt is None:
+            raise RuntimeError("PyJWT or cryptography is not available on this system.")
         return jwt.encode({'sub': user.id, 'jti': uuid.uuid4().hex,
                            'exp': utcnow() + timedelta(hours=self.token_expire_hours)},
                           self.secret_key, algorithm='HS256')
 
     def verify_token(self, token):
+        if jwt is None:
+            return None
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=['HS256'],
                                  options={'require': ['sub', 'exp', 'jti']})
@@ -299,16 +308,21 @@ class AuthManager:
                     return None
             user = self._store.get_user(payload['sub'])
             return user if user and user.is_active else None
-        except (jwt.PyJWTError, TypeError, KeyError):
+        except (_JWTError, TypeError, KeyError):
             return None
 
     def revoke_token(self, token):
+        if jwt is None:
+            return
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=['HS256'],
                                  options={'require': ['jti', 'exp']})
             with self._lock:
-                self._store.revoke_token(payload['jti'], payload['exp'])
-        except (jwt.PyJWTError, TypeError):
+                if self._store.is_token_revoked(payload['jti']):
+                    pass
+                else:
+                    self._store.revoke_token(payload['jti'], payload['exp'])
+        except (_JWTError, TypeError):
             pass
 
     def create_api_key(self, name, user_id, scopes=None, expires_days=None):

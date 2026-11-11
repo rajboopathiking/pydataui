@@ -83,6 +83,16 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'get_app': ('.dx', 'get_app'),
     'get_default_app': ('.dx', 'get_default_app'),
     
+    # Modern Dashboards & Extensibility
+    'DashboardLayout': ('.shadcn', 'DashboardLayout'),
+    'Sidebar': ('.shadcn', 'Sidebar'),
+    'Header': ('.shadcn', 'Header'),
+    'NavGroup': ('.shadcn', 'NavGroup'),
+    'NavItem': ('.shadcn', 'NavItem'),
+    'create_shadcn_component': ('.shadcn', 'create_shadcn_component'),
+    'from_jsx': ('.shadcn', 'from_jsx'),
+    'from_html': ('.shadcn', 'from_html'),
+    
     # Shell & Native
     'init_tauri': ('.shell', 'init_tauri'),
     'init_capacitor': ('.shell', 'init_capacitor'),

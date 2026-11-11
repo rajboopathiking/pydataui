@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## [1.1.2] - 2026-11-11 - Complete shadcn/ui Parity, Collapsible Sidebar, Zero-JS Dashboard Shell & Universal Extensibility Engine Release
+## [1.1.1] (Git) / [1.1.2] (PyPI) - 2026-11-11 - Complete shadcn/ui Parity, Collapsible Sidebar, Zero-JS Dashboard Shell & Universal Extensibility Engine Release
+
+> **Note on Versioning**: Version in git repository is maintained at `1.1.1` as requested. The PyPI registry distribution is tagged as `1.1.2` due to PyPI immutability rules. Both refer to the identical complete release.
 
 - **Modern Collapsible Sidebar System**: Added full-stack shadcn Sidebar suite (`ShadSidebarProvider`, `ShadSidebar`, `ShadSidebarHeader`, `ShadSidebarContent`, `ShadSidebarGroup`, `ShadSidebarGroupLabel`, `ShadSidebarMenu`, `ShadSidebarMenuItem`, `ShadSidebarMenuButton`, `ShadSidebarFooter`, `ShadSidebarRail`, `ShadSidebarTrigger`) with `collapsible="icon" | "offcanvas"`, keyboard shortcut `Cmd+B` toggling, localStorage persistence, and responsive touch slide-over sheet drawer on mobile viewports (`< 768px`).
 - **High-Level Composable Dashboard Shell**: Added `DashboardLayout`, `Sidebar`, `Header`, `NavGroup`, and `NavItem` allowing data and AI professionals to declare complete production dashboards in pure Python with zero HTML/JS.

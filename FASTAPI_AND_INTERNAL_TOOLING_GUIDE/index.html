@@ -1,0 +1,2256 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Full-Stack Python Framework for Data and AI Applications with a Compiled Rust HTTP Core">
+      
+      
+        <meta name="author" content="Boopathi Raj">
+      
+      
+        <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/FASTAPI_AND_INTERNAL_TOOLING_GUIDE/">
+      
+      
+        <link rel="prev" href="../BENCHMARKS/">
+      
+      
+        <link rel="next" href="../NATIVE_OFFLINE_AND_STANDALONE/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>FastAPI & Internal Tooling Masterclass - PyDataUI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-python-developers-masterclass-building-production-ai-apis-dashboards-internal-tooling-with-fastapi-pydataui" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PyDataUI" class="md-header__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyDataUI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FastAPI & Internal Tooling Masterclass
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../BENCHMARKS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../TEMPLATE_GALLERY/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PyDataUI" class="md-nav__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyDataUI
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & Internal Tooling Masterclass
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & Internal Tooling Masterclass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-executive-vision-why-this-architecture-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Executive Vision: Why This Architecture Wins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Executive Vision: Why This Architecture Wins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-industry-dilemma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Industry Dilemma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-existing-solutions-fail-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Existing Solutions Fail in Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-power-of-high-level-pythonic-abstractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Power of High-Level Pythonic Abstractions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-end-to-end-master-tutorial-building-a-unified-ai-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. End-to-End Master Tutorial: Building a Unified AI Service
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. End-to-End Master Tutorial: Building a Unified AI Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-the-unified-application-mainpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create the Unified Application (main.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-running-and-inspecting-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Running and Inspecting the Application
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Running and Inspecting the Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-just-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Just Happened?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-honest-framework-comparison-why-pydataui-is-the-go-to-for-internal-products" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Honest Framework Comparison: Why PyDataUI is the Go-To for Internal Products
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Honest Framework Comparison: Why PyDataUI is the Go-To for Internal Products">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-does-javascript-dominate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Does JavaScript Dominate?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-does-pydataui-outperform-everything-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Does PyDataUI Outperform Everything Else?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-head-to-head-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Head-to-Head Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-addressing-perceived-disadvantages-the-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Addressing Perceived Disadvantages (The Reality)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Addressing Perceived Disadvantages (The Reality)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#does-pydataui-compile-into-a-react-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Does PyDataUI compile into a React SPA?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-i-need-a-cutting-edge-community-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "What if I need a cutting-edge community widget?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-production-deployment-checklist-for-engineering-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Production Deployment Checklist for Engineering Teams
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary-the-golden-standard-for-python-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary: The Golden Standard for Python Developers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NATIVE_OFFLINE_AND_STANDALONE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Native Offline & Standalone Mobile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_OPTIMIZATION_AND_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Optimization & Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FASTAPI_MOUNTING_AND_CONFLICTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI Mounting & Conflicts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_AND_DESKTOP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile & Desktop Apps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DOCS_DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation & HTML Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTHENTICATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CUSTOMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyDataUI vs Reflex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_TEMPLATES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Team Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRODUCTION_READINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TROUBLESHOOTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TEMPLATE_GALLERY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Gallery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HTML_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTML Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CSS_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSS Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QUICKREF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_3_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_2_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.2.1)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-executive-vision-why-this-architecture-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Executive Vision: Why This Architecture Wins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Executive Vision: Why This Architecture Wins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-industry-dilemma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Industry Dilemma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-existing-solutions-fail-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Existing Solutions Fail in Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-power-of-high-level-pythonic-abstractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Power of High-Level Pythonic Abstractions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-end-to-end-master-tutorial-building-a-unified-ai-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. End-to-End Master Tutorial: Building a Unified AI Service
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. End-to-End Master Tutorial: Building a Unified AI Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-the-unified-application-mainpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create the Unified Application (main.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-running-and-inspecting-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Running and Inspecting the Application
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Running and Inspecting the Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-just-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Just Happened?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-honest-framework-comparison-why-pydataui-is-the-go-to-for-internal-products" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Honest Framework Comparison: Why PyDataUI is the Go-To for Internal Products
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Honest Framework Comparison: Why PyDataUI is the Go-To for Internal Products">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-does-javascript-dominate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Does JavaScript Dominate?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-does-pydataui-outperform-everything-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Does PyDataUI Outperform Everything Else?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-head-to-head-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Head-to-Head Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-addressing-perceived-disadvantages-the-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Addressing Perceived Disadvantages (The Reality)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Addressing Perceived Disadvantages (The Reality)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#does-pydataui-compile-into-a-react-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Does PyDataUI compile into a React SPA?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-i-need-a-cutting-edge-community-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "What if I need a cutting-edge community widget?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-production-deployment-checklist-for-engineering-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Production Deployment Checklist for Engineering Teams
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary-the-golden-standard-for-python-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary: The Golden Standard for Python Developers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-python-developers-masterclass-building-production-ai-apis-dashboards-internal-tooling-with-fastapi-pydataui">🎓 The Python Developer's Masterclass: Building Production AI APIs, Dashboards &amp; Internal Tooling with FastAPI &amp; PyDataUI</h1>
+<blockquote>
+<p><strong>A Comprehensive Guide for Python Developers, Data Scientists &amp; AI Engineers.</strong><br />
+Learn how to turn any FastAPI AI service into a complete, enterprise-grade application with an embedded modern dashboard—<strong>in pure Python, with zero JavaScript, zero Node.js, and running on a single unified server.</strong></p>
+</blockquote>
+<hr />
+<h2 id="1-executive-vision-why-this-architecture-wins">1. Executive Vision: Why This Architecture Wins</h2>
+<h3 id="the-core-industry-dilemma">The Core Industry Dilemma</h3>
+<p>In modern AI, ML, and data engineering, <strong>FastAPI is the undisputed standard</strong>. Whether you are deploying an LLM gateway, fine-tuning Mistral or LLaMA with vLLM, building RAG pipelines with LangChain or LlamaIndex, or running high-performance DuckDB and Polars queries, your backend code is almost certainly written in Python on FastAPI.</p>
+<p>However, every production AI backend immediately needs an <strong>Internal UI</strong>:
+1. <strong>Interactive Prompt &amp; Model Playground</strong>: For engineers and domain experts to test generation parameters ($temperature$, $top_p$, stop sequences) and benchmark latency live.
+2. <strong>Observability &amp; Evaluation Dashboard</strong>: To monitor drift, hallucination rates, token throughput, and confusion matrices.
+3. <strong>Internal Operations &amp; Admin Portal</strong>: To manage API keys, inspect cluster health, approve human-in-the-loop agent steps, and review audit logs.</p>
+<h3 id="why-existing-solutions-fail-in-production">Why Existing Solutions Fail in Production</h3>
+<pre class="mermaid"><code>flowchart TD
+    subgraph TraditionalFails["Common Pitfalls in Enterprise Tooling"]
+        direction TB
+        F1["❌ Separate React/Next.js App\nRequires Node.js, npm, separate repo, separate frontend team with 6-month backlog, and CORS nightmares."]
+        F2["❌ Streamlit / Gradio\nRuns on a separate server (port 8501). Reruns the entire script on every button click, causing catastrophic 10GB model reloads and data query lag."]
+        F3["❌ Reflex (Pynecone)\nTranspiles to Next.js under the hood. Requires Node.js/npm runtime, heavy WebSocket connections that lag over high latency, and confusing dual-stack stacktraces."]
+    end
+
+    subgraph PyDataUIWinner["✨ The PyDataUI + FastAPI Unified Pattern"]
+        direction TB
+        W1["✅ Single Process, Single Server\nMount directly inside FastAPI via mount(api, app, path='/dashboard'). No separate ports, no CORS, shared in-process memory."]
+        W2["✅ Pure Python (Zero Node.js / Zero npm)\npip install pydataui gives you modern shadcn/ui and Tailwind with zero JavaScript build steps."]
+        W3["✅ Partial Hypermedia SSR (HTMX)\nMoving a slider only re-renders that specific metric bubble or card. Models and database connections stay permanently resident in memory."]
+        W4["✅ Universal Component Ingestion\nCopy-paste raw JSX snippets from ui.shadcn.com or 21st.dev directly into Python with from_jsx()."]
+    end</code></pre>
+<hr />
+<h2 id="2-the-power-of-high-level-pythonic-abstractions">2. The Power of High-Level Pythonic Abstractions</h2>
+<p>Python developers prioritize <strong>velocity, readability, and clean mental models</strong>. They do not want to spend hours debugging flexbox margins, CSS cascading conflicts, or React state hooks.</p>
+<p>PyDataUI provides <strong>high-level, composable Python abstractions</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Abstraction</th>
+<th style="text-align: left;">What it Replaces</th>
+<th style="text-align: left;">Code Simplicity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>DashboardLayout</code></a></strong></td>
+<td style="text-align: left;">800+ lines of responsive HTML/CSS shell code</td>
+<td style="text-align: left;">Single call: <code>DashboardLayout(sidebar=..., header=..., content=[...])</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>Sidebar</code></a></strong></td>
+<td style="text-align: left;">Complex multi-tier collapsible drawer logic</td>
+<td style="text-align: left;">Pure Python dictionaries: <code>Sidebar(brand={...}, groups=[...], footer={...})</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>Header</code></a></strong></td>
+<td style="text-align: left;">Sticky navigation bar, breadcrumbs, <code>⌘K</code> search trigger</td>
+<td style="text-align: left;">Single call: <code>Header(breadcrumbs=[...], search=True, actions=[...])</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>ShadSlider</code></a></strong></td>
+<td style="text-align: left;">HTML range input + value bubble + JS listener</td>
+<td style="text-align: left;"><code>ShadSlider(label="Temperature", min_val=0, max_val=2, step=0.05, bind=State.temp)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>ShadRadioGroup</code></a></strong></td>
+<td style="text-align: left;">Styled radio selection cards with descriptions</td>
+<td style="text-align: left;">Pass clean Python option dicts: <code>[{"value": "vllm", "label": "vLLM", "badge": "Fast"}]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>MetricCard</code></a></strong></td>
+<td style="text-align: left;">Custom card, status pill, badge, and delta indicator</td>
+<td style="text-align: left;"><code>MetricCard(title="Throughput", value="1,840 tok/s", delta="+12%")</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>ConfusionMatrix</code></a></strong></td>
+<td style="text-align: left;">Canvas/D3 heatmaps</td>
+<td style="text-align: left;"><code>ConfusionMatrix(matrix=[[850, 42], [38, 910]], labels=["Hallucinated", "Grounded"])</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#"><code>from_jsx</code></a></strong></td>
+<td style="text-align: left;">Entire frontend component build pipeline</td>
+<td style="text-align: left;">Copy-paste JSX snippet directly into a Python string</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-end-to-end-master-tutorial-building-a-unified-ai-service">3. End-to-End Master Tutorial: Building a Unified AI Service</h2>
+<p>Here is a complete, runnable reference showing how to build an <strong>LLM Gateway with a production API and an embedded Model Evaluation Dashboard</strong> on the same server.</p>
+<h3 id="step-1-install-dependencies">Step 1: Install Dependencies</h3>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>fastapi<span class="w"> </span>uvicorn<span class="w"> </span>pydataui
+</span></code></pre></div>
+<em>(No Node.js, no npm, and no frontend bundler required!)</em></p>
+<h3 id="step-2-create-the-unified-application-mainpy">Step 2: Create the Unified Application (<code>main.py</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="sd">Unified AI Inference Gateway &amp; Operations Dashboard</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sd">FastAPI REST API + PyDataUI Dashboard running on a single Uvicorn process.</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">mount</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">DashboardLayout</span><span class="p">,</span> <span class="n">Sidebar</span><span class="p">,</span> <span class="n">NavGroup</span><span class="p">,</span> <span class="n">NavItem</span><span class="p">,</span> <span class="n">Header</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">ShadButton</span><span class="p">,</span> <span class="n">ShadCard</span><span class="p">,</span> <span class="n">ShadCardHeader</span><span class="p">,</span> <span class="n">ShadCardTitle</span><span class="p">,</span> <span class="n">ShadCardDescription</span><span class="p">,</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">ShadCardContent</span><span class="p">,</span> <span class="n">ShadBadge</span><span class="p">,</span> <span class="n">ShadSlider</span><span class="p">,</span> <span class="n">ShadRadioGroup</span><span class="p">,</span> <span class="n">ShadDatePicker</span><span class="p">,</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">ShadDropdownMenu</span><span class="p">,</span> <span class="n">ShadDropdownItem</span><span class="p">,</span> <span class="n">ShadDropdownSeparator</span><span class="p">,</span> <span class="n">ShadTooltip</span><span class="p">,</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">from_jsx</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">)</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.components.data_science</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetricCard</span><span class="p">,</span> <span class="n">ConfusionMatrix</span><span class="p">,</span> <span class="n">PipelineStatus</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># 1. Core FastAPI REST API (For programmatic clients, LangChain, SDKs)</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="n">api</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;NeuroNest AI Inference Gateway&quot;</span><span class="p">,</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Production LLM endpoints with embedded internal ops portal.&quot;</span><span class="p">,</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="p">)</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="k">class</span><span class="w"> </span><span class="nc">GenerateRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mistral-7b&quot;</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    <span class="n">max_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="k">class</span><span class="w"> </span><span class="nc">GenerateResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    <span class="n">completion</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    <span class="n">tokens_generated</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    <span class="n">latency_ms</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="c1"># Shared in-memory model telemetry state</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="n">TELEMETRY</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>    <span class="s2">&quot;total_requests&quot;</span><span class="p">:</span> <span class="mi">14250</span><span class="p">,</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    <span class="s2">&quot;avg_latency_ms&quot;</span><span class="p">:</span> <span class="mf">14.2</span><span class="p">,</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    <span class="s2">&quot;gpu_vram_pct&quot;</span><span class="p">:</span> <span class="mf">84.6</span><span class="p">,</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    <span class="s2">&quot;active_model&quot;</span><span class="p">:</span> <span class="s2">&quot;mistral-7b-instruct-v0.3&quot;</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="p">}</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="nd">@api</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/v1/generate&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">GenerateResponse</span><span class="p">)</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">GenerateRequest</span><span class="p">):</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Production endpoint used by external apps, curl, and microservices.&quot;&quot;&quot;</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>    <span class="k">return</span> <span class="n">GenerateResponse</span><span class="p">(</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>        <span class="n">completion</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Simulated LLM completion for prompt: &#39;</span><span class="si">{</span><span class="n">req</span><span class="o">.</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&#39; using </span><span class="si">{</span><span class="n">req</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>        <span class="n">tokens_generated</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">prompt</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>        <span class="n">latency_ms</span><span class="o">=</span><span class="mf">14.2</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>    <span class="p">)</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="nd">@api</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/v1/health&quot;</span><span class="p">)</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">():</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span><span class="p">,</span> <span class="s2">&quot;model_loaded&quot;</span><span class="p">:</span> <span class="n">TELEMETRY</span><span class="p">[</span><span class="s2">&quot;active_model&quot;</span><span class="p">]}</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="c1"># 2. PyDataUI Dashboard Application (For data scientists &amp; internal team)</span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="n">dashboard</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;NeuroNest Model Registry &amp; Ops&quot;</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;dark&quot;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;zinc&quot;</span><span class="p">)</span>
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="k">class</span><span class="w"> </span><span class="nc">PlaygroundState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>    <span class="n">top_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span>
+</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>    <span class="n">selected_engine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;vllm&quot;</span>
+</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>    <span class="n">benchmark_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2026-11-11&quot;</span>
+</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>
+</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="c1"># Extensibility Engine: Ingest an upcoming modern card without JavaScript:</span>
+</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="n">BentoMetricsCard</span> <span class="o">=</span> <span class="n">from_jsx</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="s2">&lt;div className=&quot;rounded-xl border border-border bg-card text-card-foreground p-5 shadow-sm&quot;&gt;</span>
+</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="s2">  &lt;div className=&quot;flex items-center justify-between pb-2&quot;&gt;</span>
+</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="s2">    &lt;span className=&quot;text-xs font-semibold uppercase text-muted-foreground&quot;&gt;</span><span class="si">{category}</span><span class="s2">&lt;/span&gt;</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="s2">    &lt;span className=&quot;text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400&quot;&gt;</span><span class="si">{status}</span><span class="s2">&lt;/span&gt;</span>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="s2">  &lt;/div&gt;</span>
+</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="s2">  &lt;h4 className=&quot;text-lg font-bold tracking-tight&quot;&gt;</span><span class="si">{title}</span><span class="s2">&lt;/h4&gt;</span>
+</span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="s2">  &lt;p className=&quot;text-xs text-muted-foreground mt-1&quot;&gt;</span><span class="si">{description}</span><span class="s2">&lt;/p&gt;</span>
+</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="s2">  &lt;div className=&quot;mt-4 pt-3 border-t border-border flex justify-between items-center text-xs&quot;&gt;</span>
+</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="s2">    &lt;span className=&quot;font-mono text-muted-foreground&quot;&gt;</span><span class="si">{latency}</span><span class="s2">&lt;/span&gt;</span>
+</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="s2">    </span><span class="si">{action}</span>
+</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="s2">  &lt;/div&gt;</span>
+</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a><span class="s2">&lt;/div&gt;</span>
+</span><span id="__span-1-89"><a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</span><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>
+</span><span id="__span-1-91"><a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a><span class="nd">@dashboard</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+</span><span id="__span-1-92"><a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="k">def</span><span class="w"> </span><span class="nf">ops_home</span><span class="p">():</span>
+</span><span id="__span-1-93"><a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>    <span class="c1"># 1. Collapsible Sidebar Shell</span>
+</span><span id="__span-1-94"><a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>    <span class="n">sidebar</span> <span class="o">=</span> <span class="n">Sidebar</span><span class="p">(</span>
+</span><span id="__span-1-95"><a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>        <span class="n">brand</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NeuroNest AI&quot;</span><span class="p">,</span> <span class="s2">&quot;logo&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;plan&quot;</span><span class="p">:</span> <span class="s2">&quot;Enterprise&quot;</span><span class="p">},</span>
+</span><span id="__span-1-96"><a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>        <span class="n">groups</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-97"><a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>            <span class="n">NavGroup</span><span class="p">(</span><span class="s2">&quot;Serving &amp; Testing&quot;</span><span class="p">,</span> <span class="p">[</span>
+</span><span id="__span-1-98"><a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>                <span class="n">NavItem</span><span class="p">(</span><span class="s2">&quot;Model Registry&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/dashboard&quot;</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">badge</span><span class="o">=</span><span class="s2">&quot;14&quot;</span><span class="p">),</span>
+</span><span id="__span-1-99"><a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>                <span class="n">NavItem</span><span class="p">(</span><span class="s2">&quot;Prompt Studio&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;sparkles&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/dashboard/prompts&quot;</span><span class="p">),</span>
+</span><span id="__span-1-100"><a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>                <span class="n">NavItem</span><span class="p">(</span><span class="s2">&quot;Evaluation Benchmarks&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/dashboard/benchmarks&quot;</span><span class="p">),</span>
+</span><span id="__span-1-101"><a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>            <span class="p">]),</span>
+</span><span id="__span-1-102"><a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>            <span class="n">NavGroup</span><span class="p">(</span><span class="s2">&quot;Operations &amp; Telemetry&quot;</span><span class="p">,</span> <span class="p">[</span>
+</span><span id="__span-1-103"><a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>                <span class="n">NavItem</span><span class="p">(</span><span class="s2">&quot;Cluster Health&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/dashboard/health&quot;</span><span class="p">),</span>
+</span><span id="__span-1-104"><a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a>                <span class="n">NavItem</span><span class="p">(</span><span class="s2">&quot;Vector Stores&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;database&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/dashboard/vectors&quot;</span><span class="p">),</span>
+</span><span id="__span-1-105"><a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a>                <span class="n">NavItem</span><span class="p">(</span><span class="s2">&quot;Security &amp; Audit&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;shield-check&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/dashboard/audit&quot;</span><span class="p">),</span>
+</span><span id="__span-1-106"><a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a>            <span class="p">]),</span>
+</span><span id="__span-1-107"><a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a>        <span class="p">],</span>
+</span><span id="__span-1-108"><a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a>        <span class="n">footer</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Lead ML Engineer&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;engineer@neuronest.ai&quot;</span><span class="p">,</span> <span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="s2">&quot;ML&quot;</span><span class="p">},</span>
+</span><span id="__span-1-109"><a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a>        <span class="n">collapsible</span><span class="o">=</span><span class="s2">&quot;icon&quot;</span>
+</span><span id="__span-1-110"><a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a>    <span class="p">)</span>
+</span><span id="__span-1-111"><a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a>
+</span><span id="__span-1-112"><a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>    <span class="c1"># 2. Top Header with Breadcrumbs, Search, Actions, Theme Toggle</span>
+</span><span id="__span-1-113"><a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a>    <span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span>
+</span><span id="__span-1-114"><a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a>        <span class="n">breadcrumbs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Gateway&quot;</span><span class="p">,</span> <span class="s2">&quot;/dashboard&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Models&quot;</span><span class="p">,</span> <span class="s2">&quot;/dashboard&quot;</span><span class="p">),</span> <span class="n">TELEMETRY</span><span class="p">[</span><span class="s2">&quot;active_model&quot;</span><span class="p">]],</span>
+</span><span id="__span-1-115"><a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a>        <span class="n">search</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-1-116"><a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a>        <span class="n">actions</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-117"><a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a>            <span class="n">ShadTooltip</span><span class="p">(</span><span class="s2">&quot;Inspect Raw Safetensors&quot;</span><span class="p">,</span> <span class="n">ShadButton</span><span class="p">(</span><span class="s2">&quot;Export Weights&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;outline&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span><span class="p">)),</span>
+</span><span id="__span-1-118"><a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a>            <span class="n">ShadDropdownMenu</span><span class="p">(</span>
+</span><span id="__span-1-119"><a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a>                <span class="n">trigger</span><span class="o">=</span><span class="n">ShadButton</span><span class="p">(</span><span class="s2">&quot;Deploy to Node&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span><span class="p">),</span>
+</span><span id="__span-1-120"><a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a>                <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-121"><a id="__codelineno-1-121" name="__codelineno-1-121" href="#__codelineno-1-121"></a>                    <span class="n">ShadDropdownItem</span><span class="p">(</span><span class="s2">&quot;Deploy to 8x H100 Cluster&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span> <span class="n">shortcut</span><span class="o">=</span><span class="s2">&quot;⌘D&quot;</span><span class="p">),</span>
+</span><span id="__span-1-122"><a id="__codelineno-1-122" name="__codelineno-1-122" href="#__codelineno-1-122"></a>                    <span class="n">ShadDropdownItem</span><span class="p">(</span><span class="s2">&quot;Deploy to AWS Inferentia2&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">),</span>
+</span><span id="__span-1-123"><a id="__codelineno-1-123" name="__codelineno-1-123" href="#__codelineno-1-123"></a>                    <span class="n">ShadDropdownSeparator</span><span class="p">(),</span>
+</span><span id="__span-1-124"><a id="__codelineno-1-124" name="__codelineno-1-124" href="#__codelineno-1-124"></a>                    <span class="n">ShadDropdownItem</span><span class="p">(</span><span class="s2">&quot;Drain Active Replicas&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">danger</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-125"><a id="__codelineno-1-125" name="__codelineno-1-125" href="#__codelineno-1-125"></a>                <span class="p">]</span>
+</span><span id="__span-1-126"><a id="__codelineno-1-126" name="__codelineno-1-126" href="#__codelineno-1-126"></a>            <span class="p">)</span>
+</span><span id="__span-1-127"><a id="__codelineno-1-127" name="__codelineno-1-127" href="#__codelineno-1-127"></a>        <span class="p">],</span>
+</span><span id="__span-1-128"><a id="__codelineno-1-128" name="__codelineno-1-128" href="#__codelineno-1-128"></a>        <span class="n">theme_toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-1-129"><a id="__codelineno-1-129" name="__codelineno-1-129" href="#__codelineno-1-129"></a>        <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="s2">&quot;ML&quot;</span><span class="p">}</span>
+</span><span id="__span-1-130"><a id="__codelineno-1-130" name="__codelineno-1-130" href="#__codelineno-1-130"></a>    <span class="p">)</span>
+</span><span id="__span-1-131"><a id="__codelineno-1-131" name="__codelineno-1-131" href="#__codelineno-1-131"></a>
+</span><span id="__span-1-132"><a id="__codelineno-1-132" name="__codelineno-1-132" href="#__codelineno-1-132"></a>    <span class="c1"># 3. Main Operational Content Canvas</span>
+</span><span id="__span-1-133"><a id="__codelineno-1-133" name="__codelineno-1-133" href="#__codelineno-1-133"></a>    <span class="n">content</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-1-134"><a id="__codelineno-1-134" name="__codelineno-1-134" href="#__codelineno-1-134"></a>        <span class="c1"># KPI Telemetry Cards Row</span>
+</span><span id="__span-1-135"><a id="__codelineno-1-135" name="__codelineno-1-135" href="#__codelineno-1-135"></a>        <span class="n">MetricCard</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Throughput&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;1,840 tok/s&quot;</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s2">&quot;+12.4%&quot;</span><span class="p">,</span> <span class="n">delta_type</span><span class="o">=</span><span class="s2">&quot;increase&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;📈&quot;</span><span class="p">),</span>
+</span><span id="__span-1-136"><a id="__codelineno-1-136" name="__codelineno-1-136" href="#__codelineno-1-136"></a>        <span class="n">MetricCard</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;P99 Inference Latency&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TELEMETRY</span><span class="p">[</span><span class="s1">&#39;avg_latency_ms&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s2">&quot;-3.1 ms&quot;</span><span class="p">,</span> <span class="n">delta_type</span><span class="o">=</span><span class="s2">&quot;decrease&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;⚡&quot;</span><span class="p">),</span>
+</span><span id="__span-1-137"><a id="__codelineno-1-137" name="__codelineno-1-137" href="#__codelineno-1-137"></a>        <span class="n">MetricCard</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;GPU VRAM Allocated&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TELEMETRY</span><span class="p">[</span><span class="s1">&#39;gpu_vram_pct&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s2">&quot;Optimal&quot;</span><span class="p">,</span> <span class="n">delta_type</span><span class="o">=</span><span class="s2">&quot;neutral&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;🧠&quot;</span><span class="p">),</span>
+</span><span id="__span-1-138"><a id="__codelineno-1-138" name="__codelineno-1-138" href="#__codelineno-1-138"></a>
+</span><span id="__span-1-139"><a id="__codelineno-1-139" name="__codelineno-1-139" href="#__codelineno-1-139"></a>        <span class="c1"># Pipeline Execution Visualizer</span>
+</span><span id="__span-1-140"><a id="__codelineno-1-140" name="__codelineno-1-140" href="#__codelineno-1-140"></a>        <span class="n">PipelineStatus</span><span class="p">(</span>
+</span><span id="__span-1-141"><a id="__codelineno-1-141" name="__codelineno-1-141" href="#__codelineno-1-141"></a>            <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-142"><a id="__codelineno-1-142" name="__codelineno-1-142" href="#__codelineno-1-142"></a>                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Tokenization&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2ms&quot;</span><span class="p">},</span>
+</span><span id="__span-1-143"><a id="__codelineno-1-143" name="__codelineno-1-143" href="#__codelineno-1-143"></a>                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;KV Cache Lookup&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="s2">&quot;0.8ms&quot;</span><span class="p">},</span>
+</span><span id="__span-1-144"><a id="__codelineno-1-144" name="__codelineno-1-144" href="#__codelineno-1-144"></a>                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;FlashAttention-3&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="s2">&quot;10.4ms&quot;</span><span class="p">},</span>
+</span><span id="__span-1-145"><a id="__codelineno-1-145" name="__codelineno-1-145" href="#__codelineno-1-145"></a>                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sampling &amp; Detokenize&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;pending&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">},</span>
+</span><span id="__span-1-146"><a id="__codelineno-1-146" name="__codelineno-1-146" href="#__codelineno-1-146"></a>            <span class="p">]</span>
+</span><span id="__span-1-147"><a id="__codelineno-1-147" name="__codelineno-1-147" href="#__codelineno-1-147"></a>        <span class="p">),</span>
+</span><span id="__span-1-148"><a id="__codelineno-1-148" name="__codelineno-1-148" href="#__codelineno-1-148"></a>
+</span><span id="__span-1-149"><a id="__codelineno-1-149" name="__codelineno-1-149" href="#__codelineno-1-149"></a>        <span class="c1"># Hyperparameter Tuning Studio</span>
+</span><span id="__span-1-150"><a id="__codelineno-1-150" name="__codelineno-1-150" href="#__codelineno-1-150"></a>        <span class="n">ShadCard</span><span class="p">(</span>
+</span><span id="__span-1-151"><a id="__codelineno-1-151" name="__codelineno-1-151" href="#__codelineno-1-151"></a>            <span class="n">ShadCardHeader</span><span class="p">(</span>
+</span><span id="__span-1-152"><a id="__codelineno-1-152" name="__codelineno-1-152" href="#__codelineno-1-152"></a>                <span class="n">ShadCardTitle</span><span class="p">(</span><span class="s2">&quot;Model Generation Hyperparameters&quot;</span><span class="p">),</span>
+</span><span id="__span-1-153"><a id="__codelineno-1-153" name="__codelineno-1-153" href="#__codelineno-1-153"></a>                <span class="n">ShadCardDescription</span><span class="p">(</span><span class="s2">&quot;Tune generation parameters in real-time with automatic reactive state binding.&quot;</span><span class="p">)</span>
+</span><span id="__span-1-154"><a id="__codelineno-1-154" name="__codelineno-1-154" href="#__codelineno-1-154"></a>            <span class="p">),</span>
+</span><span id="__span-1-155"><a id="__codelineno-1-155" name="__codelineno-1-155" href="#__codelineno-1-155"></a>            <span class="n">ShadCardContent</span><span class="p">(</span>
+</span><span id="__span-1-156"><a id="__codelineno-1-156" name="__codelineno-1-156" href="#__codelineno-1-156"></a>                <span class="n">ShadSlider</span><span class="p">(</span>
+</span><span id="__span-1-157"><a id="__codelineno-1-157" name="__codelineno-1-157" href="#__codelineno-1-157"></a>                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sampling Temperature&quot;</span><span class="p">,</span>
+</span><span id="__span-1-158"><a id="__codelineno-1-158" name="__codelineno-1-158" href="#__codelineno-1-158"></a>                    <span class="n">min_val</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-1-159"><a id="__codelineno-1-159" name="__codelineno-1-159" href="#__codelineno-1-159"></a>                    <span class="n">max_val</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+</span><span id="__span-1-160"><a id="__codelineno-1-160" name="__codelineno-1-160" href="#__codelineno-1-160"></a>                    <span class="n">step</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+</span><span id="__span-1-161"><a id="__codelineno-1-161" name="__codelineno-1-161" href="#__codelineno-1-161"></a>                    <span class="n">value</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+</span><span id="__span-1-162"><a id="__codelineno-1-162" name="__codelineno-1-162" href="#__codelineno-1-162"></a>                    <span class="n">bind</span><span class="o">=</span><span class="n">PlaygroundState</span><span class="o">.</span><span class="n">temperature</span>
+</span><span id="__span-1-163"><a id="__codelineno-1-163" name="__codelineno-1-163" href="#__codelineno-1-163"></a>                <span class="p">),</span>
+</span><span id="__span-1-164"><a id="__codelineno-1-164" name="__codelineno-1-164" href="#__codelineno-1-164"></a>                <span class="n">ShadSlider</span><span class="p">(</span>
+</span><span id="__span-1-165"><a id="__codelineno-1-165" name="__codelineno-1-165" href="#__codelineno-1-165"></a>                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nucleus Sampling (top_p)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-166"><a id="__codelineno-1-166" name="__codelineno-1-166" href="#__codelineno-1-166"></a>                    <span class="n">min_val</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+</span><span id="__span-1-167"><a id="__codelineno-1-167" name="__codelineno-1-167" href="#__codelineno-1-167"></a>                    <span class="n">max_val</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-1-168"><a id="__codelineno-1-168" name="__codelineno-1-168" href="#__codelineno-1-168"></a>                    <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+</span><span id="__span-1-169"><a id="__codelineno-1-169" name="__codelineno-1-169" href="#__codelineno-1-169"></a>                    <span class="n">value</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+</span><span id="__span-1-170"><a id="__codelineno-1-170" name="__codelineno-1-170" href="#__codelineno-1-170"></a>                    <span class="n">bind</span><span class="o">=</span><span class="n">PlaygroundState</span><span class="o">.</span><span class="n">top_p</span>
+</span><span id="__span-1-171"><a id="__codelineno-1-171" name="__codelineno-1-171" href="#__codelineno-1-171"></a>                <span class="p">),</span>
+</span><span id="__span-1-172"><a id="__codelineno-1-172" name="__codelineno-1-172" href="#__codelineno-1-172"></a>                <span class="n">ShadRadioGroup</span><span class="p">(</span>
+</span><span id="__span-1-173"><a id="__codelineno-1-173" name="__codelineno-1-173" href="#__codelineno-1-173"></a>                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;engine&quot;</span><span class="p">,</span>
+</span><span id="__span-1-174"><a id="__codelineno-1-174" name="__codelineno-1-174" href="#__codelineno-1-174"></a>                    <span class="n">value</span><span class="o">=</span><span class="s2">&quot;vllm&quot;</span><span class="p">,</span>
+</span><span id="__span-1-175"><a id="__codelineno-1-175" name="__codelineno-1-175" href="#__codelineno-1-175"></a>                    <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-176"><a id="__codelineno-1-176" name="__codelineno-1-176" href="#__codelineno-1-176"></a>                        <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;vllm&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;vLLM PagedAttention&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;High-throughput production engine&quot;</span><span class="p">,</span> <span class="s2">&quot;badge&quot;</span><span class="p">:</span> <span class="s2">&quot;Optimal&quot;</span><span class="p">},</span>
+</span><span id="__span-1-177"><a id="__codelineno-1-177" name="__codelineno-1-177" href="#__codelineno-1-177"></a>                        <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;tgi&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;HuggingFace TGI&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Tensor-parallel optimized&quot;</span><span class="p">},</span>
+</span><span id="__span-1-178"><a id="__codelineno-1-178" name="__codelineno-1-178" href="#__codelineno-1-178"></a>                        <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;trt&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;NVIDIA TensorRT-LLM&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Maximum kernel fusion speed&quot;</span><span class="p">}</span>
+</span><span id="__span-1-179"><a id="__codelineno-1-179" name="__codelineno-1-179" href="#__codelineno-1-179"></a>                    <span class="p">],</span>
+</span><span id="__span-1-180"><a id="__codelineno-1-180" name="__codelineno-1-180" href="#__codelineno-1-180"></a>                    <span class="n">bind</span><span class="o">=</span><span class="n">PlaygroundState</span><span class="o">.</span><span class="n">selected_engine</span>
+</span><span id="__span-1-181"><a id="__codelineno-1-181" name="__codelineno-1-181" href="#__codelineno-1-181"></a>                <span class="p">),</span>
+</span><span id="__span-1-182"><a id="__codelineno-1-182" name="__codelineno-1-182" href="#__codelineno-1-182"></a>                <span class="n">ShadDatePicker</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Evaluation Date Filter&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;2026-11-11&quot;</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">PlaygroundState</span><span class="o">.</span><span class="n">benchmark_date</span><span class="p">)</span>
+</span><span id="__span-1-183"><a id="__codelineno-1-183" name="__codelineno-1-183" href="#__codelineno-1-183"></a>            <span class="p">)</span>
+</span><span id="__span-1-184"><a id="__codelineno-1-184" name="__codelineno-1-184" href="#__codelineno-1-184"></a>        <span class="p">),</span>
+</span><span id="__span-1-185"><a id="__codelineno-1-185" name="__codelineno-1-185" href="#__codelineno-1-185"></a>
+</span><span id="__span-1-186"><a id="__codelineno-1-186" name="__codelineno-1-186" href="#__codelineno-1-186"></a>        <span class="c1"># Bento Card using from_jsx extensibility</span>
+</span><span id="__span-1-187"><a id="__codelineno-1-187" name="__codelineno-1-187" href="#__codelineno-1-187"></a>        <span class="n">BentoMetricsCard</span><span class="p">(</span>
+</span><span id="__span-1-188"><a id="__codelineno-1-188" name="__codelineno-1-188" href="#__codelineno-1-188"></a>            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;Vector Database&quot;</span><span class="p">,</span>
+</span><span id="__span-1-189"><a id="__codelineno-1-189" name="__codelineno-1-189" href="#__codelineno-1-189"></a>            <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Healthy&quot;</span><span class="p">,</span>
+</span><span id="__span-1-190"><a id="__codelineno-1-190" name="__codelineno-1-190" href="#__codelineno-1-190"></a>            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Qdrant Hybrid Dense-Sparse Shards&quot;</span><span class="p">,</span>
+</span><span id="__span-1-191"><a id="__codelineno-1-191" name="__codelineno-1-191" href="#__codelineno-1-191"></a>            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indexing 2.4M chunks with BGE-M3 embeddings across 4 nodes.&quot;</span><span class="p">,</span>
+</span><span id="__span-1-192"><a id="__codelineno-1-192" name="__codelineno-1-192" href="#__codelineno-1-192"></a>            <span class="n">latency</span><span class="o">=</span><span class="s2">&quot;p99: 18.2ms&quot;</span><span class="p">,</span>
+</span><span id="__span-1-193"><a id="__codelineno-1-193" name="__codelineno-1-193" href="#__codelineno-1-193"></a>            <span class="n">action</span><span class="o">=</span><span class="n">ShadButton</span><span class="p">(</span><span class="s2">&quot;Inspect Shards&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;outline&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span><span class="p">)</span>
+</span><span id="__span-1-194"><a id="__codelineno-1-194" name="__codelineno-1-194" href="#__codelineno-1-194"></a>        <span class="p">),</span>
+</span><span id="__span-1-195"><a id="__codelineno-1-195" name="__codelineno-1-195" href="#__codelineno-1-195"></a>
+</span><span id="__span-1-196"><a id="__codelineno-1-196" name="__codelineno-1-196" href="#__codelineno-1-196"></a>        <span class="c1"># Evaluation Confusion Matrix</span>
+</span><span id="__span-1-197"><a id="__codelineno-1-197" name="__codelineno-1-197" href="#__codelineno-1-197"></a>        <span class="n">ConfusionMatrix</span><span class="p">(</span>
+</span><span id="__span-1-198"><a id="__codelineno-1-198" name="__codelineno-1-198" href="#__codelineno-1-198"></a>            <span class="n">matrix</span><span class="o">=</span><span class="p">[[</span><span class="mi">850</span><span class="p">,</span> <span class="mi">42</span><span class="p">],</span> <span class="p">[</span><span class="mi">38</span><span class="p">,</span> <span class="mi">910</span><span class="p">]],</span>
+</span><span id="__span-1-199"><a id="__codelineno-1-199" name="__codelineno-1-199" href="#__codelineno-1-199"></a>            <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Hallucinated&quot;</span><span class="p">,</span> <span class="s2">&quot;Grounded&quot;</span><span class="p">],</span>
+</span><span id="__span-1-200"><a id="__codelineno-1-200" name="__codelineno-1-200" href="#__codelineno-1-200"></a>            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Hallucination &amp; Factuality Evaluation&quot;</span>
+</span><span id="__span-1-201"><a id="__codelineno-1-201" name="__codelineno-1-201" href="#__codelineno-1-201"></a>        <span class="p">)</span>
+</span><span id="__span-1-202"><a id="__codelineno-1-202" name="__codelineno-1-202" href="#__codelineno-1-202"></a>    <span class="p">]</span>
+</span><span id="__span-1-203"><a id="__codelineno-1-203" name="__codelineno-1-203" href="#__codelineno-1-203"></a>
+</span><span id="__span-1-204"><a id="__codelineno-1-204" name="__codelineno-1-204" href="#__codelineno-1-204"></a>    <span class="k">return</span> <span class="n">DashboardLayout</span><span class="p">(</span>
+</span><span id="__span-1-205"><a id="__codelineno-1-205" name="__codelineno-1-205" href="#__codelineno-1-205"></a>        <span class="n">sidebar</span><span class="o">=</span><span class="n">sidebar</span><span class="p">,</span>
+</span><span id="__span-1-206"><a id="__codelineno-1-206" name="__codelineno-1-206" href="#__codelineno-1-206"></a>        <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+</span><span id="__span-1-207"><a id="__codelineno-1-207" name="__codelineno-1-207" href="#__codelineno-1-207"></a>        <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
+</span><span id="__span-1-208"><a id="__codelineno-1-208" name="__codelineno-1-208" href="#__codelineno-1-208"></a>        <span class="n">collapsible</span><span class="o">=</span><span class="s2">&quot;icon&quot;</span>
+</span><span id="__span-1-209"><a id="__codelineno-1-209" name="__codelineno-1-209" href="#__codelineno-1-209"></a>    <span class="p">)</span>
+</span><span id="__span-1-210"><a id="__codelineno-1-210" name="__codelineno-1-210" href="#__codelineno-1-210"></a>
+</span><span id="__span-1-211"><a id="__codelineno-1-211" name="__codelineno-1-211" href="#__codelineno-1-211"></a>
+</span><span id="__span-1-212"><a id="__codelineno-1-212" name="__codelineno-1-212" href="#__codelineno-1-212"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-213"><a id="__codelineno-1-213" name="__codelineno-1-213" href="#__codelineno-1-213"></a><span class="c1"># 3. The Magic Connection: Mount Dashboard into FastAPI</span>
+</span><span id="__span-1-214"><a id="__codelineno-1-214" name="__codelineno-1-214" href="#__codelineno-1-214"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-215"><a id="__codelineno-1-215" name="__codelineno-1-215" href="#__codelineno-1-215"></a>
+</span><span id="__span-1-216"><a id="__codelineno-1-216" name="__codelineno-1-216" href="#__codelineno-1-216"></a><span class="c1"># One single line connects the entire UI to FastAPI with full sub-path isolation!</span>
+</span><span id="__span-1-217"><a id="__codelineno-1-217" name="__codelineno-1-217" href="#__codelineno-1-217"></a><span class="n">mount</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">dashboard</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/dashboard&quot;</span><span class="p">)</span>
+</span><span id="__span-1-218"><a id="__codelineno-1-218" name="__codelineno-1-218" href="#__codelineno-1-218"></a>
+</span><span id="__span-1-219"><a id="__codelineno-1-219" name="__codelineno-1-219" href="#__codelineno-1-219"></a>
+</span><span id="__span-1-220"><a id="__codelineno-1-220" name="__codelineno-1-220" href="#__codelineno-1-220"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-221"><a id="__codelineno-1-221" name="__codelineno-1-221" href="#__codelineno-1-221"></a><span class="c1"># 4. Entry Point Execution</span>
+</span><span id="__span-1-222"><a id="__codelineno-1-222" name="__codelineno-1-222" href="#__codelineno-1-222"></a><span class="c1"># ---------------------------------------------------------------------------</span>
+</span><span id="__span-1-223"><a id="__codelineno-1-223" name="__codelineno-1-223" href="#__codelineno-1-223"></a>
+</span><span id="__span-1-224"><a id="__codelineno-1-224" name="__codelineno-1-224" href="#__codelineno-1-224"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-1-225"><a id="__codelineno-1-225" name="__codelineno-1-225" href="#__codelineno-1-225"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+</span><span id="__span-1-226"><a id="__codelineno-1-226" name="__codelineno-1-226" href="#__codelineno-1-226"></a>    <span class="c1"># Single server command runs both the API and the full Dashboard!</span>
+</span><span id="__span-1-227"><a id="__codelineno-1-227" name="__codelineno-1-227" href="#__codelineno-1-227"></a>    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;main:api&quot;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">reload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="4-running-and-inspecting-the-application">4. Running and Inspecting the Application</h2>
+<p>Start the application with a standard Uvicorn command:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>main.py
+</span></code></pre></div>
+<p>Now open your browser:
+- <strong>Interactive Ops Dashboard</strong>: <a href="http://127.0.0.1:8000/dashboard">http://127.0.0.1:8000/dashboard</a><br />
+<em>Gives you the full collapsible sidebar, responsive header, hyperparameter sliders, confusion matrix, and <code>⌘K</code> spotlight command palette.</em>
+- <strong>FastAPI Interactive Swagger Docs</strong>: <a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a><br />
+<em>Allows external developers to test the REST endpoints.</em>
+- <strong>Automated REST Endpoint</strong>: <code>curl -X POST http://127.0.0.1:8000/api/v1/generate -H "Content-Type: application/json" -d '{"prompt": "Explain Quantum Computing"}'</code></p>
+<h3 id="what-just-happened">What Just Happened?</h3>
+<ol>
+<li><strong>Zero Node.js was executed.</strong></li>
+<li><strong>Zero NPM packages were installed.</strong></li>
+<li><strong>No separate server process or port was created.</strong></li>
+<li><strong>Shared In-Memory State</strong>: The dashboard and the API endpoints directly read and mutate the exact same in-memory variables (<code>TELEMETRY</code>), database pools, and loaded model weights.</li>
+<li><strong>Ultra-Low Memory Footprint</strong>: Instead of running a 400MB Node/Next.js server alongside a Python process, the entire application runs inside Python's single, highly efficient process.</li>
+</ol>
+<hr />
+<h2 id="5-honest-framework-comparison-why-pydataui-is-the-go-to-for-internal-products">5. Honest Framework Comparison: Why PyDataUI is the Go-To for Internal Products</h2>
+<h3 id="where-does-javascript-dominate">Where Does JavaScript Dominate?</h3>
+<p>Let's be completely transparent: <strong>JavaScript and React/Next.js dominate commercial consumer-facing public websites.</strong>
+- If you are building Amazon, Airbnb, a public marketing homepage with heavy SEO requirements, or a consumer mobile app with 10 million users, React/Next.js is the proven choice.</p>
+<h3 id="where-does-pydataui-outperform-everything-else">Where Does PyDataUI Outperform Everything Else?</h3>
+<p>For <strong>enterprise internal tools, AI/ML engineering portals, operations cockpits, and data applications</strong>, PyDataUI outperforms every alternative:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>               ┌────────────────────────────────────────────────────────┐
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>               │             Which Python UI Framework?                 │
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>               └────────────────────────────────────────────────────────┘
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                                           │
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                    Is it a quick 10-line temporary script?
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                                ├── YES ──► Streamlit / Gradio
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                                │
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                    Do you want to manage Node.js, NPM &amp; Next.js?
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                                ├── YES ──► Reflex (Pynecone)
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                                │
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                    Do you want raw HTML without design systems?
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                                ├── YES ──► FastHTML
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                                │
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                    Do you want production shadcn/ui aesthetics,
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                    zero Node.js, sub-millisecond reactivity, and
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>                    native FastAPI mounting in a single server?
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>                                └── YES ──► 🚀 PyDataUI
+</span></code></pre></div>
+<h3 id="direct-head-to-head-comparison">Direct Head-to-Head Comparison</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;"><strong>PyDataUI</strong></th>
+<th style="text-align: left;"><strong>Streamlit</strong></th>
+<th style="text-align: left;"><strong>Reflex</strong></th>
+<th style="text-align: left;"><strong>Dash</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Server Architecture</strong></td>
+<td style="text-align: left;"><strong>Unified</strong>: Mounts inside FastAPI (<code>mount()</code>)</td>
+<td style="text-align: left;"><strong>Separate</strong>: Runs on port 8501</td>
+<td style="text-align: left;"><strong>Dual</strong>: Python backend + Node/Next frontend</td>
+<td style="text-align: left;"><strong>Separate</strong>: Flask/Werkzeug app</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Execution Model</strong></td>
+<td style="text-align: left;"><strong>HTMX Partial SSR</strong>: Only swapped elements re-render</td>
+<td style="text-align: left;"><strong>Full Script Rerun</strong>: Entire file re-runs on click</td>
+<td style="text-align: left;"><strong>WebSocket Diffs</strong>: Relies on state diffs</td>
+<td style="text-align: left;"><strong>Callback Graphs</strong>: Complex <code>@app.callback</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Heavy Model Handling</strong></td>
+<td style="text-align: left;"><strong>Zero Overhead</strong>: Models stay in memory permanently</td>
+<td style="text-align: left;"><strong>Catastrophic</strong>: Re-runs cause leaks or reload latency</td>
+<td style="text-align: left;"><strong>Overhead</strong>: Must serialize state across WebSockets</td>
+<td style="text-align: left;"><strong>Complex</strong>: Requires manual <code>dcc.Store</code> caching</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Aesthetics</strong></td>
+<td style="text-align: left;"><strong>Production shadcn/ui</strong>: Modern dark mode, clean typography</td>
+<td style="text-align: left;"><strong>Notebook</strong>: Recognizable "toy" appearance</td>
+<td style="text-align: left;"><strong>Tailwind</strong>: Good styling, but high build setup</td>
+<td style="text-align: left;"><strong>Dated</strong>: Requires manual custom CSS sheets</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Component Extensibility</strong></td>
+<td style="text-align: left;"><strong><code>from_jsx()</code> &amp; <code>pydataui add</code></strong>: Paste React/shadcn code directly</td>
+<td style="text-align: left;"><strong>Impossible</strong>: Must write iframe React plugins</td>
+<td style="text-align: left;"><strong>DSL Wrappers</strong>: Must write Python React bindings</td>
+<td style="text-align: left;"><strong>React Components</strong>: High boilerplate packaging</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Deployment Simplicity</strong></td>
+<td style="text-align: left;"><strong>1 Docker Container</strong>: Single <code>uvicorn main:api</code></td>
+<td style="text-align: left;"><strong>2 Containers</strong>: API server + Streamlit container</td>
+<td style="text-align: left;"><strong>2 Build Stages</strong>: Node build + Python build</td>
+<td style="text-align: left;"><strong>1 Container</strong>: Flask-centric</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-addressing-perceived-disadvantages-the-reality">6. Addressing Perceived Disadvantages (The Reality)</h2>
+<h3 id="does-pydataui-compile-into-a-react-spa">"Does PyDataUI compile into a React SPA?"</h3>
+<ul>
+<li><strong>Perceived Disadvantage</strong>: "It doesn't generate a client-side React Single Page Application."</li>
+<li><strong>The Engineering Reality</strong>: This is an <strong>intentional design breakthrough, not a bug</strong>.</li>
+<li>Compiling to React requires Node.js, Webpack/Vite, npm dependencies, and hydration mismatches.</li>
+<li>By using <strong>Hypermedia-driven Server-Side Rendering (HTMX)</strong> styled with standard Tailwind and shadcn/ui CSS, PyDataUI achieves <strong>faster initial page loads</strong>, <strong>zero hydration delay</strong>, and <strong>instant interaction</strong>, while eliminating the entire JavaScript build toolchain.</li>
+</ul>
+<h3 id="what-if-i-need-a-cutting-edge-community-widget">"What if I need a cutting-edge community widget?"</h3>
+<ul>
+<li>In older Python frameworks, you were trapped: if Streamlit or Dash didn't have a component, you had to wait months or write an npm wrapper.</li>
+<li>In PyDataUI, you use the <strong>Universal Extensibility Engine</strong>:
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.shadcn</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_jsx</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Copy any JSX snippet from 21st.dev or ui.shadcn.com:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">FancyCard</span> <span class="o">=</span> <span class="n">from_jsx</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">&lt;div className=&quot;rounded-xl border p-4 bg-card shadow-sm&quot;&gt;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">  &lt;h3&gt;</span><span class="si">{title}</span><span class="s2">&lt;/h3&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">  &lt;div&gt;</span><span class="si">{children}</span><span class="s2">&lt;/div&gt;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">&lt;/div&gt;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">FancyCard</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My Custom Card&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
+</span></code></pre></div></li>
+<li><strong>You get the full aesthetic power of the React ecosystem without ever writing JavaScript.</strong></li>
+</ul>
+<hr />
+<h2 id="7-production-deployment-checklist-for-engineering-teams">7. Production Deployment Checklist for Engineering Teams</h2>
+<p>When deploying your unified FastAPI + PyDataUI service to Kubernetes, AWS ECS, Google Cloud Run, or Docker:</p>
+<ol>
+<li><strong>Single Dockerfile</strong>:
+   <div class="language-dockerfile highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;main:api&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--workers&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">]</span>
+</span></code></pre></div></li>
+<li><strong>Access Control</strong>:</li>
+<li>Protect sensitive dashboard sub-paths using PyDataUI's built-in role decorator:
+     <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">require_role</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nd">@dashboard</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/admin&quot;</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nd">@require_role</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">admin_console</span><span class="p">():</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">return</span> <span class="n">DashboardLayout</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div></li>
+<li><strong>Database &amp; Resource Sharing</strong>:</li>
+<li>Instantiate your database connection pool (e.g. SQLAlchemy, asyncpg, DuckDB) once in FastAPI's <code>lifespan</code> handler.</li>
+<li>Both your REST endpoints and your PyDataUI dashboard functions can access the exact same pool directly.</li>
+</ol>
+<hr />
+<h2 id="8-summary-the-golden-standard-for-python-developers">8. Summary: The Golden Standard for Python Developers</h2>
+<p>PyDataUI provides Python developers with the ultimate balance:
+- <strong>Zero Frontend Friction</strong>: No Node.js, no TypeScript, no npm, no Webpack.
+- <strong>Modern Aesthetics</strong>: Built-in shadcn/ui design tokens, collapsible sidebars, and dark palettes.
+- <strong>Native FastAPI Integration</strong>: Unified single-server deployment via <code>mount()</code>.
+- <strong>Instant Extensibility</strong>: Copy-paste JSX snippets directly with <code>from_jsx()</code>.</p>
+<p>For any Python engineer building commercial internal tools, AI playgrounds, or operations dashboards, <strong>FastAPI + PyDataUI is the definitive, production-ready stack.</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

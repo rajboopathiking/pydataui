@@ -1,6 +1,36 @@
 # CHANGELOG
 
-## [1.1.1] (Git) / [1.1.2] (PyPI) - 2026-11-11 - Complete shadcn/ui Parity, Collapsible Sidebar, Zero-JS Dashboard Shell & Universal Extensibility Engine Release
+## [1.2.0] - 2026-11-11 - Stable DX Revolution: Zero-Class Reactive State Hook, Universal Tabular Sniffing, Pythonic Layouts, Pydantic Auto-Forms, Multi-Page Auto-Discovery & Terminal TUI Runner
+
+- **1. Zero-Class Procedural State Hook (`state(**defaults)` / `reactive_state(**defaults)`)**:
+  - Eliminates the mandatory `class MyState(State):` inheritance requirement for simple scripts, AI playgrounds, and rapid dashboard prototypes.
+  - Dynamically constructs a reactive state subclass with metaclass binding, event delegation, and automatic session store sync.
+  - Supports `@s.action` decorator to turn arbitrary inline Python functions into reactive server event handlers with zero boilerplate.
+  - Supports quick state setters (`s.setter("field")`), direct mutation (`s.count += 1`), and automatic transparent `StateVarRef` binding in UI templates.
+  - Callable module wrapper allows `from pydataui import state; s = state(...)` with zero namespace collisions.
+- **2. Universal Tabular Data Sniffing for `DataTable` & `Table`**:
+  - Auto-detects and seamlessly digests **Polars DataFrames / LazyFrames**, **Pandas DataFrames / Series**, **DuckDB PyRelations**, **PyArrow Tables / RecordBatches**, **SQLAlchemy mappings**, **Pydantic models**, **Python dataclasses**, **NamedTuples**, and **columnar dicts** with zero manual configuration.
+  - Automatically extracts column names, normalizes headers, and formats rows.
+  - Added micro-latency in-browser interactive client controls in `pdu-bridge.js`: real-time text search filtering, bidirectional column sorting (numeric and alphabetic), and client-side pagination with zero JavaScript required from the user.
+- **3. Pythonic Spatial Layout Shorthands (`Row`, `Col`, `Grid`, `Spacer`)**:
+  - Top-level spatial primitives avoiding raw Tailwind flex/grid classes.
+  - `Row(*children, gap="4", align="center", justify="start", wrap=False)`: Flexible horizontal row layout with responsive gap parsing.
+  - `Col(*children, span=6, width="1/2", gap="4")`: Flexible column layout supporting 12-column grid spans or fraction widths (`"1/3"`, `"1/2"`, `"full"`).
+  - `Spacer(size=None, flex=1)`: Auto-expanding flexible spacer (`flex: 1 1 auto;`) or fixed-dimension gap.
+  - `Grid(*children, columns=3, gap="4")`: Intuitive CSS grid container with responsive column repeat rules.
+- **4. Instant Pydantic Auto-Form Generator (`ShadForm.from_pydantic(Model)` & `Form.from_pydantic(Model)`)**:
+  - Automatically generates complete, typed, validated forms from Pydantic v1, Pydantic v2, or standard Python dataclasses.
+  - Intelligently maps types to shadcn/ui components: strings to `ShadInput` (with automatic email, password, and URL type sniffing), numbers to `ShadInput(type="number")` or `ShadSlider`, booleans to `ShadSwitch`, enums and `Literal[...]` to `ShadSelect`, dates to `ShadDatePicker`.
+  - Supports field overrides (`field_configs`), initial values (`initial_values`), customizable submit buttons, and automatic `hx-post` event handler binding.
+- **5. Multi-Page Directory Auto-Discovery (`pages/` & `Sidebar.from_app(app)`)**:
+  - Drop Python page files into a `pages/` directory (e.g. `01_dashboard.py`, `02_analytics.py`, `03_settings.py`) and PyDataUI automatically detects them, slugifies route URLs (`/dashboard`, `/analytics`, `/settings`), parses titles, icons, and roles.
+  - `Sidebar.from_app(app)` and `DashboardLayout.from_app(app)` inspect discovered routes and automatically build complete, responsive navigation menus.
+- **6. Terminal User Interface (TUI) Runner (`pydataui run --tui` & `pydataui tui`)**:
+  - Launch live interactive terminal dashboards using `Rich` for remote SSH sessions, headless GPU training clusters, and headless containers without X11 or open web ports.
+  - Recursively compiles PyDataUI component trees into Rich panels, tables, columns, and metric cards.
+  - Built-in ASCII/ANSI fallback ensures graceful rendering on bare terminals without Rich installed.
+  - Added CLI commands: `pydataui tui app.py`, `pydataui run --tui app.py`, and `pydataui tui --once app.py`.
+
 
 > **Note on Versioning**: Version in git repository is maintained at `1.1.1` as requested. The PyPI registry distribution is tagged as `1.1.2` due to PyPI immutability rules. Both refer to the identical complete release.
 

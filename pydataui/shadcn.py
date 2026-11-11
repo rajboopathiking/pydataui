@@ -32,6 +32,7 @@ from .components.shadcn import (
     ShadHoverCard,
     ShadAccordion,
     ShadSheet,
+    ShadForm,
 
     # Sidebar System & Responsive Shell
     ShadSidebarProvider,
@@ -119,6 +120,7 @@ __all__ = [
     'ShadHoverCard',
     'ShadAccordion',
     'ShadSheet',
+    'ShadForm',
 
     # Sidebar System & Responsive Shell
     'ShadSidebarProvider',

@@ -432,4 +432,144 @@ PyDataUI provides Python developers with the ultimate balance:
 - **Native FastAPI Integration**: Unified single-server deployment via `mount()`.
 - **Instant Extensibility**: Copy-paste JSX snippets directly with `from_jsx()`.
 
+## 7. The 5 Targeted DX Enhancements & Terminal TUI Runner (v1.2.0)
+
+To eliminate any reason for a Python developer to pick Streamlit, Reflex, or Gradio, PyDataUI v1.2.0 introduces five high-impact Developer Experience (DX) enhancements along with a native Terminal User Interface (TUI) runner.
+
+---
+
+### 1. Zero-Class Procedural State Hook (`state(**defaults)`)
+
+No need to subclass `State` for simple tools or interactive prototypes. Declare reactive variables directly and attach functions with `@s.action`:
+
+```python
+from pydataui import App, state, Button, Text, Row
+
+app = App()
+s = state(count=0, query="GPT-4")
+
+@s.action
+def increment():
+    s.count += 1
+
+@s.action
+def decrement():
+    s.count -= 1
+
+@app.page("/")
+def home():
+    return Row(
+        Button("-", on_click=s.decrement),
+        Text(s.count),
+        Button("+", on_click=s.increment)
+    )
+```
+
+---
+
+### 2. Universal Data Sniffing for `DataTable` and `Table`
+
+Pass any Python data structure directly to `DataTable` or `Table` without manual conversion:
+
+* **Polars DataFrame / LazyFrame**: `DataTable(pl_df)`
+* **Pandas DataFrame / Series**: `DataTable(pd_df)`
+* **DuckDB PyRelation**: `DataTable(conn.sql("SELECT * FROM models"))`
+* **PyArrow Table**: `DataTable(arrow_table)`
+* **Pydantic Models**: `DataTable([User(id=1, name="Alice"), User(id=2, name="Bob")])`
+* **Dataclasses**: `DataTable([Metric(name="Latency", value=14.2)])`
+* **Columnar Dicts**: `DataTable({"epochs": [1, 2, 3], "loss": [0.45, 0.32, 0.21]})`
+
+Includes instant in-browser column sorting, real-time search filtering, and client-side pagination with zero JavaScript.
+
+---
+
+### 3. Pythonic Spatial Layout Shorthands (`Row`, `Col`, `Grid`, `Spacer`)
+
+Avoid raw Tailwind utility classes for layout. Structure pages using clean spatial primitives:
+
+```python
+from pydataui import Row, Col, Grid, Spacer, Card, Text
+
+Row(
+    Col(Card(Text("Model Overview")), span=4),        # 4/12 grid span
+    Spacer(),                                         # Auto-flex expanding spacer
+    Col(Card(Text("Live Cluster VRAM")), width="1/2") # Half width
+)
+```
+
+---
+
+### 4. Pydantic Auto-Form Generator (`ShadForm.from_pydantic(Model)`)
+
+Generate typed, validated shadcn/ui forms directly from existing FastAPI schemas:
+
+```python
+from pydantic import BaseModel, Field
+from typing import Literal
+from pydataui.shadcn import ShadForm
+
+class JobRequest(BaseModel):
+    experiment_name: str = Field(..., description="Unique run name")
+    learning_rate: float = Field(0.001, description="AdamW learning rate")
+    use_fp16: bool = Field(True, description="Enable mixed precision")
+    sampling: Literal["greedy", "beam", "top_k"] = "beam"
+
+# Instant validated form with submit button and card shell:
+form = ShadForm.from_pydantic(
+    JobRequest,
+    on_submit=s.launch_experiment,
+    submit_text="Deploy Training Run",
+    field_configs={
+        "learning_rate": {"component": "slider", "min": 0.0001, "max": 0.01, "step": 0.0001}
+    }
+)
+```
+
+---
+
+### 5. Multi-Page Directory Auto-Discovery (`pages/`)
+
+Organize multi-page applications into a `pages/` directory:
+
+```
+my_app/
+├── app.py
+└── pages/
+    ├── 01_dashboard.py
+    ├── 02_model_registry.py
+    └── 03_system_logs.py
+```
+
+PyDataUI automatically discovers the pages, registers their routes (`/dashboard`, `/model-registry`, `/system-logs`), parses module-level metadata (`TITLE`, `ICON`, `ROLES`, `PUBLIC`), and populates the sidebar:
+
+```python
+from pydataui import App
+from pydataui.shadcn import DashboardLayout
+
+app = App() # auto-discovers pages/
+
+@app.page("/")
+def home():
+    # Sidebar automatically populated with all discovered pages:
+    return DashboardLayout.from_app(app, title="Operations Center")
+```
+
+---
+
+### 6. Terminal User Interface (TUI) Runner
+
+For remote GPU clusters, headless servers, and SSH sessions without X11 or web ports:
+
+```bash
+# Launch interactive Rich terminal dashboard:
+pydataui run --tui app.py
+# Or using shorthand:
+pydataui tui app.py
+
+# Render once to terminal output (e.g. for batch cron logs):
+pydataui tui --once app.py
+```
+
+---
+
 For any Python engineer building commercial internal tools, AI playgrounds, or operations dashboards, **FastAPI + PyDataUI is the definitive, production-ready stack.**

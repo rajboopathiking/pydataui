@@ -37,6 +37,25 @@ grid_layout = Div(
 )
 ```
 
+### Pythonic Spatial Layout Shorthands (`Row`, `Col`, `Grid`, `Spacer`)
+
+In PyDataUI v1.2.0+, you can avoid manual Tailwind flex/grid classes by using high-level spatial primitives:
+
+```python
+from pydataui import Row, Col, Grid, Spacer, Card, Text
+
+# Intuitive row layout with column spans:
+layout = Row(
+    Col(Card(Text("Sidebar")), span=3),                # 3/12 columns
+    Col(Card(Text("Main Feed")), width="1/2"),         # 50% width
+    Spacer(),                                          # Auto-flex expanding spacer
+    Col(Card(Text("Details")), width="full"),          # Full width on wrap
+    gap="6",
+    align="start"
+)
+```
+
+
 ### Arbitrary Tailwind Values
 You can use Tailwind arbitrary value syntax (`[...]`):
 ```python

@@ -7,7 +7,7 @@ import importlib.util
 from pathlib import Path
 from pydataui.cli.templates import TEMPLATES
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 def _load_app(file_path_str: str):
     """Dynamically load and locate the PyDataUI App instance in a given file."""
@@ -107,6 +107,13 @@ def dev_server(args):
 def run_server(args):
     file_path = Path(args.file).resolve()
     os.environ["PYDATAUI_APP_FILE"] = str(file_path)
+    if getattr(args, "tui", False):
+        app = _load_app(str(file_path))
+        from pydataui.tui import run_tui
+        print(f"\n📟 Starting PyDataUI Terminal UI (TUI) for '{args.file}'...")
+        run_tui(app, file_path=str(file_path))
+        return
+
     desktop = getattr(args, "desktop", False)
     mobile_preview = getattr(args, "mobile_preview", False)
     if mobile_preview:
@@ -119,6 +126,16 @@ def run_server(args):
     else:
         print(f"\n⚡ Starting PyDataUI production server for '{args.file}' on {args.host}:{args.port} (workers={args.workers})...")
     app.run(host=args.host, port=args.port, reload=False, workers=args.workers, share=args.share, desktop=desktop, mobile_preview=mobile_preview)
+
+def tui_cmd(args):
+    file_path = Path(args.file).resolve()
+    os.environ["PYDATAUI_APP_FILE"] = str(file_path)
+    app = _load_app(str(file_path))
+    from pydataui.tui import run_tui
+    refresh = getattr(args, "refresh", 1.0)
+    once = getattr(args, "once", False)
+    run_tui(app, file_path=str(file_path), refresh_interval=refresh, once=once)
+
 
 def desktop_cmd(args):
     from pydataui.shell.tauri import init_tauri, run_tauri_dev, build_tauri
@@ -312,6 +329,14 @@ def main():
     parser_run.add_argument("--share", action="store_true", help="Create public port forwarding tunnel (like Gradio)")
     parser_run.add_argument("--desktop", action="store_true", help="Launch in native desktop window")
     parser_run.add_argument("--mobile-preview", action="store_true", help="Launch in-browser mobile device simulator with live reload & QR code")
+    parser_run.add_argument("--tui", action="store_true", help="Launch interactive Terminal User Interface (TUI) instead of web server")
+
+    # tui
+    parser_tui = subparsers.add_parser("tui", help="Run dashboard in terminal via Rich TUI")
+    parser_tui.add_argument("file", nargs="?", default="app.py", help="App entrypoint file (default: app.py)")
+    parser_tui.add_argument("--refresh", type=float, default=1.0, help="Terminal UI refresh interval in seconds (default: 1.0)")
+    parser_tui.add_argument("--once", action="store_true", help="Render dashboard once to stdout and exit")
+
 
     # desktop
     parser_desktop = subparsers.add_parser("desktop", help="Manage Tauri 2.0 cross-platform desktop application")
@@ -397,6 +422,9 @@ def main():
         dev_server(args)
     elif args.command == "run":
         run_server(args)
+    elif args.command == "tui":
+        tui_cmd(args)
+
     elif args.command == "desktop":
         desktop_cmd(args)
     elif args.command == "mobile":

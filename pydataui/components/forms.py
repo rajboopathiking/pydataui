@@ -350,6 +350,13 @@ class Form(Component):
             
         return super().render(state_snapshot)
 
+    @classmethod
+    def from_pydantic(cls, model_class: Any, on_submit: Optional[Any] = None, **kwargs) -> Component:
+        """Auto-generate a validated form from a Pydantic model or dataclass."""
+        from .shadcn import ShadForm
+        return ShadForm.from_pydantic(model_class, on_submit=on_submit, **kwargs)
+
+
 class FileUpload(Input):
     def __init__(self, name='file', accept=None, multiple=False, label='Choose file', on_change=None, **props):
         super().__init__(type='file', name=name, label=label, on_change=on_change, **props)

@@ -1,11 +1,161 @@
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from .base import Component
 from ..utils import escape_html
 
+
+def sniff_tabular_data(
+    data: Any,
+    columns: Optional[List[str]] = None,
+    headers: Optional[List[str]] = None
+) -> Tuple[List[Dict[str, Any]], List[str], List[str]]:
+    """Universal data sniffer converting Polars, Pandas, DuckDB, Arrow, Pydantic,
+    dataclasses, dicts, and tuples into uniform records, column keys, and headers."""
+    if data is None:
+        return [], [], []
+
+    # 1. Pandas DataFrame / Series
+    if hasattr(data, 'to_dict') and hasattr(data, 'columns'):
+        cols = list(data.columns) if not columns else list(columns)
+        records = data[cols].to_dict(orient='records')
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    if hasattr(data, 'to_frame'):  # Pandas Series
+        df = data.to_frame()
+        cols = list(df.columns) if not columns else list(columns)
+        records = df.to_dict(orient='records')
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 2. Polars DataFrame / LazyFrame
+    if hasattr(data, 'collect') and hasattr(data, 'schema'):  # Polars LazyFrame
+        try:
+            data = data.collect()
+        except Exception:
+            pass
+    if hasattr(data, 'to_dicts') and hasattr(data, 'columns'):  # Polars DataFrame
+        cols = list(data.columns) if not columns else list(columns)
+        try:
+            records = data.select(cols).to_dicts()
+        except Exception:
+            records = data.to_dicts()
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 3. DuckDB PyRelation
+    if hasattr(data, 'df'):  # duckdb.PyRelation
+        try:
+            df = data.df()
+            cols = list(df.columns) if not columns else list(columns)
+            records = df.to_dict(orient='records')
+            hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+            return records, cols, hdrs
+        except Exception:
+            pass
+    if hasattr(data, 'fetchall') and hasattr(data, 'description') and data.description:
+        cols = [d[0] for d in data.description] if not columns else list(columns)
+        rows = data.fetchall()
+        records = [dict(zip(cols, row)) for row in rows]
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 4. PyArrow Table / RecordBatch
+    if hasattr(data, 'to_pylist') and hasattr(data, 'column_names'):
+        cols = list(data.column_names) if not columns else list(columns)
+        records = data.to_pylist()
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 5. Columnar dict: {"col1": [1, 2], "col2": [3, 4]}
+    if isinstance(data, dict):
+        if all(isinstance(v, (list, tuple)) for v in data.values()):
+            cols = list(data.keys()) if not columns else list(columns)
+            num_rows = min((len(data[c]) for c in cols if c in data), default=0)
+            records = [{c: data[c][i] for c in cols if c in data} for i in range(num_rows)]
+            hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+            return records, cols, hdrs
+        else:
+            cols = list(data.keys()) if not columns else list(columns)
+            records = [data]
+            hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+            return records, cols, hdrs
+
+    # Convert iterables to list
+    if not isinstance(data, (list, tuple)):
+        try:
+            data = list(data)
+        except Exception:
+            return [], [], []
+
+    if not data:
+        return [], [], []
+
+    first = data[0]
+
+    # 6. List of Pydantic models (v1 and v2)
+    if hasattr(first, 'model_dump') and callable(getattr(first, 'model_dump')):
+        records = [row.model_dump() for row in data]
+        cols = list(records[0].keys()) if not columns else list(columns)
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+    if hasattr(first, 'dict') and callable(getattr(first, 'dict')):
+        records = [row.dict() for row in data]
+        cols = list(records[0].keys()) if not columns else list(columns)
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 7. List of Dataclasses
+    if hasattr(first, '__dataclass_fields__'):
+        from dataclasses import asdict
+        records = [asdict(row) for row in data]
+        cols = list(records[0].keys()) if not columns else list(columns)
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 8. List of NamedTuples
+    if hasattr(first, '_asdict') and callable(getattr(first, '_asdict')):
+        records = [row._asdict() for row in data]
+        cols = list(records[0].keys()) if not columns else list(columns)
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 9. List of Dicts
+    if isinstance(first, dict):
+        records = list(data)
+        cols = list(first.keys()) if not columns else list(columns)
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # 10. List of lists / tuples
+    if isinstance(first, (list, tuple)):
+        cols = list(columns) if columns else [f"col_{i}" for i in range(len(first))]
+        records = [dict(zip(cols, row)) for row in data]
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    # Primitives list: [1, 2, 3]
+    cols = list(columns) if columns else ["value"]
+    records = [{"value": val} for val in data]
+    hdrs = headers or ["Value"]
+    return records, cols, hdrs
+
+
 class Table(Component):
     tag = 'table'
-    def __init__(self, data=None, columns=None, headers=None, striped=True, hoverable=True, bordered=False, compact=False, rows=None, **props):
+
+    def __init__(
+        self,
+        data=None,
+        columns=None,
+        headers=None,
+        striped=True,
+        hoverable=True,
+        bordered=False,
+        compact=False,
+        rows=None,
+        **props
+    ):
         super().__init__(**props)
         self.data = data if data is not None else (rows or [])
         self.columns = columns
@@ -14,79 +164,150 @@ class Table(Component):
         self.hoverable = hoverable
         self.bordered = bordered
         self.compact = compact
-        
+
     def _get_classes(self) -> List[str]:
         classes = super()._get_classes() + ['pdu-table']
-        if self.striped: classes.append('pdu-table-striped')
-        if self.hoverable: classes.append('pdu-table-hover')
-        if self.bordered: classes.append('pdu-table-bordered')
-        if self.compact: classes.append('pdu-table-compact')
+        if self.striped:
+            classes.append('pdu-table-striped')
+        if self.hoverable:
+            classes.append('pdu-table-hover')
+        if self.bordered:
+            classes.append('pdu-table-bordered')
+        if self.compact:
+            classes.append('pdu-table-compact')
         return classes
-        
+
     def render(self, state_snapshot: dict) -> str:
         attrs = self._build_attrs(state_snapshot)
-        data = self._resolve_value(self.data, state_snapshot) or []
-        
-        if not data:
-            return f"<{self.tag} {attrs}><tbody><tr><td>No data</td></tr></tbody></{self.tag}>"
-            
-        first_row = data[0]
-        is_dict = isinstance(first_row, dict)
-        
-        cols = self.columns
-        if not cols:
-            if is_dict: cols = list(first_row.keys())
-            else: cols = list(range(len(first_row)))
-            
-        headers = self.headers or [str(c).title() for c in cols]
-        
+        raw_data = self._resolve_value(self.data, state_snapshot)
+        records, cols, headers = sniff_tabular_data(raw_data, self.columns, self.headers)
+
+        if not records:
+            return f"<{self.tag} {attrs}><tbody><tr><td class='p-4 text-muted-foreground text-center'>No data</td></tr></tbody></{self.tag}>"
+
         th_html = "".join(f"<th>{escape_html(str(h))}</th>" for h in headers)
         thead = f"<thead><tr>{th_html}</tr></thead>"
-        
+
         tbody_rows = []
-        for row in data:
+        for row in records:
             tds = []
-            if is_dict:
-                for col in cols:
-                    val = row.get(col, "")
-                    if isinstance(val, Component):
-                        cell_content = val.render(state_snapshot)
-                    else:
-                        cell_content = escape_html(str(self._resolve_value(val, state_snapshot)))
-                    tds.append(f"<td>{cell_content}</td>")
-            else:
-                for idx in range(len(cols)):
-                    val = row[idx] if idx < len(row) else ""
-                    if isinstance(val, Component):
-                        cell_content = val.render(state_snapshot)
-                    else:
-                        cell_content = escape_html(str(self._resolve_value(val, state_snapshot)))
-                    tds.append(f"<td>{cell_content}</td>")
+            for col in cols:
+                val = row.get(col, "")
+                if isinstance(val, Component):
+                    cell_content = val.render(state_snapshot)
+                else:
+                    cell_content = escape_html(str(self._resolve_value(val, state_snapshot)))
+                tds.append(f"<td>{cell_content}</td>")
             tbody_rows.append(f"<tr>{''.join(tds)}</tr>")
-            
+
         tbody = f"<tbody>{''.join(tbody_rows)}</tbody>"
         return f"<{self.tag} {attrs}>{thead}{tbody}</{self.tag}>"
 
+
 class DataTable(Table):
-    def __init__(self, data=None, columns=None, sortable=False, searchable=False, paginated=False, page_size=10, **props):
-        super().__init__(data=data, columns=columns, **props)
+    """Universal DataTable with auto-sniffing for Pandas, Polars, DuckDB, Arrow,
+    instant client-side search filtering, column sorting, and pagination."""
+
+    def __init__(
+        self,
+        data=None,
+        columns=None,
+        headers=None,
+        sortable=True,
+        searchable=True,
+        paginated=False,
+        page_size=10,
+        striped=True,
+        hoverable=True,
+        bordered=False,
+        compact=False,
+        **props
+    ):
+        super().__init__(
+            data=data,
+            columns=columns,
+            headers=headers,
+            striped=striped,
+            hoverable=hoverable,
+            bordered=bordered,
+            compact=compact,
+            **props
+        )
         self.sortable = sortable
         self.searchable = searchable
         self.paginated = paginated
         self.page_size = page_size
-        
+
     def _get_classes(self) -> List[str]:
         return super()._get_classes() + ['pdu-datatable']
-        
+
     def render(self, state_snapshot: dict) -> str:
-        # Full DataTable with HTMX logic would be complex.
-        # This is a stubbed implementation wrapping the base Table.
-        table_html = super().render(state_snapshot)
+        attrs = self._build_attrs(state_snapshot)
+        raw_data = self._resolve_value(self.data, state_snapshot)
+        records, cols, headers = sniff_tabular_data(raw_data, self.columns, self.headers)
+
+        if not records:
+            return (
+                f"<div class='pdu-datatable-wrapper'>"
+                f"<table {attrs}><tbody><tr><td class='p-4 text-muted-foreground text-center'>No data</td></tr></tbody></table>"
+                f"</div>"
+            )
+
         controls = []
-        if self.searchable: controls.append("<input type='search' placeholder='Search...' class='pdu-input pdu-mb-md' />")
-        # Add pagination logic etc if needed
-        controls_html = f"<div class='pdu-datatable-controls'>{''.join(controls)}</div>" if controls else ""
-        return f"<div class='pdu-datatable-wrapper'>{controls_html}{table_html}</div>"
+        if self.searchable:
+            controls.append(
+                "<div class='pdu-datatable-search relative mb-3'>"
+                "<input type='search' placeholder='Search records...' "
+                "class='pdu-table-search-input w-full max-w-sm px-3 py-1.5 text-sm border rounded-md "
+                "bg-background text-foreground border-input focus:outline-none focus:ring-1 focus:ring-ring' />"
+                "</div>"
+            )
+
+        controls_html = f"<div class='pdu-datatable-controls flex justify-between items-center'>{''.join(controls)}</div>" if controls else ""
+
+        th_parts = []
+        for idx, h in enumerate(headers):
+            col_name = cols[idx] if idx < len(cols) else f"col_{idx}"
+            sort_attr = f"data-sort='{col_name}' class='cursor-pointer select-none'" if self.sortable else ""
+            indicator = " <span class='pdu-sort-indicator text-xs text-muted-foreground opacity-60'>↕</span>" if self.sortable else ""
+            th_parts.append(f"<th {sort_attr}>{escape_html(str(h))}{indicator}</th>")
+        thead = f"<thead><tr>{''.join(th_parts)}</tr></thead>"
+
+        tbody_rows = []
+        for row in records:
+            tds = []
+            for col in cols:
+                val = row.get(col, "")
+                if isinstance(val, Component):
+                    cell = val.render(state_snapshot)
+                else:
+                    cell = escape_html(str(self._resolve_value(val, state_snapshot)))
+                tds.append(f"<td>{cell}</td>")
+            tbody_rows.append(f"<tr>{''.join(tds)}</tr>")
+        tbody = f"<tbody>{''.join(tbody_rows)}</tbody>"
+
+        pagination_html = ""
+        if self.paginated:
+            pagination_html = (
+                f"<div class='pdu-datatable-pagination flex items-center justify-between pt-3 text-xs text-muted-foreground' "
+                f"data-page-size='{self.page_size}'>"
+                f"<span>Showing <span class='pdu-page-info'>1 to {min(self.page_size, len(records))} of {len(records)} entries</span></span>"
+                f"<div class='flex gap-1'>"
+                f"<button type='button' class='pdu-page-prev px-2.5 py-1 border rounded text-xs disabled:opacity-50' disabled>Prev</button>"
+                f"<button type='button' class='pdu-page-next px-2.5 py-1 border rounded text-xs disabled:opacity-50'>Next</button>"
+                f"</div>"
+                f"</div>"
+            )
+
+        return (
+            f"<div class='pdu-datatable-wrapper' data-sortable='{str(self.sortable).lower()}' "
+            f"data-page-size='{self.page_size if self.paginated else 0}'>"
+            f"{controls_html}"
+            f"<div class='overflow-x-auto'><table {attrs}>{thead}{tbody}</table></div>"
+            f"{pagination_html}"
+            f"</div>"
+        )
+
 
 class ListItem(Component):
     """List item component."""

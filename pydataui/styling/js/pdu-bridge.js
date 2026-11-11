@@ -372,5 +372,114 @@
                 }
             }
         });
+
+        // 12. Instant Interactive DataTable (Search, Sort & Pagination)
+        function initDataTables() {
+            // Live Search Filter
+            document.addEventListener('input', function (e) {
+                if (e.target.matches('.pdu-table-search-input')) {
+                    var wrapper = e.target.closest('.pdu-datatable-wrapper');
+                    if (!wrapper) return;
+                    var q = (e.target.value || '').toLowerCase().trim();
+                    var rows = wrapper.querySelectorAll('tbody tr');
+                    var visibleCount = 0;
+                    for (var i = 0; i < rows.length; i++) {
+                        var text = rows[i].innerText.toLowerCase();
+                        if (!q || text.indexOf(q) !== -1) {
+                            rows[i].style.display = '';
+                            visibleCount++;
+                        } else {
+                            rows[i].style.display = 'none';
+                        }
+                    }
+                    var info = wrapper.querySelector('.pdu-page-info');
+                    if (info) info.innerText = visibleCount + ' matching entries';
+                }
+            });
+
+            // Column Sorting
+            document.addEventListener('click', function (e) {
+                var th = e.target.closest('th[data-sort]');
+                if (!th) return;
+                var table = th.closest('table');
+                var wrapper = th.closest('.pdu-datatable-wrapper');
+                if (!table || !wrapper) return;
+                var tbody = table.querySelector('tbody');
+                if (!tbody) return;
+
+                var thList = Array.prototype.slice.call(th.parentNode.children);
+                var colIdx = thList.indexOf(th);
+                if (colIdx === -1) return;
+
+                var isAsc = th.getAttribute('data-order') === 'asc';
+                var newOrder = isAsc ? 'desc' : 'asc';
+
+                // Reset other headers
+                for (var i = 0; i < thList.length; i++) {
+                    thList[i].removeAttribute('data-order');
+                    var ind = thList[i].querySelector('.pdu-sort-indicator');
+                    if (ind) ind.innerText = '↕';
+                }
+
+                th.setAttribute('data-order', newOrder);
+                var currentInd = th.querySelector('.pdu-sort-indicator');
+                if (currentInd) currentInd.innerText = newOrder === 'asc' ? '▲' : '▼';
+
+                var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+                rows.sort(function (a, b) {
+                    var aCell = a.children[colIdx] ? a.children[colIdx].innerText.trim() : '';
+                    var bCell = b.children[colIdx] ? b.children[colIdx].innerText.trim() : '';
+                    var aNum = parseFloat(aCell.replace(/[^0-9.-]+/g, ''));
+                    var bNum = parseFloat(bCell.replace(/[^0-9.-]+/g, ''));
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return newOrder === 'asc' ? aNum - bNum : bNum - aNum;
+                    }
+                    return newOrder === 'asc' ? aCell.localeCompare(bCell) : bCell.localeCompare(aCell);
+                });
+
+                for (var j = 0; j < rows.length; j++) {
+                    tbody.appendChild(rows[j]);
+                }
+            });
+
+            // Pagination Controls
+            document.addEventListener('click', function (e) {
+                var prevBtn = e.target.closest('.pdu-page-prev');
+                var nextBtn = e.target.closest('.pdu-page-next');
+                if (!prevBtn && !nextBtn) return;
+                var wrapper = (prevBtn || nextBtn).closest('.pdu-datatable-wrapper');
+                if (!wrapper) return;
+
+                var pageSize = parseInt(wrapper.getAttribute('data-page-size') || '0', 10);
+                if (pageSize <= 0) return;
+
+                var rows = wrapper.querySelectorAll('tbody tr');
+                var total = rows.length;
+                var currentPage = parseInt(wrapper.getAttribute('data-current-page') || '1', 10);
+                var maxPage = Math.max(1, Math.ceil(total / pageSize));
+
+                if (prevBtn && currentPage > 1) currentPage--;
+                if (nextBtn && currentPage < maxPage) currentPage++;
+
+                wrapper.setAttribute('data-current-page', currentPage);
+
+                var start = (currentPage - 1) * pageSize;
+                var end = start + pageSize;
+                for (var i = 0; i < total; i++) {
+                    rows[i].style.display = (i >= start && i < end) ? '' : 'none';
+                }
+
+                var prev = wrapper.querySelector('.pdu-page-prev');
+                var next = wrapper.querySelector('.pdu-page-next');
+                if (prev) prev.disabled = (currentPage <= 1);
+                if (next) next.disabled = (currentPage >= maxPage);
+
+                var info = wrapper.querySelector('.pdu-page-info');
+                if (info) {
+                    info.innerText = (start + 1) + ' to ' + Math.min(end, total) + ' of ' + total + ' entries';
+                }
+            });
+        }
+        initDataTables();
     });
 })();

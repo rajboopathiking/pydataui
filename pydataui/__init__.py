@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.1.1'
+__version__ = '1.2.0'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -15,6 +15,44 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'StateVarRef': ('.state', 'StateVarRef'),
     'EventHandler': ('.state', 'EventHandler'),
     'AppConfig': ('.config', 'AppConfig'),
+    'state': ('.state', 'state'),
+    'reactive_state': ('.state', 'reactive_state'),
+    'ProceduralState': ('.state', 'ProceduralState'),
+
+    # Layout Primitives
+    'Row': ('.components.layout', 'Row'),
+    'Col': ('.components.layout', 'Col'),
+    'Grid': ('.components.layout', 'Grid'),
+    'Spacer': ('.components.layout', 'Spacer'),
+    'Container': ('.components.layout', 'Container'),
+    'Box': ('.components.layout', 'Box'),
+    'HStack': ('.components.layout', 'HStack'),
+    'VStack': ('.components.layout', 'VStack'),
+    'Card': ('.components.layout', 'Card'),
+    'Divider': ('.components.layout', 'Divider'),
+
+    # Data Display & Universal Sniffing
+    'DataTable': ('.components.data_display', 'DataTable'),
+    'Table': ('.components.data_display', 'Table'),
+    'sniff_tabular_data': ('.components.data_display', 'sniff_tabular_data'),
+    'Badge': ('.components.data_display', 'Badge'),
+
+    # Forms & Input
+    'Button': ('.components.forms', 'Button'),
+    'Input': ('.components.forms', 'Input'),
+    'TextArea': ('.components.forms', 'TextArea'),
+    'Form': ('.components.forms', 'Form'),
+    'ShadForm': ('.shadcn', 'ShadForm'),
+
+    # Typography
+    'Heading': ('.components.typography', 'Heading'),
+    'Text': ('.components.typography', 'Text'),
+    'Paragraph': ('.components.typography', 'Paragraph'),
+
+    # TUI
+    'tui': ('.tui', 'run_tui'),
+    'run_tui': ('.tui', 'run_tui'),
+
     
     # Auth
     'AuthManager': ('.auth', 'AuthManager'),

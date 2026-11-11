@@ -97,6 +97,34 @@ DataFrameTable(df=df, max_rows=50)
 
 ---
 
+### `DataTable` (Universal Sniffing & In-Browser Interactivity)
+
+Renders any dataset with automatic schema inference, instant client-side search filtering, interactive column sorting, and pagination.
+
+```python
+from pydataui import DataTable
+
+# Pass Polars, Pandas, DuckDB, Arrow, Pydantic, or Dicts directly:
+DataTable(
+    data=df,              # Any DataFrame, Relation, Arrow Table, or list of objects
+    searchable=True,      # In-browser instant text filter
+    sortable=True,        # Clickable column sorting (numeric & alphabetic)
+    paginated=True,       # Client-side pagination
+    page_size=10
+)
+```
+
+**Supported Inputs:**
+- **Polars DataFrames & LazyFrames** (`df.to_dicts()`)
+- **Pandas DataFrames & Series** (`df.to_dict('records')`)
+- **DuckDB PyRelations** (`conn.sql(...)`)
+- **PyArrow Tables & RecordBatches** (`table.to_pylist()`)
+- **Pydantic Models & Dataclasses** (`[Item(...) for ...]`)
+- **Columnar Dicts** (`{"col": [1, 2]}`)
+
+
+---
+
 ### `PlotlyChart`
 Embeds interactive Plotly charts with auto-resizing and responsive layouts.
 

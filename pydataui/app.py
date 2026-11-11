@@ -94,7 +94,14 @@ class App:
         self._custom_api_routes = []
         self._setup_internal_routes()
         self._register_api_endpoints()
+        self.discovered_pages: List[Dict[str, Any]] = []
+        if kwargs.get("auto_discover", True):
+            try:
+                self.discover_pages()
+            except Exception:
+                pass
         App._active_instance = self
+
         
     @classmethod
     def get_active_app(cls) -> Optional['App']:
@@ -132,6 +139,106 @@ class App:
         """Mount this PyDataUI app onto an existing FastAPI or Starlette application."""
         from .mount import mount
         mount(parent_app, self, path=path)
+
+    def discover_pages(self, pages_dir: str = "pages", base_path: str = "") -> List[Dict[str, Any]]:
+        """Auto-discover and register pages from a directory (e.g. 'pages/').
+
+        Supports numbered filenames (e.g. '01_dashboard.py', '02_analytics.py'),
+        module metadata (TITLE, ICON, ROLES, PUBLIC, LAYOUT), and automatic
+        route registration.
+        """
+        import importlib.util
+        import re
+        from pathlib import Path
+
+        dir_path = Path(pages_dir)
+        if not dir_path.is_absolute():
+            candidates = [Path.cwd() / pages_dir]
+            app_file = os.environ.get("PYDATAUI_APP_FILE")
+            if app_file:
+                candidates.insert(0, Path(app_file).parent / pages_dir)
+
+            found = None
+            for cand in candidates:
+                if cand.is_dir():
+                    found = cand
+                    break
+            if not found:
+                return []
+            dir_path = found
+
+        py_files = sorted([f for f in dir_path.glob("*.py") if not f.name.startswith(("_", "."))])
+        discovered = []
+
+        for p in py_files:
+            stem = p.stem
+            match = re.match(r"^(\d+)[_-]?(.*)$", stem)
+            if match:
+                order = int(match.group(1))
+                raw_slug = match.group(2)
+            else:
+                order = 999
+                raw_slug = stem
+
+            if raw_slug.lower() in ('home', 'index', 'main') and not base_path:
+                path = "/"
+            else:
+                slug = raw_slug.replace('_', '-').lower()
+                path = f"{base_path}/{slug}".replace('//', '/')
+
+            default_title = raw_slug.replace('_', ' ').replace('-', ' ').title()
+
+            mod_name = f"_pdu_page_{p.stem}_{id(self)}"
+            spec = importlib.util.spec_from_file_location(mod_name, str(p))
+            if spec is None or spec.loader is None:
+                continue
+            mod = importlib.util.module_from_spec(spec)
+            try:
+                spec.loader.exec_module(mod)
+            except Exception as e:
+                import logging
+                logging.getLogger("pydataui").error(f"Failed to load page module {p}: {e}")
+                continue
+
+            handler = None
+            for candidate in ('page', 'render', 'view', 'layout', 'app_page', raw_slug.lower(), raw_slug.replace('-', '_').lower()):
+                if hasattr(mod, candidate) and callable(getattr(mod, candidate)):
+                    handler = getattr(mod, candidate)
+                    break
+
+            if handler is None:
+                for attr_name in dir(mod):
+                    if attr_name.startswith('_'):
+                        continue
+                    attr = getattr(mod, attr_name)
+                    if callable(attr) and getattr(attr, '__module__', None) == mod_name:
+                        handler = attr
+                        break
+
+            if handler is None:
+                continue
+
+            title = getattr(mod, 'TITLE', getattr(mod, 'title', default_title))
+            icon = getattr(mod, 'ICON', getattr(mod, 'icon', 'file-text'))
+            public = getattr(mod, 'PUBLIC', getattr(mod, 'public', False))
+            roles = getattr(mod, 'ROLES', getattr(mod, 'roles', ()))
+            layout = getattr(mod, 'LAYOUT', getattr(mod, 'layout', None))
+
+            self.page(path, title=title, layout=layout, public=public, roles=roles)(handler)
+            page_meta = {
+                'path': path,
+                'title': title,
+                'icon': icon,
+                'order': order,
+                'file': str(p),
+                'handler': handler
+            }
+            discovered.append(page_meta)
+
+        discovered.sort(key=lambda x: (x['order'], x['title']))
+        self.discovered_pages = discovered
+        return discovered
+
 
     def page(self, path: str, title: Optional[str] = None, layout: Optional[Callable] = None, *, public: bool = False, roles=()):
         """Decorator to register a page route."""

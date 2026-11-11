@@ -962,6 +962,39 @@ def Sidebar(brand: Optional[Dict[str, Any]] = None,
     return ShadSidebar(*children, collapsible=collapsible, **kwargs)
 
 
+def _sidebar_from_app(app: Any, active_path: str = "/", brand: Optional[Dict[str, Any]] = None,
+                      footer: Optional[Dict[str, Any]] = None, title: str = "Navigation", **kwargs) -> ShadSidebar:
+    """Auto-generate a complete sidebar from app.discovered_pages or registered page routes."""
+    items = []
+    discovered = getattr(app, 'discovered_pages', [])
+    if discovered:
+        for p in discovered:
+            items.append(
+                NavItem(
+                    p['title'],
+                    icon=p.get('icon', 'file-text'),
+                    href=p['path'],
+                    active=(p['path'] == active_path)
+                )
+            )
+    elif hasattr(app, '_page_router') and hasattr(app._page_router, '_routes'):
+        for path, route in app._page_router._routes.items():
+            label = route.title or path.replace('/', '').replace('_', ' ').replace('-', ' ').title() or "Home"
+            items.append(
+                NavItem(
+                    label,
+                    icon="file-text",
+                    href=path,
+                    active=(path == active_path)
+                )
+            )
+    groups = [NavGroup(title, items)] if items else []
+    return Sidebar(brand=brand, groups=groups, footer=footer, **kwargs)
+
+Sidebar.from_app = _sidebar_from_app
+
+
+
 class Header(Component):
     """
     Sticky top header bar for dashboards. Includes sidebar trigger, breadcrumbs,
@@ -1099,6 +1132,24 @@ class DashboardLayout(Component):
         provider = ShadSidebarProvider(default_open=True, collapsible=self.collapsible)
         provider.children = [Component(children=[sidebar_html, main_html], tag='div', class_name="flex flex-1 w-full")]
         return provider.render(snap)
+
+    @classmethod
+    def from_app(
+        cls,
+        app: Any,
+        *children,
+        active_path: str = "/",
+        brand: Optional[Dict[str, Any]] = None,
+        header: Optional[Any] = None,
+        footer: Optional[Dict[str, Any]] = None,
+        title: Optional[str] = None,
+        **kwargs
+    ) -> 'DashboardLayout':
+        """Generate a complete dashboard shell automatically from app pages."""
+        sb = Sidebar.from_app(app, active_path=active_path, brand=brand, footer=footer)
+        hdr = header or Header(title=title)
+        return cls(*children, sidebar=sb, header=hdr, **kwargs)
+
 
 
 # ============================================================================
@@ -1633,3 +1684,210 @@ def create_shadcn_component(
     DynamicShadComponent.__name__ = name
     DynamicShadComponent.__doc__ = f"Dynamically generated shadcn component: <{tag}> with {len(var_map)} variants."
     return DynamicShadComponent
+
+
+# ============================================================================
+# Phase 5: Pydantic Auto-Form Generator (ShadForm)
+# ============================================================================
+
+class ShadForm(Component):
+    """Auto-generated, typed shadcn/ui form derived directly from Pydantic models."""
+    tag = 'form'
+
+    def __init__(self, *children, on_submit=None, action=None, method='POST', **props):
+        super().__init__(*children, **props)
+        self.props['method'] = method
+        if action:
+            self.props['action'] = action
+        if on_submit:
+            from ..state import EventHandler
+            if isinstance(on_submit, EventHandler):
+                self.props['hx-post'] = on_submit.get_endpoint()
+                self.props['hx-target'] = on_submit.target
+                self.props['hx-swap'] = on_submit.swap
+            elif callable(on_submit):
+                self._event_props['on_submit'] = on_submit
+
+    def _get_classes(self) -> List[str]:
+        return super()._get_classes() + ['space-y-4', 'w-full']
+
+    def render(self, state_snapshot: dict = None) -> str:
+        if 'on_submit' in self._event_props:
+            htmx = self._get_event_htmx_attrs('on_submit', self._event_props['on_submit'])
+            if 'hx-get' in htmx:
+                htmx['hx-post'] = htmx.pop('hx-get')
+            elif not any(k.startswith('hx-') for k in htmx if k in ('hx-post', 'hx-put', 'hx-patch', 'hx-delete')):
+                ep = self._event_props['on_submit'].get_endpoint() if hasattr(self._event_props['on_submit'], 'get_endpoint') else ''
+                htmx['hx-post'] = ep
+            self.props.update(htmx)
+            self.props['hx-trigger'] = 'submit'
+        return super().render(state_snapshot or {})
+
+    @classmethod
+    def from_pydantic(
+        cls,
+        model_class: Any,
+        on_submit: Optional[Any] = None,
+        submit_text: str = "Submit",
+        initial_values: Optional[Dict[str, Any]] = None,
+        field_configs: Optional[Dict[str, Dict[str, Any]]] = None,
+        card_wrapper: bool = True,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        **form_props
+    ) -> Component:
+        """Generate a complete, typed shadcn/ui form with validation from a Pydantic model or dataclass."""
+        import inspect
+        import typing
+        from enum import Enum
+        from .base import RawHtml
+
+        init_vals = initial_values or {}
+        configs = field_configs or {}
+        fields: Dict[str, Dict[str, Any]] = {}
+
+        # 1. Inspect Pydantic v2
+        if hasattr(model_class, 'model_fields'):
+            for name, f_info in model_class.model_fields.items():
+                default = f_info.default if getattr(f_info, 'default', None) is not getattr(typing, 'PydanticUndefined', None) else None
+                # Check for sentinel object representing undefined
+                if str(default).startswith('PydanticUndefined'):
+                    default = None
+                fields[name] = {
+                    'annotation': f_info.annotation,
+                    'description': f_info.description or '',
+                    'default': default,
+                    'required': f_info.is_required() if hasattr(f_info, 'is_required') else (default is None),
+                }
+        # 2. Inspect Pydantic v1
+        elif hasattr(model_class, '__fields__'):
+            for name, f_info in model_class.__fields__.items():
+                ann = getattr(f_info, 'outer_type_', getattr(f_info, 'type_', str))
+                desc = getattr(f_info.field_info, 'description', '') or ''
+                fields[name] = {
+                    'annotation': ann,
+                    'description': desc,
+                    'default': f_info.default,
+                    'required': getattr(f_info, 'required', False),
+                }
+        # 3. Inspect Dataclasses
+        elif hasattr(model_class, '__dataclass_fields__'):
+            for name, f_info in model_class.__dataclass_fields__.items():
+                fields[name] = {
+                    'annotation': f_info.type,
+                    'description': '',
+                    'default': f_info.default if str(f_info.default) != '<dataclasses._MISSING_TYPE object>' else None,
+                    'required': str(f_info.default) == '<dataclasses._MISSING_TYPE object>',
+                }
+        else:
+            raise ValueError(f"Cannot generate form: '{model_class}' is not a Pydantic model or dataclass.")
+
+        form_children = []
+
+        for fname, finfo in fields.items():
+            fcfg = configs.get(fname, {})
+            flabel = fcfg.get('label') or fname.replace('_', ' ').title()
+            fdesc = fcfg.get('description') or finfo.get('description', '')
+            freq = finfo.get('required', False)
+            fdefault = init_vals.get(fname, finfo.get('default'))
+            ann = finfo.get('annotation', str)
+
+            # Unwrap Optional[T] / Union[T, None]
+            origin = typing.get_origin(ann)
+            args = typing.get_args(ann)
+            if origin is typing.Union and type(None) in args:
+                non_none = [a for a in args if a is not type(None)]
+                if len(non_none) == 1:
+                    ann = non_none[0]
+                    origin = typing.get_origin(ann)
+                    args = typing.get_args(ann)
+
+            req_mark = '<span class="text-destructive ml-0.5">*</span>' if freq else ''
+            label_html = f'<label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{escape_html(flabel)}{req_mark}</label>'
+            desc_html = f'<p class="text-xs text-muted-foreground">{escape_html(fdesc)}</p>' if fdesc else ''
+
+            component_override = fcfg.get('component')
+            input_widget: Optional[Component] = None
+
+            # Sliders
+            if component_override == 'slider' or (isinstance(component_override, type) and component_override is ShadSlider):
+                min_v = fcfg.get('min', 0.0)
+                max_v = fcfg.get('max', 100.0)
+                step_v = fcfg.get('step', 1.0)
+                val = fdefault if fdefault is not None else min_v
+                input_widget = ShadSlider(name=fname, min=min_v, max=max_v, step=step_v, value=val)
+            # Boolean switches
+            elif ann is bool or component_override == 'switch':
+                checked = bool(fdefault) if fdefault is not None else False
+                input_widget = ShadSwitch(name=fname, checked=checked)
+            # Select / Enum / Literal
+            elif (inspect.isclass(ann) and issubclass(ann, Enum)) or origin is typing.Literal or component_override == 'select':
+                if inspect.isclass(ann) and issubclass(ann, Enum):
+                    opts = [{"label": e.name.replace('_', ' ').title(), "value": e.value} for e in ann]
+                elif origin is typing.Literal:
+                    opts = [{"label": str(a), "value": a} for a in args]
+                else:
+                    opts = fcfg.get('options', [])
+                input_widget = ShadSelect(name=fname, options=opts, value=fdefault, placeholder=fcfg.get('placeholder', 'Select...'))
+            # Date / Datetime
+            elif str(ann) in ('<class \'datetime.date\'>', '<class \'datetime.datetime\'>') or getattr(ann, '__name__', '') in ('date', 'datetime') or component_override == 'date':
+                input_widget = ShadDatePicker(name=fname, value=str(fdefault) if fdefault else '')
+            # Numbers
+            elif ann in (int, float) or component_override == 'number':
+                step = fcfg.get('step', 'any' if ann is float else '1')
+                min_v = fcfg.get('min')
+                max_v = fcfg.get('max')
+                p = {'name': fname, 'type': 'number', 'step': step}
+                if freq:
+                    p['required'] = True
+                if fdefault is not None:
+                    p['value'] = fdefault
+                if min_v is not None:
+                    p['min'] = min_v
+                if max_v is not None:
+                    p['max'] = max_v
+                input_widget = ShadInput(**p)
+            # Text / password / email / url
+            else:
+                input_type = fcfg.get('type')
+                if not input_type:
+                    low = fname.lower()
+                    if 'password' in low or 'secret' in low or 'token' in low:
+                        input_type = 'password'
+                    elif 'email' in low:
+                        input_type = 'email'
+                    elif 'url' in low or 'link' in low or 'website' in low:
+                        input_type = 'url'
+                    else:
+                        input_type = 'text'
+                p = {'name': fname, 'type': input_type, 'placeholder': fcfg.get('placeholder', fdesc or '')}
+                if freq:
+                    p['required'] = True
+                if fdefault is not None:
+                    p['value'] = str(fdefault)
+                input_widget = ShadInput(**p)
+
+            items = [RawHtml(label_html), input_widget]
+            if desc_html:
+                items.append(RawHtml(desc_html))
+            form_children.append(Component(*items, class_name="space-y-1.5"))
+
+        # Submit button
+        submit_btn = ShadButton(submit_text, type="submit", variant="default", class_name="w-full mt-4")
+        form_children.append(submit_btn)
+
+        form_instance = cls(*form_children, on_submit=on_submit, **form_props)
+
+        if card_wrapper:
+            c_title = title or model_class.__name__.replace('Model', '').replace('Schema', '').replace('Request', '')
+            c_desc = description or getattr(model_class, '__doc__', '') or ''
+            header_items = [ShadCardTitle(c_title)]
+            if c_desc and c_desc.strip():
+                header_items.append(ShadCardDescription(c_desc.strip()))
+            return ShadCard(
+                ShadCardHeader(*header_items),
+                ShadCardContent(form_instance)
+            )
+
+        return form_instance
+

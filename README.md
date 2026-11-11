@@ -34,7 +34,12 @@ Build dashboards, dataset explorers, AI agent interfaces, and microservice workf
 - ⚡ **FastAPI Default Engine**: Native ASGI foundation running on standard FastAPI and Uvicorn.
 - 🦀 **Optional PyRustAPI Support**: Plug in Rust-powered `pyrustapi` for high-throughput I/O.
 - 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards inside any existing FastAPI app via `mount(api, dashboard, path="/dashboard")`.
-- 🪄 **Streamlit-Like Simplicity**: Create immediate UIs with `import pydataui as ui; ui.title(...); ui.run()`.
+- 🪄 **Zero-Class Procedural State (`s = state(count=0)`)**: Reactive state without class inheritance, with `@s.action` decorators and instant setters.
+- 📊 **Universal Data Sniffing (`DataTable`)**: Zero-configuration auto-detection for Polars, Pandas, DuckDB, PyArrow, and Pydantic with instant in-browser sorting, search, and pagination.
+- 📐 **Pythonic Spatial Layouts (`Row`, `Col`, `Grid`, `Spacer`)**: Intuitive top-level spatial primitives without raw Tailwind flex utility classes.
+- 📝 **Pydantic Auto-Forms (`ShadForm.from_pydantic`)**: Instant validated shadcn/ui forms generated directly from existing FastAPI Pydantic schemas.
+- 📂 **Multi-Page Auto-Discovery (`pages/`)**: Drop files into `pages/` and let the sidebar auto-generate navigation with zero routing code.
+- 📟 **Terminal User Interface (TUI) Runner**: Run dashboards live inside SSH terminals and headless GPU clusters via `pydataui tui app.py`.
 - 🎨 **Tailwind CSS + shadcn/ui**: Modern design system with dark mode and CSS variables.
 - 🏗️ **Complete shadcn/ui Dashboard & Collapsible Sidebar**: Production-grade `DashboardLayout`, collapsible `Sidebar` (icon & mobile sheet drawer), `Header`, `Breadcrumbs`, and `⌘K` spotlight command palette in pure Python.
 - 🧩 **Universal Extensibility Engine**: Ingest upcoming shadcn & community components directly in pure Python via `from_jsx`, `from_html`, or `pydataui add <component>`. Zero frontend JavaScript!

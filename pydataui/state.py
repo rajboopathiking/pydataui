@@ -1,5 +1,7 @@
 import copy
 import contextvars
+import sys
+import types
 from typing import Any, Dict, Callable, Type, Optional
 from .types import StateSnapshot
 
@@ -530,3 +532,183 @@ class State(metaclass=StateMeta):
                 if isinstance(attr, StateVar):
                     result[name] = attr
         return result
+
+
+_procedural_state_id: int = 0
+
+
+class ProceduralState:
+    """Zero-class procedural state proxy for rapid prototyping and clean scripting.
+
+    Eliminates the need to subclass State for simple dashboards and scripts.
+
+    Usage:
+        s = state(count=0, name="Alice")
+
+        @s.action
+        def increment():
+            s.count += 1
+
+        Button("+", on_click=s.increment)
+        Text(s.count)
+    """
+
+    def __init__(self, state_name: Optional[str] = None, **initial_values: Any):
+        global _procedural_state_id
+        if not state_name:
+            _procedural_state_id += 1
+            state_name = f"ProceduralState_{_procedural_state_id}"
+
+        self._name = state_name
+        self._initial_values = dict(initial_values)
+
+        # Build dynamic State subclass with StateMeta
+        namespace = dict(initial_values)
+        cls = StateMeta(state_name, (State,), namespace)
+        self._cls = cls
+
+    @property
+    def cls(self) -> Type[State]:
+        return self._cls
+
+    @property
+    def state_name(self) -> str:
+        return self._name
+
+    @property
+    def name(self) -> Any:
+        if hasattr(self, '_cls') and 'name' in self._cls.get_state_vars():
+            return getattr(self._cls, 'name')
+        return self._name
+
+
+    def action(self, func: Optional[Callable] = None, name: Optional[str] = None):
+        """Decorator to register a procedural function or method as an event handler on this state."""
+        def decorator(fn: Callable):
+            action_name = name or fn.__name__
+            import inspect
+            sig = inspect.signature(fn)
+            params = list(sig.parameters.values())
+
+            def handler(self_inst, *args, **kwargs):
+                if len(params) == 0:
+                    return fn()
+                elif len(params) == 1 and params[0].name in ('self', 'state'):
+                    return fn(self_inst)
+                else:
+                    has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params)
+                    if has_var_kw:
+                        return fn(*args, **kwargs)
+                    accepted = set(sig.parameters.keys())
+                    filtered = {k: v for k, v in kwargs.items() if k in accepted}
+                    return fn(*args, **filtered)
+
+            handler.__name__ = action_name
+            handler.__doc__ = fn.__doc__
+            setattr(self._cls, action_name, handler)
+            return getattr(self._cls, action_name)
+
+        if func is not None:
+            return decorator(func)
+        return decorator
+
+    def setter(self, field_name: str, value: Any = None):
+        """Generate an action that updates a specific field."""
+        action_name = f"set_{field_name}" if value is None else f"set_{field_name}_{abs(hash(str(value)))}"
+        if not hasattr(self._cls, action_name):
+            def handler(self_inst, **kwargs):
+                val = value if value is not None else kwargs.get(field_name, kwargs.get("value"))
+                setattr(self_inst, field_name, val)
+                self_inst._mark_dirty(field_name)
+            handler.__name__ = action_name
+            setattr(self._cls, action_name, handler)
+        return getattr(self._cls, action_name)
+
+    def set(self, **kwargs: Any) -> None:
+        """Update state variables immediately in active session or class store."""
+        session = _current_session.get()
+        if session is not None and hasattr(session, 'state_instances'):
+            if self._name not in session.state_instances:
+                session.state_instances[self._name] = self._cls()
+            inst = session.state_instances[self._name]
+            for k, v in kwargs.items():
+                setattr(inst, k, v)
+                inst._mark_dirty(k)
+        for k, v in kwargs.items():
+            if hasattr(self._cls, '_class_store'):
+                self._cls._class_store[k] = v
+
+    def reset(self) -> EventHandler:
+        return self._cls.reset
+
+    def to_dict(self) -> Dict[str, Any]:
+        session = _current_session.get()
+        if session is not None and hasattr(session, 'state_instances') and self._name in session.state_instances:
+            return session.state_instances[self._name].to_dict()
+        return self._cls.to_dict()
+
+    def __getattr__(self, name: str) -> Any:
+        if name in self.__dict__:
+            return self.__dict__[name]
+        if hasattr(self._cls, name):
+            session = _current_session.get()
+            if session is not None and hasattr(session, 'state_instances') and self._name in session.state_instances:
+                inst = session.state_instances[self._name]
+                if name in inst.get_state_vars():
+                    return getattr(inst, name)
+            return getattr(self._cls, name)
+        raise AttributeError(f"'{self._name}' has no attribute '{name}'")
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name.startswith('_') or name in ('cls', 'name'):
+            super().__setattr__(name, value)
+            return
+
+        session = _current_session.get()
+        if session is not None and hasattr(session, 'state_instances'):
+            if self._name not in session.state_instances:
+                session.state_instances[self._name] = self._cls()
+            inst = session.state_instances[self._name]
+            setattr(inst, name, value)
+            inst._mark_dirty(name)
+
+        if hasattr(self, '_cls'):
+            if hasattr(self._cls, '_class_store'):
+                self._cls._class_store[name] = value
+            if name not in self._cls.get_state_vars():
+                setattr(self._cls, name, StateVar(default=value, field_name=name))
+                self._cls._class_store[name] = value
+        else:
+            super().__setattr__(name, value)
+
+    def __getitem__(self, key: str) -> Any:
+        return getattr(self, key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        setattr(self, key, value)
+
+    def __repr__(self) -> str:
+        return f"<ProceduralState {self._name} values={self.to_dict()}>"
+
+
+def reactive_state(*args: str, _state_name: Optional[str] = None, **initial_values: Any) -> ProceduralState:
+    """Create a reactive procedural state without class inheritance."""
+    name = args[0] if args else _state_name
+    return ProceduralState(state_name=name, **initial_values)
+
+
+
+# Export shorthand 'state'
+state = reactive_state
+
+
+class _StateModule(types.ModuleType):
+    """Callable module wrapper allowing both module access (`state.State`)
+    and direct functional invocation (`s = state(...)`)."""
+    def __call__(self, *args: Any, **kwargs: Any) -> ProceduralState:
+        return reactive_state(*args, **kwargs)
+
+
+sys.modules[__name__].__class__ = _StateModule
+
+

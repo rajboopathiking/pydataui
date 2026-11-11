@@ -48,7 +48,7 @@ class Grid(Component):
     def __init__(self, *children, columns=1, gap='md', template_columns=None, template_rows=None, **props):
         super().__init__(*children, **props)
         self.columns = columns
-        self.gap = gap
+        self.gap = str(gap)
         self.template_columns = template_columns
         self.template_rows = template_rows
         
@@ -57,9 +57,15 @@ class Grid(Component):
         
     def _get_style_string(self) -> str:
         s = super()._get_style_string()
-        tc = self.template_columns or f"repeat({self.columns}, 1fr)"
+        if self.template_columns:
+            tc = self.template_columns
+        elif isinstance(self.columns, int):
+            tc = f"repeat({self.columns}, minmax(0, 1fr))"
+        else:
+            tc = f"repeat({self.columns}, 1fr)"
         tr = f"grid-template-rows: {self.template_rows};" if self.template_rows else ""
-        return f"{s} display: grid; grid-template-columns: {tc}; {tr} gap: var(--pdu-spacing-{self.gap}, {self.gap});".strip()
+        gap_style = f"gap: {int(self.gap)*0.25}rem;" if self.gap.isdigit() else f"gap: var(--pdu-spacing-{self.gap}, {self.gap});"
+        return f"{s} display: grid; grid-template-columns: {tc}; {tr} {gap_style}".strip()
 
 class Stack(Flex):
     """Vertical/horizontal stack."""
@@ -75,6 +81,77 @@ class VStack(Flex):
     """Vertical stack."""
     def __init__(self, *children, gap='md', align='stretch', **props):
         super().__init__(*children, direction='column', gap=gap, align=align, **props)
+
+class Row(Flex):
+    """Pythonic horizontal layout row shorthand with intuitive gap and alignment."""
+    def __init__(
+        self,
+        *children,
+        gap='4',
+        align='center',
+        justify='start',
+        wrap=False,
+        **props
+    ):
+        wrap_val = 'wrap' if wrap else 'nowrap'
+        gap_str = str(gap)
+        super().__init__(*children, direction='row', align=align, justify=justify, gap=gap_str, wrap=wrap_val, **props)
+
+    def _get_classes(self) -> List[str]:
+        return super()._get_classes() + ['pdu-row']
+
+    def _get_style_string(self) -> str:
+        s = super()._get_style_string()
+        if self.gap.isdigit():
+            gap_rem = float(self.gap) * 0.25
+            s = f"{s} gap: {gap_rem}rem;"
+        return s.strip()
+
+class Col(Flex):
+    """Pythonic vertical layout column shorthand with responsive span/width."""
+    def __init__(
+        self,
+        *children,
+        span: Optional[int] = None,
+        width: Optional[str] = None,
+        gap='4',
+        align='stretch',
+        justify='start',
+        **props
+    ):
+        gap_str = str(gap)
+        super().__init__(*children, direction='column', align=align, justify=justify, gap=gap_str, **props)
+        self.span = span
+        self.width = width
+
+    def _get_classes(self) -> List[str]:
+        classes = super()._get_classes() + ['pdu-col']
+        if self.span is not None:
+            classes.append(f'pdu-col-span-{self.span}')
+        return classes
+
+    def _get_style_string(self) -> str:
+        s = super()._get_style_string()
+        styles = []
+        if self.gap.isdigit():
+            gap_rem = float(self.gap) * 0.25
+            styles.append(f"gap: {gap_rem}rem;")
+        if self.span is not None:
+            pct = round((self.span / 12) * 100, 4)
+            styles.append(f"flex: 0 0 {pct}%; max-width: {pct}%;")
+        elif self.width is not None:
+            if self.width == 'full':
+                styles.append("width: 100%;")
+            elif '/' in self.width:
+                parts = self.width.split('/')
+                pct = round((float(parts[0]) / float(parts[1])) * 100, 4)
+                styles.append(f"flex: 0 0 {pct}%; max-width: {pct}%;")
+            else:
+                styles.append(f"width: {self.width};")
+        else:
+            styles.append("flex: 1 1 0%; min-width: 0;")
+        return f"{s} {' '.join(styles)}".strip()
+
 
 class Card(Component):
     """Card container with optional header."""
@@ -118,14 +195,26 @@ class Divider(Component):
         return super()._get_classes() + ['pdu-divider', f'pdu-divider-{self.orientation}']
 
 class Spacer(Component):
-    """Empty space."""
+    """Auto-expanding flexible spacer or fixed dimension spacer."""
     tag = 'div'
-    def __init__(self, size='md', **props):
+    def __init__(self, size: Optional[Any] = None, flex: int = 1, **props):
         super().__init__(**props)
         self.size = size
-        
+        self.flex = flex
+
     def _get_classes(self) -> List[str]:
-        return super()._get_classes() + ['pdu-spacer', f'pdu-m-{self.size}']
+        classes = super()._get_classes() + ['pdu-spacer']
+        if self.size is not None and isinstance(self.size, str) and not self.size.isdigit() and not self.size.endswith(('px', 'rem', 'em', '%')):
+            classes.append(f'pdu-m-{self.size}')
+        return classes
+
+    def _get_style_string(self) -> str:
+        s = super()._get_style_string()
+        if self.size is None:
+            return f"{s} flex: {self.flex} {self.flex} auto;".strip()
+        val = f"{self.size}px" if isinstance(self.size, int) or (isinstance(self.size, str) and self.size.isdigit()) else str(self.size)
+        return f"{s} width: {val}; height: {val}; flex-shrink: 0;".strip()
+
 
 class Center(Flex):
     """Centers content both horizontally and vertically."""

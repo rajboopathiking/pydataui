@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## [1.1.2] - 2026-11-11 - Complete shadcn/ui Parity, Collapsible Sidebar, Zero-JS Dashboard Shell & Universal Extensibility Engine Release
+
+- **Modern Collapsible Sidebar System**: Added full-stack shadcn Sidebar suite (`ShadSidebarProvider`, `ShadSidebar`, `ShadSidebarHeader`, `ShadSidebarContent`, `ShadSidebarGroup`, `ShadSidebarGroupLabel`, `ShadSidebarMenu`, `ShadSidebarMenuItem`, `ShadSidebarMenuButton`, `ShadSidebarFooter`, `ShadSidebarRail`, `ShadSidebarTrigger`) with `collapsible="icon" | "offcanvas"`, keyboard shortcut `Cmd+B` toggling, localStorage persistence, and responsive touch slide-over sheet drawer on mobile viewports (`< 768px`).
+- **High-Level Composable Dashboard Shell**: Added `DashboardLayout`, `Sidebar`, `Header`, `NavGroup`, and `NavItem` allowing data and AI professionals to declare complete production dashboards in pure Python with zero HTML/JS.
+- **Hierarchical Breadcrumbs**: Added accessible breadcrumb navigation suite (`ShadBreadcrumb`, `ShadBreadcrumbList`, `ShadBreadcrumbItem`, `ShadBreadcrumbLink`, `ShadBreadcrumbPage`, `ShadBreadcrumbSeparator`).
+- **Zero-JS Overlays & Menus**: Added headless accessible overlays with click-outside auto-dismiss, backdrop blur, and keyboard escape dismiss: `ShadDropdownMenu`, `ShadDropdownItem`, `ShadDropdownSeparator`, `ShadDropdownLabel`, `ShadPopover`, `ShadTooltip` (`role="tooltip"`), `ShadAlertDialog`, and `ShadCommandPalette` (`⌘K` Spotlight search modal).
+- **Precision AI & ML Form Controls**: Added `ShadSlider` with live value bubble indicator and state binding, `ShadRadioGroup` with styled card options, `ShadDatePicker`, and `ShadPagination`.
+- **Universal Extensibility Engine**:
+  - `from_jsx(jsx_string)`: Copy-paste raw JSX snippets from [ui.shadcn.com](https://ui.shadcn.com) or [21st.dev](https://21st.dev) directly into Python docstrings to produce callable typed components.
+  - `from_html(html_string)`: Instant component factory from raw HTML snippets with `{slot}` placeholders.
+  - `dynamic(schema_or_url)`: Runtime dynamic loader for external shadcn registry JSON schemas.
+  - `create_shadcn_component(...)`: 5-line declarative pure-Python component and variant generator.
+  - `pydataui add <component | url>`: CLI tool to pull upcoming shadcn registry JSON schemas and transpile them into native Python classes under `components/shadcn/`.
+- **Client Interaction Bridge**: Enhanced `pdu-bridge.js` with lightweight event delegation for sidebar collapse, mobile drawer toggles, dropdown dismiss, popover dismiss, `⌘K` listener, and live slider value updates.
+- **Documentation & Flagship Example App**:
+  - Added reference AI model registry portal: `examples/ai_model_dashboard.py`.
+  - Added in-line interactive **Rendered UI Previews** for all components in `docs/CUSTOMIZATION.md`.
+  - Added architecture comparison guide in `docs/PYDATAUI_VS_REFLEX.md`.
+
 ## [1.1.1] - 2026-10-29 - Native Offline Mobile Parity & Standalone Architecture Release
 
 - **Native Offline Parity (Standalone Mobile Default)**: Decoupled Standalone mode from Wi-Fi sync in `pydataui.shell.capacitor`. By default, builds omit the `server` block from `capacitor.config.json`, serving bundled assets (`assets/public/`) directly from device flash memory at `https://localhost/` with <150 ms cold start. Completely eliminates `net::ERR_CONNECTION_REFUSED` ("Web page not available") in Airplane mode and offline environments.

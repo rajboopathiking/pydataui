@@ -36,6 +36,8 @@ Build dashboards, dataset explorers, AI agent interfaces, and microservice workf
 - 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards inside any existing FastAPI app via `mount(api, dashboard, path="/dashboard")`.
 - 🪄 **Streamlit-Like Simplicity**: Create immediate UIs with `import pydataui as ui; ui.title(...); ui.run()`.
 - 🎨 **Tailwind CSS + shadcn/ui**: Modern design system with dark mode and CSS variables.
+- 🏗️ **Complete shadcn/ui Dashboard & Collapsible Sidebar**: Production-grade `DashboardLayout`, collapsible `Sidebar` (icon & mobile sheet drawer), `Header`, `Breadcrumbs`, and `⌘K` spotlight command palette in pure Python.
+- 🧩 **Universal Extensibility Engine**: Ingest upcoming shadcn & community components directly in pure Python via `from_jsx`, `from_html`, or `pydataui add <component>`. Zero frontend JavaScript!
 - ⚡ **Reactive SSR via HTMX**: Server re-renders page fragments on state mutation without client-side JavaScript.
 - 🤖 **AI & Agent Ready**: Built-in `Chat`, `Markdown`, and `CodeEditor` components compatible with LangGraph, UnifiedNexus, and LLMs.
 - 🔒 **Auth & API Keys**: JWT authentication, RBAC, and `pdu_live_...` API keys for ETL automation.

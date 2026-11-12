@@ -378,18 +378,24 @@ def _run_chat_tui(app: Any, handler: Any, current_page: str, initial_chat_comp: 
     """Run an intuitive, streamlined conversational Terminal UI for Chat applications."""
     title = getattr(app, 'title', 'PyDataUI Chatbot')
     chat_title = getattr(initial_chat_comp, 'chat_title', title)
+    suggestions = getattr(initial_chat_comp, 'suggestions', []) or []
 
     if _HAS_RICH and console:
         console.clear()
         header = (
-            f"[bold green]● {chat_title}[/bold green] • [dim]PyDataUI v1.2.0 Chat Mode[/dim]\n"
-            f"[dim]Type your message and press Enter to chat. Type [bold yellow]q[/bold yellow] or [bold yellow]exit[/bold yellow] to quit.[/dim]"
+            f"[bold green]● {chat_title}[/bold green] • [dim]PyDataUI v1.2.1 Chat Mode[/dim]\n"
+            f"[dim]Type your message and press Enter to chat. Type [bold yellow]q[/bold yellow] or [bold yellow]exit[/bold yellow] to quit. Type [bold yellow]/clear[/bold yellow] to reset.[/dim]"
         )
         console.print(Panel(header, border_style="cyan", expand=False))
+        if suggestions:
+            badges = [f"[bold yellow][{i+1}][/bold yellow] {s}" for i, s in enumerate(suggestions)]
+            console.print(Panel("  |  ".join(badges), title="[bold cyan]💡 Quick Suggestions[/bold cyan]", border_style="dim blue", expand=False))
         console.print()
     else:
         print(f"\n=== {chat_title} • PyDataUI Chat Mode ===")
-        print("Type your message and press Enter. Type 'q' to quit.\n")
+        print("Type your message and press Enter. Type 'q' to quit. Type '/clear' to reset.\n")
+        if suggestions:
+            print("Quick Suggestions: " + " | ".join(f"[{i+1}] {s}" for i, s in enumerate(suggestions)) + "\n")
 
     # Initial history
     raw_msgs = getattr(initial_chat_comp, 'messages', [])
@@ -433,6 +439,32 @@ def _run_chat_tui(app: Any, handler: Any, current_page: str, initial_chat_comp: 
             else:
                 print("Exited PyDataUI chat session.")
             break
+
+        # Suggestion selection by number
+        if user_input.isdigit() and suggestions:
+            s_idx = int(user_input) - 1
+            if 0 <= s_idx < len(suggestions):
+                user_input = suggestions[s_idx]
+                if console:
+                    console.print(f"[dim]Selected: {user_input}[/dim]")
+
+        # /clear command
+        if user_input.lower() in ('/clear', 'clear'):
+            root = handler()
+            chat_comp = _find_chat_component(root) or initial_chat_comp
+            clear_fn = getattr(chat_comp, '_event_props', {}).get('on_clear')
+            if clear_fn:
+                try:
+                    _dispatch_action(clear_fn)
+                except Exception:
+                    pass
+            if _HAS_RICH and console:
+                console.clear()
+                console.print(Panel(header, border_style="cyan", expand=False))
+            else:
+                print("\n=== Chat Cleared ===")
+            printed_count = 0
+            continue
 
         # Re-resolve actions and chat component
         actions_map = _collect_actions()

@@ -82,6 +82,10 @@ def test_sqlite_auth_store_password_and_delete():
 
 def test_admin_user_state_cms_lifecycle():
     # Setup admin and regular user in app_auth
+    for uname in ["carol_engineer", "carol_lead", "hacker"]:
+        uid = app_auth.users_by_username.get(uname)
+        if uid:
+            app_auth.delete_user(uid)
     admin = app_auth.get_or_create_user("cms_admin", "adminpass123", email="admin@cms.com", roles=[Role.ADMIN])
     
     state = AdminUserState()

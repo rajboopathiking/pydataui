@@ -94,9 +94,15 @@ def home():
 
 ---
 
-## Recipe 2: Production AI Chatbot with Loading Indicators
+## Recipe 2: Production AI Chatbot with Loading Indicators & Modern UI/UX
 
-Renders an interactive chat interface with built-in HTMX typing animations, button spinner, and input locking during LLM calls.
+Renders an interactive commercial-grade chat interface with:
+- **IME-Safe Multiline Textarea**: Auto-expanding with `Shift+Enter` for new line and `Enter` to submit.
+- **Built-in HTMX Indicators**: 3-dot pulsing typing bubble (`animate-bounce`), button spinner (`animate-spin`), and button/input double-submission locks (`hx-disabled-elt`).
+- **Clickable Suggestion Chips**: Auto-fills and triggers quick starter prompts with one click.
+- **Auto-Scroll to Bottom**: Smoothly keeps the newest messages in view on render and updates.
+- **Markdown & Code Formatting**: Beautiful syntax and styling for assistant responses with copy-to-clipboard button.
+- **Clear Chat Support**: Dedicated `on_clear` action handler and trash button in header.
 
 ```python
 import httpx
@@ -107,7 +113,7 @@ app = App(title="AI Agent Chat")
 
 s = state(
     messages=[
-        {"role": "assistant", "content": "Hello! I am your AI Assistant."}
+        {"role": "assistant", "content": "Hello! I am your AI Assistant. Ask me anything or select a suggestion below.", "timestamp": "10:00 AM"}
     ],
     session_id="chat_session_01",
     loading=False
@@ -119,7 +125,7 @@ async def handle_message(message: str = "", **kwargs):
     if not user_msg:
         return
 
-    # Immediately push user message
+    # Immediately push user message into history
     s.messages.append({"role": "user", "content": user_msg})
     s.loading = True
 
@@ -139,15 +145,30 @@ async def handle_message(message: str = "", **kwargs):
 
     s.messages.append({"role": "assistant", "content": reply})
 
+@s.action
+def clear_chat():
+    s.messages = [
+        {"role": "assistant", "content": "Chat history cleared. How can I assist you today?"}
+    ]
+
 @app.page("/")
 def home():
     return Container(
         Chat(
             messages=s.messages,
             title="Customer Support AI",
-            placeholder="Ask a question...",
+            subtitle="SLM Agent • Model: Llama-3-8B • Context: 8k",
+            placeholder="Type a message... (Shift+Enter for new line)",
             on_send=handle_message,
-            loading=s.loading  # Triggers pulsing typing dots + button spinner
+            on_clear=clear_chat,
+            suggestions=[
+                "How do I reset my password?",
+                "What are your business hours?",
+                "Show cluster compute telemetry"
+            ],
+            loading=s.loading,  # Triggers pulsing typing dots + button spinner
+            height="650px",
+            show_clear=True
         ),
         max_width="lg",
         padding="lg"

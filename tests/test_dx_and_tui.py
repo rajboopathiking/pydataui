@@ -497,3 +497,36 @@ def test_tui_chat_mode_and_async_dispatch():
     output = captured.getvalue()
     assert "Customer Support AI" in output
     assert "Exited PyDataUI chat session." in output
+
+
+def test_chat_commercial_features():
+    """Verify modern commercial features: suggestions chips, multiline IME-safe textarea, auto-scroll, and copy."""
+    from pydataui.components.advanced import Chat
+    s = state(messages=[{"role": "assistant", "content": "Welcome!", "timestamp": "12:00 PM"}])
+
+    @s.action
+    def send_msg(message: str = ""): pass
+
+    @s.action
+    def clear_chat(): pass
+
+    chat = Chat(
+        messages=s.messages,
+        title="Copilot AI",
+        subtitle="SLM 8B Model",
+        suggestions=["Explain LoRA", "Cluster Health"],
+        on_send=send_msg,
+        on_clear=clear_chat,
+        height="700px"
+    )
+    html = chat.render()
+
+    assert "Copilot AI" in html
+    assert "SLM 8B Model" in html
+    assert "Explain LoRA" in html
+    assert "Cluster Health" in html
+    assert "textarea" in html
+    assert "event.isComposing" in html
+    assert "el.scrollTop = el.scrollHeight" in html
+    assert "navigator.clipboard.writeText" in html
+    assert "12:00 PM" in html

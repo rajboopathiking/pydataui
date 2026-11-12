@@ -36,6 +36,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'Table': ('.components.data_display', 'Table'),
     'sniff_tabular_data': ('.components.data_display', 'sniff_tabular_data'),
     'Badge': ('.components.data_display', 'Badge'),
+    'MetricCard': ('.components.data_science', 'MetricCard'),
 
     # Forms & Input
     'Button': ('.components.forms', 'Button'),

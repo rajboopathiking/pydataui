@@ -134,7 +134,9 @@ def tui_cmd(args):
     from pydataui.tui import run_tui
     refresh = getattr(args, "refresh", 1.0)
     once = getattr(args, "once", False)
-    run_tui(app, file_path=str(file_path), refresh_interval=refresh, once=once)
+    watch = getattr(args, "watch", False)
+    interactive = False if watch else getattr(args, "interactive", None)
+    run_tui(app, file_path=str(file_path), refresh_interval=refresh, once=once, interactive=interactive)
 
 
 def desktop_cmd(args):
@@ -336,6 +338,8 @@ def main():
     parser_tui.add_argument("file", nargs="?", default="app.py", help="App entrypoint file (default: app.py)")
     parser_tui.add_argument("--refresh", type=float, default=1.0, help="Terminal UI refresh interval in seconds (default: 1.0)")
     parser_tui.add_argument("--once", action="store_true", help="Render dashboard once to stdout and exit")
+    parser_tui.add_argument("-i", "--interactive", action="store_true", default=None, help="Force interactive prompt mode for input/output commands")
+    parser_tui.add_argument("--watch", action="store_true", help="Passive auto-refresh live loop without interactive prompts")
 
 
     # desktop

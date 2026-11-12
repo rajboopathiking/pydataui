@@ -4,7 +4,7 @@ Uses Tailwind CSS utility classes matching the shadcn/ui design system.
 """
 from __future__ import annotations
 from typing import Any, Dict, List, Optional
-from .base import Component
+from .base import Component, RawHtml
 from ..utils import escape_html, generate_id
 
 
@@ -1130,7 +1130,7 @@ class DashboardLayout(Component):
         )
 
         provider = ShadSidebarProvider(default_open=True, collapsible=self.collapsible)
-        provider.children = [Component(children=[sidebar_html, main_html], tag='div', class_name="flex flex-1 w-full")]
+        provider.children = [Component(children=[RawHtml(sidebar_html), RawHtml(main_html)], tag='div', class_name="flex flex-1 w-full")]
         return provider.render(snap)
 
     @classmethod

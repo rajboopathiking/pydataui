@@ -14,17 +14,20 @@ def sniff_tabular_data(
     if data is None:
         return [], [], []
 
-    # 1. Pandas DataFrame / Series
-    if hasattr(data, 'to_dict') and hasattr(data, 'columns'):
-        cols = list(data.columns) if not columns else list(columns)
-        records = data[cols].to_dict(orient='records')
-        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
-        return records, cols, hdrs
-
-    if hasattr(data, 'to_frame'):  # Pandas Series
-        df = data.to_frame()
-        cols = list(df.columns) if not columns else list(columns)
-        records = df.to_dict(orient='records')
+    # 1. DuckDB PyRelation
+    if hasattr(data, 'df') and hasattr(data, 'description'):  # duckdb.PyRelation
+        try:
+            df = data.df()
+            cols = list(df.columns) if not columns else list(columns)
+            records = df[cols].to_dict(orient='records')
+            hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+            return records, cols, hdrs
+        except Exception:
+            pass
+    if hasattr(data, 'fetchall') and hasattr(data, 'description') and data.description:
+        cols = [d[0] for d in data.description] if not columns else list(columns)
+        rows = data.fetchall()
+        records = [dict(zip(cols, row)) for row in rows]
         hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
         return records, cols, hdrs
 
@@ -43,20 +46,17 @@ def sniff_tabular_data(
         hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
         return records, cols, hdrs
 
-    # 3. DuckDB PyRelation
-    if hasattr(data, 'df'):  # duckdb.PyRelation
-        try:
-            df = data.df()
-            cols = list(df.columns) if not columns else list(columns)
-            records = df.to_dict(orient='records')
-            hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
-            return records, cols, hdrs
-        except Exception:
-            pass
-    if hasattr(data, 'fetchall') and hasattr(data, 'description') and data.description:
-        cols = [d[0] for d in data.description] if not columns else list(columns)
-        rows = data.fetchall()
-        records = [dict(zip(cols, row)) for row in rows]
+    # 3. Pandas DataFrame / Series
+    if hasattr(data, 'to_dict') and hasattr(data, 'columns') and hasattr(data, 'iloc'):
+        cols = list(data.columns) if not columns else list(columns)
+        records = data[cols].to_dict(orient='records')
+        hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
+        return records, cols, hdrs
+
+    if hasattr(data, 'to_frame'):  # Pandas Series
+        df = data.to_frame()
+        cols = list(df.columns) if not columns else list(columns)
+        records = df.to_dict(orient='records')
         hdrs = headers or [str(c).replace('_', ' ').title() for c in cols]
         return records, cols, hdrs
 

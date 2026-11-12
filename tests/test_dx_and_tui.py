@@ -375,3 +375,61 @@ def test_tui_render():
 
     # Test run_tui once=True (does not hang)
     run_tui(app, once=True)
+
+
+def test_tui_chat_and_inputs_render():
+    from pydataui.components.advanced import Chat
+    from pydataui import Input, TextArea
+
+    chat = Chat(
+        messages=[
+            {"role": "user", "content": "What is PyDataUI?"},
+            {"role": "assistant", "content": "It is a full-stack Python framework."},
+        ],
+        title="Agent Bot",
+    )
+    rich_chat = render_to_rich(chat)
+    assert rich_chat is not None
+    ascii_chat = render_to_ascii(chat)
+    assert "Agent Bot" in ascii_chat
+    assert "What is PyDataUI?" in ascii_chat
+
+    inp = Input(label="Search", value="polars", placeholder="Search records...")
+    rich_inp = render_to_rich(inp)
+    assert rich_inp is not None
+    ascii_inp = render_to_ascii(inp)
+    assert "polars" in ascii_inp
+
+
+def test_tui_interactive_io_dispatch():
+    import io
+    import sys
+
+    app = App(title="Interactive TUI App", auto_discover=False)
+    s = state(count=5, response="")
+
+    @s.action
+    def submit_prompt(user_input: str = "", **kwargs):
+        s.response = f"Echo: {user_input}"
+        s.count += 1
+
+    @app.page("/")
+    def home():
+        return Col(
+            Heading("Interactive Dashboard", level=1),
+            Text(s.response),
+        )
+
+    # Simulate keyboard inputs: 'input test message', then 'q' to exit
+    old_stdin, old_stdout = sys.stdin, sys.stdout
+    captured = io.StringIO()
+    try:
+        sys.stdin = io.StringIO("input test message\nq\n")
+        sys.stdout = captured
+        run_tui(app, interactive=True)
+    finally:
+        sys.stdin, sys.stdout = old_stdin, old_stdout
+
+    assert s.response == "Echo: test message"
+    assert s.count == 6
+    assert "Interactive TUI Command Dock" in captured.getvalue()

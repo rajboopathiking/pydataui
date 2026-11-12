@@ -78,6 +78,7 @@ nav:
       - Data Team Templates: DATA_TEMPLATES.md
       - Production Deployment: DEPLOYMENT.md
       - Production Readiness: PRODUCTION_READINESS.md
+      - Production Readiness & DX Audit: PRODUCTION_READINESS_AND_DX_AUDIT.md
       - Troubleshooting: TROUBLESHOOTING.md
   - Reference:
       - Template Gallery: TEMPLATE_GALLERY.md

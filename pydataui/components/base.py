@@ -140,18 +140,19 @@ class Component:
                 parts.append(escape_html(str(child)))
         return ''.join(parts)
     
-    def _resolve_value(self, value: Any, state_snapshot: StateSnapshot) -> Any:
+    def _resolve_value(self, value: Any, state_snapshot: Optional[StateSnapshot] = None) -> Any:
         """Resolve a value that might be a StateVarRef or container of StateVarRefs."""
+        snap = state_snapshot if state_snapshot is not None else {}
         if isinstance(value, StateVarRef):
-            return value.resolve(state_snapshot)
+            return value.resolve(snap)
         if isinstance(value, dict):
-            return {k: self._resolve_value(v, state_snapshot) for k, v in value.items()}
+            return {k: self._resolve_value(v, snap) for k, v in value.items()}
         if isinstance(value, list):
-            return [self._resolve_value(v, state_snapshot) for v in value]
+            return [self._resolve_value(v, snap) for v in value]
         if isinstance(value, tuple):
-            return tuple(self._resolve_value(v, state_snapshot) for v in value)
+            return tuple(self._resolve_value(v, snap) for v in value)
         if callable(value) and not isinstance(value, (type, Component)):
-            return value(state_snapshot)
+            return value(snap)
         return value
     
     def _get_event_htmx_attrs(self, event_name: str, handler: Any) -> Dict[str, str]:

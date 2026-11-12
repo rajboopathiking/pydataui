@@ -151,17 +151,20 @@ class Chat(Component):
         placeholder: str = "Type your message...",
         title: str = "Agent Chat",
         on_send: Optional[Union[EventHandler, Callable]] = None,
+        loading: Optional[Union[bool, Any]] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
         self.messages = messages or []
         self.placeholder = placeholder
         self.chat_title = title
+        self.loading = loading
         if on_send:
             self._event_props["on_send"] = on_send
 
     def render(self, state_snapshot: Optional[Dict[str, Any]] = None) -> str:
         msgs = self._resolve_value(self.messages, state_snapshot) or []
+        is_loading = bool(self._resolve_value(self.loading, state_snapshot)) if self.loading is not None else False
         chat_id = self.id or generate_id("chat")
 
         bubbles = []
@@ -181,6 +184,20 @@ class Chat(Component):
                     f'</div>'
                 )
 
+        # Typing / Thinking Indicator Bubble
+        # Shown automatically during HTMX in-flight requests (via .htmx-request) OR when loading is True
+        indicator_display = "flex" if is_loading else "none"
+        indicator_bubble = f'''<div id="{chat_id}-loading" class="htmx-indicator justify-start mb-3" style="display: {indicator_display};">
+  <div class="max-w-[80%] rounded-2xl px-4 py-2.5 bg-muted text-foreground text-sm border shadow-sm flex items-center gap-2">
+    <span class="inline-flex gap-1 items-center">
+      <span class="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]"></span>
+      <span class="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]"></span>
+      <span class="w-2 h-2 rounded-full bg-primary animate-bounce"></span>
+    </span>
+    <span class="text-xs text-muted-foreground ml-1.5 font-medium">{html.escape(self.chat_title)} is thinking...</span>
+  </div>
+</div>'''
+
         bubbles_html = "".join(bubbles) if bubbles else '<div class="text-center text-muted-foreground text-sm py-8">No messages yet. Start a conversation below!</div>'
 
         send_handler = self._event_props.get("on_send")
@@ -189,18 +206,36 @@ class Chat(Component):
             htmx_attrs = self._get_event_htmx_attrs("click", send_handler)
             if "hx-include" not in htmx_attrs:
                 htmx_attrs["hx-include"] = f"#{chat_id}-input"
+            if "hx-indicator" not in htmx_attrs:
+                htmx_attrs["hx-indicator"] = f"#{chat_id}-loading, #{chat_id}-spinner"
+            if "hx-disabled-elt" not in htmx_attrs:
+                htmx_attrs["hx-disabled-elt"] = f"#{chat_id}-send-btn, #{chat_id}-input"
             htmx_post = " ".join(f'{k}="{v}"' for k, v in htmx_attrs.items())
 
-        return f'''<div class="chat-container rounded-xl border bg-card text-card-foreground shadow-sm flex flex-col h-[500px] overflow-hidden" id="{chat_id}">
-  <div class="p-3 border-b bg-muted/30 font-semibold text-sm flex items-center gap-2">
-    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-    {html.escape(self.chat_title)}
+        return f'''<style>
+#{chat_id}-loading.htmx-request {{ display: flex !important; }}
+#{chat_id}-spinner.htmx-request {{ display: inline-block !important; }}
+</style>
+<div class="chat-container rounded-xl border bg-card text-card-foreground shadow-sm flex flex-col h-[520px] overflow-hidden" id="{chat_id}">
+  <div class="p-3 border-b bg-muted/30 font-semibold text-sm flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span>{html.escape(self.chat_title)}</span>
+    </div>
+    <span class="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Online</span>
   </div>
   <div class="flex-1 p-4 overflow-y-auto space-y-2" id="{chat_id}-messages">
     {bubbles_html}
+    {indicator_bubble}
   </div>
   <div class="p-3 border-t bg-background flex gap-2">
-    <input type="text" name="message" id="{chat_id}-input" placeholder="{html.escape(self.placeholder)}" class="chat-input flex-1 h-10 px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary" onkeydown="if(event.key==='Enter'){{event.preventDefault();this.nextElementSibling.click();}}" />
-    <button type="button" class="h-10 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition shadow-sm" {htmx_post}>Send</button>
+    <input type="text" name="message" id="{chat_id}-input" placeholder="{html.escape(self.placeholder)}" class="chat-input flex-1 h-10 px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 disabled:cursor-not-allowed" onkeydown="if(event.key==='Enter'){{event.preventDefault();document.getElementById('{chat_id}-send-btn').click();}}" />
+    <button type="button" id="{chat_id}-send-btn" class="h-10 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition shadow-sm inline-flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed" {htmx_post}>
+      <span>Send</span>
+      <svg id="{chat_id}-spinner" class="htmx-indicator animate-spin h-4 w-4 text-primary-foreground hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </button>
   </div>
 </div>'''

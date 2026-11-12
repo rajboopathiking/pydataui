@@ -433,3 +433,67 @@ def test_tui_interactive_io_dispatch():
     assert s.response == "Echo: test message"
     assert s.count == 6
     assert "Interactive TUI Command Dock" in captured.getvalue()
+
+
+def test_chat_loading_indicator_and_htmx_attrs():
+    """Verify that Chat component includes HTMX loading indicators, spinner, and disabled attributes."""
+    from pydataui.components.advanced import Chat
+    s = state(messages=[{"role": "assistant", "content": "Welcome!"}], is_waiting=False)
+
+    @s.action
+    def send_msg(message: str = ""):
+        pass
+
+    chat = Chat(messages=s.messages, on_send=send_msg, title="Support Bot", loading=s.is_waiting)
+    html = chat.render()
+
+    assert "Support Bot is thinking..." in html
+    assert "htmx-indicator" in html
+    assert "animate-spin" in html
+    assert "hx-indicator" in html
+    assert "hx-disabled-elt" in html
+
+
+def test_tui_chat_mode_and_async_dispatch():
+    """Verify that Chat components automatically trigger streamlined conversational TUI with async dispatch."""
+    import io
+    import sys
+    from pydataui import Container
+    from pydataui.components.advanced import Chat
+
+    app = App(title="AI Chat App", auto_discover=False)
+    chat_state = state(messages=[{"role": "assistant", "content": "Hello human!"}], session_id="test_sess")
+
+    @chat_state.action
+    async def handle_message(message: str = "", **kwargs):
+        user_msg = message or kwargs.get("message", "").strip()
+        chat_state.messages.append({"role": "user", "content": user_msg})
+        chat_state.messages.append({"role": "assistant", "content": f"AI Reply: {user_msg}"})
+
+    @app.page("/")
+    def home():
+        return Container(
+            Chat(
+                messages=chat_state.messages,
+                title="Customer Support AI",
+                on_send=handle_message,
+            )
+        )
+
+    old_stdin, old_stdout = sys.stdin, sys.stdout
+    captured = io.StringIO()
+    try:
+        # Simulate typing 'hello world', then 'q' to exit
+        sys.stdin = io.StringIO("hello world\nq\n")
+        sys.stdout = captured
+        run_tui(app, interactive=True)
+    finally:
+        sys.stdin, sys.stdout = old_stdin, old_stdout
+
+    # Verify messages in state were updated by the async action
+    assert len(chat_state.messages) == 3
+    assert chat_state.messages[1] == {"role": "user", "content": "hello world"}
+    assert chat_state.messages[2] == {"role": "assistant", "content": "AI Reply: hello world"}
+    output = captured.getvalue()
+    assert "Customer Support AI" in output
+    assert "Exited PyDataUI chat session." in output

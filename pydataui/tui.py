@@ -256,6 +256,226 @@ def _collect_actions() -> Dict[str, Any]:
     return actions
 
 
+def _find_chat_component(comp: Any) -> Optional[Any]:
+    """Recursively search for a Chat component in the component tree."""
+    if comp is None:
+        return None
+    if type(comp).__name__ == 'Chat':
+        return comp
+    children = getattr(comp, 'children', None)
+    if children and isinstance(children, (list, tuple)):
+        for child in children:
+            found = _find_chat_component(child)
+            if found:
+                return found
+    return None
+
+
+def _dispatch_action(act_fn: Any, scls: Any = None, **kwargs) -> Any:
+    """Safely invoke an action (sync or async) passing arguments matched by signature."""
+    import inspect
+    import asyncio
+
+    if act_fn is None:
+        return None
+
+    # Inspect signature
+    sig = None
+    try:
+        sig = inspect.signature(act_fn)
+    except (ValueError, TypeError):
+        pass
+
+    call_args = []
+    call_kwargs = {}
+
+    if scls is not None and sig and len(sig.parameters) > 0:
+        first_param = list(sig.parameters.values())[0]
+        if first_param.name in ('self', 'cls', 'state', 'self_inst'):
+            call_args.append(scls)
+
+    if sig:
+        has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+        if has_var_kw:
+            call_kwargs.update(kwargs)
+        else:
+            for p_name, param in sig.parameters.items():
+                if p_name in ('self', 'cls', 'state', 'self_inst'):
+                    continue
+                if p_name in kwargs:
+                    call_kwargs[p_name] = kwargs[p_name]
+                elif p_name in ('message', 'user_input', 'prompt', 'text', 'query', 'content'):
+                    for text_key in ('message', 'user_input', 'prompt', 'text', 'query', 'content'):
+                        if text_key in kwargs:
+                            call_kwargs[p_name] = kwargs[text_key]
+                            break
+    else:
+        call_kwargs.update(kwargs)
+
+    try:
+        res = act_fn(*call_args, **call_kwargs)
+    except TypeError:
+        try:
+            res = act_fn(**call_kwargs)
+        except TypeError:
+            first_val = next(iter(kwargs.values())) if kwargs else None
+            res = act_fn(first_val) if first_val is not None else act_fn()
+
+    if inspect.isawaitable(res) or inspect.iscoroutine(res):
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                return asyncio.run_coroutine_threadsafe(res, loop).result(timeout=120)
+            else:
+                return loop.run_until_complete(res)
+        except RuntimeError:
+            return asyncio.run(res)
+    return res
+
+
+def _resolve_chat_action(chat_comp: Any, actions_map: Dict[str, Any]) -> tuple[Optional[Any], Optional[Any]]:
+    """Determine the action function and state class associated with a Chat component."""
+    from .state import EventHandler, StateMeta
+
+    # 1. Check Chat's on_send event prop
+    on_send = getattr(chat_comp, '_event_props', {}).get('on_send') if hasattr(chat_comp, '_event_props') else None
+    if on_send is None and hasattr(chat_comp, 'props'):
+        on_send = chat_comp.props.get('on_send')
+
+    if isinstance(on_send, EventHandler):
+        scls_name = getattr(on_send, 'state_cls_name', None)
+        method_name = getattr(on_send, 'method_name', None)
+        if scls_name and scls_name in StateMeta._registry:
+            scls = StateMeta._registry[scls_name]
+            handlers = scls.get_event_handlers() if hasattr(scls, 'get_event_handlers') else {}
+            if method_name in handlers:
+                return handlers[method_name], scls
+            if hasattr(scls, method_name):
+                return getattr(scls, method_name), scls
+    elif callable(on_send):
+        return on_send, None
+
+    # 2. Check candidate action names in actions_map
+    for cand in ('handle_message', 'send_message', 'on_send', 'chat', 'message', 'reply', 'process_input', 'submit_prompt'):
+        if cand in actions_map:
+            sname, scls, act_fn = actions_map[cand]
+            return act_fn, scls
+
+    # 3. Fallback to first available action
+    if actions_map:
+        first_act = list(actions_map.keys())[0]
+        return actions_map[first_act][2], actions_map[first_act][1]
+
+    return None, None
+
+
+def _run_chat_tui(app: Any, handler: Any, current_page: str, initial_chat_comp: Any, console: Any) -> None:
+    """Run an intuitive, streamlined conversational Terminal UI for Chat applications."""
+    title = getattr(app, 'title', 'PyDataUI Chatbot')
+    chat_title = getattr(initial_chat_comp, 'chat_title', title)
+
+    if _HAS_RICH and console:
+        console.clear()
+        header = (
+            f"[bold green]● {chat_title}[/bold green] • [dim]PyDataUI v1.2.0 Chat Mode[/dim]\n"
+            f"[dim]Type your message and press Enter to chat. Type [bold yellow]q[/bold yellow] or [bold yellow]exit[/bold yellow] to quit.[/dim]"
+        )
+        console.print(Panel(header, border_style="cyan", expand=False))
+        console.print()
+    else:
+        print(f"\n=== {chat_title} • PyDataUI Chat Mode ===")
+        print("Type your message and press Enter. Type 'q' to quit.\n")
+
+    # Initial history
+    raw_msgs = getattr(initial_chat_comp, 'messages', [])
+    msgs = initial_chat_comp._resolve_value(raw_msgs, {}) if hasattr(initial_chat_comp, '_resolve_value') else raw_msgs
+    printed_count = 0
+    if msgs:
+        for m in msgs:
+            role = m.get('role', 'user')
+            content = m.get('content', '')
+            if role == 'user':
+                if _HAS_RICH and console:
+                    console.print(f"[bold green]You:[/bold green] {content}")
+                else:
+                    print(f"You: {content}")
+            else:
+                if _HAS_RICH and console:
+                    console.print(f"[bold cyan]{chat_title}:[/bold cyan] {content}\n")
+                else:
+                    print(f"{chat_title}: {content}\n")
+        printed_count = len(msgs)
+
+    while True:
+        try:
+            if _HAS_RICH and console:
+                user_input = Prompt.ask("[bold green]You[/bold green]", console=console).strip()
+            else:
+                user_input = input("You > ").strip()
+        except (KeyboardInterrupt, EOFError):
+            if console:
+                console.print("\n[yellow]Exited PyDataUI chat session.[/yellow]")
+            else:
+                print("\nExited PyDataUI chat session.")
+            break
+
+        if not user_input:
+            continue
+
+        if user_input.lower() in ('q', 'quit', 'exit', ':q', '/quit'):
+            if console:
+                console.print("[yellow]Exited PyDataUI chat session.[/yellow]")
+            else:
+                print("Exited PyDataUI chat session.")
+            break
+
+        # Re-resolve actions and chat component
+        actions_map = _collect_actions()
+        root = handler()
+        chat_comp = _find_chat_component(root) or initial_chat_comp
+        act_fn, scls = _resolve_chat_action(chat_comp, actions_map)
+
+        if not act_fn:
+            if console:
+                console.print("[bold red]No chat action handler found.[/bold red]\n")
+            else:
+                print("No chat action handler found.\n")
+            continue
+
+        try:
+            if _HAS_RICH and console:
+                with console.status(f"[bold cyan]{chat_title} is thinking...[/bold cyan]", spinner="dots"):
+                    _dispatch_action(act_fn, scls, message=user_input, user_input=user_input, text=user_input, prompt=user_input)
+            else:
+                print(f"{chat_title} is thinking...")
+                _dispatch_action(act_fn, scls, message=user_input, user_input=user_input, text=user_input, prompt=user_input)
+        except Exception as e:
+            if console:
+                console.print(f"[bold red]Chat error: {e}[/bold red]\n")
+            else:
+                print(f"Chat error: {e}\n")
+            continue
+
+        # Re-render to fetch new messages
+        root = handler()
+        chat_comp = _find_chat_component(root) or initial_chat_comp
+        raw_msgs = getattr(chat_comp, 'messages', [])
+        current_msgs = chat_comp._resolve_value(raw_msgs, {}) if hasattr(chat_comp, '_resolve_value') else raw_msgs
+
+        if current_msgs and len(current_msgs) > printed_count:
+            for m in current_msgs[printed_count:]:
+                role = m.get('role', 'user')
+                content = m.get('content', '')
+                if role != 'user':
+                    if _HAS_RICH and console:
+                        console.print(f"[bold cyan]{chat_title}:[/bold cyan] {content}\n")
+                    else:
+                        print(f"{chat_title}: {content}\n")
+            printed_count = len(current_msgs)
+        elif current_msgs:
+            printed_count = len(current_msgs)
+
+
 def run_tui(
     app: Any,
     file_path: Optional[str] = None,
@@ -337,6 +557,13 @@ def run_tui(
                     time.sleep(refresh_interval)
             except KeyboardInterrupt:
                 print("\nPyDataUI TUI session closed.")
+        return
+
+    # Check for Chat Component in active page - if present, run streamlined conversational Chat TUI
+    root = handler()
+    chat_comp = _find_chat_component(root)
+    if chat_comp is not None:
+        _run_chat_tui(app, handler, current_page, chat_comp, console)
         return
 
     # Interactive TUI REPL Loop with Input/Output Dock
@@ -429,15 +656,15 @@ def run_tui(
             parts = cmd.split(None, 1)
             user_val = parts[1].strip() if len(parts) > 1 else ""
             dispatched = False
-            for act_candidate in ('submit_prompt', 'process_input', 'on_submit'):
+            for act_candidate in ('submit_prompt', 'process_input', 'on_submit', 'handle_message', 'send_message', 'chat'):
                 if act_candidate in actions_map:
                     sname, scls, act_fn = actions_map[act_candidate]
-                    act_fn(scls, user_input=user_val)
+                    _dispatch_action(act_fn, scls, message=user_val, user_input=user_val, text=user_val, prompt=user_val)
                     dispatched = True
                     break
             if not dispatched and actions_map:
                 first_act = list(actions_map.keys())[0]
-                actions_map[first_act][2](actions_map[first_act][1], user_input=user_val)
+                _dispatch_action(actions_map[first_act][2], actions_map[first_act][1], message=user_val, user_input=user_val, text=user_val, prompt=user_val)
             continue
 
         # Set Variable Command (e.g. `set active_workers=14`)
@@ -470,19 +697,19 @@ def run_tui(
         if matched_act:
             sname, scls, act_fn = actions_map[matched_act]
             try:
-                act_fn(scls)
+                _dispatch_action(act_fn, scls)
             except Exception:
                 pass
             continue
 
         # Fallback: Treat unrecognized text as chat/input query
-        input_candidates = ('chat', 'send', 'send_message', 'message', 'reply', 'submit_prompt', 'process_input', 'on_submit')
+        input_candidates = ('chat', 'send', 'send_message', 'handle_message', 'message', 'reply', 'submit_prompt', 'process_input', 'on_submit')
         dispatched = False
         for cand in input_candidates:
             if cand in actions_map:
                 sname, scls, act_fn = actions_map[cand]
                 try:
-                    act_fn(scls, user_input=cmd)
+                    _dispatch_action(act_fn, scls, message=cmd, user_input=cmd, text=cmd, prompt=cmd)
                     dispatched = True
                     break
                 except Exception:
@@ -491,6 +718,6 @@ def run_tui(
             only_act = list(actions_map.keys())[0]
             sname, scls, act_fn = actions_map[only_act]
             try:
-                act_fn(scls, user_input=cmd)
+                _dispatch_action(act_fn, scls, message=cmd, user_input=cmd, text=cmd, prompt=cmd)
             except Exception:
                 pass

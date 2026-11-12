@@ -45,9 +45,12 @@ class StateVarRef:
             
         return self.default
 
-    def resolve(self, state_snapshot: StateSnapshot) -> Any:
-        state_dict = state_snapshot.get(self.state_cls_name, {})
-        return state_dict.get(self.field_name, self.default)
+    def resolve(self, state_snapshot: Optional[StateSnapshot] = None) -> Any:
+        if state_snapshot and isinstance(state_snapshot, dict) and self.state_cls_name in state_snapshot:
+            state_dict = state_snapshot[self.state_cls_name]
+            if isinstance(state_dict, dict) and self.field_name in state_dict:
+                return state_dict[self.field_name]
+        return self._get_val()
 
     def __iter__(self):
         val = self._get_val()

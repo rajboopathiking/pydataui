@@ -275,9 +275,14 @@ def _dispatch_action(act_fn: Any, scls: Any = None, **kwargs) -> Any:
     """Safely invoke an action (sync or async) passing arguments matched by signature."""
     import inspect
     import asyncio
+    from .session import Session
+    from .state import _current_session
 
     if act_fn is None:
         return None
+
+    if _current_session.get() is None:
+        _current_session.set(Session(session_id="tui_action_session"))
 
     # Inspect signature
     sig = None
@@ -489,6 +494,10 @@ def run_tui(
     Supports interactive commands, getting input, running actions, page switching,
     and live reactive output updates.
     """
+    from .session import Session
+    from .state import _current_session
+    if _current_session.get() is None:
+        _current_session.set(Session(session_id="tui_session"))
     routes = getattr(app, 'routes', {})
     current_page = page_path if page_path in routes else (list(routes.keys())[0] if routes else "/")
     handler = routes.get(current_page)

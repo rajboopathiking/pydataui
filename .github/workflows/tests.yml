@@ -1,31 +1,54 @@
-name: Tests
-on: [push, pull_request]
+name: Tests & CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 permissions:
   contents: read
+
 jobs:
   python:
+    name: Python ${{ matrix.python }} Unit Tests
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python: ['3.10', '3.12', '3.13']
+        python: ['3.10', '3.11', '3.12', '3.13']
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install -e '.[dev]'
-      - run: python -m pytest -q
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+      - name: Run unit test suite
+        run: python -m pytest tests/ -q --ignore=tests/test_browser_security.py
+      - name: Verify Documentation Build (strict MkDocs)
+        if: matrix.python == '3.11'
+        run: python -m mkdocs build --strict
 
   browser:
+    name: Headless Browser & Security Verification
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -e '.[dev,browser]'
-      - run: python -m playwright install --with-deps chromium
-      - run: python -m pytest tests/test_browser_security.py -q
+      - name: Install dependencies with browser extra
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev,browser]'
+      - name: Install Chromium with Playwright dependencies
+        run: python -m playwright install --with-deps chromium
+      - name: Run browser security test suite
+        run: python -m pytest tests/test_browser_security.py -q
         env:
           PYDATAUI_REQUIRE_BROWSER: '1'
           PYDATAUI_REQUIRE_REAL_STYLES: '1'

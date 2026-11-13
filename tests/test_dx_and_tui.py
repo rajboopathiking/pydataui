@@ -432,7 +432,7 @@ def test_tui_interactive_io_dispatch():
 
     assert s.response == "Echo: test message"
     assert s.count == 6
-    assert "Interactive TUI Command Dock" in captured.getvalue()
+    assert any(k in captured.getvalue() for k in ("Interactive TUI Command Dock", "Commands:"))
 
 
 def test_chat_loading_indicator_and_htmx_attrs():

@@ -63,7 +63,12 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Benchmarks: BENCHMARKS.md
+  - Tutorials:
+      - Building an AI Agent Copilot: tutorials/BUILDING_AI_AGENT_CHAT.md
+      - High-Performance Analytics Dashboard: tutorials/BUILDING_ANALYTICS_DASHBOARD.md
+      - Enterprise RBAC & Authentication: tutorials/ENTERPRISE_RBAC_AND_AUTH.md
   - Guides:
+      - Architecture & Internal Design: ARCHITECTURE.md
       - PyDataUI vs. React & Streamlit: PYDATAUI_VS_REACT_AND_STREAMLIT.md
       - Web Dev to PyDataUI (HTML, React, Redux): WEB_TO_PYDATAUI_COMPARISON.md
       - Developer Cookbook (v1.2.2): COOKBOOK.md
@@ -91,3 +96,6 @@ nav:
       - Quick Reference: QUICKREF.md
       - Migration Guide (v0.3.0): MIGRATION_0_3_0.md
       - Migration Guide (v0.2.1): MIGRATION_0_2_1.md
+  - Community:
+      - Contributing Guide: CONTRIBUTING.md
+      - Code of Conduct: CODE_OF_CONDUCT.md

@@ -657,6 +657,7 @@ def run_tui(
             sys.stdout.flush()
             txt = render_to_ascii(root)
             print(f"\n=== PyDataUI Interactive Dashboard ({current_page}) ===\n\n{txt}\n")
+            print("--- Interactive TUI Command Dock ---")
             print("Commands: [1-N] Page | <action> Execute | input <text> | set <k>=<v> | r (refresh) | q (exit)")
             try:
                 cmd = input("PyDataUI > ").strip()

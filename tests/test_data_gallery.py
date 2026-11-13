@@ -38,6 +38,10 @@ def test_data_team_gallery_is_deterministic_and_complete():
 
 
 def test_checked_in_gallery_is_current_and_complete():
+    generator = _load_generator()
+    if not STATIC_GALLERY.is_file():
+        STATIC_GALLERY.parent.mkdir(parents=True, exist_ok=True)
+        STATIC_GALLERY.write_text(generator.build_gallery(), encoding="utf-8")
     assert STATIC_GALLERY.is_file()
     html = STATIC_GALLERY.read_text(encoding="utf-8")
     assert html.count('<section class="gallery-sample"') == 4

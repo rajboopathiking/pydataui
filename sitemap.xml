@@ -9,6 +9,10 @@
          <lastmod>2026-11-13</lastmod>
     </url>
     <url>
+         <loc>https://rajboopathiking.github.io/pydataui/ARCHITECTURE/</loc>
+         <lastmod>2026-11-13</lastmod>
+    </url>
+    <url>
          <loc>https://rajboopathiking.github.io/pydataui/AUTHENTICATION/</loc>
          <lastmod>2026-11-13</lastmod>
     </url>
@@ -17,7 +21,15 @@
          <lastmod>2026-11-13</lastmod>
     </url>
     <url>
+         <loc>https://rajboopathiking.github.io/pydataui/CODE_OF_CONDUCT/</loc>
+         <lastmod>2026-11-13</lastmod>
+    </url>
+    <url>
          <loc>https://rajboopathiking.github.io/pydataui/COMPONENTS_REFERENCE/</loc>
+         <lastmod>2026-11-13</lastmod>
+    </url>
+    <url>
+         <loc>https://rajboopathiking.github.io/pydataui/CONTRIBUTING/</loc>
          <lastmod>2026-11-13</lastmod>
     </url>
     <url>
@@ -110,6 +122,18 @@
     </url>
     <url>
          <loc>https://rajboopathiking.github.io/pydataui/WEB_TO_PYDATAUI_COMPARISON/</loc>
+         <lastmod>2026-11-13</lastmod>
+    </url>
+    <url>
+         <loc>https://rajboopathiking.github.io/pydataui/tutorials/BUILDING_AI_AGENT_CHAT/</loc>
+         <lastmod>2026-11-13</lastmod>
+    </url>
+    <url>
+         <loc>https://rajboopathiking.github.io/pydataui/tutorials/BUILDING_ANALYTICS_DASHBOARD/</loc>
+         <lastmod>2026-11-13</lastmod>
+    </url>
+    <url>
+         <loc>https://rajboopathiking.github.io/pydataui/tutorials/ENTERPRISE_RBAC_AND_AUTH/</loc>
          <lastmod>2026-11-13</lastmod>
     </url>
 </urlset>

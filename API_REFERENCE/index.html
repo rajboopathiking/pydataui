@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/API_REFERENCE/">
       
       
-        <link rel="prev" href="../CSS_REFERENCE/">
+        <link rel="prev" href="../COMPONENTS_REFERENCE/">
       
       
-        <link rel="next" href="../QUICKREF/">
+        <link rel="next" href="../TEMPLATE_GALLERY/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>API Reference - PyDataUI</title>
+        <title>Core API & Methods Reference - PyDataUI</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pydataui-api-reference" class="md-skip">
+        <a href="#pydataui-core-api-methods-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              Core API & Methods Reference
             
           </span>
         </div>
@@ -291,7 +291,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../TEMPLATE_GALLERY/" class="md-tabs__link">
+        <a href="../COMPONENTS_REFERENCE/" class="md-tabs__link">
           
   
   
@@ -506,7 +506,7 @@
   <span class="md-ellipsis">
     
   
-    Developer Cookbook (v1.2.1)
+    Developer Cookbook (v1.2.2)
   
 
     
@@ -1000,6 +1000,8 @@
       
         
       
+        
+      
     
     
     
@@ -1047,6 +1049,522 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPONENTS_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Encyclopedia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core API & Methods Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core API & Methods Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-application-core-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Application Core (App)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Application Core (App)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        class App(...)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="class App(...)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods-on-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods on App
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods on App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apppagepath-str-title-optionalstr-none-layout-optionalcallable-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appapipath-str-method-str-get-public-bool-false-roles-tuple-kwargs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.api(path: str, method: str = 'GET', public: bool = False, roles: tuple = (), **kwargs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appsetup_authauth_manager-authmanager-allow_registration-bool-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.setup_auth(auth_manager: AuthManager, allow_registration: bool = False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appmountpath-str-asgi_app-any" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.mount(path: str, asgi_app: Any)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apprunhost-str-127001-port-int-8000-reload-bool-false-workers-int-1-share-bool-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, workers: int = 1, share: bool = False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appbuild_openapi-dictstr-any" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.build_openapi() -&gt; Dict[str, Any]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-state-reactivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. State &amp; Reactivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. State &amp; Reactivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#procedural-state-hook-statedefaults-proceduralstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Procedural State Hook: state(**defaults) -&gt; ProceduralState
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Procedural State Hook: state(**defaults) -&gt; ProceduralState">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-attributes-on-proceduralstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods &amp; Attributes on ProceduralState
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-based-reactive-state-class-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class-Based Reactive State: class State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Class-Based Reactive State: class State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-session-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle &amp; Session Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-authentication-security-authmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Authentication &amp; Security (AuthManager)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Authentication &amp; Security (AuthManager)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class-authmanagersecret_key-token_expire_hours24-storenone-enable_throttlingtrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        class AuthManager(secret_key, token_expire_hours=24, store=None, enable_throttling=True, ...)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="class AuthManager(secret_key, token_expire_hours=24, store=None, enable_throttling=True, ...)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-on-authmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods on AuthManager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-decorators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Decorators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-storage-engines-cluster-persistence-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Storage Engines &amp; Cluster Persistence (storage)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Storage Engines &amp; Cluster Persistence (storage)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-backends-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Backends Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-data-ingestion-tabular-sniffing-datatable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Data Ingestion &amp; Tabular Sniffing (DataTable)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Data Ingestion &amp; Tabular Sniffing (DataTable)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sniff_tabular_datadata-any-tuplelistdictstr-any-liststr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sniff_tabular_data(data: Any) -&gt; Tuple[List[Dict[str, Any]], List[str]]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-pydantic-form-generator-shadform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Pydantic Form Generator (ShadForm)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Pydantic Form Generator (ShadForm)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shadformfrom_pydanticmodel_cls-on_submit-submit_labelsubmit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShadForm.from_pydantic(model_cls, on_submit, submit_label="Submit", ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-terminal-user-interface-engine-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Terminal User Interface Engine (tui)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Terminal User Interface Engine (tui)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-navigation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Navigation &amp; Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-ai-chat-in-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive AI Chat in TUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-cli-command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. CLI Command Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-internal-http-event-wire-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Internal HTTP &amp; Event Wire Protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
             
               
                 
@@ -1127,371 +1645,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#table-of-contents" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Table of Contents
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#1-app-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. App &amp; Configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1. App &amp; Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#class-apptitlepydataui-app-description-version035-debugfalse-kwargs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        class App(title="PyDataUI App", description="", version="0.3.5", debug=False, **kwargs)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="class App(title=&#34;PyDataUI App&#34;, description=&#34;&#34;, version=&#34;0.3.5&#34;, debug=False, **kwargs)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#properties" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Properties:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-state-reactivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. State &amp; Reactivity
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. State &amp; Reactivity">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#class-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        class State
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-authentication-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Authentication &amp; Security
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Authentication &amp; Security">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#class-authmanagersecret_key-str-token_expire_hours-int-24" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        class AuthManager(secret_key: str, token_expire_hours: int = 24)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="class AuthManager(secret_key: str, token_expire_hours: int = 24)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#class-role" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        class Role
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#decorators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decorators:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-tunnel-port-forwarding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Tunnel &amp; Port Forwarding
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Tunnel &amp; Port Forwarding">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#class-tunnelmanagerport-optionalint-none" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        class TunnelManager(port: Optional[int] = None)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="class TunnelManager(port: Optional[int] = None)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-component-index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Component Index
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Component Index">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#data-science-machine-learning-pydatauicomponentsdata_science" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Science &amp; Machine Learning (pydataui.components.data_science)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-team-templates-pydatauitemplates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Team Templates (pydataui.templates)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shadcnui-styled-components-pydatauicomponentsshadcn" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        shadcn/ui Styled Components (pydataui.components.shadcn)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication-components-pydatauiauth" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication Components (pydataui.auth)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-cli-command-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. CLI Command Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-system-http-routes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. System HTTP Routes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1626,34 +1779,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-app-configuration" class="md-nav__link">
+  <a href="#1-application-core-app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. App &amp; Configuration
+        1. Application Core (App)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. App &amp; Configuration">
+    <nav class="md-nav" aria-label="1. Application Core (App)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-apptitlepydataui-app-description-version035-debugfalse-kwargs" class="md-nav__link">
+  <a href="#class-app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class App(title="PyDataUI App", description="", version="0.3.5", debug=False, **kwargs)
+        class App(...)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="class App(title=&#34;PyDataUI App&#34;, description=&#34;&#34;, version=&#34;0.3.5&#34;, debug=False, **kwargs)">
+    <nav class="md-nav" aria-label="class App(...)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
+  <a href="#constructor-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Methods:
+        Constructor Parameters
       
     </span>
   </a>
@@ -1661,13 +1814,85 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#properties" class="md-nav__link">
+  <a href="#methods-on-app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Properties:
+        Methods on App
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Methods on App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apppagepath-str-title-optionalstr-none-layout-optionalcallable-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appapipath-str-method-str-get-public-bool-false-roles-tuple-kwargs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.api(path: str, method: str = 'GET', public: bool = False, roles: tuple = (), **kwargs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appsetup_authauth_manager-authmanager-allow_registration-bool-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.setup_auth(auth_manager: AuthManager, allow_registration: bool = False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appmountpath-str-asgi_app-any" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.mount(path: str, asgi_app: Any)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apprunhost-str-127001-port-int-8000-reload-bool-false-workers-int-1-share-bool-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, workers: int = 1, share: bool = False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appbuild_openapi-dictstr-any" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app.build_openapi() -&gt; Dict[str, Any]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1694,50 +1919,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-state" class="md-nav__link">
+  <a href="#procedural-state-hook-statedefaults-proceduralstate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class State
+        Procedural State Hook: state(**defaults) -&gt; ProceduralState
       
     </span>
   </a>
   
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-authentication-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Authentication &amp; Security
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Authentication &amp; Security">
+    <nav class="md-nav" aria-label="Procedural State Hook: state(**defaults) -&gt; ProceduralState">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-authmanagersecret_key-str-token_expire_hours-int-24" class="md-nav__link">
+  <a href="#methods-attributes-on-proceduralstate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class AuthManager(secret_key: str, token_expire_hours: int = 24)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="class AuthManager(secret_key: str, token_expire_hours: int = 24)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods:
+        Methods &amp; Attributes on ProceduralState
       
     </span>
   </a>
@@ -1750,61 +1947,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#class-role" class="md-nav__link">
+  <a href="#class-based-reactive-state-class-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class Role
+        Class-Based Reactive State: class State
       
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#decorators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decorators:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-tunnel-port-forwarding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Tunnel &amp; Port Forwarding
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Tunnel &amp; Port Forwarding">
+    <nav class="md-nav" aria-label="Class-Based Reactive State: class State">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-tunnelmanagerport-optionalint-none" class="md-nav__link">
+  <a href="#lifecycle-session-isolation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        class TunnelManager(port: Optional[int] = None)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="class TunnelManager(port: Optional[int] = None)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods:
+        Lifecycle &amp; Session Isolation
       
     </span>
   </a>
@@ -1822,22 +1980,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-component-index" class="md-nav__link">
+  <a href="#3-authentication-security-authmanager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Component Index
+        3. Authentication &amp; Security (AuthManager)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5. Component Index">
+    <nav class="md-nav" aria-label="3. Authentication &amp; Security (AuthManager)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-science-machine-learning-pydatauicomponentsdata_science" class="md-nav__link">
+  <a href="#class-authmanagersecret_key-token_expire_hours24-storenone-enable_throttlingtrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Science &amp; Machine Learning (pydataui.components.data_science)
+        class AuthManager(secret_key, token_expire_hours=24, store=None, enable_throttling=True, ...)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="class AuthManager(secret_key, token_expire_hours=24, store=None, enable_throttling=True, ...)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-on-authmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods on AuthManager
       
     </span>
   </a>
@@ -1845,32 +2015,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-team-templates-pydatauitemplates" class="md-nav__link">
+  <a href="#security-decorators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Team Templates (pydataui.templates)
+        Security Decorators
       
     </span>
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#shadcnui-styled-components-pydatauicomponentsshadcn" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-storage-engines-cluster-persistence-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        shadcn/ui Styled Components (pydataui.components.shadcn)
+        4. Storage Engines &amp; Cluster Persistence (storage)
       
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="4. Storage Engines &amp; Cluster Persistence (storage)">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#authentication-components-pydatauiauth" class="md-nav__link">
+  <a href="#storage-backends-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authentication Components (pydataui.auth)
+        Storage Backends Comparison
       
     </span>
   </a>
@@ -1883,10 +2064,105 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-cli-command-reference" class="md-nav__link">
+  <a href="#5-data-ingestion-tabular-sniffing-datatable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. CLI Command Reference
+        5. Data Ingestion &amp; Tabular Sniffing (DataTable)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Data Ingestion &amp; Tabular Sniffing (DataTable)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sniff_tabular_datadata-any-tuplelistdictstr-any-liststr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sniff_tabular_data(data: Any) -&gt; Tuple[List[Dict[str, Any]], List[str]]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-pydantic-form-generator-shadform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Pydantic Form Generator (ShadForm)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Pydantic Form Generator (ShadForm)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shadformfrom_pydanticmodel_cls-on_submit-submit_labelsubmit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShadForm.from_pydantic(model_cls, on_submit, submit_label="Submit", ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-terminal-user-interface-engine-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Terminal User Interface Engine (tui)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Terminal User Interface Engine (tui)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-navigation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Navigation &amp; Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-ai-chat-in-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive AI Chat in TUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-cli-command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. CLI Command Reference
       
     </span>
   </a>
@@ -1894,10 +2170,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-system-http-routes" class="md-nav__link">
+  <a href="#9-internal-http-event-wire-protocol" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. System HTTP Routes
+        9. Internal HTTP &amp; Event Wire Protocol
       
     </span>
   </a>
@@ -1924,279 +2200,515 @@
   
 
 
-<blockquote>
-<p>See <a href="../MIGRATION_0_2_1/">0.2.1 migration</a> for security defaults and state controls.</p>
-</blockquote>
-<h1 id="pydataui-api-reference">PyDataUI API Reference</h1>
-<p>Complete reference for classes, functions, decorators, components, and CLI tools.</p>
+<h1 id="pydataui-core-api-methods-reference">PyDataUI Core API &amp; Methods Reference</h1>
+<p>Comprehensive specification of all core classes, methods, signatures, decorators, storage engines, and CLI tools in <strong>PyDataUI</strong>.</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
-<li><a href="#1-app-configuration">App &amp; Configuration</a></li>
-<li><a href="#2-state-reactivity">State &amp; Reactivity</a></li>
-<li><a href="#3-authentication-security">Authentication &amp; Security</a></li>
-<li><a href="#4-tunnel-port-forwarding">Tunnel &amp; Port Forwarding</a></li>
-<li><a href="#5-component-index">Component Index</a></li>
-<li><a href="#6-cli-command-reference">CLI Command Reference</a></li>
-<li><a href="#7-system-http-routes">System HTTP Routes</a></li>
+<li><a href="#1-application-core-app">Application Core (<code>App</code>)</a></li>
+<li><a href="#2-state-reactivity">State &amp; Reactivity (<code>state</code>, <code>State</code>, <code>ProceduralState</code>)</a></li>
+<li><a href="#3-authentication-security-authmanager">Authentication &amp; Security (<code>AuthManager</code>)</a></li>
+<li><a href="#4-storage-engines-cluster-persistence-storage">Storage Engines &amp; Cluster Persistence (<code>storage</code>)</a></li>
+<li><a href="#5-data-ingestion-tabular-sniffing-datatable">Data Ingestion &amp; Tabular Sniffing (<code>DataTable</code>)</a></li>
+<li><a href="#6-pydantic-form-generator-shadform">Pydantic Form Generator (<code>ShadForm</code>)</a></li>
+<li><a href="#7-terminal-user-interface-engine-tui">Terminal User Interface Engine (<code>tui</code>, <code>run_tui</code>)</a></li>
+<li><a href="#8-cli-command-reference">CLI Command Reference</a></li>
+<li><a href="#9-internal-http-event-wire-protocol">Internal HTTP &amp; Event Wire Protocol</a></li>
 </ol>
 <hr />
-<h2 id="1-app-configuration">1. App &amp; Configuration</h2>
-<h3 id="class-apptitlepydataui-app-description-version035-debugfalse-kwargs"><code>class App(title="PyDataUI App", description="", version="0.3.5", debug=False, **kwargs)</code></h3>
-<p>The central application object integrating routing, state snapshots, REST APIs, and the HTTP server.</p>
-<p>Request bodies are capped by <code>max_request_size</code> (default <code>10 * 1024 * 1024</code> bytes).
-Oversized bodies are rejected with HTTP <code>413</code> before routing; requests that
-declare an oversized <code>Content-Length</code> are rejected without being read.</p>
-<h4 id="methods">Methods:</h4>
-<ul>
-<li><code>app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)</code>
-  Decorator registering an SSR page route. The decorated function must return a <code>Component</code> or HTML string.</li>
-<li><code>app.api(path: str, method: str = 'GET', public=False, roles=(), **kwargs)</code>
-  Decorator registering a custom JSON endpoint on the underlying pyrustapi engine.</li>
-<li><code>app.setup_auth(auth_manager: AuthManager, allow_registration=False)</code>
-  Mounts <code>/api/auth/*</code> endpoints and registers authentication middleware handlers.</li>
-<li><code>app.run(host=None, port=None, reload=False, workers=1, share=False, auth=None)</code>
-  Starts the HTTP server.</li>
-<li><code>share=True</code>: Launches a public internet tunnel (port forwarding) and prints the public URL.</li>
-<li><code>workers=N</code>: Number of pyrustapi multi-threaded worker processes.</li>
-</ul>
-<h4 id="properties">Properties:</h4>
-<ul>
-<li><code>app.title</code>: Application title.</li>
-<li><code>app.routes</code>: Mapping of registered page routes to handler functions.</li>
-<li><code>app.api_routes</code>: Mapping of registered custom API routes.</li>
-</ul>
-<hr />
-<h2 id="2-state-reactivity">2. State &amp; Reactivity</h2>
-<h3 id="class-state"><code>class State</code></h3>
-<p>Base class for reactive application state stores.
-- Annotated class variables become reactive <code>StateVar</code> descriptors.
-- Methods serve as event handlers and automatic REST actions.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+<h2 id="1-application-core-app">1. Application Core (<code>App</code>)</h2>
+<h3 id="class-app"><code>class App(...)</code></h3>
+<p>Located in <code>pydataui.app.App</code>. The central orchestrator integrating routing, state snapshots, REST APIs, middleware, and the HTTP server engine.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">AppConfig</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enterprise AI Operations&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Internal control plane for SLM clusters&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.2.2&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">secret_key</span><span class="o">=</span><span class="s2">&quot;your-32-byte-production-secret-key-goes-here&quot;</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">session_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>     <span class="c1"># Defaults to SQLite or Memory</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">auth_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>        <span class="c1"># Defaults to SQLite or Memory</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">max_request_size</span><span class="o">=</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>  <span class="c1"># 10 MB limit</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
 </span></code></pre></div>
-<ul>
-<li><strong>Class-level access</strong> (<code>MyState.count</code>): Returns a <code>StateVarRef</code> proxy that evaluates against the active session snapshot during rendering.</li>
-<li><strong>Instance-level access</strong> (<code>self.count</code>): Standard Python value.</li>
-<li><code>to_dict() -&gt; Dict[str, Any]</code>: Serializes the current state instance to a JSON-compatible dictionary.</li>
-<li><code>reset()</code>: Resets all state variables back to class default values.</li>
-</ul>
-<hr />
-<h2 id="3-authentication-security">3. Authentication &amp; Security</h2>
-<h3 id="class-authmanagersecret_key-str-token_expire_hours-int-24"><code>class AuthManager(secret_key: str, token_expire_hours: int = 24)</code></h3>
-<p>Handles user authentication, password hashing (<code>pbkdf2_hmac</code>), JWT encoding/decoding, and API key management.</p>
-<h4 id="methods_1">Methods:</h4>
-<ul>
-<li><code>add_user(username: str, password: str, email: str = "", roles: List[str] = None) -&gt; User</code>
-  Creates a user with hashed password. Raises <code>ValueError</code> if username exists.</li>
-<li><code>authenticate(username: str, password: str) -&gt; Optional[str]</code>
-  Verifies credentials and returns a signed JWT token, or <code>None</code>.</li>
-<li><code>verify_token(token: str) -&gt; Optional[User]</code>
-  Decodes JWT token and returns the <code>User</code> object if valid.</li>
-<li><code>create_api_key(name: str, user_id: str, scopes: List[str] = None, expires_days: Optional[int] = None) -&gt; APIKey</code>
-  Generates a production API key starting with <code>pdu_live_</code>.</li>
-<li><code>verify_api_key(key: str) -&gt; Optional[APIKey]</code>
-  Validates API key token, increments <code>usage_count</code>, updates <code>last_used</code>.</li>
-<li><code>revoke_api_key(key_id: str)</code>
-  Deactivates an API key.</li>
-<li><code>list_api_keys(user_id: str) -&gt; List[APIKey]</code>
-  Returns all active API keys for a user.</li>
-<li><code>require_auth_middleware(request) -&gt; Optional[User]</code>
-  Extracts and verifies user from <code>Authorization: Bearer &lt;token&gt;</code> or <code>pdu-auth</code> cookie.</li>
-</ul>
-<h3 id="class-role"><code>class Role</code></h3>
-<p>Standard role constants:
-- <code>Role.ADMIN = "admin"</code>
-- <code>Role.USER = "user"</code>
-- <code>Role.VIEWER = "viewer"</code>
-- <code>Role.DATA_ENGINEER = "data_engineer"</code>
-- <code>Role.DATA_ANALYST = "data_analyst"</code>
-- <code>Role.ML_ENGINEER = "ml_engineer"</code></p>
-<h3 id="decorators">Decorators:</h3>
-<ul>
-<li><code>@require_auth(redirect_to="/login")</code>: Protects page routes; redirects unauthenticated users.</li>
-<li><code>@require_role(*roles)</code>: Enforces that the authenticated user possesses at least one of the specified roles.</li>
-<li><code>@require_api_key(scopes=None)</code>: Protects <code>@app.api()</code> endpoints using <code>pdu_live_...</code> API keys.</li>
-</ul>
-<hr />
-<h2 id="4-tunnel-port-forwarding">4. Tunnel &amp; Port Forwarding</h2>
-<h3 id="class-tunnelmanagerport-optionalint-none"><code>class TunnelManager(port: Optional[int] = None)</code></h3>
-<p>Provides one-click public internet forwarding (like Gradio's <code>share=True</code>).</p>
-<h4 id="methods_2">Methods:</h4>
-<ul>
-<li><code>start(port: Optional[int] = None) -&gt; Optional[str]</code>: Creates tunnel and returns public URL.</li>
-<li><code>stop()</code>: Terminates active tunnels and subprocesses.</li>
-</ul>
-<hr />
-<h2 id="5-component-index">5. Component Index</h2>
-<h3 id="data-science-machine-learning-pydatauicomponentsdata_science">Data Science &amp; Machine Learning (<code>pydataui.components.data_science</code>)</h3>
-<ul>
-<li><code>DataFrameTable(df, max_rows=100)</code>: Interactive styled pandas DataFrame table.</li>
-<li><code>PlotlyChart(figure, height=400)</code>: Embedded responsive Plotly figure.</li>
-<li><code>MetricCard(title, value, format="", delta="", delta_type="neutral", icon="", description="")</code>: KPI card.</li>
-<li><code>ModelMetrics(metrics: Dict[str, float])</code>: Grid of model evaluation cards.</li>
-<li><code>ConfusionMatrix(matrix: List[List[int]], labels: List[str])</code>: Coloured confusion matrix.</li>
-<li><code>FeatureImportance(features: Dict[str, float], title="Feature Importance")</code>: Horizontal bar chart.</li>
-<li><code>PipelineStatus(steps: List[Dict[str, str]])</code>: Real-time DAG/pipeline stage monitor.</li>
-<li><code>DataTimeline(events: List[Dict[str, str]])</code>: Audit and event timeline.</li>
-<li><code>SchemaViewer(df=None, schema=None)</code>: Column dtypes, nulls, and uniques inspector.</li>
-<li><code>SQLEditor(bind="", on_run="", rows=8, placeholder="")</code>: SQL query editor.</li>
-<li><code>JSONViewer(data, max_height="400px")</code>: Collapsible JSON tree viewer.</li>
-<li><code>FileDownload(filename, content, label="Download")</code>: Data URI file exporter button.</li>
-<li><code>DataUpload(accept=".csv,.json", on_upload="")</code>: File drag-and-drop target.</li>
-</ul>
-<h3 id="data-team-templates-pydatauitemplates">Data Team Templates (<code>pydataui.templates</code>)</h3>
-<ul>
-<li><code>analyst_dashboard(...)</code>: KPI cards, filters, chart, records table, and export.</li>
-<li><code>data_quality_dashboard(...)</code>: Quality score, catalog, schema, issues, and upload.</li>
-<li><code>pipeline_operations(...)</code>: Pipeline steps, inventory, activity, and run history.</li>
-<li><code>model_registry(...)</code>: Selected model metrics, confusion matrix, feature importance, and registry.</li>
-<li>Aliases: <code>quality_dashboard</code>, <code>pipeline_dashboard</code>, <code>ml_registry</code>.</li>
-</ul>
-<p>See <a href="../DATA_TEMPLATES/">Data Team Page Templates</a> for the full parameters and examples.</p>
-<h3 id="shadcnui-styled-components-pydatauicomponentsshadcn">shadcn/ui Styled Components (<code>pydataui.components.shadcn</code>)</h3>
-<ul>
-<li><code>ShadButton(*children, variant="default", size="default", full_width=False)</code></li>
-<li><code>ShadCard(*children)</code> / <code>ShadCardHeader</code> / <code>ShadCardTitle</code> / <code>ShadCardDescription</code> / <code>ShadCardContent</code> / <code>ShadCardFooter</code></li>
-<li><code>ShadInput(placeholder="", type="text")</code></li>
-<li><code>ShadBadge(*children, variant="default")</code></li>
-<li><code>ShadAlert(*children, variant="default")</code></li>
-<li><code>ShadSeparator(orientation="horizontal")</code></li>
-<li><code>ShadProgress(value=0, max_val=100)</code></li>
-<li><code>ShadSkeleton()</code></li>
-<li><code>ShadSwitch(checked=False)</code></li>
-<li><code>ShadTable(*children)</code></li>
-<li><code>ShadSelect(*children)</code></li>
-<li><code>ShadTextarea(rows=4, placeholder="")</code></li>
-<li><code>ShadLabel(*children)</code></li>
-<li><code>ShadDialog(*children, open=False)</code></li>
-<li><code>ShadScrollArea(*children)</code></li>
-<li><code>ShadTabs(*children)</code></li>
-<li><code>ShadToast(*children)</code></li>
-<li><code>ShadAvatar(*children)</code></li>
-<li><code>ShadHoverCard(*children)</code></li>
-<li><code>ShadAccordion(*children)</code></li>
-<li><code>ShadSheet(*children, open=False, side="right")</code></li>
-</ul>
-<h3 id="authentication-components-pydatauiauth">Authentication Components (<code>pydataui.auth</code>)</h3>
-<ul>
-<li><code>LoginPage(logo=None, title="Sign In", subtitle="", redirect_to="/")</code></li>
-<li><code>UserMenu(user: Optional[User])</code></li>
-<li><code>APIKeyManager(keys: List[APIKey])</code></li>
-<li><code>AuthGuard(*children, redirect_to="/login")</code></li>
-</ul>
-<hr />
-<h2 id="6-cli-command-reference">6. CLI Command Reference</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Initialize a new project from a starter template</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pydataui<span class="w"> </span>new<span class="w"> </span>&lt;project_name&gt;<span class="w"> </span><span class="o">[</span>--template<span class="w"> </span>basic<span class="p">|</span>dashboard<span class="p">|</span>crud<span class="p">|</span>ml-dashboard<span class="p">|</span>data-pipeline<span class="p">|</span>auth<span class="o">]</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run local development server with auto-reload</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pydataui<span class="w"> </span>dev<span class="w"> </span><span class="o">[</span>file<span class="o">]</span><span class="w"> </span><span class="o">[</span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="o">]</span><span class="w"> </span><span class="o">[</span>--port<span class="w"> </span><span class="m">8000</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>--reload<span class="o">]</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Run production server</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pydataui<span class="w"> </span>run<span class="w"> </span><span class="o">[</span>file<span class="o">]</span><span class="w"> </span><span class="o">[</span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="o">]</span><span class="w"> </span><span class="o">[</span>--port<span class="w"> </span><span class="m">8000</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>--workers<span class="w"> </span><span class="m">4</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>--share<span class="o">]</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Package for production and Docker containerization</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pydataui<span class="w"> </span>build<span class="w"> </span><span class="o">[</span>file<span class="o">]</span><span class="w"> </span><span class="o">[</span>--output<span class="w"> </span>dist<span class="o">]</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify syntax and registered routes</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pydataui<span class="w"> </span>check<span class="w"> </span><span class="o">[</span>file<span class="o">]</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Generate production API key</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>pydataui<span class="w"> </span>generate<span class="w"> </span>key<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;KeyName&quot;</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Show installed version</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>pydataui<span class="w"> </span>version
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Open documentation</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>pydataui<span class="w"> </span>docs
-</span></code></pre></div>
-<hr />
-<h2 id="7-system-http-routes">7. System HTTP Routes</h2>
+<h4 id="constructor-parameters">Constructor Parameters</h4>
 <table>
 <thead>
 <tr>
-<th>Route</th>
-<th>Method</th>
-<th>Description</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>/docs</code></td>
-<td><code>GET</code></td>
-<td>Interactive Swagger UI</td>
+<td style="text-align: left;"><code>title</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"PyDataUI App"</code></td>
+<td style="text-align: left;">The title shown in HTML document <code>&lt;title&gt;</code> and TUI dashboard headers.</td>
 </tr>
 <tr>
-<td><code>/openapi.json</code></td>
-<td><code>GET</code></td>
-<td>OpenAPI 3.0 specification</td>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>""</code></td>
+<td style="text-align: left;">App description for OpenAPI metadata and page headers.</td>
 </tr>
 <tr>
-<td><code>/api</code></td>
-<td><code>GET</code></td>
-<td>Catalog of all registered States and REST endpoints</td>
+<td style="text-align: left;"><code>version</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"1.2.2"</code></td>
+<td style="text-align: left;">Semantic application version for telemetry and API catalogs.</td>
 </tr>
 <tr>
-<td><code>/api/{State}</code></td>
-<td><code>GET</code></td>
-<td>Full state JSON</td>
+<td style="text-align: left;"><code>debug</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Enables verbose stack traces and development logs.</td>
 </tr>
 <tr>
-<td><code>/api/{State}</code></td>
-<td><code>PUT</code></td>
-<td>Update state fields</td>
+<td style="text-align: left;"><code>secret_key</code></td>
+<td style="text-align: left;"><code>Optional[str]</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Cryptographic secret for signing session cookies and JWT tokens.</td>
 </tr>
 <tr>
-<td><code>/api/{State}</code></td>
-<td><code>DELETE</code></td>
-<td>Reset state to defaults</td>
+<td style="text-align: left;"><code>session_store</code></td>
+<td style="text-align: left;"><code>Optional[BaseSessionStore]</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Storage backend for user sessions (<code>Memory</code>, <code>SQLite</code>, <code>Postgres</code>).</td>
 </tr>
 <tr>
-<td><code>/api/{State}/{method}</code></td>
-<td><code>POST</code></td>
-<td>Execute a State method</td>
+<td style="text-align: left;"><code>auth_store</code></td>
+<td style="text-align: left;"><code>Optional[BaseAuthStore]</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Storage backend for users and API keys (<code>Memory</code>, <code>SQLite</code>, <code>Postgres</code>).</td>
 </tr>
 <tr>
-<td><code>/api/auth/login</code></td>
-<td><code>POST</code></td>
-<td>Authenticate user credentials, returns JWT token</td>
+<td style="text-align: left;"><code>max_request_size</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;"><code>10485760</code></td>
+<td style="text-align: left;">Max request body size in bytes (10MB). Rejects oversized requests with HTTP 413.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="methods-on-app">Methods on <code>App</code></h4>
+<h5 id="apppagepath-str-title-optionalstr-none-layout-optionalcallable-none"><code>app.page(path: str, title: Optional[str] = None, layout: Optional[Callable] = None)</code></h5>
+<p>Decorator that registers a Server-Side Rendered (SSR) page route.</p>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>path</code> (<code>str</code>): URL pattern (e.g. <code>'/'</code>, <code>'/dashboard'</code>, <code>'/model/{model_id}'</code>).</li>
+<li><code>title</code> (<code>Optional[str]</code>): Custom <code>&lt;title&gt;</code> override for this page.</li>
+<li><code>layout</code> (<code>Optional[Callable]</code>): Wrapper layout function receiving the page content component.</li>
+<li><strong>Handler Return Value</strong>: Must return a <code>Component</code> instance (e.g. <code>Container</code>, <code>DashboardLayout</code>, <code>Card</code>) or valid HTML string.</li>
+<li><strong>Example</strong>:
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/clusters&quot;</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">cluster_view</span><span class="p">():</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="k">return</span> <span class="n">Container</span><span class="p">(</span><span class="n">Heading</span><span class="p">(</span><span class="s2">&quot;Cluster Status&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</span></code></pre></div></li>
+</ul>
+<h5 id="appapipath-str-method-str-get-public-bool-false-roles-tuple-kwargs"><code>app.api(path: str, method: str = 'GET', public: bool = False, roles: tuple = (), **kwargs)</code></h5>
+<p>Decorator that registers a high-speed custom REST API endpoint on the underlying engine.</p>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>path</code> (<code>str</code>): REST endpoint path (e.g. <code>'/api/v1/telemetry'</code>).</li>
+<li><code>method</code> (<code>str</code>): HTTP verb (<code>'GET'</code>, <code>'POST'</code>, <code>'PUT'</code>, <code>'DELETE'</code>).</li>
+<li><code>public</code> (<code>bool</code>): If <code>True</code>, bypasses authentication. Default is <code>False</code>.</li>
+<li><code>roles</code> (<code>tuple[str]</code>): List of required role names (e.g. <code>(Role.ADMIN,)</code>).</li>
+<li><strong>Example</strong>:
+  <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="s2">&quot;/api/v1/health&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">():</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span><span class="p">,</span> <span class="s2">&quot;uptime_s&quot;</span><span class="p">:</span> <span class="mi">84920</span><span class="p">}</span>
+</span></code></pre></div></li>
+</ul>
+<h5 id="appsetup_authauth_manager-authmanager-allow_registration-bool-false"><code>app.setup_auth(auth_manager: AuthManager, allow_registration: bool = False)</code></h5>
+<p>Mounts standard <code>/api/auth/*</code> endpoints (<code>/login</code>, <code>/logout</code>, <code>/me</code>, <code>/keys</code>) and binds authentication middleware.</p>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>auth_manager</code> (<code>AuthManager</code>): Initialized authentication manager.</li>
+<li><code>allow_registration</code> (<code>bool</code>): If <code>True</code>, enables public <code>/api/auth/register</code>.</li>
+</ul>
+<h5 id="appmountpath-str-asgi_app-any"><code>app.mount(path: str, asgi_app: Any)</code></h5>
+<p>Mounts an external ASGI application (such as an existing FastAPI, Starlette, or LangGraph backend) under a sub-path prefix.</p>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>path</code> (<code>str</code>): Prefix path (e.g. <code>'/sub-api'</code>).</li>
+<li><code>asgi_app</code> (<code>Any</code>): Valid ASGI-compatible app.</li>
+</ul>
+<h5 id="apprunhost-str-127001-port-int-8000-reload-bool-false-workers-int-1-share-bool-false"><code>app.run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, workers: int = 1, share: bool = False)</code></h5>
+<p>Starts the production or development HTTP server.</p>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>host</code> (<code>str</code>): IP address to bind to (<code>"127.0.0.1"</code> for local, <code>"0.0.0.0"</code> for all interfaces).</li>
+<li><code>port</code> (<code>int</code>): Port number.</li>
+<li><code>reload</code> (<code>bool</code>): If <code>True</code>, enables live auto-reloading on code edits.</li>
+<li><code>workers</code> (<code>int</code>): Number of parallel multi-threaded worker processes.</li>
+<li><code>share</code> (<code>bool</code>): Launches a public internet tunnel and prints the public HTTPS URL.</li>
+</ul>
+<h5 id="appbuild_openapi-dictstr-any"><code>app.build_openapi() -&gt; Dict[str, Any]</code></h5>
+<p>Generates an OpenAPI 3.0-compliant JSON dictionary documenting all registered REST APIs and state actions.</p>
+<hr />
+<h2 id="2-state-reactivity">2. State &amp; Reactivity</h2>
+<p>PyDataUI provides two state management models:
+1. <strong>Procedural State (<code>state()</code>)</strong>: Zero-class procedural hook ideal for scripts, internal dashboards, and prototypes.
+2. <strong>Object-Oriented State (<code>class State</code>)</strong>: Class-based reactive store for multi-model enterprise applications.</p>
+<h3 id="procedural-state-hook-statedefaults-proceduralstate">Procedural State Hook: <code>state(**defaults) -&gt; ProceduralState</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">state</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># 1. Initialize state with default values</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">s</span> <span class="o">=</span> <span class="n">state</span><span class="p">(</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">counter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">active_node</span><span class="o">=</span><span class="s2">&quot;Node-A&quot;</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Welcome!&quot;</span><span class="p">}],</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">loading</span><span class="o">=</span><span class="kc">False</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">)</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 2. Register reactive action</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nd">@s</span><span class="o">.</span><span class="n">action</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">increment</span><span class="p">():</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">s</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nd">@s</span><span class="o">.</span><span class="n">action</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_node</span><span class="p">(</span><span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">s</span><span class="o">.</span><span class="n">active_node</span> <span class="o">=</span> <span class="n">node_name</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="s2">&quot;Node-A&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="methods-attributes-on-proceduralstate">Methods &amp; Attributes on <code>ProceduralState</code></h4>
+<ul>
+<li><code>@s.action</code>: Decorator registering a function as an interactive server action callable via HTMX or the TUI.</li>
+<li><code>s.&lt;variable_name&gt;</code>:</li>
+<li>Inside <code>@s.action</code> handlers: Resolves to the active session value and permits direct mutation.</li>
+<li>Inside <code>@app.page</code> layout declarations: Evaluates to a <code>StateVarRef</code> descriptor that renders reactive bindings.</li>
+<li><code>s.to_dict() -&gt; Dict[str, Any]</code>: Returns a JSON-serializable dictionary of current state variables.</li>
+<li><code>s.reset()</code>: Resets all values back to the original initial values.</li>
+</ul>
+<hr />
+<h3 id="class-based-reactive-state-class-state">Class-Based Reactive State: <code>class State</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">State</span><span class="p">,</span> <span class="n">StateVar</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">ClusterState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">node_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">is_busy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">scale_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">scale_down</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span> <span class="o">-=</span> <span class="mi">1</span>
+</span></code></pre></div>
+<h4 id="lifecycle-session-isolation">Lifecycle &amp; Session Isolation</h4>
+<ul>
+<li>Each browser session / cookie receives an independent instance of <code>ClusterState</code>.</li>
+<li><code>ClusterState.node_count</code> accessed on the class returns a <code>StateVarRef</code> for declarative component binding.</li>
+<li><code>self.node_count</code> accessed inside methods operates on the session's isolated instance.</li>
+</ul>
+<hr />
+<h2 id="3-authentication-security-authmanager">3. Authentication &amp; Security (<code>AuthManager</code>)</h2>
+<h3 id="class-authmanagersecret_key-token_expire_hours24-storenone-enable_throttlingtrue"><code>class AuthManager(secret_key, token_expire_hours=24, store=None, enable_throttling=True, ...)</code></h3>
+<p>Located in <code>pydataui.auth.AuthManager</code>. Implements production security:
+- Password hashing with PBKDF2-HMAC-SHA256 (600,000 rounds) + unique salt.
+- Signed JSON Web Tokens (JWT) with HMAC-SHA256.
+- Brute-force rate limiting and lockout protection.
+- Scoped API keys with prefix <code>pdu_live_</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthManager</span><span class="p">,</span> <span class="n">Role</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLiteAuthStore</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">auth</span> <span class="o">=</span> <span class="n">AuthManager</span><span class="p">(</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">secret_key</span><span class="o">=</span><span class="s2">&quot;your-32-byte-secret-key-at-least-32-bytes-long&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">token_expire_hours</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">store</span><span class="o">=</span><span class="n">SQLiteAuthStore</span><span class="p">(</span><span class="s2">&quot;auth.db&quot;</span><span class="p">),</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">enable_throttling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">max_login_attempts</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">lockout_duration_seconds</span><span class="o">=</span><span class="mi">300</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="methods-on-authmanager">Methods on <code>AuthManager</code></h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Method Signature</th>
+<th style="text-align: left;">Return Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>add_user(username, password, email="", roles=None)</code></td>
+<td style="text-align: left;"><code>User</code></td>
+<td style="text-align: left;">Provisions a new user. Hashes password with unique salt. Raises <code>ValueError</code> if username exists.</td>
 </tr>
 <tr>
-<td><code>/api/auth/logout</code></td>
-<td><code>POST</code></td>
-<td>Sign out</td>
+<td style="text-align: left;"><code>get_or_create_user(username, password, email="", roles=None)</code></td>
+<td style="text-align: left;"><code>User</code></td>
+<td style="text-align: left;">Idempotently retrieves existing user or creates a new one.</td>
 </tr>
 <tr>
-<td><code>/api/auth/me</code></td>
-<td><code>GET</code></td>
-<td>Current user profile</td>
+<td style="text-align: left;"><code>authenticate(username, password, client_ip=None)</code></td>
+<td style="text-align: left;"><code>Optional[str]</code></td>
+<td style="text-align: left;">Validates credentials against password hash. If valid, returns signed JWT token string; if invalid or throttled, returns <code>None</code> or raises <code>AuthenticationThrottledError</code>.</td>
 </tr>
 <tr>
-<td><code>/api/auth/keys</code></td>
-<td><code>GET</code>, <code>POST</code></td>
-<td>List or create API keys</td>
+<td style="text-align: left;"><code>verify_token(token: str)</code></td>
+<td style="text-align: left;"><code>Optional[User]</code></td>
+<td style="text-align: left;">Decodes and verifies a JWT token. Returns <code>User</code> object if valid, or <code>None</code> if expired/tampered.</td>
 </tr>
 <tr>
-<td><code>/_pdu/event/{State}/{method}</code></td>
-<td><code>POST</code></td>
-<td>HTMX reactive SSR event</td>
+<td style="text-align: left;"><code>create_api_key(name, user_id, scopes=None, expires_days=None)</code></td>
+<td style="text-align: left;"><code>APIKey</code></td>
+<td style="text-align: left;">Generates a scoped API key string starting with <code>pdu_live_</code> and stores SHA256 key hash.</td>
 </tr>
 <tr>
-<td><code>/_pdu/static/htmx.min.js</code></td>
-<td><code>GET</code></td>
-<td>Bundled local HTMX JavaScript</td>
+<td style="text-align: left;"><code>verify_api_key(raw_key: str)</code></td>
+<td style="text-align: left;"><code>Optional[APIKey]</code></td>
+<td style="text-align: left;">Validates an API key, checks expiration, updates <code>last_used</code> timestamp, and increments usage counter.</td>
 </tr>
 <tr>
-<td><code>/_pdu/static/pydataui.css</code></td>
-<td><code>GET</code></td>
-<td>Bundled PyDataUI CSS</td>
+<td style="text-align: left;"><code>revoke_api_key(key_id: str)</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Deactivates an API key.</td>
 </tr>
 <tr>
-<td><code>/_pdu/health</code></td>
-<td><code>GET</code></td>
-<td>Health check endpoint</td>
+<td style="text-align: left;"><code>list_api_keys(user_id: str)</code></td>
+<td style="text-align: left;"><code>List[APIKey]</code></td>
+<td style="text-align: left;">Returns all API keys belonging to a user.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>set_user_password(user_id: str, new_password: str)</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Resets user password to new salted hash.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>delete_user(user_id: str)</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Permanently deletes user from identity store.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="security-decorators">Security Decorators</h4>
+<ul>
+<li><code>@require_auth</code>: Protects an endpoint or page; redirects unauthenticated requests to <code>/login</code>.</li>
+<li><code>@require_role(Role.ADMIN)</code>: Requires specific role clearance.</li>
+<li><code>@require_api_key(scopes=["read:telemetry"])</code>: Enforces valid API key in <code>X-API-Key</code> or <code>Authorization</code> header.</li>
+</ul>
+<hr />
+<h2 id="4-storage-engines-cluster-persistence-storage">4. Storage Engines &amp; Cluster Persistence (<code>storage</code>)</h2>
+<p>PyDataUI supports swappable session and authentication storage backends:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui.storage</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">MemorySessionStore</span><span class="p">,</span> <span class="n">SQLiteSessionStore</span><span class="p">,</span> <span class="n">PostgresSessionStore</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">MemoryAuthStore</span><span class="p">,</span> <span class="n">SQLiteAuthStore</span><span class="p">,</span> <span class="n">PostgresAuthStore</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="storage-backends-comparison">Storage Backends Comparison</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Store</th>
+<th style="text-align: center;">Durability</th>
+<th style="text-align: center;">Multi-Process / Cluster Safe</th>
+<th style="text-align: left;">Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Memory</strong></td>
+<td style="text-align: center;">Ephemeral</td>
+<td style="text-align: center;">No (single process only)</td>
+<td style="text-align: left;">Unit testing, local development</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SQLite</strong></td>
+<td style="text-align: center;">Persistent disk</td>
+<td style="text-align: center;">Yes (WAL mode with SQLite lock management)</td>
+<td style="text-align: left;">Single-node production, embedded appliances</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>PostgreSQL</strong></td>
+<td style="text-align: center;">Distributed</td>
+<td style="text-align: center;">Yes (cluster-wide shared identity &amp; sessions)</td>
+<td style="text-align: left;">Multi-node Kubernetes, high-availability deployments</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-data-ingestion-tabular-sniffing-datatable">5. Data Ingestion &amp; Tabular Sniffing (<code>DataTable</code>)</h2>
+<h3 id="sniff_tabular_datadata-any-tuplelistdictstr-any-liststr"><code>sniff_tabular_data(data: Any) -&gt; Tuple[List[Dict[str, Any]], List[str]]</code></h3>
+<p>Automatically sniffs, extracts columns, and normalizes tabular data from:
+- <code>pandas.DataFrame</code>
+- <code>polars.DataFrame</code>
+- <code>duckdb.PyRelation</code>
+- <code>pyarrow.Table</code>
+- <code>list[pydantic.BaseModel]</code>
+- <code>list[dict]</code></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataTable</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="s2">&quot;cluster&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;us-east&quot;</span><span class="p">,</span> <span class="s2">&quot;eu-west&quot;</span><span class="p">,</span> <span class="s2">&quot;ap-south&quot;</span><span class="p">],</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;HEALTHY&quot;</span><span class="p">,</span> <span class="s2">&quot;HEALTHY&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">]</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">})</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">DataTable</span><span class="p">(</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="n">searchable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="n">paginated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="n">page_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    <span class="n">bordered</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="6-pydantic-form-generator-shadform">6. Pydantic Form Generator (<code>ShadForm</code>)</h2>
+<h3 id="shadformfrom_pydanticmodel_cls-on_submit-submit_labelsubmit"><code>ShadForm.from_pydantic(model_cls, on_submit, submit_label="Submit", ...)</code></h3>
+<p>Generates validated input fields matching Pydantic type annotations:
+- <code>str</code> -&gt; Text <code>&lt;input&gt;</code>
+- <code>int</code>, <code>float</code> -&gt; Number <code>&lt;input&gt;</code>
+- <code>bool</code> -&gt; <code>&lt;switch&gt;</code> or <code>&lt;checkbox&gt;</code>
+- <code>datetime.date</code> -&gt; <code>&lt;input type="date"&gt;</code>
+- <code>Enum</code> -&gt; <code>&lt;select&gt;</code> dropdown
+- <code>Field(description="...")</code> -&gt; Helper description text
+- <code>Field(ge=..., le=...)</code> -&gt; Min / max HTML validation constraints</p>
+<hr />
+<h2 id="7-terminal-user-interface-engine-tui">7. Terminal User Interface Engine (<code>tui</code>)</h2>
+<p>PyDataUI includes a built-in terminal dashboard engine (<code>pydataui.tui.run_tui</code>):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Launch interactive TUI</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pydataui<span class="w"> </span>run<span class="w"> </span>--tui<span class="w"> </span>app.py
+</span></code></pre></div>
+<h3 id="keyboard-navigation-commands">Keyboard Navigation &amp; Commands</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Input Command</th>
+<th style="text-align: left;">Action in TUI Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>[1-N]</code></td>
+<td style="text-align: left;">Switches directly to page index number <code>1</code> through <code>N</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;action_name&gt;</code></td>
+<td style="text-align: left;">Executes a registered state action method.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>input &lt;text&gt;</code></td>
+<td style="text-align: left;">Passes input string to active page handler.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>set &lt;key&gt;=&lt;value&gt;</code></td>
+<td style="text-align: left;">Updates a state variable directly from the terminal prompt.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>r</code></td>
+<td style="text-align: left;">Refreshes terminal dashboard rendering.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>q</code> or <code>quit</code></td>
+<td style="text-align: left;">Cleanly exits the TUI session without double confirmation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interactive-ai-chat-in-tui">Interactive AI Chat in TUI</h3>
+<p>When a page contains a <code>Chat</code> component, the TUI activates conversational chat mode:
+- Number keys (<code>1</code>, <code>2</code>, <code>3</code>) instantly execute numbered suggestion chips.
+- <code>/clear</code> invokes the <code>on_clear</code> handler and resets conversation history.
+- <code>q</code> cleanly exits back to the terminal prompt.</p>
+<hr />
+<h2 id="8-cli-command-reference">8. CLI Command Reference</h2>
+<p>The <code>pydataui</code> CLI provides commands for the full application lifecycle:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Create a new application from template</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pydataui<span class="w"> </span>new<span class="w"> </span>my_app<span class="w"> </span>--template<span class="w"> </span>ml-dashboard
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. Start local development server with auto-reload</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pydataui<span class="w"> </span>dev<span class="w"> </span>app.py<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--reload
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. Run production server</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 4. Run interactive Terminal UI (TUI)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>pydataui<span class="w"> </span>run<span class="w"> </span>--tui<span class="w"> </span>app.py
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># 5. Share via secure public HTTPS tunnel</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--share
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># 6. Syntax and routing validation check</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>pydataui<span class="w"> </span>check<span class="w"> </span>app.py
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># 7. Generate production API key</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>pydataui<span class="w"> </span>generate<span class="w"> </span>key<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;TelemetryWorker&quot;</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="c1"># 8. Show installed framework version</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>pydataui<span class="w"> </span>version
+</span></code></pre></div>
+<hr />
+<h2 id="9-internal-http-event-wire-protocol">9. Internal HTTP &amp; Event Wire Protocol</h2>
+<p>PyDataUI uses clean REST endpoints and HTMX partial swap protocols:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Route Pattern</th>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Purpose</th>
+<th style="text-align: left;">Response Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>GET /</code></td>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;">SSR HTML Page initial load</td>
+<td style="text-align: left;"><code>text/html</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>POST /_pdu/event/{State}/{action}</code></td>
+<td style="text-align: left;"><code>POST</code></td>
+<td style="text-align: left;">Reactive UI event trigger</td>
+<td style="text-align: left;"><code>text/html</code> (DOM Partial)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GET /api/{State}</code></td>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;">State variable snapshot</td>
+<td style="text-align: left;"><code>application/json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>POST /api/{State}/{action}</code></td>
+<td style="text-align: left;"><code>POST</code></td>
+<td style="text-align: left;">Headless REST action trigger</td>
+<td style="text-align: left;"><code>application/json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>POST /api/auth/login</code></td>
+<td style="text-align: left;"><code>POST</code></td>
+<td style="text-align: left;">User credential authentication</td>
+<td style="text-align: left;"><code>application/json</code> (JWT Token)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>POST /api/auth/logout</code></td>
+<td style="text-align: left;"><code>POST</code></td>
+<td style="text-align: left;">Session termination</td>
+<td style="text-align: left;"><code>application/json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GET /api/auth/me</code></td>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;">Authenticated user profile</td>
+<td style="text-align: left;"><code>application/json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GET /_pdu/health</code></td>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;">Infrastructure health check</td>
+<td style="text-align: left;"><code>application/json</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GET /docs</code></td>
+<td style="text-align: left;"><code>GET</code></td>
+<td style="text-align: left;">OpenAPI Swagger documentation</td>
+<td style="text-align: left;"><code>text/html</code></td>
 </tr>
 </tbody>
 </table>

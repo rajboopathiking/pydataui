@@ -82,8 +82,9 @@ class Input(Component):
         if self.error: classes.append('pdu-input-error')
         return classes
         
-    def render(self, state_snapshot: dict) -> str:
-        attrs = self._build_attrs(state_snapshot)
+    def render(self, state_snapshot: Optional[dict] = None) -> str:
+        snap = state_snapshot or {}
+        attrs = self._build_attrs(snap)
         input_html = f"<{self.tag} {attrs} />"
         
         if not self.label and not self.error and not self.helper_text:
@@ -91,7 +92,7 @@ class Input(Component):
             
         parts = []
         if self.label:
-            parts.append(Label(self.label).render(state_snapshot))
+            parts.append(Label(self.label).render(snap))
         parts.append(input_html)
         if self.error:
             parts.append(f"<div class='pdu-error-text'>{escape_html(self.error)}</div>")

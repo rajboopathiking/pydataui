@@ -27,7 +27,7 @@ class ModelState(State):
     eval_date: str = "2026-11-11"
 
 
-app = App(title="NeuroNest AI Model Registry", theme="dark", palette="zinc")
+app = App(title="PyDataUI Model Registry", theme="dark", palette="zinc")
 
 
 # Example of consuming an upcoming community component directly in pure Python:
@@ -51,7 +51,7 @@ BentoFeatureCard = from_jsx("""
 def home():
     # 1. Modern Collapsible Sidebar
     sidebar = Sidebar(
-        brand={"name": "NeuroNest AI", "logo": "cpu", "plan": "Enterprise"},
+        brand={"name": "PyDataUI Platform", "logo": "cpu", "plan": "Enterprise"},
         groups=[
             NavGroup("Platform", [
                 NavItem("Model Registry", icon="box", href="/", active=True, badge="14"),
@@ -65,7 +65,7 @@ def home():
                 NavItem("Cluster Settings", icon="settings", href="/settings"),
             ]),
         ],
-        footer={"name": "Boopathi Raj", "email": "boopathi@neuronest.ai", "avatar": "BR"},
+        footer={"name": "PyDataUI Admin", "email": "admin@pydataui.org", "avatar": "UI"},
         collapsible="icon"
     )
 

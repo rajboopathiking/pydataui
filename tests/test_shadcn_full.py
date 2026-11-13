@@ -63,23 +63,23 @@ def test_sidebar_system_render():
 
 def test_declarative_dashboard_and_header():
     sb = Sidebar(
-        brand={"name": "NeuroNest AI", "logo": "cpu", "plan": "Enterprise"},
+        brand={"name": "PyDataUI Platform", "logo": "cpu", "plan": "Enterprise"},
         groups=[
             NavGroup("Platform", [
                 NavItem("Models", icon="box", href="/models", active=True, badge="12"),
                 NavItem("Telemetry", icon="activity", href="/telemetry")
             ])
         ],
-        footer={"name": "Boopathi", "email": "boopathi@example.com", "avatar": "BP"}
+        footer={"name": "PyDataUI Admin", "email": "admin@pydataui.org", "avatar": "UI"}
     )
     sb_html = sb.render({})
-    assert "NeuroNest AI" in sb_html
+    assert "PyDataUI Platform" in sb_html
     assert "Enterprise" in sb_html
     assert "Models" in sb_html
     assert "12" in sb_html
     assert "Telemetry" in sb_html
-    assert "Boopathi" in sb_html
-    assert "boopathi@example.com" in sb_html
+    assert "PyDataUI Admin" in sb_html
+    assert "admin@pydataui.org" in sb_html
 
     hdr = Header(
         breadcrumbs=["Home", "Models", "Mistral-7B"],
@@ -99,7 +99,7 @@ def test_declarative_dashboard_and_header():
         content=[ShadCard("Model Performance Metrics")]
     )
     layout_html = layout.render({})
-    assert "NeuroNest AI" in layout_html
+    assert "PyDataUI Platform" in layout_html
     assert "Mistral-7B" in layout_html
     assert "Model Performance Metrics" in layout_html
 

@@ -3,7 +3,7 @@
 PyDataUI gives you complete design freedom. Whether you prefer utility-first styling with **Tailwind CSS**, pre-built **shadcn/ui** components, semantic **HTML tags in pure Python**, or direct **raw HTML/SVG templates**, you can build any interface without feeling boxed into rigid defaults.
 
 !!! tip "Developer references"
-    For the full tag and attribute contract, see the [HTML Reference](HTML_REFERENCE.md). For framework tokens, class names, dark mode, and cascade rules, see the [CSS Reference](CSS_REFERENCE.md).
+    For the full component and attribute contract, see the [Component Encyclopedia](COMPONENTS_REFERENCE.md). For framework tokens, class names, dark mode, and cascade rules, see the [CSS Reference](CSS_REFERENCE.md).
 
 ---
 
@@ -255,7 +255,7 @@ from pydataui.shadcn import DashboardLayout, Sidebar, NavGroup, NavItem, Header,
 def home():
     return DashboardLayout(
         sidebar=Sidebar(
-            brand={"name": "NeuroNest AI", "logo": "cpu", "plan": "Enterprise"},
+            brand={"name": "PyDataUI Platform", "logo": "cpu", "plan": "Enterprise"},
             groups=[
                 NavGroup("Platform", [
                     NavItem("Model Registry", icon="box", href="/", active=True, badge="14"),
@@ -267,7 +267,7 @@ def home():
                     NavItem("Audit Logs", icon="shield-check", href="/audit"),
                 ]),
             ],
-            footer={"name": "Boopathi Raj", "email": "boopathi@neuronest.ai", "avatar": "BR"},
+            footer={"name": "PyDataUI Admin", "email": "admin@pydataui.org", "avatar": "UI"},
             collapsible="icon"
         ),
         header=Header(
@@ -288,7 +288,7 @@ def home():
     <div style="width: 14rem; background: #18181b; border-right: 1px solid #27272a; display: flex; flex-direction: column;">
       <div style="height: 3rem; display: flex; align-items: center; gap: 0.5rem; padding: 0 1rem; border-bottom: 1px solid #27272a;">
         <div style="width: 1.5rem; height: 1.5rem; border-radius: 0.375rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">⚡</div>
-        <span style="font-size: 0.875rem; font-weight: 600; color: #fafafa;">NeuroNest AI</span>
+        <span style="font-size: 0.875rem; font-weight: 600; color: #fafafa;">PyDataUI Platform</span>
         <span style="margin-left: auto; font-size: 0.625rem; font-weight: 700; background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 0.125rem 0.375rem; border-radius: 0.25rem;">ENT</span>
       </div>
       <div style="padding: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; flex: 1;">
@@ -304,10 +304,10 @@ def home():
         </div>
       </div>
       <div style="padding: 0.75rem; border-top: 1px solid #27272a; display: flex; align-items: center; gap: 0.5rem;">
-        <div style="width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: #27272a; color: #e4e4e7; font-size: 0.65rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">BR</div>
+        <div style="width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: #27272a; color: #e4e4e7; font-size: 0.65rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">UI</div>
         <div style="display: flex; flex-direction: column;">
-          <span style="font-size: 0.75rem; font-weight: 600; color: #fafafa;">Boopathi Raj</span>
-          <span style="font-size: 0.625rem; color: #71717a;">boopathi@neuronest.ai</span>
+          <span style="font-size: 0.75rem; font-weight: 600; color: #fafafa;">PyDataUI Admin</span>
+          <span style="font-size: 0.625rem; color: #71717a;">admin@pydataui.org</span>
         </div>
       </div>
     </div>

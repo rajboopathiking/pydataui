@@ -18,10 +18,10 @@ flowchart LR
 ```
 
 - **Live URL**: [https://rajboopathiking.github.io/pydataui/](https://rajboopathiking.github.io/pydataui/)
-- **Configuration File**: [`mkdocs.yml`](file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/mkdocs.yml)
+- **Configuration File**: `mkdocs.yml`
 - **Source Directory**: `docs/`
 - **Output Directory**: `site/` (generated during build, gitignored)
-- **CI/CD Workflow**: [`.github/workflows/deploy-docs.yml`](file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/.github/workflows/deploy-docs.yml)
+- **CI/CD Workflow**: `.github/workflows/deploy-docs.yml`
 
 ---
 
@@ -207,7 +207,7 @@ PyDataUI uses Markdown source files (`docs/*.md`) as the single source of truth.
 ## 🚀 GitHub Pages Deployment Workflow
 
 ### Automated CI/CD Pipeline
-Every time a commit is pushed to the `main` branch affecting documentation, the GitHub Actions workflow at [`.github/workflows/deploy-docs.yml`](file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/.github/workflows/deploy-docs.yml) triggers automatically:
+Every time a commit is pushed to the `main` branch affecting documentation, the GitHub Actions workflow at `.github/workflows/deploy-docs.yml` triggers automatically:
 
 1. **Trigger Condition**:
    - Push to branch `main`
@@ -227,7 +227,7 @@ Every time a commit is pushed to the `main` branch affecting documentation, the 
 When you create a new documentation page in `docs/`:
 
 1. Save the file: `docs/YOUR_NEW_PAGE.md`
-2. Open [`mkdocs.yml`](file:///Users/boopathiraj/Downloads/AI_Browsers/Full-Web-Framework/mkdocs.yml) and add it to the `nav:` tree:
+2. Open `mkdocs.yml` and add it to the `nav:` tree:
 
 ```yaml
 nav:

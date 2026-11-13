@@ -10,7 +10,7 @@ pydataui/styling/css/pydataui.css
 
 There is no Sass, PostCSS, CSS-in-JS, or build step for this file. It is served unchanged at `/_pdu/static/pydataui.css`.
 
-For semantic HTML APIs and generated markup, see the [HTML Reference](HTML_REFERENCE.md). For task-oriented examples, see [UI Customization & Tailwind](CUSTOMIZATION.md).
+For semantic HTML APIs and generated markup, see the [Component Encyclopedia](COMPONENTS_REFERENCE.md). For task-oriented examples, see [UI Customization & Tailwind](CUSTOMIZATION.md).
 
 ---
 
@@ -659,4 +659,4 @@ For a manual check:
 | App-level `custom_css` and `stylesheets` wiring | `pydataui/config.py`, `pydataui/app.py`, `pydataui/compiler/templates.py` |
 | Component class lists | `pydataui/components/*.py` |
 | CSS-related browser coverage | `tests/test_browser_security.py` |
-| HTML-side rendering contract | [HTML Reference](HTML_REFERENCE.md) |
+| Component rendering contract | [Component Encyclopedia](COMPONENTS_REFERENCE.md) |

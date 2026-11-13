@@ -1,6 +1,6 @@
 site_name: PyDataUI
 site_description: "A Full-Stack Python Framework for Data and AI Applications with a Compiled Rust HTTP Core"
-site_author: "Boopathi Raj"
+site_author: "PyDataUI Team"
 site_url: "https://rajboopathiking.github.io/pydataui/"
 repo_url: "https://github.com/rajboopathiking/pydataui"
 repo_name: "rajboopathiking/pydataui"
@@ -64,6 +64,7 @@ nav:
   - Home: index.md
   - Benchmarks: BENCHMARKS.md
   - Guides:
+      - PyDataUI vs. React & Streamlit: PYDATAUI_VS_REACT_AND_STREAMLIT.md
       - Web Dev to PyDataUI (HTML, React, Redux): WEB_TO_PYDATAUI_COMPARISON.md
       - Developer Cookbook (v1.2.2): COOKBOOK.md
       - Modern Python DX & Commercial UI: PYTHON_DX_AND_MODERN_UI_GUIDE.md
@@ -72,7 +73,7 @@ nav:
       - Mobile Optimization & Architecture: MOBILE_OPTIMIZATION_AND_ARCHITECTURE.md
       - FastAPI Mounting & Conflicts: FASTAPI_MOUNTING_AND_CONFLICTS.md
       - Mobile & Desktop Apps: MOBILE_AND_DESKTOP.md
-      - Documentation & HTML Guide: DOCS_DEVELOPER_GUIDE.md
+      - Documentation Guide: DOCS_DEVELOPER_GUIDE.md
       - Authentication & Security: AUTHENTICATION.md
       - UI Customization & Tailwind: CUSTOMIZATION.md
       - PyDataUI vs Reflex: PYDATAUI_VS_REFLEX.md
@@ -86,7 +87,6 @@ nav:
       - Component Encyclopedia: COMPONENTS_REFERENCE.md
       - Core API & Methods Reference: API_REFERENCE.md
       - Template Gallery: TEMPLATE_GALLERY.md
-      - HTML Reference: HTML_REFERENCE.md
       - CSS Reference: CSS_REFERENCE.md
       - Quick Reference: QUICKREF.md
       - Migration Guide (v0.3.0): MIGRATION_0_3_0.md

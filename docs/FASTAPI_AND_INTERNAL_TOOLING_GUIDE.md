@@ -93,7 +93,7 @@ from pydataui.components.data_science import MetricCard, ConfusionMatrix, Pipeli
 # ---------------------------------------------------------------------------
 
 api = FastAPI(
-    title="NeuroNest AI Inference Gateway",
+    title="PyDataUI Inference Gateway",
     description="Production LLM endpoints with embedded internal ops portal.",
     version="1.0.0"
 )
@@ -135,7 +135,7 @@ async def health():
 # 2. PyDataUI Dashboard Application (For data scientists & internal team)
 # ---------------------------------------------------------------------------
 
-dashboard = App(title="NeuroNest Model Registry & Ops", theme="dark", palette="zinc")
+dashboard = App(title="PyDataUI Model Registry & Ops", theme="dark", palette="zinc")
 
 class PlaygroundState(State):
     temperature: float = 0.7
@@ -163,7 +163,7 @@ BentoMetricsCard = from_jsx("""
 def ops_home():
     # 1. Collapsible Sidebar Shell
     sidebar = Sidebar(
-        brand={"name": "NeuroNest AI", "logo": "cpu", "plan": "Enterprise"},
+        brand={"name": "PyDataUI Platform", "logo": "cpu", "plan": "Enterprise"},
         groups=[
             NavGroup("Serving & Testing", [
                 NavItem("Model Registry", icon="box", href="/dashboard", active=True, badge="14"),
@@ -176,7 +176,7 @@ def ops_home():
                 NavItem("Security & Audit", icon="shield-check", href="/dashboard/audit"),
             ]),
         ],
-        footer={"name": "Lead ML Engineer", "email": "engineer@neuronest.ai", "avatar": "ML"},
+        footer={"name": "Lead ML Engineer", "email": "engineer@pydataui.org", "avatar": "ML"},
         collapsible="icon"
     )
 

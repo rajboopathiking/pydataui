@@ -64,7 +64,7 @@ nav:
   - Home: index.md
   - Benchmarks: BENCHMARKS.md
   - Guides:
-      - Developer Cookbook (v1.2.1): COOKBOOK.md
+      - Developer Cookbook (v1.2.2): COOKBOOK.md
       - Modern Python DX & Commercial UI: PYTHON_DX_AND_MODERN_UI_GUIDE.md
       - FastAPI & Internal Tooling Masterclass: FASTAPI_AND_INTERNAL_TOOLING_GUIDE.md
       - Native Offline & Standalone Mobile: NATIVE_OFFLINE_AND_STANDALONE.md
@@ -82,10 +82,11 @@ nav:
       - Production Readiness & DX Audit: PRODUCTION_READINESS_AND_DX_AUDIT.md
       - Troubleshooting: TROUBLESHOOTING.md
   - Reference:
+      - Component Encyclopedia: COMPONENTS_REFERENCE.md
+      - Core API & Methods Reference: API_REFERENCE.md
       - Template Gallery: TEMPLATE_GALLERY.md
       - HTML Reference: HTML_REFERENCE.md
       - CSS Reference: CSS_REFERENCE.md
-      - API Reference: API_REFERENCE.md
       - Quick Reference: QUICKREF.md
       - Migration Guide (v0.3.0): MIGRATION_0_3_0.md
       - Migration Guide (v0.2.1): MIGRATION_0_2_1.md

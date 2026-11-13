@@ -8,14 +8,14 @@
 ## Table of Contents
 1. [The PyDataUI Mental Model](#1-the-pydataui-mental-model)
 2. [Recipe 1: Zero-Class Procedural State](#recipe-1-zero-class-procedural-state)
-3. [Recipe 2: Production AI Chatbot with Loading Indicators](#recipe-2-production-ai-chatbot-with-loading-indicators)
+3. [Recipe 2: Production AI Chatbot with Loading Indicators & Modern UI/UX](#recipe-2-production-ai-chatbot-with-loading-indicators-modern-uiux)
 4. [Recipe 3: Universal Tabular Data Sniffing (DuckDB, Polars, Pandas)](#recipe-3-universal-tabular-data-sniffing)
 5. [Recipe 4: Pythonic Spatial Layouts (Row, Col, Grid, Spacer)](#recipe-4-pythonic-spatial-layouts)
 6. [Recipe 5: Dynamic Forms from Pydantic Models](#recipe-5-dynamic-forms-from-pydantic-models)
 7. [Recipe 6: Multi-Page Directory Routing (`pages/`)](#recipe-6-multi-page-directory-routing)
 8. [Recipe 7: Dual-Surface Terminal UI (TUI) Mode](#recipe-7-dual-surface-terminal-ui-tui-mode)
 9. [Recipe 8: FastAPI Native Mounting & Microservices](#recipe-8-fastapi-native-mounting)
-10. [Recipe 9: Production Deployment & Dockerization](#recipe-9-production-deployment)
+10. [Recipe 9: Production Deployment & Dockerization](#recipe-9-production-deployment-dockerization)
 
 ---
 

@@ -64,6 +64,7 @@ nav:
   - Home: index.md
   - Benchmarks: BENCHMARKS.md
   - Guides:
+      - Web Dev to PyDataUI (HTML, React, Redux): WEB_TO_PYDATAUI_COMPARISON.md
       - Developer Cookbook (v1.2.2): COOKBOOK.md
       - Modern Python DX & Commercial UI: PYTHON_DX_AND_MODERN_UI_GUIDE.md
       - FastAPI & Internal Tooling Masterclass: FASTAPI_AND_INTERNAL_TOOLING_GUIDE.md

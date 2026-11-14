@@ -42,7 +42,7 @@ class App:
         self.config = AppConfig(
             title=title,
             description=description,
-            version=version or '1.2.3',
+            version=version or '1.2.4',
             debug=debug,
             theme=theme,
             palette=palette,
@@ -65,7 +65,7 @@ class App:
             backend=self.backend,
             title=title,
             description=description,
-            version=version,
+            version=self.config.version,
             docs_url=docs_url,
             openapi_url=openapi_url,
             max_request_size=self.config.max_request_size,

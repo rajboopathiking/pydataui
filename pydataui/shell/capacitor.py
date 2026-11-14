@@ -318,7 +318,7 @@ def init_capacitor(
     if not pkg_json.exists() or overwrite:
         pkg_data = {
             "name": app_name.lower().replace(" ", "-"),
-            "version": "1.2.3",
+            "version": "1.2.4",
             "private": True,
             "scripts": {
                 "cap": "cap"

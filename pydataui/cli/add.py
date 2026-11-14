@@ -35,7 +35,7 @@ def fetch_registry_schema(component_or_url: str) -> Dict[str, Any]:
 
     req = urllib.request.Request(
         url,
-        headers={"User-Agent": "PyDataUI-CLI/1.2.3 (Component Ingester)"}
+        headers={"User-Agent": "PyDataUI-CLI/1.2.4 (Component Ingester)"}
     )
     try:
         with urllib.request.urlopen(req, timeout=8) as response:

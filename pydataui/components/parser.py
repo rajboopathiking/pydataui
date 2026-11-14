@@ -108,7 +108,7 @@ def dynamic(schema_or_url: Union[str, Dict[str, Any]]) -> type:
         if schema_str.startswith("http://") or schema_str.startswith("https://"):
             req = urllib.request.Request(
                 schema_str,
-                headers={"User-Agent": "PyDataUI/1.2.3 (Extensibility Engine)"}
+                headers={"User-Agent": "PyDataUI/1.2.4 (Extensibility Engine)"}
             )
             with urllib.request.urlopen(req, timeout=10) as resp:
                 schema_data = json.loads(resp.read().decode("utf-8"))

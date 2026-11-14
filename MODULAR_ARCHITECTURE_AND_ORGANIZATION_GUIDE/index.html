@@ -1,0 +1,2855 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Full-Stack Python Framework for Data and AI Applications with a Compiled Rust HTTP Core">
+      
+      
+        <meta name="author" content="PyDataUI Team">
+      
+      
+        <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE/">
+      
+      
+        <link rel="prev" href="../tutorials/ENTERPRISE_RBAC_AND_AUTH/">
+      
+      
+        <link rel="next" href="../ARCHITECTURE/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Modular Architecture & Clean Organization - PyDataUI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pydataui-modular-architecture-clean-organization-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PyDataUI" class="md-header__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyDataUI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modular Architecture & Clean Organization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../BLOG_POST_LAUNCH/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Announcement
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../BENCHMARKS/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorials/BUILDING_AI_AGENT_CHAT/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../COMPONENTS_REFERENCE/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PyDataUI" class="md-nav__button md-logo" aria-label="PyDataUI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyDataUI
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rajboopathiking/pydataui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rajboopathiking/pydataui
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BLOG_POST_LAUNCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Announcement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BENCHMARKS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/BUILDING_AI_AGENT_CHAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building an AI Agent Copilot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/BUILDING_ANALYTICS_DASHBOARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    High-Performance Analytics Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/ENTERPRISE_RBAC_AND_AUTH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise RBAC & Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modular Architecture & Clean Organization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modular Architecture & Clean Organization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-core-philosophy-why-organization-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Core Philosophy: Why Organization Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-comparative-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Comparative Mental Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Comparative Mental Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-react-redux-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For React &amp; Redux Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-streamlit-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Streamlit Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-html-css-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For HTML / CSS Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-4-essential-golden-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The 4 Essential Golden Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The 4 Essential Golden Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rule-1-the-mandatory-name-attribute-for-form-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 1: The Mandatory name="..." Attribute for Form Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-2-statevarref-vs-evaluated-primitive-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 2: StateVarRef vs Evaluated Primitive Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-3-procedural-state-pdustate-vs-class-state-class-spdustate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 3: Procedural State (pdu.state) vs Class State (class S(pdu.State))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-4-clean-layered-imports-fallbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 4: Clean Layered Imports &amp; Fallbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-complete-architecture-blueprint-file-by-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Complete Architecture Blueprint (File-by-File)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Complete Architecture Blueprint (File-by-File)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-statepy-centralized-data-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: state.py (Centralized Data Models)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-actionspy-decoupled-business-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: actions.py (Decoupled Business Logic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-componentslayoutpy-reusable-visual-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: components/layout.py (Reusable Visual Shell)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-pagesdashboardpy-declarative-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: pages/dashboard.py (Declarative View)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-apppy-routing-application-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: app.py (Routing &amp; Application Bootstrap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-comprehensive-component-catalog-v122" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Comprehensive Component Catalog (v1.2.2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Comprehensive Component Catalog (v1.2.2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layout-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout &amp; Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forms-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forms &amp; Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Display
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typography
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback-overlays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback &amp; Overlays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced &amp; AI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testing-quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Testing &amp; Quality Assurance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture & Internal Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYDATAUI_VS_REACT_AND_STREAMLIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyDataUI vs. React & Streamlit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WEB_TO_PYDATAUI_COMPARISON/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Dev to PyDataUI (HTML, React, Redux)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COOKBOOK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Cookbook (v1.2.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYTHON_DX_AND_MODERN_UI_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modern Python DX & Commercial UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FASTAPI_AND_INTERNAL_TOOLING_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & Internal Tooling Masterclass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NATIVE_OFFLINE_AND_STANDALONE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Native Offline & Standalone Mobile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_OPTIMIZATION_AND_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Optimization & Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FASTAPI_MOUNTING_AND_CONFLICTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI Mounting & Conflicts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MOBILE_AND_DESKTOP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile & Desktop Apps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DOCS_DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTHENTICATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CUSTOMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Customization & Tailwind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyDataUI vs Reflex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_TEMPLATES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Team Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRODUCTION_READINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Readiness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRODUCTION_READINESS_AND_DX_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production Readiness & DX Audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TROUBLESHOOTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPONENTS_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Encyclopedia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core API & Methods Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TEMPLATE_GALLERY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Gallery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CSS_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSS Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QUICKREF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_3_0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MIGRATION_0_2_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide (v0.2.1)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LINKEDIN_POST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Social & Press Kit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-core-philosophy-why-organization-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Core Philosophy: Why Organization Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-comparative-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Comparative Mental Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Comparative Mental Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-react-redux-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For React &amp; Redux Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-streamlit-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Streamlit Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-html-css-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For HTML / CSS Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-4-essential-golden-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The 4 Essential Golden Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The 4 Essential Golden Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rule-1-the-mandatory-name-attribute-for-form-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 1: The Mandatory name="..." Attribute for Form Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-2-statevarref-vs-evaluated-primitive-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 2: StateVarRef vs Evaluated Primitive Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-3-procedural-state-pdustate-vs-class-state-class-spdustate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 3: Procedural State (pdu.state) vs Class State (class S(pdu.State))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-4-clean-layered-imports-fallbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 4: Clean Layered Imports &amp; Fallbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-complete-architecture-blueprint-file-by-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Complete Architecture Blueprint (File-by-File)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Complete Architecture Blueprint (File-by-File)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-statepy-centralized-data-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: state.py (Centralized Data Models)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-actionspy-decoupled-business-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: actions.py (Decoupled Business Logic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-componentslayoutpy-reusable-visual-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: components/layout.py (Reusable Visual Shell)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-pagesdashboardpy-declarative-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: pages/dashboard.py (Declarative View)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-apppy-routing-application-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: app.py (Routing &amp; Application Bootstrap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-comprehensive-component-catalog-v122" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Comprehensive Component Catalog (v1.2.2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Comprehensive Component Catalog (v1.2.2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layout-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout &amp; Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forms-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forms &amp; Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Display
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typography
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback-overlays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback &amp; Overlays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced &amp; AI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testing-quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Testing &amp; Quality Assurance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pydataui-modular-architecture-clean-organization-guide">PyDataUI Modular Architecture &amp; Clean Organization Guide</h1>
+<p>This guide establishes the architectural standards for building clean, maintainable, production-ready enterprise applications with <strong>PyDataUI</strong>. It provides a clear mental model comparing PyDataUI with React, Redux, Streamlit, and standard HTML/CSS, and eliminates common developer confusion around state, forms, and component lifecycle.</p>
+<hr />
+<h2 id="1-the-core-philosophy-why-organization-matters">1. The Core Philosophy: Why Organization Matters</h2>
+<p>PyDataUI combines the expressiveness of Python with the sub-millisecond execution speeds of compiled Rust and the simplicity of modern HTMX. Unlike script-based frameworks that re-execute the entire file from line 1 on every user click, PyDataUI operates on a <strong>persistent, session-isolated reactive state engine</strong>.</p>
+<p>To prevent codebases from becoming messy or tightly coupled, PyDataUI enforces a clean separation of concerns modeled after modern enterprise React/Next.js architectures:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>my_enterprise_app/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── app.py                  # Main Entrypoint &amp; Page Router
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── state.py                # Pure Reactive State Schemas (Single Source of Truth)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── actions.py              # Business Logic, Calculations, &amp; Event Handlers
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── components/             # Reusable UI Presentation Elements
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── __init__.py
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── layout.py           # AppShell, Navbar, Sidebar, NavItem
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── cards.py            # Domain-specific UI widgets
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── pages/                  # Page Views (Assembled from Components &amp; Bound to State)
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    ├── __init__.py
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    ├── dashboard.py
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ├── data_view.py
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    └── settings.py
+</span></code></pre></div>
+<hr />
+<h2 id="2-comparative-mental-model">2. Comparative Mental Model</h2>
+<h3 id="for-react-redux-developers">For React &amp; Redux Developers</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">React / Redux Concept</th>
+<th style="text-align: left;">PyDataUI Equivalent</th>
+<th style="text-align: left;">How It Works in PyDataUI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Redux Store / Zustand</strong></td>
+<td style="text-align: left;"><code>pdu.state(...)</code> in <code>state.py</code></td>
+<td style="text-align: left;">Holds session-isolated reactive variables with dirty-tracking.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Action Creators &amp; Reducers</strong></td>
+<td style="text-align: left;"><code>@state.action</code> in <code>actions.py</code></td>
+<td style="text-align: left;">Pure Python functions that mutate state variables directly without boilerplate.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Functional Components</strong></td>
+<td style="text-align: left;">Python Functions returning <code>Component</code></td>
+<td style="text-align: left;">Return declarative tree of UI primitives (<code>pdu.Card</code>, <code>pdu.Grid</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Virtual DOM Reconciliation</strong></td>
+<td style="text-align: left;">Server-Side HTMX DOM Diffing</td>
+<td style="text-align: left;">Instead of running a heavy JS runtime in the browser, the server sends precise HTML fragments to swap in the DOM.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Controlled Inputs (<code>value + onChange</code>)</strong></td>
+<td style="text-align: left;"><code>pdu.Input(name="field", value=s.field)</code></td>
+<td style="text-align: left;">Standard HTML input attributes with automatic two-way binding.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Next.js App Router</strong></td>
+<td style="text-align: left;"><code>@app.page("/path")</code> in <code>app.py</code></td>
+<td style="text-align: left;">Native multi-page routing with automatic CSRF protection and SEO metadata.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="for-streamlit-developers">For Streamlit Developers</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Streamlit Pattern</th>
+<th style="text-align: left;">Streamlit Limitation</th>
+<th style="text-align: left;">PyDataUI Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>st.button("Click")</code></td>
+<td style="text-align: left;">Re-executes the entire script from line 1.</td>
+<td style="text-align: left;">Executes only the targeted <code>@state.action</code>, swapping only the mutated DOM element.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>st.session_state</code></td>
+<td style="text-align: left;">Hard to decouple; mutable anywhere in script.</td>
+<td style="text-align: left;">Centralized in <code>state.py</code> with typed schemas and transaction boundaries.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Custom CSS / Layout</td>
+<td style="text-align: left;">Fragile <code>unsafe_allow_html=True</code> hacks.</td>
+<td style="text-align: left;">Built-in Tailwind CSS utility classes and Shadcn-inspired modern design system.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Terminal UI</td>
+<td style="text-align: left;">Impossible (Browser only).</td>
+<td style="text-align: left;">Native Terminal UI (<code>pdu.run_tui(app)</code>) from the exact same codebase!</td>
+</tr>
+</tbody>
+</table>
+<h3 id="for-html-css-developers">For HTML / CSS Developers</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">HTML5 / CSS Construct</th>
+<th style="text-align: left;">PyDataUI Primitive</th>
+<th style="text-align: left;">Rendered Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Heading("Title", level=1)</code></td>
+<td style="text-align: left;"><code>&lt;h1 class="pdu-heading..."&gt;Title&lt;/h1&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;div class="container"&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Container(...)</code></td>
+<td style="text-align: left;">Responsive auto-centering container</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;div class="flex flex-row"&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Row(...)</code> or <code>pdu.HStack(...)</code></td>
+<td style="text-align: left;">Flexbox row layout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;div class="flex flex-col"&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Col(...)</code> or <code>pdu.VStack(...)</code></td>
+<td style="text-align: left;">Flexbox column layout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;div class="grid grid-cols-4"&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Grid(..., columns=4)</code></td>
+<td style="text-align: left;">Responsive CSS Grid layout</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;a href="/path"&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Link("Label", href="/path")</code></td>
+<td style="text-align: left;">Semantic anchor with HTMX SPA transition capabilities</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;button&gt;</code></td>
+<td style="text-align: left;"><code>pdu.Button("Click", on_click=fn)</code></td>
+<td style="text-align: left;">Accessible button wired to reactive event endpoints</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-the-4-essential-golden-rules">3. The 4 Essential Golden Rules</h2>
+<h3 id="rule-1-the-mandatory-name-attribute-for-form-inputs">Rule 1: The Mandatory <code>name="..."</code> Attribute for Form Inputs</h3>
+<p>In HTML and HTMX, an <code>&lt;input&gt;</code> element <strong>must have a <code>name="..."</code> attribute</strong> to be serialized in HTTP POST payloads:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ❌ INCORRECT (Lacks name attribute; browser sends empty body {})</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">pdu</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">"Enter search term"</span><span class="p">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># ✅ CORRECT (name="query" ensures data is serialized and passed to action)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">pdu</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">"Enter search term"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"query"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+</span></code></pre></div>
+<p>When placed inside <code>pdu.Form(..., on_submit=handle_search)</code>, PyDataUI matches the <code>name</code> attribute directly to the action parameters:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@search_state</span><span class="o">.</span><span class="n">action</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">handle_search</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">search_state</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="c1"># Execute search logic...</span>
+</span></code></pre></div>
+<h3 id="rule-2-statevarref-vs-evaluated-primitive-values">Rule 2: StateVarRef vs Evaluated Primitive Values</h3>
+<p>When passing state into UI layouts:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">pdu</span><span class="o">.</span><span class="n">Heading</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
+<code>s.count</code> is a <strong><code>StateVarRef</code></strong> — an active reference to the state property. PyDataUI's rendering engine binds this reference to the DOM element with <code>data-bind="count"</code>. When an action modifies <code>s.count</code>, only this heading updates!</p>
+<p>If you need the raw primitive value outside an action (e.g. for Python arithmetic or logging):
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">current_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">current_label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="rule-3-procedural-state-pdustate-vs-class-state-class-spdustate">Rule 3: Procedural State (<code>pdu.state</code>) vs Class State (<code>class S(pdu.State)</code>)</h3>
+<p>PyDataUI supports two complementary state patterns:</p>
+<ol>
+<li><strong>Procedural State (<code>pdu.state(...)</code>) — Recommended for most apps</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># state.py</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">auth_state</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">is_authenticated</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># actions.py</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nd">@auth_state</span><span class="o">.</span><span class="n">action</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">):</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">auth_state</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">auth_state</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="o">=</span> <span class="kc">True</span>
+</span></code></pre></div></li>
+<li><strong>Class-based State (<code>class MyState(pdu.State)</code>) — For complex OOP designs</strong>:
+   <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AnalyticsState</span><span class="p">(</span><span class="n">pdu</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">active_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">traffic_gb</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">450.2</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">scale_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">active_nodes</span> <span class="o">+=</span> <span class="mi">2</span>
+</span></code></pre></div></li>
+</ol>
+<h3 id="rule-4-clean-layered-imports-fallbacks">Rule 4: Clean Layered Imports &amp; Fallbacks</h3>
+<p>To ensure components can run both as part of an imported package and as standalone scripts, use resilient import blocks:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># pages/dashboard.py</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_up_workers</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..components</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppShell</span><span class="p">,</span> <span class="n">KpiCard</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_up_workers</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">components</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppShell</span><span class="p">,</span> <span class="n">KpiCard</span>
+</span></code></pre></div>
+<hr />
+<h2 id="4-complete-architecture-blueprint-file-by-file">4. Complete Architecture Blueprint (File-by-File)</h2>
+<h3 id="step-1-statepy-centralized-data-models">Step 1: <code>state.py</code> (Centralized Data Models)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># state.py</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">dashboard_state</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">state</span><span class="p">(</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">active_workers</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">throughput_k</span><span class="o">=</span><span class="mf">148.5</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">system_status</span><span class="o">=</span><span class="s2">"HEALTHY"</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="step-2-actionspy-decoupled-business-logic">Step 2: <code>actions.py</code> (Decoupled Business Logic)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># actions.py</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">.state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nd">@dashboard_state</span><span class="o">.</span><span class="n">action</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">scale_up_workers</span><span class="p">():</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">dashboard_state</span><span class="o">.</span><span class="n">active_workers</span> <span class="o">+=</span> <span class="mi">4</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">dashboard_state</span><span class="o">.</span><span class="n">throughput_k</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">dashboard_state</span><span class="o">.</span><span class="n">throughput_k</span> <span class="o">*</span> <span class="mf">1.15</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="step-3-componentslayoutpy-reusable-visual-shell">Step 3: <code>components/layout.py</code> (Reusable Visual Shell)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># components/layout.py</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">AppShell</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Component</span><span class="p">,</span> <span class="n">current_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">navbar</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">Heading</span><span class="p">(</span><span class="s2">"Enterprise Portal"</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"font-bold text-lg"</span><span class="p">),</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">Link</span><span class="p">(</span><span class="s2">"Dashboard"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"px-3 py-1 hover:underline"</span><span class="p">),</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">Link</span><span class="p">(</span><span class="s2">"Settings"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">"/settings"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"px-3 py-1 hover:underline"</span><span class="p">),</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>            <span class="n">class_name</span><span class="o">=</span><span class="s2">"space-x-4"</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="p">),</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"justify-between items-center pb-4 border-b border-border mb-6"</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="p">)</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="k">return</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span><span class="n">navbar</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"max-w-6xl py-6"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="step-4-pagesdashboardpy-declarative-view">Step 4: <code>pages/dashboard.py</code> (Declarative View)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># pages/dashboard.py</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_up_workers</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">..components</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppShell</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_up_workers</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">components</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppShell</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">DashboardPage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">body</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Card</span><span class="p">(</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">Heading</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Active Nodes: </span><span class="si">{</span><span class="n">dashboard_state</span><span class="o">.</span><span class="n">active_workers</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="s2">"Add Node"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">scale_up_workers</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">)</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>        <span class="p">),</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>        <span class="n">class_name</span><span class="o">=</span><span class="s2">"p-6"</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="p">)</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    <span class="k">return</span> <span class="n">AppShell</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Operations Dashboard"</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">current_path</span><span class="o">=</span><span class="s2">"/"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="step-5-apppy-routing-application-bootstrap">Step 5: <code>app.py</code> (Routing &amp; Application Bootstrap)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># app.py</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">.pages</span><span class="w"> </span><span class="kn">import</span> <span class="n">DashboardPage</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">pages</span><span class="w"> </span><span class="kn">import</span> <span class="n">DashboardPage</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">app</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Enterprise Ops Hub"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"slate"</span><span class="p">)</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Dashboard"</span><span class="p">)</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">route_dashboard</span><span class="p">():</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="k">return</span> <span class="n">DashboardPage</span><span class="p">()</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="5-comprehensive-component-catalog-v122">5. Comprehensive Component Catalog (v1.2.2)</h2>
+<p>All canonical components are accessible directly from top-level <code>import pydataui as pdu</code>:</p>
+<h3 id="layout-containers">Layout &amp; Containers</h3>
+<ul>
+<li><code>pdu.Container(*children, class_name=...)</code>: Centered responsive container.</li>
+<li><code>pdu.Row(*children, class_name=...)</code>: Horizontal flex container (<code>flex-direction: row</code>).</li>
+<li><code>pdu.Col(*children, class_name=...)</code>: Vertical flex container (<code>flex-direction: column</code>).</li>
+<li><code>pdu.Grid(*children, columns=4, class_name=...)</code>: Responsive CSS grid.</li>
+<li><code>pdu.Card(*children, class_name=...)</code>: Elevated container with border, padding, and subtle shadow.</li>
+<li><code>pdu.Divider()</code>: Subtle horizontal divider rule.</li>
+</ul>
+<h3 id="forms-input">Forms &amp; Input</h3>
+<ul>
+<li><code>pdu.Button(text, on_click=None, variant="primary"|"outline"|"secondary", size="sm"|"md"|"lg")</code></li>
+<li><code>pdu.Input(placeholder="", name="fieldName", value=None, type="text"|"number"|"password")</code></li>
+<li><code>pdu.TextArea(placeholder="", name="fieldName", rows=4)</code></li>
+<li><code>pdu.Select(options=[{"label": "A", "value": "a"}], name="fieldName")</code></li>
+<li><code>pdu.Slider(min=0, max=100, step=1, name="fieldName")</code></li>
+<li><code>pdu.Checkbox(label="Accept terms", name="fieldName")</code></li>
+<li><code>pdu.Switch(label="Enable Notifications", name="fieldName")</code></li>
+<li><code>pdu.Form(*children, on_submit=action_function)</code>: Wraps controls and serializes all named inputs.</li>
+</ul>
+<h3 id="data-display">Data Display</h3>
+<ul>
+<li><code>pdu.DataTable(data=records, sortable=True, pagination=True, page_size=10)</code>: High-performance tabular data grid with automatic schema sniffing.</li>
+<li><code>pdu.Badge(text, variant="default"|"secondary"|"outline")</code>: Status and tag indicators.</li>
+<li><code>pdu.Stat(label="Revenue", value="$1.2M", change="+12%")</code>: Metric KPI widget.</li>
+<li><code>pdu.Avatar(src=None, fallback="JD")</code>: User avatar with fallback initials.</li>
+<li><code>pdu.Tooltip(text="Help info", content=pdu.Button("Hover me"))</code>: Hover tooltip.</li>
+</ul>
+<h3 id="typography">Typography</h3>
+<ul>
+<li><code>pdu.Heading(text, level=1|2|3|4|5|6)</code>: Semantic heading (<code>h1</code> through <code>h6</code>).</li>
+<li><code>pdu.Text(text, class_name="...")</code>: Inline text span with typography tokens.</li>
+<li><code>pdu.Paragraph(text)</code>: Body copy paragraph (<code>&lt;p&gt;</code>).</li>
+<li><code>pdu.Link(label, href="/path", external=False)</code>: Navigational anchor.</li>
+<li><code>pdu.Code(snippet, language="python")</code>: Syntax-highlighted code block.</li>
+</ul>
+<h3 id="feedback-overlays">Feedback &amp; Overlays</h3>
+<ul>
+<li><code>pdu.Alert(title="Notice", message="Backup complete", variant="info"|"warning"|"success"|"danger")</code></li>
+<li><code>pdu.Progress(value=75, max=100)</code>: Animated progress bar.</li>
+<li><code>pdu.Spinner(size="sm"|"md"|"lg")</code>: Loading spinner.</li>
+<li><code>pdu.Modal(title="Confirm", trigger=pdu.Button("Open"), content=pdu.Text("Are you sure?"))</code>: Accessible dialog overlay.</li>
+</ul>
+<h3 id="advanced-ai">Advanced &amp; AI</h3>
+<ul>
+<li><code>pdu.Chat(messages=s.messages, on_send=handle_chat, suggestions=[...])</code>: Turn-key conversational AI chat interface.</li>
+<li><code>pdu.Markdown(source=markdown_str)</code>: Real-time Markdown parser.</li>
+<li><code>pdu.CodeEditor(code=s.code, language="sql")</code>: Live interactive code editor.</li>
+</ul>
+<hr />
+<h2 id="6-testing-quality-assurance">6. Testing &amp; Quality Assurance</h2>
+<p>To ensure rock-solid stability without needing manual browser clicks, PyDataUI provides native compatibility with Starlette's <code>TestClient</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># test_app.py</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">starlette.testclient</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestClient</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">app</span><span class="w"> </span><span class="kn">import</span> <span class="n">app</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">state</span><span class="w"> </span><span class="kn">import</span> <span class="n">dashboard_state</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_dashboard_flow</span><span class="p">():</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">asgi_app</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="c1"># 1. Verify GET renders 200 OK</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="k">assert</span> <span class="s2">"Active Nodes"</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="c1"># 2. Trigger action event via POST</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="n">post_res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>        <span class="sa">f</span><span class="s2">"/_pdu/event/</span><span class="si">{</span><span class="n">dashboard_state</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">/scale_up_workers"</span><span class="p">,</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"HX-Request"</span><span class="p">:</span> <span class="s2">"true"</span><span class="p">}</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    <span class="p">)</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="k">assert</span> <span class="n">post_res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>    <span class="k">assert</span> <span class="s2">"28"</span> <span class="ow">in</span> <span class="n">post_res</span><span class="o">.</span><span class="n">text</span>  <span class="c1"># Server-rendered HTMX contains updated count!</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

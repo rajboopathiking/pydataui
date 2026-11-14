@@ -110,6 +110,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     
     # Tunnel & Storage
     'TunnelManager': ('.tunnel', 'TunnelManager'),
+    'generate_nginx_config': ('.tunnel', 'generate_nginx_config'),
     'BaseSessionStore': ('.storage', 'BaseSessionStore'),
     'BaseAuthStore': ('.storage', 'BaseAuthStore'),
     'MemorySessionStore': ('.storage', 'MemorySessionStore'),

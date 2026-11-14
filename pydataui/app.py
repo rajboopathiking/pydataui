@@ -26,7 +26,7 @@ class App:
         self,
         title: str = 'PyDataUI App',
         description: str = '',
-        version: str = '1.0.0',
+        version: Optional[str] = None,
         debug: bool = False,
         theme: str = 'light',
         palette: str = 'zinc',
@@ -42,7 +42,7 @@ class App:
         self.config = AppConfig(
             title=title,
             description=description,
-            version=version,
+            version=version or '1.2.2',
             debug=debug,
             theme=theme,
             palette=palette,

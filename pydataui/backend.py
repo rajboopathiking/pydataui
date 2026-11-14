@@ -149,7 +149,7 @@ class FastAPIEngine:
         self,
         title: str = "PyDataUI App",
         description: str = "",
-        version: str = "1.0.0",
+        version: str = "1.2.2",
         docs_url: Optional[str] = None,
         openapi_url: Optional[str] = None,
         max_request_size: int = DEFAULT_MAX_REQUEST_SIZE,

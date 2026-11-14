@@ -1366,10 +1366,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-environment-variables-reference" class="md-nav__link">
+  <a href="#7-zero-config-public-tunnels-sharetrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Environment Variables Reference
+        7. Zero-Config Public Tunnels (share=True)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Zero-Config Public Tunnels (share=True)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tunnel-architecture-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tunnel Architecture &amp; Providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-automated-nginx-reverse-proxy-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Automated Nginx Reverse Proxy Generator
       
     </span>
   </a>
@@ -1377,10 +1405,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-production-security-checklist" class="md-nav__link">
+  <a href="#9-environment-variables-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. Production Security Checklist
+        9. Environment Variables Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-production-security-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Production Security Checklist
       
     </span>
   </a>
@@ -2013,10 +2052,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-environment-variables-reference" class="md-nav__link">
+  <a href="#7-zero-config-public-tunnels-sharetrue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Environment Variables Reference
+        7. Zero-Config Public Tunnels (share=True)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Zero-Config Public Tunnels (share=True)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tunnel-architecture-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tunnel Architecture &amp; Providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-automated-nginx-reverse-proxy-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Automated Nginx Reverse Proxy Generator
       
     </span>
   </a>
@@ -2024,10 +2091,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-production-security-checklist" class="md-nav__link">
+  <a href="#9-environment-variables-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. Production Security Checklist
+        9. Environment Variables Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-production-security-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Production Security Checklist
       
     </span>
   </a>
@@ -2071,8 +2149,10 @@ Read <a href="../PRODUCTION_READINESS/">the production readiness guide</a> for a
 <li><a href="#4-kubernetes-manifests">Kubernetes Manifests</a></li>
 <li><a href="#5-systemd-service-linux-server">Systemd Service (Linux Server)</a></li>
 <li><a href="#6-nginx-reverse-proxy-configuration">Nginx Reverse Proxy Configuration</a></li>
-<li><a href="#7-environment-variables-reference">Environment Variables Reference</a></li>
-<li><a href="#8-production-security-checklist">Production Security Checklist</a></li>
+<li><a href="#7-zero-config-public-tunnels-sharetrue">Zero-Config Public Tunnels (share=True)</a></li>
+<li><a href="#8-automated-nginx-reverse-proxy-generator">Automated Nginx Reverse Proxy Generator</a></li>
+<li><a href="#9-environment-variables-reference">Environment Variables Reference</a></li>
+<li><a href="#10-production-security-checklist">Production Security Checklist</a></li>
 </ol>
 <hr />
 <h2 id="1-one-click-docker-build-via-cli">1. One-Click Docker Build via CLI</h2>
@@ -2277,7 +2357,55 @@ Read <a href="../PRODUCTION_READINESS/">the production readiness guide</a> for a
 </span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="p">}</span>
 </span></code></pre></div>
 <hr />
-<h2 id="7-environment-variables-reference">7. Environment Variables Reference</h2>
+<h2 id="7-zero-config-public-tunnels-sharetrue">7. Zero-Config Public Tunnels (<code>share=True</code>)</h2>
+<p>PyDataUI features Gradio-like public internet sharing with zero configuration, requiring no account, API key, or credit card. It automatically establishes a resilient, TLS-terminated public HTTPS tunnel forwarding traffic to your local development server:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Public Demo App"</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nd">@app</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="k">return</span> <span class="n">pdu</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">Heading</span><span class="p">(</span><span class="s2">"Live PyDataUI Public Tunnel!"</span><span class="p">),</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"Share this link with stakeholders, clients, or testers anywhere."</span><span class="p">)</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="c1"># Generates a live public HTTPS URL in seconds</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Or launch directly from the CLI:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pydataui<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--share
+</span></code></pre></div></p>
+<h3 id="tunnel-architecture-providers">Tunnel Architecture &amp; Providers</h3>
+<p><code>TunnelManager</code> automatically detects and cascades through high-availability providers:
+1. <strong>Cloudflare Quick Tunnels</strong> (<code>cloudflared</code>): Auto-selected if <code>cloudflared</code> is installed locally on the system.
+2. <strong>SSH Reverse Tunnels</strong> (<code>localhost.run</code>, <code>pinggy.io</code>, <code>serveo.net</code>): Cross-platform pseudo-terminal (<code>pty</code>) reverse SSH tunneling with TLS termination and automatic connection recovery.
+3. <strong>Ngrok</strong> (<code>pyngrok</code>): Optional integration if an auth token is provided (<code>TunnelManager(auth_token="...")</code>).</p>
+<hr />
+<h2 id="8-automated-nginx-reverse-proxy-generator">8. Automated Nginx Reverse Proxy Generator</h2>
+<p>For permanent production deployments on your own VPS or server, PyDataUI provides a built-in configuration generator that outputs an optimized Nginx reverse proxy configuration:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Generate production Nginx configuration with WebSockets &amp; SSL</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">nginx_config</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">generate_nginx_config</span><span class="p">(</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">"analytics.yourcompany.com"</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">ssl</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">)</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Save to file or inspect</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"pydataui_nginx.conf"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nginx_config</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Features built into the generated Nginx config:</strong>
+- <strong>Streaming &amp; SSE</strong>: <code>proxy_buffering off;</code> and extended read timeouts for real-time HTMX updates and streaming AI tokens.
+- <strong>WebSocket Upgrade</strong>: Auto-configured <code>Upgrade</code> and <code>Connection</code> headers.
+- <strong>Static Asset Caching</strong>: 30-day client cache for <code>/static/</code> assets.
+- <strong>Security Headers</strong>: <code>X-Frame-Options</code>, <code>X-Content-Type-Options</code>, and <code>X-XSS-Protection</code>.
+- <strong>Let's Encrypt Ready</strong>: Native TLSv1.2 / TLSv1.3 block with automatic HTTP → HTTPS redirect.</p>
+<hr />
+<h2 id="9-environment-variables-reference">9. Environment Variables Reference</h2>
 <p>All PyDataUI settings can be configured via environment variables prefixed with <code>PYDATAUI_</code>:</p>
 <table>
 <thead>
@@ -2336,7 +2464,7 @@ Read <a href="../PRODUCTION_READINESS/">the production readiness guide</a> for a
 </tbody>
 </table>
 <hr />
-<h2 id="8-production-security-checklist">8. Production Security Checklist</h2>
+<h2 id="10-production-security-checklist">10. Production Security Checklist</h2>
 <ul>
 <li>[ ] <strong>Secret Key</strong>: Set <code>PYDATAUI_SESSION_SECRET</code> to a high-entropy string (e.g. <code>openssl rand -hex 32</code>).</li>
 <li>[ ] <strong>HTTPS</strong>: Terminate SSL/TLS at your load balancer or Nginx reverse proxy.</li>

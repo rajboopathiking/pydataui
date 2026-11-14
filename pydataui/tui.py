@@ -383,7 +383,7 @@ def _run_chat_tui(app: Any, handler: Any, current_page: str, initial_chat_comp: 
     if _HAS_RICH and console:
         console.clear()
         header = (
-            f"[bold green]● {chat_title}[/bold green] • [dim]PyDataUI v1.2.2 Chat Mode[/dim]\n"
+            f"[bold green]● {chat_title}[/bold green] • [dim]PyDataUI v1.2.3 Chat Mode[/dim]\n"
             f"[dim]Type your message and press Enter to chat. Type [bold yellow]q[/bold yellow] or [bold yellow]exit[/bold yellow] to quit. Type [bold yellow]/clear[/bold yellow] to reset.[/dim]"
         )
         console.print(Panel(header, border_style="cyan", expand=False))
@@ -552,7 +552,7 @@ def run_tui(
             title = getattr(app, 'title', 'PyDataUI Terminal Dashboard')
             console.print(Panel(
                 rendered,
-                title=f"[bold green]PyDataUI v1.2.2 • {title}[/bold green]",
+                title=f"[bold green]PyDataUI v1.2.3 • {title}[/bold green]",
                 subtitle="[dim]PyDataUI Single-Shot Output[/dim]",
                 border_style="green"
             ))
@@ -573,7 +573,7 @@ def run_tui(
                 title = getattr(app, 'title', 'PyDataUI Terminal Dashboard')
                 return Panel(
                     rendered,
-                    title=f"[bold green]PyDataUI v1.2.2 • {title}[/bold green]",
+                    title=f"[bold green]PyDataUI v1.2.3 • {title}[/bold green]",
                     subtitle="[dim]Press Ctrl+C to exit[/dim]",
                     border_style="green"
                 )
@@ -629,7 +629,7 @@ def run_tui(
             rendered = render_to_rich(root)
             dashboard_panel = Panel(
                 rendered,
-                title=f"[bold green]PyDataUI v1.2.2 • {title} • Active: {current_page}[/bold green]",
+                title=f"[bold green]PyDataUI v1.2.3 • {title} • Active: {current_page}[/bold green]",
                 subtitle="[dim]PyDataUI Interactive Terminal Dashboard[/dim]",
                 border_style="green"
             )

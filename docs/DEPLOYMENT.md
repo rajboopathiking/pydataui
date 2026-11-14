@@ -16,8 +16,10 @@ PyDataUI is designed from the ground up for high-throughput production workloads
 4. [Kubernetes Manifests](#4-kubernetes-manifests)
 5. [Systemd Service (Linux Server)](#5-systemd-service-linux-server)
 6. [Nginx Reverse Proxy Configuration](#6-nginx-reverse-proxy-configuration)
-7. [Environment Variables Reference](#7-environment-variables-reference)
-8. [Production Security Checklist](#8-production-security-checklist)
+7. [Zero-Config Public Tunnels (share=True)](#7-zero-config-public-tunnels-sharetrue)
+8. [Automated Nginx Reverse Proxy Generator](#8-automated-nginx-reverse-proxy-generator)
+9. [Environment Variables Reference](#9-environment-variables-reference)
+10. [Production Security Checklist](#10-production-security-checklist)
 
 ---
 
@@ -255,7 +257,69 @@ server {
 
 ---
 
-## 7. Environment Variables Reference
+## 7. Zero-Config Public Tunnels (`share=True`)
+
+PyDataUI features Gradio-like public internet sharing with zero configuration, requiring no account, API key, or credit card. It automatically establishes a resilient, TLS-terminated public HTTPS tunnel forwarding traffic to your local development server:
+
+```python
+import pydataui as pdu
+
+app = pdu.App(title="Public Demo App")
+
+@app.page("/")
+def home():
+    return pdu.Container(
+        pdu.Heading("Live PyDataUI Public Tunnel!"),
+        pdu.Text("Share this link with stakeholders, clients, or testers anywhere.")
+    )
+
+if __name__ == "__main__":
+    # Generates a live public HTTPS URL in seconds
+    app.run(share=True)
+```
+
+Or launch directly from the CLI:
+```bash
+pydataui run app.py --share
+```
+
+### Tunnel Architecture & Providers
+`TunnelManager` automatically detects and cascades through high-availability providers:
+1. **Cloudflare Quick Tunnels** (`cloudflared`): Auto-selected if `cloudflared` is installed locally on the system.
+2. **SSH Reverse Tunnels** (`localhost.run`, `pinggy.io`, `serveo.net`): Cross-platform pseudo-terminal (`pty`) reverse SSH tunneling with TLS termination and automatic connection recovery.
+3. **Ngrok** (`pyngrok`): Optional integration if an auth token is provided (`TunnelManager(auth_token="...")`).
+
+---
+
+## 8. Automated Nginx Reverse Proxy Generator
+
+For permanent production deployments on your own VPS or server, PyDataUI provides a built-in configuration generator that outputs an optimized Nginx reverse proxy configuration:
+
+```python
+import pydataui as pdu
+
+# Generate production Nginx configuration with WebSockets & SSL
+nginx_config = pdu.generate_nginx_config(
+    port=8000,
+    domain="analytics.yourcompany.com",
+    ssl=True
+)
+
+# Save to file or inspect
+with open("pydataui_nginx.conf", "w") as f:
+    f.write(nginx_config)
+```
+
+**Features built into the generated Nginx config:**
+- **Streaming & SSE**: `proxy_buffering off;` and extended read timeouts for real-time HTMX updates and streaming AI tokens.
+- **WebSocket Upgrade**: Auto-configured `Upgrade` and `Connection` headers.
+- **Static Asset Caching**: 30-day client cache for `/static/` assets.
+- **Security Headers**: `X-Frame-Options`, `X-Content-Type-Options`, and `X-XSS-Protection`.
+- **Let's Encrypt Ready**: Native TLSv1.2 / TLSv1.3 block with automatic HTTP → HTTPS redirect.
+
+---
+
+## 9. Environment Variables Reference
 
 All PyDataUI settings can be configured via environment variables prefixed with `PYDATAUI_`:
 
@@ -273,7 +337,7 @@ All PyDataUI settings can be configured via environment variables prefixed with 
 
 ---
 
-## 8. Production Security Checklist
+## 10. Production Security Checklist
 
 - [ ] **Secret Key**: Set `PYDATAUI_SESSION_SECRET` to a high-entropy string (e.g. `openssl rand -hex 32`).
 - [ ] **HTTPS**: Terminate SSL/TLS at your load balancer or Nginx reverse proxy.

@@ -36,19 +36,61 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'Table': ('.components.data_display', 'Table'),
     'sniff_tabular_data': ('.components.data_display', 'sniff_tabular_data'),
     'Badge': ('.components.data_display', 'Badge'),
+    'Tag': ('.components.data_display', 'Tag'),
+    'Stat': ('.components.data_display', 'Stat'),
+    'KeyValue': ('.components.data_display', 'KeyValue'),
+    'Avatar': ('.components.data_display', 'Avatar'),
+    'Tooltip': ('.components.data_display', 'Tooltip'),
+    'List': ('.components.data_display', 'List'),
+    'ListItem': ('.components.data_display', 'ListItem'),
+    'DescriptionList': ('.components.data_display', 'DescriptionList'),
     'MetricCard': ('.components.data_science', 'MetricCard'),
 
     # Forms & Input
     'Button': ('.components.forms', 'Button'),
     'Input': ('.components.forms', 'Input'),
     'TextArea': ('.components.forms', 'TextArea'),
+    'Select': ('.components.forms', 'Select'),
+    'Checkbox': ('.components.forms', 'Checkbox'),
+    'Radio': ('.components.forms', 'Radio'),
+    'RadioGroup': ('.components.forms', 'RadioGroup'),
+    'Switch': ('.components.forms', 'Switch'),
+    'Slider': ('.components.forms', 'Slider'),
     'Form': ('.components.forms', 'Form'),
+    'FileUpload': ('.components.forms', 'FileUpload'),
     'ShadForm': ('.shadcn', 'ShadForm'),
 
     # Typography
     'Heading': ('.components.typography', 'Heading'),
     'Text': ('.components.typography', 'Text'),
     'Paragraph': ('.components.typography', 'Paragraph'),
+    'Link': ('.components.typography', 'Link'),
+    'Code': ('.components.typography', 'Code'),
+    'Blockquote': ('.components.typography', 'Blockquote'),
+    'Label': ('.components.typography', 'Label'),
+
+    # Feedback & Status
+    'Alert': ('.components.feedback', 'Alert'),
+    'Progress': ('.components.feedback', 'Progress'),
+    'Spinner': ('.components.feedback', 'Spinner'),
+    'Skeleton': ('.components.feedback', 'Skeleton'),
+    'Toast': ('.components.feedback', 'Toast'),
+    'Empty': ('.components.feedback', 'Empty'),
+
+    # Navigation Primitives
+    'Navbar': ('.components.navigation', 'Navbar'),
+    'NavLink': ('.components.navigation', 'NavLink'),
+    'Breadcrumb': ('.components.navigation', 'Breadcrumb'),
+    'Tabs': ('.components.navigation', 'Tabs'),
+    'Tab': ('.components.navigation', 'Tab'),
+    'Pagination': ('.components.navigation', 'Pagination'),
+    'Menu': ('.components.navigation', 'Menu'),
+
+    # Overlays & Dialogs
+    'Modal': ('.components.overlay', 'Modal'),
+    'Drawer': ('.components.overlay', 'Drawer'),
+    'Popover': ('.components.overlay', 'Popover'),
+    'Dropdown': ('.components.overlay', 'Dropdown'),
 
     # TUI
     'tui': ('.tui', 'run_tui'),
@@ -215,6 +257,13 @@ if TYPE_CHECKING:
     )
     from .components.base import Component, RawHtml, Html
     from .components.advanced import Markdown, CodeEditor, Chat
+    from .components.layout import Row, Col, Grid, Spacer, Container, Box, HStack, VStack, Card, Divider
+    from .components.typography import Heading, Text, Paragraph, Link, Code, Blockquote, Label
+    from .components.forms import Button, Input, TextArea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, Form, FileUpload
+    from .components.data_display import DataTable, Table, Badge, Tag, Stat, KeyValue, Avatar, Tooltip, List, ListItem, DescriptionList
+    from .components.feedback import Alert, Progress, Spinner, Skeleton, Toast, Empty
+    from .components.navigation import Navbar, NavLink, Breadcrumb, Tabs, Tab, Pagination, Menu
+    from .components.overlay import Modal, Drawer, Popover, Dropdown
     from .mount import mount
     from .shell import init_tauri, init_capacitor, open_desktop_window, get_preview_html
     from .responses import (

@@ -69,6 +69,7 @@ nav:
       - High-Performance Analytics Dashboard: tutorials/BUILDING_ANALYTICS_DASHBOARD.md
       - Enterprise RBAC & Authentication: tutorials/ENTERPRISE_RBAC_AND_AUTH.md
   - Guides:
+      - Modular Architecture & Clean Organization: MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE.md
       - Architecture & Internal Design: ARCHITECTURE.md
       - PyDataUI vs. React & Streamlit: PYDATAUI_VS_REACT_AND_STREAMLIT.md
       - Web Dev to PyDataUI (HTML, React, Redux): WEB_TO_PYDATAUI_COMPARISON.md

@@ -683,13 +683,6 @@ class ProceduralState:
         if name in self.__dict__:
             return self.__dict__[name]
         if hasattr(self._cls, name):
-            session = _current_session.get()
-            if session is not None and hasattr(session, 'state_instances'):
-                if self._name not in session.state_instances:
-                    session.state_instances[self._name] = self._cls()
-                inst = session.state_instances[self._name]
-                if name in inst.get_state_vars():
-                    return getattr(inst, name)
             return getattr(self._cls, name)
         raise AttributeError(f"'{self._name}' has no attribute '{name}'")
 

@@ -62,7 +62,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Announcement: BLOG_POST_LAUNCH.md
+  - Blog:
+      - PyDataUI Launch: BLOG_POST_LAUNCH.md
+      - PyDataUI vs. Next.js: BLOG_POST_NEXTJS_VS_PYDATAUI.md
   - Benchmarks: BENCHMARKS.md
   - Tutorials:
       - Building an AI Agent Copilot: tutorials/BUILDING_AI_AGENT_CHAT.md

@@ -39,6 +39,25 @@ In modern web development, developers are forced to choose between two painful t
 
 ---
 
+## 🎨 Visual Theme Showcase: One-Line Enterprise Aesthetics
+
+Forget the rigid or dated look of traditional prototyping tools. PyDataUI gives you **production-grade Shadcn & Tailwind aesthetics** on day one. Switch between themes in 1 line of Python:
+
+![Theme Gallery Showcase](assets/theme_gallery_showcase.svg)
+
+<div align="center">
+
+| Theme Preset | Ideal For | Activate with 1 Line |
+| :--- | :--- | :--- |
+| **Violet** (`theme="violet"`) | AI Agent Copilots, LLM Workbenches, Chatbots | `pdu.set_page_config(theme="violet")` |
+| **Emerald** (`theme="emerald"`) | FinTech, Executive SaaS, Billing & MRR KPIs | `pdu.set_page_config(theme="emerald")` |
+| **Zinc Dark** (`theme="zinc"`) | DevOps, Kubernetes Telemetry, Dark Mode Analytics | `pdu.set_page_config(theme="zinc", dark_mode=True)` |
+| **Amber** (`theme="amber"`) | Logistics, E-Commerce Operations, Warehouse Fleet | `pdu.set_page_config(theme="amber")` |
+
+</div>
+
+---
+
 ## 📦 Installation
 
 ```bash
@@ -202,6 +221,8 @@ uvicorn main:api --reload --port 8000
 
 PyDataUI ships with **20 official out-of-the-box color presets** matching all standard Shadcn/Tailwind design systems:
 
+![20 Color Presets](assets/theme_swatches_palette.svg)
+
 | Category | Presets Available | Hex Identifiers |
 | :--- | :--- | :--- |
 | **Modern Neutrals** | `zinc`, `slate`, `stone`, `neutral`, `gray` | `#18181b` • `#0f172a` • `#1c1917` • `#171717` • `#111827` |
@@ -209,7 +230,77 @@ PyDataUI ships with **20 official out-of-the-box color presets** matching all st
 | **Blues & Purples** | `blue`, `indigo`, `violet`, `purple` | `#2563eb` • `#4f46e5` • `#7c3aed` • `#9333ea` |
 | **Pinks & Warm** | `fuchsia`, `pink`, `rose`, `red`, `orange`, `amber`, `yellow` | `#c026d3` • `#db2777` • `#e11d48` • `#dc2626` • `#ea580c` • `#d97706` • `#ca8a04` |
 
-### **Zero Theme Limitations**
+---
+
+### 🖼️ High-Fidelity UI Gallery: See What You Can Build
+
+#### 🔮 1. AI Copilot & Agent Playground (`theme="violet"`)
+Built for LLM workbenches, multi-turn chat agents, and real-time inference telemetry. Features collapsible reasoning thought traces, token speed counters, and syntax-highlighted code output:
+
+![Violet AI Copilot Theme](assets/theme_preview_violet_ai.svg)
+
+```python
+import pydataui as pdu
+
+# Activate Violet AI theme in 1 line
+pdu.set_page_config(title="DeepAgent Copilot", theme="violet", dark_mode=True)
+
+with pdu.sidebar():
+    model = pdu.selectbox("Inference Model", ["DeepSeek-R1-Distill-70B", "Llama-3.3"])
+    temp = pdu.slider("Temperature", 0.0, 1.0, 0.70)
+
+with pdu.chat_message("user"):
+    pdu.write("Analyze the P99 latency spike on cluster node-04 and remediate.")
+
+with pdu.chat_message("assistant"):
+    with pdu.expander("💡 Thought Process: 1,420 tokens analyzed (0.4s)"):
+        pdu.write("Inspected Prometheus traces. Found cache compaction lock.")
+    pdu.write("Remediation executed: Pods re-routed. Current P99: 12.1ms")
+
+pdu.chat_input("Ask Copilot or type /command...")
+```
+
+#### 💎 2. FinTech, Billing & Revenue Analytics (`theme="emerald"`)
+Engineered for SaaS metrics, ARR/MRR acceleration, transaction ledgers, and executive board reporting:
+
+![Emerald FinTech Theme](assets/theme_preview_emerald_fintech.svg)
+
+```python
+import pydataui as pdu
+
+# Activate Emerald FinTech theme
+pdu.set_page_config(title="ApexPay Financial", theme="emerald", layout="wide")
+
+col1, col2, col3, col4 = pdu.columns([1, 1, 1, 1])
+with col1: pdu.metric("Annual Run Rate (ARR)", "$1,840,500", delta="+24.8%")
+with col2: pdu.metric("Monthly Recurring (MRR)", "$154,200", delta="+18.2%")
+with col3: pdu.metric("Paying Accounts", "2,840", delta="+142 mo")
+with col4: pdu.metric("Net Retention Rate", "118.4%", delta="TOP 5%")
+
+pdu.area_chart([92, 104, 118, 132, 145, 154])
+```
+
+#### ⚡ 3. DevOps, Cluster Telemetry & Dark Mode Analytics (`theme="zinc"`, `dark_mode=True`)
+High-density, low-eye-strain telemetry for Kubernetes clusters, GPU farms, and real-time distributed systems:
+
+![Zinc Dark Mode Telemetry](assets/theme_preview_zinc_dark.svg)
+
+```python
+import pydataui as pdu
+
+# Activate Zinc Dark Mode theme
+pdu.set_page_config(title="Cluster Telemetry", theme="zinc", dark_mode=True)
+
+col1, col2, col3, col4 = pdu.columns([1, 1, 1, 1])
+with col1: pdu.metric("P99 Latency", "12.8 ms", delta="-2.4ms")
+with col2: pdu.metric("VRAM Allocated", "1,180 GB", delta="92.1%")
+with col3: pdu.metric("Active Pods", "32 / 32", delta="100% OK")
+with col4: pdu.metric("Token Throughput", "14.2k t/s", delta="+18%")
+
+pdu.line_chart([140, 110, 125, 75, 60, 45])
+```
+
+### **Zero Theme Limitations: Custom Palettes & Brand Colors**
 You are never limited to presets. Define any custom brand palette via hex code or custom dictionary:
 
 ```python

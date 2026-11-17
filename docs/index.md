@@ -1,7 +1,15 @@
 # PyDataUI Documentation
 
-> **The Production-Grade Full-Stack Python Framework for Web, Mobile & Desktop.**  
-> Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.
+<div align="center">
+
+![PyDataUI Hero Banner](assets/pydataui_banner.svg)
+
+</div>
+
+> **The Production-Grade Full-Stack Python Framework: Streamlit Simplicity on the Surface, Next.js Performance Underneath.**  
+> Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and 20 Shadcn themes.
+
+![Theme Gallery Showcase](assets/theme_gallery_showcase.svg)
 
 <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;" markdown="1">
 

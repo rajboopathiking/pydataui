@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%">
+  <defs>
+    <!-- Background & Accents -->
+    <linearGradient id="vBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0a16" />
+      <stop offset="50%" stop-color="#120f24" />
+      <stop offset="100%" stop-color="#07060e" />
+    </linearGradient>
+    <linearGradient id="vGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="codeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0c22" />
+      <stop offset="100%" stop-color="#181432" />
+    </linearGradient>
+    <filter id="vShadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#7c3aed" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Outer Window Frame -->
+  <rect width="1000" height="600" rx="14" fill="url(#vBg)" stroke="#3b2d6e" stroke-width="1.5" />
+
+  <!-- Window Header / Browser Chrome -->
+  <rect width="1000" height="42" rx="14" fill="#17122e" />
+  <rect y="30" width="1000" height="12" fill="#17122e" />
+  <circle cx="22" cy="21" r="5" fill="#ef4444" />
+  <circle cx="38" cy="21" r="5" fill="#eab308" />
+  <circle cx="54" cy="21" r="5" fill="#22c55e" />
+
+  <!-- Browser URL Bar -->
+  <rect x="220" y="8" width="460" height="26" rx="6" fill="#0b0819" stroke="#372c69" stroke-width="1" />
+  <circle cx="236" cy="21" r="4" fill="#10b981" />
+  <text x="248" y="25" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="11" font-weight="500">https://ai-cluster.app.lhr.life</text>
+  <text x="610" y="25" fill="#6d28d9" font-family="monospace" font-size="10">share=True</text>
+
+  <!-- Theme Active Pill -->
+  <rect x="830" y="9" width="150" height="24" rx="12" fill="#7c3aed" />
+  <circle cx="845" cy="21" r="4" fill="#ffffff" />
+  <text x="857" y="25" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">theme="violet"</text>
+
+  <!-- ================= LAYOUT ================= -->
+
+  <!-- LEFT SIDEBAR -->
+  <g transform="translate(0, 42)">
+    <rect width="250" height="558" fill="#110e24" stroke="#2c2252" stroke-width="1" />
+
+    <!-- App Title & Subtitle -->
+    <text x="24" y="36" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700">DeepAgent Copilot</text>
+    <text x="24" y="52" fill="#8b5cf6" font-family="-apple-system, sans-serif" font-size="11">Powered by PyDataUI v1.3.0</text>
+    <line x1="24" y1="66" x2="226" y2="66" stroke="#2c2252" stroke-width="1" />
+
+    <!-- Controls -->
+    <!-- Model Selector -->
+    <text x="24" y="94" fill="#c4b5fd" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">INFERENCE MODEL</text>
+    <rect x="24" y="104" width="202" height="32" rx="6" fill="#1e183d" stroke="#5b21b6" stroke-width="1" />
+    <text x="36" y="124" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="12">DeepSeek-R1-Distill-70B</text>
+    <path d="M 212 118 L 217 124 L 222 118" fill="none" stroke="#a78bfa" stroke-width="1.5" />
+
+    <!-- Temperature Slider -->
+    <text x="24" y="162" fill="#c4b5fd" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">TEMPERATURE (0.70)</text>
+    <rect x="24" y="174" width="202" height="6" rx="3" fill="#2c2252" />
+    <rect x="24" y="174" width="141" height="6" rx="3" fill="#7c3aed" />
+    <circle cx="165" cy="177" r="7" fill="#ffffff" stroke="#7c3aed" stroke-width="2" />
+
+    <!-- Context Window Bar -->
+    <text x="24" y="214" fill="#c4b5fd" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">CONTEXT (32k / 64k)</text>
+    <rect x="24" y="226" width="202" height="8" rx="4" fill="#2c2252" />
+    <rect x="24" y="226" width="101" height="8" rx="4" fill="#10b981" />
+
+    <!-- System Prompt Box -->
+    <text x="24" y="264" fill="#c4b5fd" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">SYSTEM PROMPT</text>
+    <rect x="24" y="274" width="202" height="64" rx="6" fill="#1e183d" stroke="#3b2d6e" stroke-width="1" />
+    <text x="34" y="294" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">You are an autonomous SRE</text>
+    <text x="34" y="310" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">copilot monitoring 16 H100</text>
+    <text x="34" y="326" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">distributed worker nodes...</text>
+
+    <!-- Sidebar Bottom Action -->
+    <g transform="translate(24, 490)">
+      <rect width="202" height="34" rx="6" fill="url(#vGrad)" />
+      <text x="101" y="22" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" text-anchor="middle">+ New Agent Session</text>
+    </g>
+  </g>
+
+  <!-- MAIN CHAT AREA -->
+  <g transform="translate(250, 42)">
+    <!-- Top Bar inside Main -->
+    <rect width="750" height="52" fill="#151030" stroke="#2c2252" stroke-width="1" />
+    <circle cx="28" cy="26" r="5" fill="#10b981" />
+    <text x="42" y="27" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="14" font-weight="600">Cluster Diagnostic Agent</text>
+    <text x="42" y="41" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="10">Session: #agent-session-8492 • Zero-latency in-memory bridge</text>
+
+    <!-- Top Status Badges -->
+    <g transform="translate(510, 14)">
+      <rect width="95" height="24" rx="12" fill="#1e183d" stroke="#5b21b6" stroke-width="1" />
+      <text x="47" y="16" fill="#c4b5fd" font-family="-apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">⚡ 84.6 t/s</text>
+
+      <rect x="105" width="110" height="24" rx="12" fill="#064e3b" stroke="#059669" stroke-width="1" />
+      <text x="160" y="16" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">✓ Latency: 12ms</text>
+    </g>
+
+    <!-- Chat Messages Stream -->
+    <!-- Message 1: User -->
+    <g transform="translate(30, 75)">
+      <rect x="220" width="470" height="42" rx="10" fill="#7c3aed" filter="url(#vShadow)" />
+      <text x="236" y="26" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="13">
+        Analyze the P99 latency spike on cluster node-04 and remediate.
+      </text>
+      <!-- User Avatar -->
+      <circle cx="705" cy="21" r="14" fill="#a855f7" />
+      <text x="705" y="25" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">U</text>
+    </g>
+
+    <!-- Message 2: Assistant Response -->
+    <g transform="translate(30, 135)">
+      <!-- Assistant Avatar -->
+      <circle cx="16" cy="21" r="14" fill="#6366f1" />
+      <text x="16" y="25" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">AI</text>
+
+      <rect x="42" width="650" height="245" rx="10" fill="#140f2b" stroke="#3d2c70" stroke-width="1" />
+      
+      <!-- Collapsible Thought Pill -->
+      <g transform="translate(56, 14)">
+        <rect width="260" height="22" rx="4" fill="#221745" stroke="#4c1d95" stroke-width="1" />
+        <text x="10" y="15" fill="#c4b5fd" font-family="-apple-system, sans-serif" font-size="10">💡 Thought Process: 1,420 tokens analyzed (0.4s)</text>
+      </g>
+
+      <text x="56" y="58" fill="#e2e8f0" font-family="-apple-system, sans-serif" font-size="12.5" font-weight="400">
+        I inspected real-time Prometheus traces on <tspan fill="#a78bfa" font-weight="700">node-04</tspan>. A cache compaction deadlock
+      </text>
+      <text x="56" y="76" fill="#e2e8f0" font-family="-apple-system, sans-serif" font-size="12.5" font-weight="400">
+        triggered temporary VRAM starvation. Executing zero-downtime rebalance:
+      </text>
+
+      <!-- Code Block Mockup -->
+      <g transform="translate(56, 92)">
+        <rect width="620" height="80" rx="6" fill="url(#codeBg)" stroke="#372c69" stroke-width="1" />
+        <rect width="620" height="20" rx="6" fill="#1a1438" />
+        <rect y="14" width="620" height="6" fill="#1a1438" />
+        <text x="14" y="14" fill="#8b5cf6" font-family="monospace" font-size="9">rebalance_cluster.py</text>
+        <text x="560" y="14" fill="#64748b" font-family="-apple-system, sans-serif" font-size="9">Python 3.11</text>
+
+        <!-- Syntax code lines -->
+        <text x="14" y="38" fill="#f43f5e" font-family="monospace" font-size="11">import <tspan fill="#ffffff">pydataui</tspan> as <tspan fill="#38bdf8">pdu</tspan></text>
+        <text x="14" y="54" fill="#c084fc" font-family="monospace" font-size="11">await <tspan fill="#ffffff">cluster.isolate_node</tspan><tspan fill="#e2e8f0">("node-04", drain_timeout=15)</tspan></text>
+        <text x="14" y="70" fill="#4ade80" font-family="monospace" font-size="11"># In-memory execution: 0ms network hop, cluster stabilized!</text>
+      </g>
+
+      <!-- Success Callout -->
+      <g transform="translate(56, 185)">
+        <rect width="620" height="42" rx="6" fill="#062e22" stroke="#059669" stroke-width="1" />
+        <circle cx="20" cy="21" r="7" fill="#10b981" />
+        <text x="17" y="24" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="9" font-weight="700">✓</text>
+        <text x="36" y="18" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="11" font-weight="700">Remediation Executed Successfully</text>
+        <text x="36" y="33" fill="#a7f3d0" font-family="-apple-system, sans-serif" font-size="10">P99 Latency dropped from 284ms to 12.1ms • All 32 pods re-routed to node-05 and node-06</text>
+      </g>
+    </g>
+
+    <!-- Bottom Input Container -->
+    <g transform="translate(30, 475)">
+      <rect width="690" height="54" rx="10" fill="#17122e" stroke="#5b21b6" stroke-width="1.5" />
+      <text x="20" y="32" fill="#716999" font-family="-apple-system, sans-serif" font-size="13">Ask Copilot to run cluster commands, query metrics, or debug models...</text>
+      
+      <!-- Right Action Button -->
+      <rect x="600" y="9" width="78" height="36" rx="8" fill="url(#vGrad)" />
+      <text x="639" y="32" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Send ⚡</text>
+    </g>
+  </g>
+</svg>

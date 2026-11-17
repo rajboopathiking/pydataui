@@ -775,3 +775,30 @@ See the full working showcase in [`examples/custom_ui_app.py`](file:///Users/boo
 python examples/custom_ui_app.py
 ```
 Open [http://127.0.0.1:8080](http://127.0.0.1:8080) to inspect the dark theme, violet palette, interactive progress bars, and custom SVG animations.
+
+---
+
+## 10. 20 Modern Theme Presets & Visual Gallery
+
+PyDataUI ships with **20 official out-of-the-box color presets** matching all standard Shadcn/Tailwind design tokens. Switch between themes with a single line of Python:
+
+![20 Color Presets](assets/theme_swatches_palette.svg)
+
+![Theme Gallery Showcase](assets/theme_gallery_showcase.svg)
+
+### High-Fidelity UI Gallery
+
+#### 🔮 1. AI Copilot & Agent Playground (`theme="violet"`)
+Built for LLM workbenches, multi-turn chat agents, and real-time inference telemetry:
+
+![Violet AI Copilot Theme](assets/theme_preview_violet_ai.svg)
+
+#### 💎 2. FinTech, Billing & Revenue Analytics (`theme="emerald"`)
+Engineered for SaaS metrics, ARR/MRR acceleration, transaction ledgers, and executive board reporting:
+
+![Emerald FinTech Theme](assets/theme_preview_emerald_fintech.svg)
+
+#### ⚡ 3. DevOps, Cluster Telemetry & Dark Mode Analytics (`theme="zinc"`, `dark_mode=True`)
+High-density, low-eye-strain telemetry for Kubernetes clusters, GPU farms, and real-time distributed systems:
+
+![Zinc Dark Mode Telemetry](assets/theme_preview_zinc_dark.svg)

@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="swBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="50%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+  </defs>
+
+  <!-- Container -->
+  <rect width="1000" height="240" rx="12" fill="url(#swBg)" stroke="#1f2937" stroke-width="1.5" />
+
+  <!-- Header -->
+  <g transform="translate(30, 24)">
+    <text x="0" y="16" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700">
+      20 Official Built-in Color Presets
+    </text>
+    <text x="0" y="34" fill="#9ca3af" font-family="-apple-system, sans-serif" font-size="12">
+      Pass any preset directly: <tspan fill="#a5b4fc" font-family="monospace">pdu.set_page_config(theme="violet")</tspan> — or provide custom hex codes / dict palettes.
+    </text>
+  </g>
+
+  <!-- Row 1: 10 Themes -->
+  <g transform="translate(30, 75)">
+    <!-- 1: zinc -->
+    <g transform="translate(0, 0)">
+      <rect width="86" height="52" rx="8" fill="#18181b" stroke="#3f3f46" stroke-width="1.5" />
+      <circle cx="16" cy="18" r="5" fill="#fafafa" />
+      <text x="12" y="42" fill="#fafafa" font-family="monospace" font-size="11" font-weight="700">zinc</text>
+    </g>
+
+    <!-- 2: slate -->
+    <g transform="translate(94, 0)">
+      <rect width="86" height="52" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <circle cx="16" cy="18" r="5" fill="#f8fafc" />
+      <text x="12" y="42" fill="#f8fafc" font-family="monospace" font-size="11" font-weight="700">slate</text>
+    </g>
+
+    <!-- 3: stone -->
+    <g transform="translate(188, 0)">
+      <rect width="86" height="52" rx="8" fill="#1c1917" stroke="#44403c" stroke-width="1.5" />
+      <circle cx="16" cy="18" r="5" fill="#fafaf9" />
+      <text x="12" y="42" fill="#fafaf9" font-family="monospace" font-size="11" font-weight="700">stone</text>
+    </g>
+
+    <!-- 4: emerald -->
+    <g transform="translate(282, 0)">
+      <rect width="86" height="52" rx="8" fill="#059669" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">emerald</text>
+    </g>
+
+    <!-- 5: green -->
+    <g transform="translate(376, 0)">
+      <rect width="86" height="52" rx="8" fill="#16a34a" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">green</text>
+    </g>
+
+    <!-- 6: teal -->
+    <g transform="translate(470, 0)">
+      <rect width="86" height="52" rx="8" fill="#0d9488" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">teal</text>
+    </g>
+
+    <!-- 7: cyan -->
+    <g transform="translate(564, 0)">
+      <rect width="86" height="52" rx="8" fill="#0891b2" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">cyan</text>
+    </g>
+
+    <!-- 8: blue -->
+    <g transform="translate(658, 0)">
+      <rect width="86" height="52" rx="8" fill="#2563eb" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">blue</text>
+    </g>
+
+    <!-- 9: indigo -->
+    <g transform="translate(752, 0)">
+      <rect width="86" height="52" rx="8" fill="#4f46e5" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">indigo</text>
+    </g>
+
+    <!-- 10: violet -->
+    <g transform="translate(846, 0)">
+      <rect width="94" height="52" rx="8" fill="#7c3aed" stroke="#a78bfa" stroke-width="1.5" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">violet ★</text>
+    </g>
+  </g>
+
+  <!-- Row 2: 10 Themes -->
+  <g transform="translate(30, 145)">
+    <!-- 11: purple -->
+    <g transform="translate(0, 0)">
+      <rect width="86" height="52" rx="8" fill="#9333ea" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">purple</text>
+    </g>
+
+    <!-- 12: fuchsia -->
+    <g transform="translate(94, 0)">
+      <rect width="86" height="52" rx="8" fill="#c026d3" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">fuchsia</text>
+    </g>
+
+    <!-- 13: pink -->
+    <g transform="translate(188, 0)">
+      <rect width="86" height="52" rx="8" fill="#db2777" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">pink</text>
+    </g>
+
+    <!-- 14: rose -->
+    <g transform="translate(282, 0)">
+      <rect width="86" height="52" rx="8" fill="#e11d48" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">rose</text>
+    </g>
+
+    <!-- 15: red -->
+    <g transform="translate(376, 0)">
+      <rect width="86" height="52" rx="8" fill="#dc2626" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">red</text>
+    </g>
+
+    <!-- 16: orange -->
+    <g transform="translate(470, 0)">
+      <rect width="86" height="52" rx="8" fill="#ea580c" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">orange</text>
+    </g>
+
+    <!-- 17: amber -->
+    <g transform="translate(564, 0)">
+      <rect width="86" height="52" rx="8" fill="#d97706" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">amber</text>
+    </g>
+
+    <!-- 18: yellow -->
+    <g transform="translate(658, 0)">
+      <rect width="86" height="52" rx="8" fill="#ca8a04" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">yellow</text>
+    </g>
+
+    <!-- 19: gray -->
+    <g transform="translate(752, 0)">
+      <rect width="86" height="52" rx="8" fill="#374151" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">gray</text>
+    </g>
+
+    <!-- 20: neutral -->
+    <g transform="translate(846, 0)">
+      <rect width="94" height="52" rx="8" fill="#262626" />
+      <circle cx="16" cy="18" r="5" fill="#ffffff" />
+      <text x="12" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="700">neutral</text>
+    </g>
+  </g>
+</svg>

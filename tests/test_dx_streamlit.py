@@ -318,3 +318,12 @@ def test_chat_input_form_and_session_state_integration():
     assert pdu.session_state["user_prompt"] == "Explain RAG cluster"
     assert pdu.session_state["agent_reply"] == "Processed: Explain RAG cluster"
 
+
+def test_page_link_rendering():
+    pdu.reset()
+    link = pdu.page_link("/chat", label="Operations Copilot", icon="💬")
+    html = link.render({})
+    assert "href='/chat'" in html or 'href="/chat"' in html
+    assert 'Operations Copilot' in html
+    assert '💬' in html
+

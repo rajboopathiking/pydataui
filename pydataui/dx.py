@@ -1235,6 +1235,24 @@ def code_editor(
 # Application Lifecycle & Runner
 # ============================================================================
 
+def page_link(page: str, label: Optional[str] = None, icon: Optional[str] = None, **kwargs) -> Component:
+    """
+    Render a styled navigation link to another page (Streamlit `st.page_link` equivalent).
+
+    Example::
+
+        with pdu.sidebar():
+            pdu.page_link("/", label="GPU Telemetry", icon="📊")
+            pdu.page_link("/chat", label="Operations Copilot", icon="💬")
+    """
+    display_label = label or page.replace('/', '').replace('_', ' ').replace('-', ' ').title() or "Home"
+    icon_html = f"<span class='text-base select-none shrink-0'>{escape_html(icon)}</span>" if icon else ""
+    return _add_component(RawHtml(
+        f"<a href='{escape_html(page)}' class='flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors w-full'>"
+        f"{icon_html}<span>{escape_html(display_label)}</span></a>"
+    ))
+
+
 def page(path: str = "/", title: Optional[str] = None, **kwargs):
     """Decorator to register a custom page route on the default application."""
     app = get_app()

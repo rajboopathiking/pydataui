@@ -211,7 +211,7 @@ def AppShell(title: str, content: pdu.Component, current_path: str = "/") -> pdu
 
 We benchmarked a standard analytical dashboard containing 4 KPI metric cards, a 50-row paginated data table, and a live AI chat widget.
 
-| Metric | Next.js 14 (Node.js 20) | PyDataUI v1.2.5 (Rust + Python) | Advantage |
+| Metric | Next.js 14 (Node.js 20) | PyDataUI v1.3.0 (Rust + Python) | Advantage |
 | :--- | :--- | :--- | :--- |
 | **Client JS Downloaded** | ~142 KB (React, Next runtime) | **14 KB** (Lightweight HTMX core) | **10x smaller client payload** |
 | **Time to Interactive (TTI)** | 480 ms (Hydration bottleneck) | **45 ms** (Instant HTML parse) | **10.6x faster interactivity** |

@@ -275,8 +275,14 @@ class Switch(Checkbox):
 
 class Slider(Component):
     tag = 'div'
-    def __init__(self, min=0, max=100, value=50, step=1, name=None, disabled=False, label=None, show_value=True, on_change=None, **props):
+    def __init__(self, min=0, max=100, value=50, step=None, name=None, disabled=False, label=None, show_value=True, on_change=None, **props):
         super().__init__(**props)
+        if step is None:
+            if any(isinstance(v, float) for v in (min, max, value)):
+                diff = abs(max - min)
+                step = 0.01 if diff <= 1.0 else (0.1 if diff <= 10.0 else 0.01)
+            else:
+                step = 1
         self.min = min
         self.max = max
         self.value = value
@@ -300,7 +306,9 @@ class Slider(Component):
             f"max='{self.max}'",
             f"step='{self.step}'",
             f"value='{val}'",
-            "class='pdu-slider'"
+            "class='pdu-slider'",
+            "data-pdu-slider='true'",
+            "oninput=\"var v=this.parentNode.querySelector('.pdu-slider-value'); if(v) v.innerText = this.value;\"",
         ]
         if self.name: inp_attrs.append(f"name='{self.name}'")
         if self.disabled: inp_attrs.append("disabled")
@@ -367,6 +375,7 @@ class FileUpload(Input):
             else:
                 self.props['accept'] = str(accept)
         if multiple: self.props['multiple'] = 'multiple'
+        self.props['hx-encoding'] = 'multipart/form-data'
         
     def _get_classes(self) -> List[str]:
         classes = super()._get_classes()

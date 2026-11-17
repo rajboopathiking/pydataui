@@ -196,6 +196,9 @@ class Component:
         include_val = self.props.get('hx-include') or self.props.get('include')
         if include_val and attrs:
             attrs['hx-include'] = include_val
+        encoding_val = self.props.get('hx-encoding')
+        if encoding_val and attrs:
+            attrs['hx-encoding'] = encoding_val
         return attrs
     
     def _get_classes(self) -> List[str]:

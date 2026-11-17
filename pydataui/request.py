@@ -36,6 +36,29 @@ class UploadedFile:
         self._position = max(0, min(offset, len(self.content)))
         return self._position
 
+    def tell(self) -> int:
+        return self._position
+
+    def seekable(self) -> bool:
+        return True
+
+    def readable(self) -> bool:
+        return True
+
+    def getvalue(self) -> bytes:
+        return self.content
+
+    def to_pandas(self, **kwargs) -> Any:
+        import io
+        import pandas as pd
+        if self.filename.endswith('.parquet'):
+            return pd.read_parquet(io.BytesIO(self.content), **kwargs)
+        elif self.filename.endswith('.json') or self.filename.endswith('.jsonl'):
+            return pd.read_json(io.BytesIO(self.content), **kwargs)
+        return pd.read_csv(io.BytesIO(self.content), **kwargs)
+
+    to_dataframe = to_pandas
+
     def close(self) -> None:
         return None
 

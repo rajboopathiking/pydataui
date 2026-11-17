@@ -219,3 +219,73 @@ async def test_sidebar_and_fastapi_mount_workflow():
     assert "GPU Cluster Telemetry & Agent Dispatch" in body
     assert "All 16 H100 SXM5 nodes online" in body
 
+
+def test_float_slider_and_auto_step_inference():
+    pdu.reset()
+    # 1. Float range [0.0, 1.0] with default step inference -> 0.01
+    s_temp = pdu.slider("Temperature", 0.0, 1.0, 0.7)
+    assert s_temp.min == 0.0
+    assert s_temp.max == 1.0
+    assert s_temp.value == 0.7
+    assert s_temp.step == 0.01
+    html = s_temp.render({})
+    assert "step='0.01'" in html
+    assert "value='0.7'" in html
+    assert "data-pdu-slider='true'" in html
+    assert "oninput=" in html
+
+    # 2. Medium float range [0.0, 10.0] -> 0.1
+    s_scale = pdu.slider("Scale", 0.0, 10.0, 5.5)
+    assert s_scale.step == 0.1
+
+    # 3. Standard Integer range -> 1
+    s_int = pdu.slider("Count", 0, 100, 25)
+    assert s_int.step == 1
+    assert "step='1'" in s_int.render({})
+
+    # 4. Explicit step is preserved
+    s_exp = pdu.slider("Threshold", 0.0, 1.0, 0.5, step=0.05)
+    assert s_exp.step == 0.05
+    assert "step='0.05'" in s_exp.render({})
+
+
+def test_uploaded_file_and_read_csv_pandas_integration():
+    import pandas as pd
+    from pydataui.request import UploadedFile
+
+    csv_bytes = b"node,gpu_util,vram\nnode-01,88%,72 GB\nnode-02,92%,76 GB\nnode-03,78%,64 GB\n"
+    uploaded = UploadedFile("telemetry.csv", csv_bytes, "text/csv")
+
+    # 1. Direct pd.read_csv(uploaded) using file-like protocol
+    df1 = pd.read_csv(uploaded)
+    assert isinstance(df1, pd.DataFrame)
+    assert len(df1) == 3
+    assert list(df1.columns) == ["node", "gpu_util", "vram"]
+    assert df1.iloc[0]["node"] == "node-01"
+
+    # 2. pdu.read_csv(uploaded) convenience helper
+    df2 = pdu.read_csv(uploaded)
+    assert isinstance(df2, pd.DataFrame)
+    assert len(df2) == 3
+
+    # 3. uploaded.to_pandas() / to_dataframe() method
+    df3 = uploaded.to_pandas()
+    assert isinstance(df3, pd.DataFrame)
+    assert len(df3) == 3
+    assert uploaded.to_dataframe() is not None
+
+    # 4. Stream inspection methods
+    assert uploaded.tell() == len(csv_bytes)
+    assert uploaded.seekable() is True
+    assert uploaded.readable() is True
+    assert uploaded.getvalue() == csv_bytes
+
+
+def test_file_uploader_multipart_encoding():
+    pdu.reset()
+    uploader = pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"])
+    html = uploader.render({})
+    assert 'type="file"' in html
+    assert 'accept=".csv"' in html
+    assert 'hx-encoding="multipart/form-data"' in html
+

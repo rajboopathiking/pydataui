@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.3.1'
+__version__ = '1.3.2'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -161,6 +161,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'session_state': ('.dx', 'session_state'),
     'dataframe': ('.dx', 'dataframe'),
     'table': ('.dx', 'table'),
+    'read_csv': ('.dx', 'read_csv'),
     'json': ('.dx', 'json'),
     'line_chart': ('.dx', 'line_chart'),
     'bar_chart': ('.dx', 'bar_chart'),
@@ -313,7 +314,7 @@ if TYPE_CHECKING:
     from .dx import (
         title, header, subheader, caption, text, markdown, code, write,
         sidebar, columns, expander, tabs, container, metric, session_state,
-        dataframe, table, json, line_chart, bar_chart, area_chart, scatter_chart,
+        dataframe, table, read_csv, json, line_chart, bar_chart, area_chart, scatter_chart,
         plotly_chart, pyplot, button, input, text_input, textarea, text_area,
         number_input, slider, selectbox, multiselect, checkbox, radio, switch,
         toggle, file_uploader, chat_message, chat_input, chat, card, row,

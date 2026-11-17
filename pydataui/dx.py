@@ -155,6 +155,8 @@ def register_callback(func: Callable) -> str:
             if len(sig.parameters) == 0:
                 return cb()
             call_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
+            if not call_kwargs and len(sig.parameters) == 1 and kwargs:
+                return cb(next(iter(kwargs.values())))
             return cb(**call_kwargs)
 
     action_method.__name__ = action_id
@@ -850,6 +852,31 @@ def table(data: Any, columns: Optional[List[str]] = None, **kwargs) -> DataTable
     return _add_component(DataTable(data=data, columns=columns, **kwargs))
 
 
+def read_csv(source: Any, **kwargs) -> Any:
+    """
+    Convenience helper to read CSV data from an UploadedFile, string, bytes, or file path into a pandas DataFrame.
+
+    Example::
+
+        def handle_upload(file):
+            df = pdu.read_csv(file)  # or pd.read_csv(file)
+            pdu.session_state.df = df
+    """
+    import io
+    import pandas as pd
+    if hasattr(source, "to_pandas"):
+        return source.to_pandas(**kwargs)
+    if hasattr(source, "content"):
+        return pd.read_csv(io.BytesIO(source.content), **kwargs)
+    if isinstance(source, bytes):
+        return pd.read_csv(io.BytesIO(source), **kwargs)
+    if isinstance(source, str):
+        if "\n" in source or "," in source:
+            return pd.read_csv(io.StringIO(source), **kwargs)
+        return pd.read_csv(source, **kwargs)
+    return pd.read_csv(source, **kwargs)
+
+
 def json(data: Any, max_height: str = "400px", **kwargs) -> Component:
     """Render an interactive, collapsible JSON tree viewer."""
     return _add_component(JSONViewer(data=data, max_height=max_height, **kwargs))
@@ -900,26 +927,49 @@ def number_input(
     min_value: Optional[float] = None,
     max_value: Optional[float] = None,
     value: float = 0,
-    step: float = 1,
+    step: Optional[float] = None,
     key: Optional[str] = None,
     on_change: Optional[Callable] = None,
     **kwargs
 ) -> Input:
     """Add a numerical input widget."""
+    if step is None:
+        if any(isinstance(x, float) for x in (min_value, max_value, value)):
+            step = 0.01
+        else:
+            step = 1
     return _add_component(Input(label=label, value=value, type="number", min=min_value, max=max_value, step=step, name=key, on_change=on_change, **kwargs))
 
 
 def slider(
     label: str = "",
-    min_value: float = 0,
-    max_value: float = 100,
-    value: float = 50,
-    step: float = 1,
+    min_value: Optional[float] = None,
+    max_value: Optional[float] = None,
+    value: Optional[float] = None,
+    step: Optional[float] = None,
     key: Optional[str] = None,
     on_change: Optional[Callable] = None,
     **kwargs
 ) -> Slider:
-    """Add a slider input widget."""
+    """
+    Add an interactive slider widget supporting both integer and floating-point ranges.
+
+    If min_value, max_value, or value is a float and step is omitted, step automatically
+    defaults to 0.01 (or 0.1 for ranges <= 10.0), matching Streamlit behavior.
+    """
+    is_float = any(isinstance(x, float) for x in (min_value, max_value, value, step) if x is not None)
+    if min_value is None:
+        min_value = 0.0 if is_float else 0
+    if max_value is None:
+        max_value = 100.0 if is_float else 100
+    if value is None:
+        value = min_value
+    if step is None:
+        if is_float or any(isinstance(x, float) for x in (min_value, max_value, value)):
+            diff = abs(max_value - min_value)
+            step = 0.01 if diff <= 1.0 else (0.1 if diff <= 10.0 else 0.01)
+        else:
+            step = 1
     return _add_component(Slider(label=label, min=min_value, max=max_value, value=value, step=step, name=key, on_change=on_change, **kwargs))
 
 

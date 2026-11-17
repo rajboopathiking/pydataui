@@ -148,14 +148,17 @@ def register_callback(func: Callable) -> str:
     action_id = f"act_{len(_callbacks)}_{getattr(func, '__name__', 'cb')}"
     _callbacks[action_id] = func
 
-    def action_method(self, **kwargs):
+    def action_method(self=None, *args, **kwargs):
         cb = _callbacks.get(action_id)
         if cb:
             sig = inspect.signature(cb)
             if len(sig.parameters) == 0:
                 return cb()
+            has_var_keyword = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+            if has_var_keyword:
+                return cb(*args, **kwargs)
             call_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
-            if not call_kwargs and len(sig.parameters) == 1 and kwargs:
+            if not call_kwargs and kwargs:
                 return cb(next(iter(kwargs.values())))
             return cb(**call_kwargs)
 
@@ -1047,8 +1050,30 @@ def file_uploader(
     on_change: Optional[Callable] = None,
     **kwargs
 ) -> FileUpload:
-    """Add a drag-and-drop file upload input."""
-    return _add_component(FileUpload(label=label, accept=accept, multiple=multiple, name=key or "file", on_change=on_change, **kwargs))
+    """
+    Add a drag-and-drop file upload input.
+
+    When a file is uploaded, it is automatically saved to `session_state[key]`
+    and passed directly to `on_change(file)` if provided.
+    """
+    input_name = key or "file"
+
+    def _file_callback(file=None, **kws):
+        val = file or (next(iter(kws.values())) if kws else None)
+        if key:
+            session_state[key] = val
+        session_state["last_uploaded_file"] = val
+        if on_change:
+            sig = inspect.signature(on_change)
+            if len(sig.parameters) == 0:
+                return on_change()
+            call_k = {k: v for k, v in kws.items() if k in sig.parameters}
+            if not call_k and len(sig.parameters) == 1:
+                return on_change(val)
+            return on_change(**call_k)
+
+    cb = _file_callback if (on_change or key) else None
+    return _add_component(FileUpload(label=label, accept=accept, multiple=multiple, name=input_name, on_change=cb, **kwargs))
 
 
 # ============================================================================
@@ -1127,21 +1152,42 @@ def chat_input(
     on_submit: Optional[Callable] = None,
     **kwargs
 ) -> Component:
-    """Add a sleek, modern chat input prompt bar."""
+    """
+    Add a sleek, modern chat input prompt bar.
+
+    When submitted, user input is passed to `on_submit(prompt)` and automatically
+    stored in `pdu.session_state[key]` and `pdu.session_state["last_chat_input"]`.
+    The input bar auto-resets on submit.
+    """
     input_id = key or generate_id("chat_input")
     action_attr = ""
-    if on_submit:
-        action_name = register_callback(on_submit)
-        action_attr = f'hx-post="/_pdu/event/ActionState/{action_name}" hx-trigger="keyup[keyCode==13], click from:button" hx-include="[name=\'{input_id}\']"'
+    if on_submit or key:
+        def _chat_callback(msg=None, **kws):
+            text_val = msg or (next(iter(kws.values())) if kws else "")
+            if key:
+                session_state[key] = text_val
+            session_state["last_chat_input"] = text_val
+            if on_submit:
+                sig = inspect.signature(on_submit)
+                if len(sig.parameters) == 0:
+                    return on_submit()
+                call_k = {k: v for k, v in kws.items() if k in sig.parameters}
+                if not call_k and len(sig.parameters) == 1:
+                    return on_submit(text_val)
+                return on_submit(**call_k)
 
+        action_name = register_callback(_chat_callback)
+        action_attr = f'hx-post="/_pdu/event/ActionState/{action_name}" hx-trigger="submit" hx-include="this" hx-on::after-request="this.reset()"'
+
+    form_id = f"form_{input_id}"
     return _add_component(RawHtml(
-        f"<div class='flex gap-2 items-center w-full my-4 p-2 bg-card border border-border rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-primary/40 transition-all'>"
-        f"<input type='text' name='{input_id}' placeholder='{escape_html(placeholder)}' "
-        f"class='flex-1 bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none' {action_attr} />"
-        f"<button type='button' class='p-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity cursor-pointer' {action_attr}>"
+        f"<form id='{form_id}' class='flex gap-2 items-center w-full my-4 p-2 bg-card border border-border rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-primary/40 transition-all' {action_attr}>"
+        f"<input type='text' name='{input_id}' placeholder='{escape_html(placeholder)}' autocomplete='off' "
+        f"class='flex-1 bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none' />"
+        f"<button type='submit' class='p-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center'>"
         f"<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m22 2-7 20-4-9-9-4Z'/><path d='M22 2 11 13'/></svg>"
         f"</button>"
-        f"</div>"
+        f"</form>"
     ))
 
 

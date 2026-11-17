@@ -289,3 +289,32 @@ def test_file_uploader_multipart_encoding():
     assert 'accept=".csv"' in html
     assert 'hx-encoding="multipart/form-data"' in html
 
+
+def test_chat_input_form_and_session_state_integration():
+    pdu.reset()
+    received_message = None
+
+    def my_agent_callback(query):
+        nonlocal received_message
+        received_message = query
+        pdu.session_state["agent_reply"] = f"Processed: {query}"
+
+    chat_box = pdu.chat_input("Ask a question...", key="user_prompt", on_submit=my_agent_callback)
+    html = chat_box.render({})
+    assert "<form" in html
+    assert "type='submit'" in html or 'type="submit"' in html
+    assert "hx-on::after-request=\"this.reset()\"" in html
+    assert "name='user_prompt'" in html or 'name="user_prompt"' in html
+
+    # Verify callback invocation via ActionState
+    from pydataui.dx import ActionState
+    # Find registered action
+    for attr in dir(ActionState):
+        if attr.startswith("act_"):
+            getattr(ActionState, attr)(None, user_prompt="Explain RAG cluster")
+            break
+
+    assert received_message == "Explain RAG cluster"
+    assert pdu.session_state["user_prompt"] == "Explain RAG cluster"
+    assert pdu.session_state["agent_reply"] == "Processed: Explain RAG cluster"
+

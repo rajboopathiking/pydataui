@@ -62,46 +62,49 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Blog:
-      - PyDataUI Launch: BLOG_POST_LAUNCH.md
-      - PyDataUI vs. Next.js: BLOG_POST_NEXTJS_VS_PYDATAUI.md
-  - Benchmarks: BENCHMARKS.md
+  - Rapid Prototyping (Streamlit Style):
+      - 10-Second Quickstart & Cheat Sheet: STREAMLIT_MIGRATION_AND_RAPID_PROTOTYPING_GUIDE.md
+      - PyDataUI vs. Streamlit & React: PYDATAUI_VS_REACT_AND_STREAMLIT.md
+      - Quick Reference: QUICKREF.md
+  - Full-Stack Web (Next.js Style):
+      - Next.js vs. PyDataUI Deep Dive: BLOG_POST_NEXTJS_VS_PYDATAUI.md
+      - Clean Modular Architecture: MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE.md
+      - Architecture & Request Lifecycle: ARCHITECTURE.md
+      - Web Dev to PyDataUI (React & Redux): WEB_TO_PYDATAUI_COMPARISON.md
+      - FastAPI & REST Integration: FASTAPI_AND_INTERNAL_TOOLING_GUIDE.md
+      - Mounting & Engine Routing: FASTAPI_MOUNTING_AND_CONFLICTS.md
+      - PyDataUI vs. Reflex: PYDATAUI_VS_REFLEX.md
+  - Components & Theming:
+      - Component Encyclopedia: COMPONENTS_REFERENCE.md
+      - Data Science & ML Components: DATA_COMPONENTS.md
+      - UI Customization & 20 Themes: CUSTOMIZATION.md
+      - CSS & Design Tokens Reference: CSS_REFERENCE.md
+      - Data Team Templates: DATA_TEMPLATES.md
+      - Template Gallery: TEMPLATE_GALLERY.md
+  - Security & Auth:
+      - Authentication, RBAC & API Keys: AUTHENTICATION.md
+      - Enterprise RBAC Tutorial: tutorials/ENTERPRISE_RBAC_AND_AUTH.md
   - Tutorials:
       - Building an AI Agent Copilot: tutorials/BUILDING_AI_AGENT_CHAT.md
       - High-Performance Analytics Dashboard: tutorials/BUILDING_ANALYTICS_DASHBOARD.md
-      - Enterprise RBAC & Authentication: tutorials/ENTERPRISE_RBAC_AND_AUTH.md
-  - Guides:
-      - Modular Architecture & Clean Organization: MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE.md
-      - Architecture & Internal Design: ARCHITECTURE.md
-      - Streamlit Migration & Rapid Prototyping: STREAMLIT_MIGRATION_AND_RAPID_PROTOTYPING_GUIDE.md
-      - PyDataUI vs. React & Streamlit: PYDATAUI_VS_REACT_AND_STREAMLIT.md
-      - Web Dev to PyDataUI (HTML, React, Redux): WEB_TO_PYDATAUI_COMPARISON.md
-      - Developer Cookbook (v1.2.2): COOKBOOK.md
-      - Modern Python DX & Commercial UI: PYTHON_DX_AND_MODERN_UI_GUIDE.md
-      - FastAPI & Internal Tooling Masterclass: FASTAPI_AND_INTERNAL_TOOLING_GUIDE.md
-      - Native Offline & Standalone Mobile: NATIVE_OFFLINE_AND_STANDALONE.md
-      - Mobile Optimization & Architecture: MOBILE_OPTIMIZATION_AND_ARCHITECTURE.md
-      - FastAPI Mounting & Conflicts: FASTAPI_MOUNTING_AND_CONFLICTS.md
-      - Mobile & Desktop Apps: MOBILE_AND_DESKTOP.md
-      - Documentation Guide: DOCS_DEVELOPER_GUIDE.md
-      - Authentication & Security: AUTHENTICATION.md
-      - UI Customization & Tailwind: CUSTOMIZATION.md
-      - PyDataUI vs Reflex: PYDATAUI_VS_REFLEX.md
-      - Data Science Components: DATA_COMPONENTS.md
-      - Data Team Templates: DATA_TEMPLATES.md
-      - Production Deployment: DEPLOYMENT.md
-      - Production Readiness: PRODUCTION_READINESS.md
-      - Production Readiness & DX Audit: PRODUCTION_READINESS_AND_DX_AUDIT.md
+      - Developer Cookbook: COOKBOOK.md
+  - Extensions & Packaging:
+      - Standalone Native Architecture: NATIVE_OFFLINE_AND_STANDALONE.md
+      - Mobile & Desktop Apps (Tauri & Capacitor): MOBILE_AND_DESKTOP.md
+      - Mobile Performance & PWA Architecture: MOBILE_OPTIMIZATION_AND_ARCHITECTURE.md
+      - Terminal UI (Headless Telemetry & DevTools): PYTHON_DX_AND_MODERN_UI_GUIDE.md
+  - Production & Deployment:
+      - Production Deployment (Docker, Nginx, Tunnels): DEPLOYMENT.md
+      - Production Readiness & Security Audit: PRODUCTION_READINESS.md
+      - Production DX Audit: PRODUCTION_READINESS_AND_DX_AUDIT.md
+      - System Benchmarks (Rust HTTP Core): BENCHMARKS.md
       - Troubleshooting: TROUBLESHOOTING.md
-  - Reference:
-      - Component Encyclopedia: COMPONENTS_REFERENCE.md
+  - Reference & Community:
       - Core API & Methods Reference: API_REFERENCE.md
-      - Template Gallery: TEMPLATE_GALLERY.md
-      - CSS Reference: CSS_REFERENCE.md
-      - Quick Reference: QUICKREF.md
+      - Documentation Developer Guide: DOCS_DEVELOPER_GUIDE.md
+      - PyDataUI Launch Announcement: BLOG_POST_LAUNCH.md
       - Migration Guide (v0.3.0): MIGRATION_0_3_0.md
       - Migration Guide (v0.2.1): MIGRATION_0_2_1.md
-  - Community:
       - Contributing Guide: CONTRIBUTING.md
       - Code of Conduct: CODE_OF_CONDUCT.md
       - Social & Press Kit: LINKEDIN_POST.md

@@ -1,0 +1,331 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+
+    <!-- Header Text Gradient -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="50%" stop-color="#e2e8f0" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+
+    <!-- Theme Accents -->
+    <linearGradient id="violetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#0d9488" />
+    </linearGradient>
+    <linearGradient id="zincGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27272a" />
+      <stop offset="100%" stop-color="#09090b" />
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <!-- Chart Gradients -->
+    <linearGradient id="chartViolet" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0" />
+    </linearGradient>
+    <linearGradient id="chartEmerald" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
+    </linearGradient>
+    <linearGradient id="chartZinc" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+    </linearGradient>
+    <linearGradient id="chartAmber" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0" />
+    </linearGradient>
+
+    <!-- Subtle Shadows -->
+    <filter id="shadowCard" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Container Base -->
+  <rect width="1200" height="660" rx="16" fill="url(#bgGrad)" />
+  <rect width="1200" height="660" rx="16" fill="none" stroke="#1e293b" stroke-width="1.5" />
+
+  <!-- Showcase Header -->
+  <g transform="translate(60, 36)">
+    <rect width="190" height="26" rx="13" fill="#1e1b4b" stroke="#4338ca" stroke-width="1" />
+    <circle cx="14" cy="13" r="4" fill="#a855f7" />
+    <text x="26" y="17" fill="#c7d2fe" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="0.5">SHADCN / TAILWIND THEMES</text>
+    
+    <text x="0" y="66" fill="url(#textGrad)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5">
+      One-Line Theming: 20 Curated Presets + Unlimited Custom Palettes
+    </text>
+    <text x="0" y="92" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="400">
+      Switch between modern enterprise styles instantly. Zero CSS, zero npm build steps, automatic dark/light mode.
+    </text>
+  </g>
+
+  <!-- ================= GRID OF 4 THEMES ================= -->
+
+  <!-- THEME 1: VIOLET (Top-Left) -->
+  <g transform="translate(60, 145)" filter="url(#shadowCard)">
+    <!-- Window Frame -->
+    <rect width="520" height="230" rx="12" fill="#0f172a" stroke="#4c1d95" stroke-width="1.5" />
+    <!-- Header Bar -->
+    <rect width="520" height="34" rx="12" fill="#1e1b4b" />
+    <rect y="22" width="520" height="12" fill="#1e1b4b" />
+    <circle cx="20" cy="17" r="4.5" fill="#ef4444" />
+    <circle cx="36" cy="17" r="4.5" fill="#eab308" />
+    <circle cx="52" cy="17" r="4.5" fill="#22c55e" />
+    <!-- Title & Badge -->
+    <text x="75" y="21" fill="#c4b5fd" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600">AI Copilot &amp; LLM Playground</text>
+    <rect x="380" y="7" width="125" height="20" rx="10" fill="#7c3aed" />
+    <text x="442" y="21" fill="#ffffff" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">theme="violet"</text>
+
+    <!-- UI Content -->
+    <!-- Metric Cards -->
+    <g transform="translate(18, 48)">
+      <rect width="150" height="52" rx="8" fill="#1e1b4b" stroke="#6d28d9" stroke-width="1" />
+      <text x="12" y="20" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Token Speed</text>
+      <text x="12" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">84.2 t/s</text>
+      <text x="80" y="40" fill="#34d399" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">+14%</text>
+
+      <rect x="162" width="150" height="52" rx="8" fill="#1e1b4b" stroke="#3730a3" stroke-width="1" />
+      <text x="174" y="20" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Active Model</text>
+      <text x="174" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="14" font-weight="700">DeepSeek-R1</text>
+
+      <rect x="324" width="160" height="52" rx="8" fill="#1e1b4b" stroke="#3730a3" stroke-width="1" />
+      <text x="336" y="20" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">P99 Latency</text>
+      <text x="336" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">12.4 ms</text>
+      <text x="410" y="40" fill="#34d399" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">-3ms</text>
+    </g>
+
+    <!-- Chat Bubbles -->
+    <g transform="translate(18, 112)">
+      <!-- User message -->
+      <rect x="180" width="304" height="28" rx="8" fill="#7c3aed" />
+      <text x="194" y="18" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11">Summarize cluster memory load across nodes</text>
+
+      <!-- Assistant response -->
+      <rect x="0" y="36" width="370" height="36" rx="8" fill="#1e1b4b" stroke="#6d28d9" stroke-width="1" />
+      <text x="14" y="52" fill="#e2e8f0" font-family="-apple-system, sans-serif" font-size="11">All 16 H100 nodes healthy. Peak VRAM utilization: 78 GB.</text>
+      <text x="14" y="66" fill="#a78bfa" font-family="monospace" font-size="9">✓ Latency: 11ms • Memory: 82% normal</text>
+
+      <!-- Chat input mockup -->
+      <rect x="0" y="80" width="410" height="26" rx="6" fill="#111827" stroke="#4c1d95" stroke-width="1" />
+      <text x="12" y="97" fill="#6b7280" font-family="-apple-system, sans-serif" font-size="10">Ask operations assistant or run /command...</text>
+      <rect x="418" y="80" width="66" height="26" rx="6" fill="#7c3aed" />
+      <text x="451" y="97" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle">Send</text>
+    </g>
+  </g>
+
+  <!-- THEME 2: EMERALD (Top-Right) -->
+  <g transform="translate(620, 145)" filter="url(#shadowCard)">
+    <!-- Window Frame -->
+    <rect width="520" height="230" rx="12" fill="#061c14" stroke="#047857" stroke-width="1.5" />
+    <!-- Header Bar -->
+    <rect width="520" height="34" rx="12" fill="#064e3b" />
+    <rect y="22" width="520" height="12" fill="#064e3b" />
+    <circle cx="20" cy="17" r="4.5" fill="#ef4444" />
+    <circle cx="36" cy="17" r="4.5" fill="#eab308" />
+    <circle cx="52" cy="17" r="4.5" fill="#22c55e" />
+    <!-- Title & Badge -->
+    <text x="75" y="21" fill="#a7f3d0" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600">FinTech &amp; Revenue Analytics</text>
+    <rect x="375" y="7" width="130" height="20" rx="10" fill="#059669" />
+    <text x="440" y="21" fill="#ffffff" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">theme="emerald"</text>
+
+    <!-- UI Content -->
+    <!-- Metric Cards -->
+    <g transform="translate(18, 48)">
+      <rect width="150" height="52" rx="8" fill="#064e3b" stroke="#059669" stroke-width="1" />
+      <text x="12" y="20" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Monthly Revenue</text>
+      <text x="12" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">$148,290</text>
+      <text x="96" y="40" fill="#34d399" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">+22.4%</text>
+
+      <rect x="162" width="150" height="52" rx="8" fill="#064e3b" stroke="#047857" stroke-width="1" />
+      <text x="174" y="20" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Active Accounts</text>
+      <text x="174" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="15" font-weight="700">1,420</text>
+      <text x="240" y="40" fill="#34d399" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">+64</text>
+
+      <rect x="324" width="160" height="52" rx="8" fill="#064e3b" stroke="#047857" stroke-width="1" />
+      <text x="336" y="20" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Net Churn</text>
+      <text x="336" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">0.78%</text>
+      <text x="395" y="40" fill="#34d399" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">-0.4%</text>
+    </g>
+
+    <!-- Mini Area Chart -->
+    <g transform="translate(18, 110)">
+      <rect width="484" height="106" rx="8" fill="#042f2e" stroke="#065f46" stroke-width="1" />
+      <!-- Chart Fill -->
+      <path d="M 15 85 Q 90 60, 160 70 T 310 35 T 465 15 L 465 95 L 15 95 Z" fill="url(#chartEmerald)" />
+      <!-- Chart Line -->
+      <path d="M 15 85 Q 90 60, 160 70 T 310 35 T 465 15" fill="none" stroke="#10b981" stroke-width="2.5" />
+      <!-- Data dots -->
+      <circle cx="160" cy="70" r="3.5" fill="#34d399" />
+      <circle cx="310" cy="35" r="3.5" fill="#34d399" />
+      <circle cx="465" cy="15" r="4.5" fill="#6ee7b7" stroke="#064e3b" stroke-width="2" />
+      <!-- Chart Labels -->
+      <text x="20" y="22" fill="#a7f3d0" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">MRR Growth Trajectory (Q1-Q4)</text>
+      <text x="410" y="22" fill="#34d399" font-family="-apple-system, sans-serif" font-size="10" font-weight="700">ATH: $148k</text>
+    </g>
+  </g>
+
+  <!-- THEME 3: ZINC DARK (Bottom-Left) -->
+  <g transform="translate(60, 395)" filter="url(#shadowCard)">
+    <!-- Window Frame -->
+    <rect width="520" height="230" rx="12" fill="#09090b" stroke="#3f3f46" stroke-width="1.5" />
+    <!-- Header Bar -->
+    <rect width="520" height="34" rx="12" fill="#18181b" />
+    <rect y="22" width="520" height="12" fill="#18181b" />
+    <circle cx="20" cy="17" r="4.5" fill="#ef4444" />
+    <circle cx="36" cy="17" r="4.5" fill="#eab308" />
+    <circle cx="52" cy="17" r="4.5" fill="#22c55e" />
+    <!-- Title & Badge -->
+    <text x="75" y="21" fill="#f43f5e" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600">DevOps Cluster Telemetry</text>
+    <rect x="360" y="7" width="145" height="20" rx="10" fill="#27272a" stroke="#52525b" stroke-width="1" />
+    <text x="432" y="21" fill="#f4f4f5" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">theme="zinc" (Dark)</text>
+
+    <!-- UI Content -->
+    <!-- Metric Cards -->
+    <g transform="translate(18, 48)">
+      <rect width="150" height="52" rx="8" fill="#18181b" stroke="#27272a" stroke-width="1" />
+      <text x="12" y="20" fill="#a1a1aa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">CPU Load</text>
+      <text x="12" y="40" fill="#fafafa" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">42.8%</text>
+      <rect x="90" y="28" width="48" height="16" rx="4" fill="#052e16" />
+      <text x="114" y="40" fill="#4ade80" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" text-anchor="middle">NORMAL</text>
+
+      <rect x="162" width="150" height="52" rx="8" fill="#18181b" stroke="#27272a" stroke-width="1" />
+      <text x="174" y="20" fill="#a1a1aa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">VRAM Alloc</text>
+      <text x="174" y="40" fill="#fafafa" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">892 GB</text>
+      <text x="250" y="40" fill="#38bdf8" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">76%</text>
+
+      <rect x="324" width="160" height="52" rx="8" fill="#18181b" stroke="#27272a" stroke-width="1" />
+      <text x="336" y="20" fill="#a1a1aa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Error Rate</text>
+      <text x="336" y="40" fill="#fafafa" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">0.002%</text>
+      <text x="410" y="40" fill="#4ade80" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">-0.01%</text>
+    </g>
+
+    <!-- Table Mockup -->
+    <g transform="translate(18, 110)">
+      <rect width="484" height="106" rx="8" fill="#121215" stroke="#27272a" stroke-width="1" />
+      <!-- Table Header -->
+      <rect width="484" height="26" rx="8" fill="#18181b" />
+      <rect y="16" width="484" height="10" fill="#18181b" />
+      <text x="14" y="17" fill="#71717a" font-family="-apple-system, sans-serif" font-size="9" font-weight="700">NODE ID</text>
+      <text x="130" y="17" fill="#71717a" font-family="-apple-system, sans-serif" font-size="9" font-weight="700">GPU ARCH</text>
+      <text x="240" y="17" fill="#71717a" font-family="-apple-system, sans-serif" font-size="9" font-weight="700">PODS</text>
+      <text x="330" y="17" fill="#71717a" font-family="-apple-system, sans-serif" font-size="9" font-weight="700">STATUS</text>
+      <text x="420" y="17" fill="#71717a" font-family="-apple-system, sans-serif" font-size="9" font-weight="700">ACTIONS</text>
+
+      <!-- Row 1 -->
+      <text x="14" y="46" fill="#f4f4f5" font-family="monospace" font-size="10">us-east-h100-01</text>
+      <text x="130" y="46" fill="#a1a1aa" font-family="-apple-system, sans-serif" font-size="10">8x H100 SXM5</text>
+      <text x="240" y="46" fill="#f4f4f5" font-family="-apple-system, sans-serif" font-size="10">32 / 32</text>
+      <rect x="330" y="34" width="54" height="16" rx="4" fill="#052e16" stroke="#16a34a" stroke-width="0.5" />
+      <text x="357" y="46" fill="#4ade80" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" text-anchor="middle">ONLINE</text>
+      <rect x="418" y="34" width="52" height="16" rx="4" fill="#27272a" />
+      <text x="444" y="45" fill="#d4d4d8" font-family="-apple-system, sans-serif" font-size="9" text-anchor="middle">Inspect</text>
+
+      <!-- Row 2 -->
+      <text x="14" y="74" fill="#f4f4f5" font-family="monospace" font-size="10">us-east-h100-02</text>
+      <text x="130" y="74" fill="#a1a1aa" font-family="-apple-system, sans-serif" font-size="10">8x H100 SXM5</text>
+      <text x="240" y="74" fill="#f4f4f5" font-family="-apple-system, sans-serif" font-size="10">28 / 32</text>
+      <rect x="330" y="62" width="54" height="16" rx="4" fill="#052e16" stroke="#16a34a" stroke-width="0.5" />
+      <text x="357" y="74" fill="#4ade80" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" text-anchor="middle">ONLINE</text>
+      <rect x="418" y="62" width="52" height="16" rx="4" fill="#27272a" />
+      <text x="444" y="73" fill="#d4d4d8" font-family="-apple-system, sans-serif" font-size="9" text-anchor="middle">Inspect</text>
+
+      <!-- Row 3 -->
+      <text x="14" y="98" fill="#f4f4f5" font-family="monospace" font-size="10">eu-west-a100-01</text>
+      <text x="130" y="98" fill="#a1a1aa" font-family="-apple-system, sans-serif" font-size="10">4x A100 80GB</text>
+      <text x="240" y="98" fill="#f4f4f5" font-family="-apple-system, sans-serif" font-size="10">16 / 16</text>
+      <rect x="330" y="87" width="54" height="14" rx="4" fill="#1c1917" stroke="#78350f" stroke-width="0.5" />
+      <text x="357" y="98" fill="#fbbf24" font-family="-apple-system, sans-serif" font-size="8" font-weight="700" text-anchor="middle">DRAIN</text>
+      <rect x="418" y="87" width="52" height="14" rx="4" fill="#27272a" />
+      <text x="444" y="98" fill="#d4d4d8" font-family="-apple-system, sans-serif" font-size="9" text-anchor="middle">Inspect</text>
+    </g>
+  </g>
+
+  <!-- THEME 4: AMBER (Bottom-Right) -->
+  <g transform="translate(620, 395)" filter="url(#shadowCard)">
+    <!-- Window Frame -->
+    <rect width="520" height="230" rx="12" fill="#1c1917" stroke="#b45309" stroke-width="1.5" />
+    <!-- Header Bar -->
+    <rect width="520" height="34" rx="12" fill="#451a03" />
+    <rect y="22" width="520" height="12" fill="#451a03" />
+    <circle cx="20" cy="17" r="4.5" fill="#ef4444" />
+    <circle cx="36" cy="17" r="4.5" fill="#eab308" />
+    <circle cx="52" cy="17" r="4.5" fill="#22c55e" />
+    <!-- Title & Badge -->
+    <text x="75" y="21" fill="#fed7aa" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600">Operations &amp; Warehouse Logistics</text>
+    <rect x="385" y="7" width="120" height="20" rx="10" fill="#d97706" />
+    <text x="445" y="21" fill="#ffffff" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">theme="amber"</text>
+
+    <!-- UI Content -->
+    <!-- Metric Cards -->
+    <g transform="translate(18, 48)">
+      <rect width="150" height="52" rx="8" fill="#451a03" stroke="#d97706" stroke-width="1" />
+      <text x="12" y="20" fill="#fcd34d" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Dispatched Orders</text>
+      <text x="12" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">3,892</text>
+      <text x="78" y="40" fill="#fde047" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">+18.5%</text>
+
+      <rect x="162" width="150" height="52" rx="8" fill="#451a03" stroke="#78350f" stroke-width="1" />
+      <text x="174" y="20" fill="#fcd34d" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Fulfillment Time</text>
+      <text x="174" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="15" font-weight="700">1.8 hrs</text>
+      <text x="240" y="40" fill="#4ade80" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">-12%</text>
+
+      <rect x="324" width="160" height="52" rx="8" fill="#451a03" stroke="#78350f" stroke-width="1" />
+      <text x="336" y="20" fill="#fcd34d" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Backlog Items</text>
+      <text x="336" y="40" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">14</text>
+      <text x="375" y="40" fill="#4ade80" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">All clear</text>
+    </g>
+
+    <!-- Mini Bar Chart -->
+    <g transform="translate(18, 110)">
+      <rect width="484" height="106" rx="8" fill="#292524" stroke="#78350f" stroke-width="1" />
+      <text x="20" y="22" fill="#fed7aa" font-family="-apple-system, sans-serif" font-size="10" font-weight="600">Hourly Shipments vs Fleet Capacity</text>
+      
+      <!-- Bars -->
+      <g transform="translate(25, 32)">
+        <!-- Bar 1 -->
+        <rect x="0" y="40" width="30" height="30" rx="3" fill="#d97706" />
+        <text x="15" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">08:00</text>
+        <!-- Bar 2 -->
+        <rect x="44" y="25" width="30" height="45" rx="3" fill="#d97706" />
+        <text x="59" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">10:00</text>
+        <!-- Bar 3 -->
+        <rect x="88" y="10" width="30" height="60" rx="3" fill="#f59e0b" />
+        <text x="103" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">12:00</text>
+        <!-- Bar 4 -->
+        <rect x="132" y="18" width="30" height="52" rx="3" fill="#d97706" />
+        <text x="147" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">14:00</text>
+        <!-- Bar 5 -->
+        <rect x="176" y="5" width="30" height="65" rx="3" fill="#fbbf24" />
+        <text x="191" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">16:00</text>
+        <!-- Bar 6 -->
+        <rect x="220" y="22" width="30" height="48" rx="3" fill="#d97706" />
+        <text x="235" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">18:00</text>
+        <!-- Bar 7 -->
+        <rect x="264" y="35" width="30" height="35" rx="3" fill="#b45309" />
+        <text x="279" y="82" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8" text-anchor="middle">20:00</text>
+
+        <!-- Right Side Stat Summary -->
+        <g transform="translate(320, 6)">
+          <rect width="105" height="58" rx="6" fill="#1c1917" stroke="#78350f" stroke-width="1" />
+          <text x="10" y="18" fill="#fbbf24" font-family="-apple-system, sans-serif" font-size="9" font-weight="600">Peak Capacity</text>
+          <text x="10" y="38" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="14" font-weight="700">96.4%</text>
+          <text x="10" y="50" fill="#a8a29e" font-family="-apple-system, sans-serif" font-size="8">Slot: 16:00 - 18:00</text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

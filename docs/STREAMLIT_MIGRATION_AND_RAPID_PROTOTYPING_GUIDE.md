@@ -181,3 +181,49 @@ When you pass `share=True`, your terminal prints:
 🌐 Public Tunnel URL: https://b7d29a14c3e8.app.lhr.life (Ready in 3.5s)
 📖 Interactive API Docs: http://127.0.0.1:8000/docs
 ```
+
+---
+
+## 5. 1-Line Mounting Inside an Existing FastAPI Backend
+
+Unlike Streamlit (which runs on Tornado with a proprietary WebSocket loop and cannot be mounted inside FastAPI), **PyDataUI is pure ASGI**.
+
+You can mount your procedural Streamlit-style dashboard directly inside any existing FastAPI microservice or backend:
+
+```python
+from fastapi import FastAPI
+import pydataui as pdu
+import pandas as pd
+
+# 1. Your Existing Enterprise FastAPI Backend
+api = FastAPI(title="Core AI Microservice")
+
+@api.get("/api/health")
+def health():
+    return {"status": "healthy", "nodes_online": 16}
+
+# 2. Build Your Streamlit-Style Dashboard
+pdu.set_page_config(title="AI Telemetry", layout="wide", theme="zinc", dark_mode=True)
+
+with pdu.sidebar():
+    pdu.title("Controls")
+    pdu.theme_toggle()
+    model = pdu.selectbox("Select Model", ["Llama-3.3", "DeepSeek-R1", "GPT-4o"])
+    temp = pdu.slider("Temperature", 0.0, 1.0, 0.7)
+    dataset = pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"])
+
+pdu.title("GPU Cluster Telemetry & Agent Dispatch")
+pdu.success("All 16 H100 SXM5 nodes online.")
+
+# 3. Mount Directly into FastAPI — 1 process, 1 port, 0ms in-memory access!
+api.mount("/dashboard", pdu.get_app()._engine.app)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(api, host="127.0.0.1", port=8001)
+```
+
+Visit:
+* 📡 **FastAPI API:** `http://127.0.0.1:8001/api/health`
+* 📖 **FastAPI Docs:** `http://127.0.0.1:8001/docs`
+* 💻 **PyDataUI Dashboard:** `http://127.0.0.1:8001/dashboard/`

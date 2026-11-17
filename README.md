@@ -323,7 +323,7 @@ pdu.set_page_config(theme={
 
 ## 📊 Side-by-Side Performance Comparison
 
-| Metric | Next.js + FastAPI | Streamlit | PyDataUI (v1.3.0) |
+| Metric | Next.js + FastAPI | Streamlit | PyDataUI (v1.3.1) |
 | :--- | :---: | :---: | :---: |
 | **Languages Needed** | 2 (TypeScript + Python) | 1 (Python) | **1 (Pure Python)** |
 | **Execution on Click** | Partial re-render | ❌ **Reruns lines 1-100** |  **Surgical HTMX fragment swap** |
@@ -332,7 +332,7 @@ pdu.set_page_config(theme={
 | **FastAPI Mountable** | ❌ Separate service | ❌ Incompatible (Tornado) |  **Native 1-line mount** |
 | **Auto REST API Docs** | Manual FastAPI config | ❌ None |  **Auto OpenAPI 3.1 Swagger UI** |
 | **Public Demos** | Requires Vercel/Cloud | ❌ Cloud account required |  **`share=True` (3.5s instant tunnel)** |
-| **Automated Tests** | Polyglot setup | Basic | **192 / 192 Passed (100% Green)** |
+| **Automated Tests** | Polyglot setup | Basic | **194 / 194 Passed (100% Green)** |
 
 ---
 

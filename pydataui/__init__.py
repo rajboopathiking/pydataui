@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.3.0'
+__version__ = '1.3.1'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -201,6 +201,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'theme_toggle': ('.dx', 'theme_toggle'),
     'page': ('.dx', 'page'),
     'run': ('.dx', 'run'),
+    'reset': ('.dx', 'reset'),
     'get_app': ('.dx', 'get_app'),
     'get_default_app': ('.dx', 'get_default_app'),
     

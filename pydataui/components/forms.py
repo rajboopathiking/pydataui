@@ -361,7 +361,11 @@ class Form(Component):
 class FileUpload(Input):
     def __init__(self, name='file', accept=None, multiple=False, label='Choose file', on_change=None, **props):
         super().__init__(type='file', name=name, label=label, on_change=on_change, **props)
-        if accept: self.props['accept'] = accept
+        if accept:
+            if isinstance(accept, (list, tuple)):
+                self.props['accept'] = ','.join(str(x) for x in accept)
+            else:
+                self.props['accept'] = str(accept)
         if multiple: self.props['multiple'] = 'multiple'
         
     def _get_classes(self) -> List[str]:

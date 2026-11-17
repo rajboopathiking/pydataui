@@ -225,42 +225,78 @@ session_state = SessionStateProxy()
 # Core Container Stack & App Engine
 # ============================================================================
 
+class _ProceduralPageLayout(Component):
+    """Clean full-page layout supporting sticky sidebar and responsive main content."""
+    def __init__(
+        self,
+        sidebar_components: List[Component],
+        main_components: List[Component],
+        is_wide: bool = False,
+        theme_css: str = "",
+    ):
+        super().__init__()
+        self.sidebar_components = sidebar_components
+        self.main_components = main_components
+        self.is_wide = is_wide
+        self.theme_css = theme_css
+
+    def render(self, state_snapshot: Optional[dict] = None) -> str:
+        theme_html = f"<style>{self.theme_css}</style>" if self.theme_css and not self.theme_css.startswith("<style>") else self.theme_css
+        content_wrap = "w-full" if self.is_wide else "max-w-6xl mx-auto"
+        
+        main_html = "".join(c.render(state_snapshot) for c in self.main_components)
+
+        if self.sidebar_components:
+            sidebar_html = "".join(c.render(state_snapshot) for c in self.sidebar_components)
+            return (
+                f"{theme_html}"
+                f"<div class='pdu-dx-shell flex flex-row min-h-screen w-full bg-background text-foreground' "
+                f"style='display: flex !important; flex-direction: row !important; min-height: 100vh; width: 100%;'>"
+                f"<aside class='w-72 min-w-[18rem] border-r border-border bg-card/60 backdrop-blur-md p-6 space-y-6 shrink-0 h-screen sticky top-0 overflow-y-auto flex flex-col justify-start z-20 shadow-sm'>"
+                f"{sidebar_html}"
+                f"</aside>"
+                f"<div class='flex-1 min-w-0 {content_wrap} flex flex-col min-h-screen' style='flex: 1 1 0%; min-width: 0;'>"
+                f"<main class='flex-1 p-6 md:p-8 space-y-6 overflow-y-auto'>{main_html}</main>"
+                f"</div>"
+                f"</div>"
+            )
+        else:
+            return (
+                f"{theme_html}"
+                f"<div class='pdu-dx-shell min-h-screen w-full bg-background text-foreground flex flex-col' style='min-height: 100vh; width: 100%;'>"
+                f"<div class='{content_wrap} p-6 md:p-8 space-y-6 flex-1'>"
+                f"<main class='space-y-6'>{main_html}</main>"
+                f"</div>"
+                f"</div>"
+            )
+
+
 def get_app() -> App:
     """Return the global default App instance, initializing it if necessary."""
     global _default_app
     if _default_app is None:
-        _default_app = App(title=_page_config["title"])
+        init_theme = "dark" if _page_config.get("dark_mode", True) else "light"
+        init_palette = _page_config.get("theme", "zinc")
+        if not isinstance(init_palette, str) or init_palette not in THEME_PRESETS:
+            init_palette = "zinc"
+        _default_app = App(
+            title=_page_config.get("title", "PyDataUI App"),
+            theme=init_theme,
+            palette=init_palette,
+        )
 
         @_default_app.page("/")
         def default_home():
             is_wide = _page_config.get("layout") == "wide"
-            main_class = "w-full p-6 space-y-6" if is_wide else "max-w-5xl mx-auto p-6 space-y-6"
-
             theme_val = _page_config.get("theme", "zinc")
             theme_css = _resolve_theme_css(theme_val)
-            theme_elem = RawHtml(theme_css) if theme_css else RawHtml("")
 
-            main_container = Container(
-                theme_elem,
-                *_default_page_components,
-                class_name=main_class
+            return _ProceduralPageLayout(
+                sidebar_components=_sidebar_components,
+                main_components=_default_page_components,
+                is_wide=is_wide,
+                theme_css=theme_css,
             )
-
-            if _sidebar_components:
-                sidebar_panel = Box(
-                    *_sidebar_components,
-                    class_name="w-72 min-w-[18rem] border-r border-border bg-card/60 p-6 space-y-6 shrink-0 h-screen sticky top-0 overflow-y-auto"
-                )
-                return Box(
-                    sidebar_panel,
-                    main_container,
-                    class_name="flex flex-row min-h-screen w-full bg-background text-foreground"
-                )
-            else:
-                return Container(
-                    main_container,
-                    class_name="min-h-screen w-full bg-background text-foreground"
-                )
     return _default_app
 
 
@@ -315,12 +351,18 @@ def set_page_config(
     """
     if title:
         _page_config["title"] = title
-        app = get_app()
-        app.config.title = title
     _page_config["layout"] = layout
     _page_config["theme"] = theme
     if dark_mode is not None:
         _page_config["dark_mode"] = dark_mode
+
+    app = get_app()
+    if title:
+        app.config.title = title
+    if dark_mode is not None:
+        app.config.theme = "dark" if dark_mode else "light"
+    if isinstance(theme, str) and theme.strip().lower() in THEME_PRESETS:
+        app.config.palette = theme.strip().lower()
 
 
 def theme_toggle(**kwargs) -> Component:
@@ -1114,6 +1156,22 @@ def run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, share: 
     """
     app = get_app()
     app.run(host=host, port=port, reload=reload, share=share, **kwargs)
+
+
+def reset() -> None:
+    """Reset the global procedural DX state (useful for test isolation or script re-execution)."""
+    global _default_app, _default_page_components, _sidebar_components, _container_stack, _callbacks
+    _default_app = None
+    _default_page_components.clear()
+    _sidebar_components.clear()
+    _container_stack.clear()
+    _callbacks.clear()
+    _page_config.update({
+        "title": "PyDataUI App",
+        "layout": "centered",
+        "theme": "zinc",
+        "dark_mode": True,
+    })
 
 
 get_default_app = get_app

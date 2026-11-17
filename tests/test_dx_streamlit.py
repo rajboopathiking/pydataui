@@ -99,6 +99,9 @@ async def test_streamlit_dx_complete_workflow():
     status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
     
     assert status == 200
+    assert "<aside" in body
+    assert "<main" in body
+    assert "pdu-dx-shell" in body
     assert "AI Operations Center" in body
     assert "System Configuration" in body
     assert "Cluster healthy" in body
@@ -183,4 +186,36 @@ def test_theme_system_presets_and_custom_palettes():
     assert "--primary: #6366f1" in dict_css
     assert "--bg: #0f172a" in dict_css
     assert "--accent: #a855f7" in dict_css
+
+
+@pytest.mark.anyio
+async def test_sidebar_and_fastapi_mount_workflow():
+    pdu.reset()
+    pdu.set_page_config(title="FastAPI Mounted AI App", layout="wide", theme="zinc", dark_mode=True)
+    
+    with pdu.sidebar():
+        pdu.title("Controls")
+        pdu.theme_toggle()
+        pdu.selectbox("Select Model", ["Llama-3.3", "DeepSeek-R1", "GPT-4o"])
+        pdu.slider("Temperature", 0.0, 1.0, 0.7)
+        pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"])
+    
+    pdu.title("GPU Cluster Telemetry & Agent Dispatch")
+    pdu.success("All 16 H100 SXM5 nodes online.")
+    
+    # Verify app is ASGI-compliant and mountable
+    app = pdu.get_app()
+    assert hasattr(app._engine, "app")
+    
+    # Render page directly
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "<aside" in body
+    assert "Controls" in body
+    assert "Select Model" in body
+    assert "Temperature" in body
+    assert 'accept=".csv"' in body
+    assert "<main" in body
+    assert "GPU Cluster Telemetry & Agent Dispatch" in body
+    assert "All 16 H100 SXM5 nodes online" in body
 

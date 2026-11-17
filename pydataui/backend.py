@@ -149,7 +149,7 @@ class FastAPIEngine:
         self,
         title: str = "PyDataUI App",
         description: str = "",
-        version: str = "1.2.4",
+        version: str = "1.2.5",
         docs_url: Optional[str] = None,
         openapi_url: Optional[str] = None,
         max_request_size: int = DEFAULT_MAX_REQUEST_SIZE,
@@ -159,7 +159,7 @@ class FastAPIEngine:
         from fastapi import FastAPI
         self.title = title
         self.description = description
-        self.version = version or "1.2.4"
+        self.version = version or "1.2.5"
         self.docs_url = docs_url
         self.openapi_url = openapi_url
         self.max_request_size = int(max_request_size)
@@ -243,7 +243,7 @@ class FastAPIEngine:
             return self.app.openapi_schema
         schema = get_openapi(
             title=self.title,
-            version=self.version or "1.2.4",
+            version=self.version or "1.2.5",
             description=self.description,
             routes=self.app.routes,
         )

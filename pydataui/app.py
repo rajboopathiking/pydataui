@@ -42,7 +42,7 @@ class App:
         self.config = AppConfig(
             title=title,
             description=description,
-            version=version or '1.2.4',
+            version=version or '1.2.5',
             debug=debug,
             theme=theme,
             palette=palette,

@@ -715,6 +715,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#5-1-line-mounting-inside-an-existing-fastapi-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 1-Line Mounting Inside an Existing FastAPI Backend
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2384,6 +2395,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#5-1-line-mounting-inside-an-existing-fastapi-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 1-Line Mounting Inside an Existing FastAPI Backend
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2679,6 +2701,45 @@ Streamlit popularized rapid Python prototyping, but its architecture re-executes
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>🌐 Public Tunnel URL: https://b7d29a14c3e8.app.lhr.life (Ready in 3.5s)
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>📖 Interactive API Docs: http://127.0.0.1:8000/docs
 </span></code></pre></div></p>
+<hr />
+<h2 id="5-1-line-mounting-inside-an-existing-fastapi-backend">5. 1-Line Mounting Inside an Existing FastAPI Backend</h2>
+<p>Unlike Streamlit (which runs on Tornado with a proprietary WebSocket loop and cannot be mounted inside FastAPI), <strong>PyDataUI is pure ASGI</strong>.</p>
+<p>You can mount your procedural Streamlit-style dashboard directly inside any existing FastAPI microservice or backend:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 1. Your Existing Enterprise FastAPI Backend</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">api</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Core AI Microservice"</span><span class="p">)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nd">@api</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/api/health"</span><span class="p">)</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">():</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">,</span> <span class="s2">"nodes_online"</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 2. Build Your Streamlit-Style Dashboard</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"AI Telemetry"</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"wide"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span> <span class="n">dark_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">sidebar</span><span class="p">():</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Controls"</span><span class="p">)</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">theme_toggle</span><span class="p">()</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="n">model</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">"Select Model"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"Llama-3.3"</span><span class="p">,</span> <span class="s2">"DeepSeek-R1"</span><span class="p">,</span> <span class="s2">"GPT-4o"</span><span class="p">])</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="n">temp</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">"Temperature"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="n">dataset</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span><span class="s2">"Upload Evaluation CSV"</span><span class="p">,</span> <span class="n">accept</span><span class="o">=</span><span class="p">[</span><span class="s2">".csv"</span><span class="p">])</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"GPU Cluster Telemetry &amp; Agent Dispatch"</span><span class="p">)</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="n">pdu</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">"All 16 H100 SXM5 nodes online."</span><span class="p">)</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># 3. Mount Directly into FastAPI — 1 process, 1 port, 0ms in-memory access!</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="n">api</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/dashboard"</span><span class="p">,</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8001</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Visit:
+* 📡 <strong>FastAPI API:</strong> <code>http://127.0.0.1:8001/api/health</code>
+* 📖 <strong>FastAPI Docs:</strong> <code>http://127.0.0.1:8001/docs</code>
+* 💻 <strong>PyDataUI Dashboard:</strong> <code>http://127.0.0.1:8001/dashboard/</code></p>
 
 
 

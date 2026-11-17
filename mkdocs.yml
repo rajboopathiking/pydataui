@@ -73,6 +73,7 @@ nav:
   - Guides:
       - Modular Architecture & Clean Organization: MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE.md
       - Architecture & Internal Design: ARCHITECTURE.md
+      - Streamlit Migration & Rapid Prototyping: STREAMLIT_MIGRATION_AND_RAPID_PROTOTYPING_GUIDE.md
       - PyDataUI vs. React & Streamlit: PYDATAUI_VS_REACT_AND_STREAMLIT.md
       - Web Dev to PyDataUI (HTML, React, Redux): WEB_TO_PYDATAUI_COMPARISON.md
       - Developer Cookbook (v1.2.2): COOKBOOK.md

@@ -152,7 +152,17 @@ class Component:
         if isinstance(value, tuple):
             return tuple(self._resolve_value(v, snap) for v in value)
         if callable(value) and not isinstance(value, (type, Component)):
-            return value(snap)
+            try:
+                import inspect
+                sig = inspect.signature(value)
+                if len(sig.parameters) == 0:
+                    return value()
+            except Exception:
+                pass
+            try:
+                return value(snap)
+            except TypeError:
+                return value()
         return value
     
     def _get_event_htmx_attrs(self, event_name: str, handler: Any) -> Dict[str, str]:

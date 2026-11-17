@@ -11,6 +11,30 @@ def sniff_tabular_data(
 ) -> Tuple[List[Dict[str, Any]], List[str], List[str]]:
     """Universal data sniffer converting Polars, Pandas, DuckDB, Arrow, Pydantic,
     dataclasses, dicts, and tuples into uniform records, column keys, and headers."""
+    if callable(data):
+        try:
+            data = data()
+        except Exception:
+            pass
+    if isinstance(data, str):
+        try:
+            from ..dx import session_state
+            data = session_state.get(data)
+        except Exception:
+            pass
+    if hasattr(data, 'key') or hasattr(data, 'name') or (hasattr(data, 'props') and 'name' in getattr(data, 'props', {})):
+        try:
+            from ..dx import session_state
+            k = getattr(data, 'key', None) or getattr(data, 'name', None) or (data.props.get('name') if hasattr(data, 'props') and isinstance(data.props, dict) else None)
+            if k and k in session_state:
+                data = session_state.get(k)
+        except Exception:
+            pass
+    if hasattr(data, 'to_pandas') and not hasattr(data, 'iloc'):
+        try:
+            data = data.to_pandas()
+        except Exception:
+            pass
     if data is None:
         return [], [], []
 

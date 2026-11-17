@@ -327,3 +327,64 @@ def test_page_link_rendering():
     assert 'Operations Copilot' in html
     assert '💬' in html
 
+
+def test_dynamic_table_rendering_callable_and_session_state():
+    import pandas as pd
+    pdu.reset()
+
+    # 1. Test None state -> Empty placeholder
+    df_comp = pdu.dataframe(lambda: pdu.session_state.get("dyn_df"))
+    html_empty = df_comp.render({})
+    assert "No data loaded yet" in html_empty
+
+    # 2. Populate session_state -> Table renders dynamically
+    test_df = pd.DataFrame({"Node": ["node-01", "node-02"], "Load": [75, 82]})
+    pdu.session_state["dyn_df"] = test_df
+    html_filled = df_comp.render({})
+    assert "node-01" in html_filled
+    assert "node-02" in html_filled
+    assert "75" in html_filled
+    assert "2 rows × 2 columns" in html_filled
+
+    # 3. Test string key resolution
+    df_key_comp = pdu.dataframe("dyn_df")
+    html_key = df_key_comp.render({})
+    assert "node-01" in html_key
+
+    # 4. Test pdu.write with dynamic callable
+    pdu.reset()
+    pdu.session_state["telemetry"] = pd.DataFrame({"GPU": ["H100-0", "H100-1"]})
+    pdu.write(lambda: pdu.session_state.get("telemetry"))
+    app = pdu.get_app()
+    from pydataui.dx import _default_page_components
+    assert len(_default_page_components) > 0
+    table_html = _default_page_components[0].render({})
+    assert "H100-0" in table_html
+    assert "H100-1" in table_html
+
+
+def test_table_with_file_uploader_widget_binding():
+    import pandas as pd
+    from pydataui.request import UploadedFile
+    pdu.reset()
+
+    # Create uploader widget
+    uploader = pdu.file_uploader("Upload CSV", key="user_csv")
+    
+    # Pass uploader widget directly to pdu.table
+    tbl = pdu.table(uploader)
+    
+    # 1. Before upload: Empty
+    html_before = tbl.render({})
+    assert "No data" in html_before
+
+    # 2. Simulate upload by placing UploadedFile into session_state[uploader.key]
+    csv_payload = b"id,val\n1,100\n2,200\n"
+    pdu.session_state["user_csv"] = UploadedFile("test.csv", csv_payload, "text/csv")
+
+    # 3. After upload: Table automatically renders parsed CSV rows
+    html_after = tbl.render({})
+    assert "100" in html_after
+    assert "200" in html_after
+
+

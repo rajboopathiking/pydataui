@@ -102,7 +102,10 @@ class RequestContext:
 
     def __init__(self, request: Any, app: Optional[Any] = None):
         self._request = request
-        self.app = app or getattr(request, "app", None)
+        try:
+            self.app = app or getattr(request, "app", None)
+        except Exception:
+            self.app = app
         self._cached_body: Optional[bytes] = None
         self._cached_json: Optional[Dict[str, Any]] = None
         self._cached_form: Optional[Dict[str, Any]] = None

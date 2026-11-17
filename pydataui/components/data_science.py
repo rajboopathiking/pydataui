@@ -41,17 +41,61 @@ class DataFrameTable(Component):
         self.max_rows = max_rows
 
     def render(self, state_snapshot=None) -> str:
+        data = self.df
+        if callable(data):
+            try:
+                import inspect
+                sig = inspect.signature(data)
+                if len(sig.parameters) == 0:
+                    data = data()
+                else:
+                    data = data(state_snapshot)
+            except Exception:
+                try:
+                    data = data()
+                except Exception:
+                    pass
+        elif isinstance(data, str):
+            try:
+                from ..dx import session_state
+                if data in session_state:
+                    data = session_state.get(data)
+            except Exception:
+                pass
+        elif hasattr(data, "key") or hasattr(data, "name") or (hasattr(data, "props") and "name" in getattr(data, "props", {})):
+            try:
+                from ..dx import session_state
+                k = getattr(data, "key", None) or getattr(data, "name", None) or (data.props.get("name") if hasattr(data, "props") and isinstance(data.props, dict) else None)
+                if k and k in session_state:
+                    data = session_state.get(k)
+            except Exception:
+                pass
+
+        if hasattr(data, "to_pandas") and not hasattr(data, "iloc"):
+            try:
+                data = data.to_pandas()
+            except Exception:
+                pass
+
+        if data is None:
+            return (f'<div id="{self.id}" class="w-full rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center text-muted-foreground">'
+                    '<p class="text-sm font-medium">No data loaded yet. Upload a dataset or run a query to populate this view.</p>'
+                    '</div>')
+
         try:
             import pandas as pd
         except ImportError:
-            return ('<div class="text-destructive p-4 border rounded-lg bg-card">'
+            return (f'<div id="{self.id}" class="text-destructive p-4 border rounded-lg bg-card">'
                     '⚠ pandas is not installed. Run: <code>pip install pandas</code></div>')
 
-        if not isinstance(self.df, pd.DataFrame):
-            return ('<div class="text-destructive p-4 border rounded-lg bg-card">'
-                    'DataFrameTable: provided data is not a pandas DataFrame.</div>')
+        if not isinstance(data, pd.DataFrame):
+            try:
+                data = pd.DataFrame(data)
+            except Exception:
+                return (f'<div id="{self.id}" class="text-destructive p-4 border rounded-lg bg-card">'
+                        'DataFrameTable: provided data is not a pandas DataFrame or convertible table.</div>')
 
-        slice_df = self.df.head(self.max_rows)
+        slice_df = data.head(self.max_rows)
         raw_html = slice_df.to_html(border=0, index=True, escape=True)
 
         # Style the raw pandas HTML to match shadcn/ui table
@@ -63,7 +107,7 @@ class DataFrameTable(Component):
         raw_html = raw_html.replace('<td>', '<td class="p-4 align-middle">')
 
         rows, cols = slice_df.shape
-        total = len(self.df)
+        total = len(data)
         note = (f'<p class="text-xs text-muted-foreground mt-2">Showing {rows} of {total} rows '
                 f'× {cols} columns</p>' if total > self.max_rows else
                 f'<p class="text-xs text-muted-foreground mt-2">{rows} rows × {cols} columns</p>')

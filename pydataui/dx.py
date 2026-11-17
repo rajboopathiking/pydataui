@@ -588,6 +588,8 @@ def write(*args: Any, **kwargs: Any) -> None:
     for obj in args:
         if isinstance(obj, Component):
             _add_component(obj)
+        elif callable(obj):
+            dataframe(obj, **kwargs)
         elif hasattr(obj, "to_pandas") or hasattr(obj, "iloc") or (type(obj).__name__ in ("DataFrame", "Table")):
             dataframe(obj, **kwargs)
         elif hasattr(obj, "to_plotly_json") or type(obj).__name__ == "Figure":
@@ -842,7 +844,7 @@ def pyplot(fig: Any = None, **kwargs) -> Component:
 
 def dataframe(df: Any, max_rows: int = 100, **kwargs) -> DataFrameTable:
     """Render a Pandas / Polars DataFrame as an interactive, styled table."""
-    if hasattr(df, "to_pandas") and not hasattr(df, "iloc"):
+    if hasattr(df, "to_pandas") and not hasattr(df, "iloc") and not callable(df):
         try:
             df = df.to_pandas()
         except Exception:
@@ -1073,7 +1075,9 @@ def file_uploader(
             return on_change(**call_k)
 
     cb = _file_callback if (on_change or key) else None
-    return _add_component(FileUpload(label=label, accept=accept, multiple=multiple, name=input_name, on_change=cb, **kwargs))
+    comp = FileUpload(label=label, accept=accept, multiple=multiple, name=input_name, on_change=cb, **kwargs)
+    comp.key = key or input_name
+    return _add_component(comp)
 
 
 # ============================================================================

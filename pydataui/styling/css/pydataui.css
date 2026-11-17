@@ -405,3 +405,31 @@ body {
 @media (min-width: 768px) { .pdu-hidden-md { display: none !important; } }
 @media (min-width: 1024px) { .pdu-hidden-lg { display: none !important; } }
 
+/* 13. Premium 60fps Scroll Reveal & Micro-Interactions (Zero 3D / No Three.js) */
+.pdu-scroll-item {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.pdu-scroll-item.pdu-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pdu-metric-card, .pdu-card {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
+}
+
+.pdu-metric-card:hover, .pdu-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .pdu-metric-card:hover, .dark .pdu-card:hover {
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 255, 255, 0.03);
+}
+
+

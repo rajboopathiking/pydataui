@@ -481,5 +481,29 @@
             });
         }
         initDataTables();
+
+        // 13. High-Performance Premium Scroll Reveal Animations (Zero 3D/No Three.js)
+        function initScrollAnimations() {
+            if (!('IntersectionObserver' in window)) return;
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('pdu-revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+            document.querySelectorAll('.pdu-reveal, [data-pdu-animate], .pdu-card, .pdu-metric-card, .pdu-chart-container, .pdu-datatable-wrapper').forEach(function(el) {
+                if (!el.classList.contains('pdu-revealed')) {
+                    el.classList.add('pdu-scroll-item');
+                    observer.observe(el);
+                }
+            });
+        }
+        initScrollAnimations();
+        if (document.body) {
+            document.body.addEventListener('htmx:afterSwap', initScrollAnimations);
+        }
     });
 })();

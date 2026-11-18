@@ -275,3 +275,57 @@ class Menu(Component):
             li_html.append(f"<li class='pdu-menu-item'><a href='{escape_html(href)}'>{icon_html}<span class='pdu-menu-label'>{lbl}</span></a></li>")
             
         return f"<{self.tag} {attrs}>{''.join(li_html)}</{self.tag}>"
+
+
+class Footer(Component):
+    """
+    Modern responsive application footer bar.
+    Displays branding, copyright, status indicator, and legal/navigation links.
+    """
+    tag = 'footer'
+
+    def __init__(
+        self,
+        *children,
+        copyright: Optional[str] = None,
+        links: Optional[List[Dict[str, str]]] = None,
+        brand: Optional[str] = None,
+        logo: Optional[str] = None,
+        **props
+    ):
+        super().__init__(*children, **props)
+        self.copyright = copyright
+        self.links = links or []
+        self.brand = brand
+        self.logo = logo
+
+    def _get_classes(self) -> List[str]:
+        return super()._get_classes() + [
+            'pdu-footer', 'w-full', 'px-6', 'py-6', 'border-t', 'border-border/60',
+            'bg-card/40', 'backdrop-blur', 'flex', 'flex-col', 'md:flex-row',
+            'items-center', 'justify-between', 'gap-4', 'text-xs', 'text-muted-foreground', 'mt-auto'
+        ]
+
+    def render(self, state_snapshot: Optional[dict] = None) -> str:
+        attrs = self._build_attrs(state_snapshot or {})
+        children_html = self._render_children(state_snapshot or {})
+
+        left_parts = []
+        if self.logo:
+            left_parts.append(f"<span class='text-base mr-1.5'>{escape_html(str(self.logo))}</span>")
+        if self.brand:
+            left_parts.append(f"<span class='font-bold text-sm tracking-tight text-foreground mr-3'>{escape_html(str(self.brand))}</span>")
+        if self.copyright:
+            left_parts.append(f"<span>{escape_html(str(self.copyright))}</span>")
+        left_html = f"<div class='flex items-center flex-wrap gap-1'>{''.join(left_parts)}</div>"
+
+        links_html = ""
+        if self.links:
+            tags = []
+            for lnk in self.links:
+                lbl = escape_html(str(lnk.get('label', lnk.get('title', ''))))
+                hrf = escape_html(str(lnk.get('href', '#')))
+                tags.append(f"<a href='{hrf}' class='hover:text-foreground transition-colors'>{lbl}</a>")
+            links_html = f"<div class='flex items-center gap-6'>{''.join(tags)}</div>"
+
+        return f"<{self.tag} {attrs}>{left_html}{children_html}{links_html}</{self.tag}>"

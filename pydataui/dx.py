@@ -2684,6 +2684,37 @@ def navbar(
     return _add_component(nav_comp)
 
 
+def footer(
+    copyright: Optional[str] = None,
+    links: Optional[List[Dict[str, str]]] = None,
+    brand: Optional[str] = None,
+    logo: Optional[str] = None,
+    *children: Component,
+    **kwargs
+) -> Component:
+    """
+    Render a modern commercial footer bar with branding, copyright statement, and navigation links.
+    Supports both context manager syntax (`with pdu.footer():`) and direct arguments.
+    """
+    from .components.navigation import Footer
+    return _add_component(Footer(*children, copyright=copyright, links=links, brand=brand, logo=logo, **kwargs))
+
+
+def login_page(
+    title: str = "Sign in to PyDataUI",
+    subtitle: str = "Enter your credentials to access your data workspace",
+    logo: Optional[str] = None,
+    redirect_to: str = "/",
+    **kwargs
+) -> Component:
+    """
+    Render a production-ready authentication/login page with CSRF protection, input validation, and theming.
+    """
+    from .auth.components import LoginPage
+    logo_comp = RawHtml(f"<span class='text-3xl mb-2'>{logo}</span>") if logo else None
+    return _add_component(LoginPage(title=title, subtitle=subtitle, logo=logo_comp, redirect_to=redirect_to, **kwargs))
+
+
 def breadcrumb(
     items: Optional[List[Union[str, Dict[str, str], Tuple[str, str]]]] = None,
     separator: str = "/",
@@ -2956,6 +2987,12 @@ def data_editor(
 # ============================================================================
 # Application Lifecycle & Runner
 # ============================================================================
+
+def link(label: str, href: str = "#", **kwargs) -> Component:
+    """Add a styled hyperlink."""
+    from .components.typography import Link
+    return _add_component(Link(label, href=href, **kwargs))
+
 
 def page_link(page: str, label: Optional[str] = None, icon: Optional[str] = None, **kwargs) -> Component:
     """

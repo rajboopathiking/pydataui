@@ -755,6 +755,141 @@ if __name__ == "__main__":
     pdu.run(port=8000)
 ```
 
+#### 🔐 4. Enterprise Authentication & Glassmorphic Login (`theme="indigo"`)
+Clean, secure enterprise login with single sign-on (SSO), CSRF tokens, input validation, and atmospheric indigo dark theming:
+
+```python
+import pydataui as pdu
+
+# 1. Page Configuration & Theme
+pdu.set_page_config(title="Login — NexusCloud AI", theme="indigo", dark_mode=True)
+
+# 2. Centered Glassmorphic Authentication Card
+with pdu.box(class_name="min-h-screen flex items-center justify-center p-4"):
+    with pdu.card(class_name="max-w-md w-full p-8 shadow-2xl backdrop-blur-xl border border-border/80"):
+        # Brand Badge & Title Header
+        with pdu.flex(direction="col", align="center", class_name="mb-6 text-center space-y-2"):
+            pdu.badge("🛡️ SSO & Enterprise Security", color="indigo", variant="subtle")
+            pdu.header("Sign in to NexusCloud")
+            pdu.caption("Enter your corporate credentials or single sign-on provider")
+
+        # Email & Password Form Inputs
+        email = pdu.text_input("Corporate Email", placeholder="alex.vance@company.com", key="auth_email")
+        password = pdu.text_input("Password", type="password", placeholder="••••••••••••", key="auth_pass")
+
+        # Remember Me Checkbox & Reset Password Link
+        with pdu.flex(justify="between", align="center", class_name="my-3 text-xs"):
+            pdu.checkbox("Remember this workstation (30 days)", key="remember_me")
+            pdu.link("Forgot password?", href="/reset-password")
+
+        # Primary Submit Action
+        pdu.button("Sign In to Workspace ⚡", type="primary", use_container_width=True)
+
+        pdu.divider("or continue with enterprise SSO")
+
+        # OAuth / SSO Provider Quick Buttons
+        with pdu.row(gap=2):
+            pdu.button("Google Workspace", use_container_width=True)
+            pdu.button("Okta / SAML 2.0", use_container_width=True)
+
+        # Enterprise Compliance Caption
+        with pdu.flex(justify="center", class_name="mt-6 text-xs text-muted-foreground"):
+            pdu.caption("🔒 256-bit TLS encrypted • ISO 27001 & SOC 2 Type II certified")
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
+#### 🏛️ 5. Commercial Application Shell: Navbar + Sidebar + Content + Footer (`theme="slate"`)
+End-to-end commercial portal featuring a sticky top navigation bar, collapsible hierarchy sidebar, breadcrumbs, high-density KPI metrics, and a docked commercial footer:
+
+```python
+import pydataui as pdu
+import pandas as pd
+
+# 1. Page Configuration & Theme
+pdu.set_page_config(title="DataMesh Cloud Platform", theme="slate", layout="wide", dark_mode=True)
+
+# 2. Sticky Commercial Top Navigation Bar
+pdu.navbar(
+    brand="DataMesh Enterprise",
+    logo="🌐",
+    links=[
+        {"label": "Overview", "href": "/", "active": True},
+        {"label": "Pipelines", "href": "/pipelines"},
+        {"label": "Model Registry", "href": "/models"},
+        {"label": "Endpoints", "href": "/endpoints"},
+        {"label": "Security Logs", "href": "/audit"}
+    ],
+    search="Search clusters, models, or datasets...",
+    user={"name": "Sarah Connor", "role": "Platform Lead"},
+    sticky=True
+)
+
+# 3. Left Control & Hierarchy Sidebar
+with pdu.sidebar():
+    pdu.header("DataMesh OS")
+    pdu.caption("v1.5.1 Production Mesh")
+    pdu.divider()
+
+    env = pdu.selectbox("Active Environment", ["Production (us-east-1)", "Staging (eu-central-1)"])
+    pdu.radio("Quick Views", ["📊 Cluster Telemetry", "🚀 Model Deployments", "🛡️ RBAC Permissions", "⚙️ System Settings"])
+
+    with pdu.card(title="Storage Quota"):
+        pdu.caption("Distributed S3 Pool (74%)")
+        pdu.progress(74)
+        pdu.caption("14.8 TB / 20.0 TB Allocated")
+
+# 4. Main Workspace with Breadcrumbs & Action Header
+pdu.breadcrumb(["Home", "Compute Mesh", "GPU Worker Nodes"])
+
+with pdu.flex(justify="between", align="center", class_name="mb-4 pb-2 border-b border-border/40"):
+    with pdu.column(gap=0):
+        pdu.header("Distributed Inference Telemetry")
+        pdu.caption("Active workload nodes across multi-region Kubernetes clusters")
+    with pdu.row(gap=2):
+        pdu.button("📥 Export Parquet")
+        pdu.button("⚡ Deploy Endpoint", type="primary")
+
+# 4 KPI Stat Cards with Rounded Delta Badges
+c1, c2, c3, c4 = pdu.columns(4)
+with c1: pdu.metric("Cluster Throughput", "28.4k req/s", delta="+14.2%")
+with c2: pdu.metric("P99 Tail Latency", "11.4 ms", delta="-3.1ms")
+with c3: pdu.metric("VRAM Saturation", "88.6%", delta="Optimal")
+with c4: pdu.metric("Health Score", "99.98%", delta="100% SLA")
+
+# Real-Time Telemetry Line Chart
+with pdu.card(title="P99 Response Time (ms) by Availability Zone", subtitle="Live 5-second polling via in-memory telemetry"):
+    pdu.line_chart([18.2, 16.4, 14.8, 12.1, 11.4])
+
+# Active Endpoints Ledger Table
+pdu.subheader("Active Model Serving Endpoints")
+df_endpoints = pd.DataFrame({
+    "MODEL ID": ["llama-3.3-70b-instruct", "deepseek-r1-distill-qwen", "mistral-large-2407"],
+    "REPLICAS": ["8 / 8 Pods", "16 / 16 Pods", "4 / 4 Pods"],
+    "HARDWARE": ["8x H100 SXM5", "16x A100 80GB", "4x L40S 48GB"],
+    "AVG LATENCY": ["14.2 ms", "10.8 ms", "18.6 ms"],
+    "STATUS": ["HEALTHY ✓", "HEALTHY ✓", "HEALTHY ✓"]
+})
+pdu.table(df_endpoints)
+
+# 5. Commercial Footer with Branding, Copyright & Legal Links
+pdu.footer(
+    brand="DataMesh Cloud",
+    logo="🌐",
+    copyright="© 2026 DataMesh Systems, Inc. All rights reserved.",
+    links=[
+        {"label": "Privacy Policy", "href": "/privacy"},
+        {"label": "Terms of Service", "href": "/terms"},
+        {"label": "SOC 2 Type II", "href": "/security"},
+        {"label": "System Status", "href": "/status"}
+    ]
+)
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
 ### **Zero Theme Limitations: Custom Palettes & Brand Colors**
 You are never limited to presets. Define any custom brand palette via hex code or custom dictionary:
 

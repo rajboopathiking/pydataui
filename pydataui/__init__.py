@@ -101,6 +101,8 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
 
     # Procedural Final Extensions
     'navbar': ('.dx', 'navbar'),
+    'footer': ('.dx', 'footer'),
+    'login_page': ('.dx', 'login_page'),
     'breadcrumb': ('.dx', 'breadcrumb'),
     'image': ('.dx', 'image'),
     'video': ('.dx', 'video'),
@@ -234,6 +236,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'theme_toggle': ('.dx', 'theme_toggle'),
     'page': ('.dx', 'page'),
     'page_link': ('.dx', 'page_link'),
+    'link': ('.dx', 'link'),
     'switch_page': ('.dx', 'switch_page'),
     'rerun': ('.dx', 'rerun'),
     'form': ('.dx', 'form'),

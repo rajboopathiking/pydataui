@@ -1207,18 +1207,41 @@ Breadcrumb(
 ---
 
 ### Tabs & Tab
-Panel switcher that toggles active views without refreshing the page.
+Panel switcher that toggles active views without refreshing the page. In v1.4.4, supports equal-width distribution, modern segmented pill tabs, and headless multi-step wizards.
 
 ```python
 from pydataui import Tabs, Tab, Text
 
+# 1. Full-width expanded tabs
 Tabs(
     Tab("Overview", Text("High-level system metrics.")),
     Tab("Configuration", Text("Cluster environment variables.")),
-    Tab("Audit Logs", Text("Security events and access records.")),
-    default_tab="Overview"
+    expand=True
+)
+
+# 2. Modern Segmented Pill Tabs
+Tabs(
+    Tab("7 Days", Text("Weekly overview")),
+    Tab("30 Days", Text("Monthly overview")),
+    variant="pill"
+)
+
+# 3. Headless Multi-Step Wizard (tab headers completely hidden)
+# Perfect for step-by-step onboarding, checkouts, and AI interview forms
+Tabs(
+    Tab("Step 1", Text("Account details...")),
+    Tab("Step 2", Text("Payment details...")),
+    hide_tab_buttons=True
 )
 ```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `*tabs` | `Tab` | `()` | Tab child elements containing title and body. |
+| `default_tab` | `Optional[str]` | `None` | Initial active tab label. |
+| `expand` | `bool` | `False` | When `True`, tabs expand equally across container width. |
+| `hide_tab_buttons`| `bool` | `False` | When `True`, hides the tab navigation bar (for multi-step wizards). |
+| `variant` | `str` | `'line'` | Visual tab style: `'line'` (underline) or `'pill'` (segmented pill). |
 
 ---
 
@@ -1591,4 +1614,152 @@ ShadCommandPalette(
 ```python
 from pydataui.shadcn import ShadDatePicker
 ShadDatePicker(label="Select Evaluation Date")
+```
+
+---
+
+## Commercial Dashboard & Analytics Suite (v1.4.4)
+
+### StatCard
+Commercial executive KPI stat card with optional integrated inline SVG sparklines, delta change indicators, and icon badges.
+
+```python
+from pydataui.components.commercial import StatCard
+
+StatCard(
+    title="Monthly Recurring Revenue",
+    value="$154,200",
+    change="+18.2% vs last month",
+    change_type="increase",
+    sparkline=[92, 104, 118, 132, 145, 154],
+    icon="📈",
+    color="emerald"
+)
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `title` | `str` | Required | Header title of the stat metric. |
+| `value` | `Union[str, int, float]`| Required | The primary large KPI number or string. |
+| `change` | `Optional[str]` | `None` | Delta string (e.g. `'+12.4%'`, `'-2.1ms'`). |
+| `change_type` | `Optional[str]` | `None` | `'increase'`, `'decrease'`, or `'neutral'` (auto-detected if omitted). |
+| `icon` | `Optional[str]` | `None` | Emoji or SVG icon displayed in header. |
+| `sparkline` | `Optional[list[float]]` | `None` | List of numbers to render as an integrated inline SVG sparkline. |
+| `color` | `str` | `'indigo'` | Theme color preset or custom hex code. |
+
+---
+
+### Sparkline
+Pure inline SVG sparkline component. High-performance, zero JavaScript dependencies, renders in ~0.001ms.
+
+```python
+from pydataui.components.commercial import Sparkline
+
+Sparkline(
+    data=[12, 14, 18, 15, 22, 28, 35, 32, 42],
+    color="indigo",
+    width=140,
+    height=36,
+    stroke_width=2,
+    fill=True
+)
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `data` | `list[float]` | Required | Numerical series to plot. |
+| `color` | `str` | `'indigo'` | Stroke and fill color (preset name or hex code). |
+| `width` | `Union[int, str]` | `120` | Width in pixels or CSS string. |
+| `height` | `Union[int, str]` | `36` | Height in pixels. |
+| `stroke_width`| `int` | `2` | SVG stroke line width. |
+| `fill` | `bool` | `True` | Whether to render semi-transparent gradient fill under the curve. |
+
+---
+
+### PricingCard
+Complete commercial SaaS pricing tier card with featured badge and list of tier capabilities.
+
+```python
+from pydataui.components.commercial import PricingCard
+
+PricingCard(
+    tier="Pro Developer",
+    price="$49",
+    period="/month",
+    description="For fast-moving engineering teams",
+    features=[
+        "Unlimited cluster deployments",
+        "0ms in-memory PyTorch / Pandas access",
+        "10 public tunnel domains",
+        "24/7 dedicated support"
+    ],
+    button_text="Upgrade to Pro",
+    highlighted=True,
+    badge_label="MOST POPULAR"
+)
+```
+
+---
+
+### Temporal & Search Input Primitives
+
+#### DateInput
+HTML5 native date picker integrated with session state.
+
+```python
+from pydataui.components.commercial import DateInput
+
+DateInput(
+    label="Select Audit Date",
+    value="2026-11-18",
+    min_value="2026-01-01",
+    max_value="2026-12-31",
+    key="audit_date"
+)
+```
+
+#### TimeInput
+HTML5 native time picker integrated with session state.
+
+```python
+from pydataui.components.commercial import TimeInput
+
+TimeInput(
+    label="Daily Backup Window",
+    value="02:30",
+    key="backup_time"
+)
+```
+
+#### SearchInput
+Real-time search bar with instant HTMX debounced dispatch.
+
+```python
+from pydataui.components.commercial import SearchInput
+
+SearchInput(
+    placeholder="Search telemetry traces...",
+    key="trace_query",
+    on_search=lambda q: print("Searching for:", q)
+)
+```
+
+---
+
+### Spacing & Division Primitives
+
+#### Spacer
+Vertical whitespace container.
+```python
+from pydataui.components.layout import Spacer
+
+Spacer(height=24)  # 24px vertical space
+```
+
+#### Divider
+Horizontal line separator with optional centered text label.
+```python
+from pydataui.components.layout import Divider
+
+Divider(label="OR CONTINUE WITH")
 ```

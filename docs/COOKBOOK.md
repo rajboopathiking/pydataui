@@ -16,6 +16,11 @@
 8. [Recipe 7: Dual-Surface Terminal UI (TUI) Mode](#recipe-7-dual-surface-terminal-ui-tui-mode)
 9. [Recipe 8: FastAPI Native Mounting & Microservices](#recipe-8-fastapi-native-mounting)
 10. [Recipe 9: Production Deployment & Dockerization](#recipe-9-production-deployment-dockerization)
+11. [Recipe 10: Advanced Flexbox & Responsive CSS Grid Layouts](#recipe-10-advanced-flexbox-responsive-css-grid-layouts)
+12. [Recipe 11: Absolute Floating Badges & Sticky Action Bars](#recipe-11-absolute-floating-badges-sticky-action-bars)
+13. [Recipe 12: Headless Multi-Step Interactive Wizard](#recipe-12-headless-multi-step-interactive-wizard)
+14. [Recipe 13: Commercial FinTech Executive Dashboard](#recipe-13-commercial-fintech-executive-dashboard)
+15. [Recipe 14: FastAPI Production Hardening & Swagger Filtering](#recipe-14-fastapi-production-hardening-swagger-filtering)
 
 ---
 
@@ -393,3 +398,220 @@ CMD ["pydataui", "run", "app.py", "--host", "0.0.0.0", "--port", "8000", "--work
 - [x] Enable HTTPS for encrypted cookie transmission.
 - [x] Run with multiple Uvicorn workers (`--workers 4`).
 - [x] Pre-validate routes with `pydataui check app.py`.
+
+
+---
+
+## Recipe 10: Advanced Flexbox & Responsive CSS Grid Layouts
+
+Build modern, auto-wrapping dashboard layouts without writing CSS media queries.
+
+```python
+import pydataui as pdu
+
+pdu.set_page_config(title="Cluster Telemetry", layout="wide", theme="zinc", dark_mode=True)
+
+# 1. Navigation Header with Flexbox distribution
+with pdu.flex(direction="row", justify="between", align="center", gap=4):
+    with pdu.row(align="center", gap=3):
+        pdu.subheader("Production Cluster Alpha")
+        pdu.badge("US-EAST-1", color="zinc", variant="outline")
+        pdu.badge("32/32 PODS HEALTHY", color="emerald", variant="subtle")
+    
+    with pdu.row(align="center", gap=2):
+        pdu.button("Drain Nodes", type="destructive")
+        pdu.button("+ Deploy Pod", type="primary")
+
+pdu.spacer(height=16)
+
+# 2. Responsive CSS Grid: Cards automatically wrap when screen or card reaches 260px width!
+with pdu.grid(min_column_width="260px", gap=4):
+    pdu.stat_card("Active Pods", "32 / 32", change="100% OK", sparkline=[10, 10, 10, 10], color="emerald")
+    pdu.stat_card("P99 Latency", "8.2 ms", change="-2.1ms", sparkline=[14, 12, 10, 8], color="indigo")
+    pdu.stat_card("VRAM Allocated", "1,180 GB", change="+12%", sparkline=[60, 75, 85, 92], color="amber")
+    pdu.stat_card("Token Throughput", "18.4k t/s", change="+24.8%", sparkline=[12, 15, 17, 18], color="rose")
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
+---
+
+## Recipe 11: Absolute Floating Badges & Sticky Action Bars
+
+Combine relative parent containers with absolute children and viewport-docked action bars.
+
+```python
+import pydataui as pdu
+
+pdu.set_page_config(title="Incident Remediation", theme="slate")
+
+# Relative Card with Absolute Floating Badge
+with pdu.card(position="relative"):
+    # Pinned to the top-right corner of this card
+    pdu.badge("HOTSPOT DETECTED", color="rose", position="absolute", top="14px", right="14px")
+    pdu.title("Worker Node 04")
+    pdu.caption("High thermal signature detected during distributed LLM checkpointing.")
+    pdu.line_chart([65, 72, 80, 85, 94, 98, 82], color="rose")
+
+# Sticky Docked Viewport Action Bar (docked to bottom of browser window)
+with pdu.pinned(position="bottom"):
+    with pdu.flex(justify="between", align="center", class_name="max-w-4xl mx-auto py-2"):
+        pdu.text("⚠️ 3 worker nodes require kernel updates before next training run.")
+        with pdu.row(gap=2):
+            pdu.button("Ignore for 24h", type="outline")
+            pdu.button("Apply Batch Update", type="primary")
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
+---
+
+## Recipe 12: Headless Multi-Step Interactive Wizard
+
+Create checkout flows, multi-stage data pipelines, and AI interview wizards in 1 line by setting `hide_tab_buttons=True`:
+
+```python
+import pydataui as pdu
+
+pdu.set_page_config(title="SaaS Onboarding Wizard", theme="violet")
+
+# Initialize current step in session_state
+if "step" not in pdu.session_state:
+    pdu.session_state["step"] = 0
+
+# Multi-Step Tabs with navigation buttons completely hidden
+steps = pdu.tabs(["Account", "Organization", "Billing", "Finish"], hide_tab_buttons=True)
+
+# Step 0: Account Details
+with steps[0]:
+    with pdu.card(title="Step 1: Account Information", subtitle="Create your admin login"):
+        pdu.text_input("Full Name", key="wiz_name")
+        pdu.text_input("Work Email", key="wiz_email")
+        pdu.button("Next: Organization →", type="primary", on_click=lambda: pdu.session_state.update({"step": 1}))
+
+# Step 1: Organization Details
+with steps[1]:
+    with pdu.card(title="Step 2: Organization Setup"):
+        pdu.text_input("Company Name", key="wiz_company")
+        pdu.selectbox("Team Size", ["1-10", "11-50", "51-200", "200+"])
+        with pdu.row(justify="between"):
+            pdu.button("← Back", on_click=lambda: pdu.session_state.update({"step": 0}))
+            pdu.button("Next: Billing →", type="primary", on_click=lambda: pdu.session_state.update({"step": 2}))
+
+# Step 2: Plan Selection
+with steps[2]:
+    with pdu.card(title="Step 3: Select Plan"):
+        with pdu.grid(columns=2, gap=4):
+            pdu.pricing_card("Pro", "$49", features=["Up to 10 nodes", "Shared cluster"])
+            pdu.pricing_card("Enterprise", "$199", features=["Unlimited nodes", "Dedicated VPC"], highlighted=True)
+        with pdu.row(justify="between"):
+            pdu.button("← Back", on_click=lambda: pdu.session_state.update({"step": 1}))
+            pdu.button("Complete Setup 🚀", type="primary", on_click=lambda: pdu.session_state.update({"step": 3}))
+
+# Step 3: Success Screen
+with steps[3]:
+    pdu.success("🎉 Welcome aboard! Your cluster workspace is provisioned.")
+    pdu.button("Launch Dashboard", type="primary", on_click=lambda: pdu.switch_page("/dashboard"))
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
+---
+
+## Recipe 13: Commercial FinTech Executive Dashboard
+
+Renders ARR/MRR velocity, customer cohorts, and pure inline SVG sparklines in ~0.001ms.
+
+```python
+import pydataui as pdu
+import pandas as pd
+
+pdu.set_page_config(title="ApexPay FinTech Analytics", layout="wide", theme="emerald")
+
+pdu.title("ApexPay Revenue Operations & Cohorts")
+pdu.success("Stripe Webhook Sync: Active • 99.99% Gateway Uptime")
+
+# 1. Executive Stat Cards with inline Sparklines
+with pdu.grid(columns=4, gap=4):
+    pdu.stat_card("Annual Run Rate (ARR)", "$1,840,500", change="+24.8%", sparkline=[90, 110, 130, 145, 160, 184], icon="💳", color="emerald")
+    pdu.stat_card("Monthly Recurring (MRR)", "$154,200", change="+18.2%", sparkline=[92, 104, 118, 132, 145, 154], icon="📈", color="emerald")
+    pdu.stat_card("Active Accounts", "2,840", change="+142 mo", sparkline=[2200, 2400, 2600, 2840], icon="👥", color="indigo")
+    pdu.stat_card("Net Retention Rate", "118.4%", change="TOP 5%", sparkline=[112, 114, 116, 118], icon="⚡", color="amber")
+
+pdu.spacer(height=20)
+
+# 2. Date Filtering & Revenue Cohorts Table
+with pdu.flex(direction="row", justify="between", align="center"):
+    pdu.subheader("Revenue Ingestion Ledger")
+    with pdu.row(align="center", gap=2):
+        pdu.date_input("Audit Window", value="2026-11-18", key="ledger_date")
+        pdu.button("Export CSV", type="outline")
+
+df = pd.DataFrame({
+    "Transaction ID": [f"tx-894{i}" for i in range(1, 6)],
+    "Customer": ["Acme Corp", "BioHealth AI", "FinFlow Inc", "DataMesh Labs", "ScaleOps"],
+    "Tier": ["Enterprise", "Pro", "Pro", "Enterprise", "Pro"],
+    "Amount": ["$12,400", "$4,900", "$4,900", "$15,200", "$4,900"],
+    "Status": ["Settled", "Settled", "Settled", "Processing", "Settled"]
+})
+pdu.write(df)
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
+---
+
+## Recipe 14: FastAPI Production Hardening & Swagger Filtering
+
+Access the native FastAPI engine directly to integrate background tasks, add CORS middleware, and harden Swagger UI for production.
+
+```python
+import pydataui as pdu
+from fastapi import APIRouter, BackgroundTasks
+from starlette.middleware.cors import CORSMiddleware
+
+# 1. Configure production Swagger UI security
+pdu.set_page_config(
+    title="Production Hardened App",
+    # Enable search filtering in Swagger UI
+    swagger_ui_parameters={"filter": True, "syntaxHighlight.theme": "monokai"},
+    # Only allow users with the 'admin' role to view /docs
+    docs_roles=["admin"]
+)
+
+# 2. Access the native FastAPI application
+fastapi_app = pdu.get_fastapi()
+
+# 3. Attach standard Starlette / FastAPI middlewares
+fastapi_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://mycompany.com"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"]
+)
+
+# 4. Attach APIRouter with Starlette BackgroundTasks
+router = APIRouter(prefix="/v1")
+
+def audit_log_worker(event: str):
+    print(f"[AUDIT WORKER] Logging event: {event}")
+
+@router.post("/trigger-audit")
+def trigger_audit(bg: BackgroundTasks):
+    bg.add_task(audit_log_worker, "User initiated cluster security scan")
+    return {"status": "enqueued", "queue": "background"}
+
+fastapi_app.include_router(router)
+
+# 5. Build procedural UI
+pdu.title("Hardened Operations Center")
+pdu.write("All requests secured with CORS and authenticated Swagger UI.")
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```

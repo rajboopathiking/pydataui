@@ -15,6 +15,7 @@ Comprehensive specification of all core classes, methods, signatures, decorators
 7. [Terminal User Interface Engine (`tui`, `run_tui`)](#7-terminal-user-interface-engine-tui)
 8. [CLI Command Reference](#8-cli-command-reference)
 9. [Internal HTTP & Event Wire Protocol](#9-internal-http-event-wire-protocol)
+10. [Procedural Streamlit-Style DX Reference (`pydataui as pdu`)](#10-procedural-streamlit-style-dx-reference-import-pydataui-as-pdu)
 
 ---
 
@@ -365,3 +366,348 @@ PyDataUI uses clean REST endpoints and HTMX partial swap protocols:
 | `GET /api/auth/me` | `GET` | Authenticated user profile | `application/json` |
 | `GET /_pdu/health` | `GET` | Infrastructure health check | `application/json` |
 | `GET /docs` | `GET` | OpenAPI Swagger documentation | `text/html` |
+
+
+---
+
+## 10. Procedural Streamlit-Style DX Reference (`import pydataui as pdu`)
+
+PyDataUI v1.4.4 provides a comprehensive procedural API under the `pydataui` module namespace. All methods support top-to-bottom procedural execution, context managers (`with` syntax), and direct component return values.
+
+### 10.1 Global Configuration & Lifecycle
+
+#### `pdu.set_page_config(...)`
+Configures application metadata, layout mode, visual theme, and production FastAPI OpenAPI/Swagger settings.
+
+```python
+pdu.set_page_config(
+    title="Cluster Operations",
+    layout="wide",
+    theme="zinc",
+    dark_mode=True,
+    docs_url="/docs",
+    openapi_url="/openapi.json",
+    swagger_ui_parameters={"filter": True, "syntaxHighlight.theme": "monokai"},
+    docs_roles=["admin"]
+)
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `title` | `str` | `"PyDataUI App"` | HTML `<title>` tag and browser tab name. |
+| `layout` | `str` | `"centered"` | Layout width: `"centered"` (max 1200px) or `"wide"` (100% responsive fluid width). |
+| `theme` | `str | dict` | `"indigo"` | Theme name (e.g. `"zinc"`, `"emerald"`, `"violet"`), custom HEX (`"#4f46e5"`), or palette dict. |
+| `dark_mode` | `bool` | `False` | Forces dark mode if `True`. |
+| `docs_url` | `Optional[str]` | `"/docs"` | Path to Swagger UI docs. Pass `None` to completely disable in production. |
+| `openapi_url` | `Optional[str]` | `"/openapi.json"` | Path to OpenAPI JSON schema. Pass `None` to disable in production. |
+| `swagger_ui_parameters` | `Optional[dict]` | `None` | Dictionary of Swagger UI config parameters (e.g. `{"filter": True}`). |
+| `docs_roles` | `Optional[list[str]]`| `None` | List of user roles allowed to access `/docs` (e.g. `["admin"]`). |
+
+#### `pdu.run(app=None, host="127.0.0.1", port=8000, reload=False, share=False)`
+Starts the ASGI web application and optional instant public HTTPS tunnel.
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `app` | `Optional[App]` | `None` | Custom App instance. If `None`, runs the active default procedural app. |
+| `host` | `str` | `"127.0.0.1"` | Bind interface IP. Use `"0.0.0.0"` for Docker containers. |
+| `port` | `int` | `8000` | Port number to listen on. |
+| `reload` | `bool` | `False` | Enables auto-reload on source code modification. |
+| `share` | `bool` | `False` | Starts an instant, secure public HTTPS tunnel (ready in ~3.5s). |
+
+#### `pdu.page(path, title=None, roles=None, public=False)`
+Decorator for defining multi-page routes in procedural apps.
+
+```python
+@pdu.page("/analytics", title="Telemetry", roles=["admin"])
+def analytics_view():
+    pdu.title("Telemetry Dashboard")
+```
+
+#### `pdu.page_link(path, label=None, icon=None)`
+Renders an interactive internal page navigation anchor.
+
+#### `pdu.switch_page(path)`
+Programmatically redirects the user to a different route.
+
+---
+
+### 10.2 Structural Layout & Containers
+
+#### `pdu.flex(direction="row", justify="start", align="stretch", gap=3, wrap=False, **props)`
+Flexbox container context manager. Provides granular control over CSS flexbox layout.
+
+```python
+with pdu.flex(direction="row", justify="between", align="center", gap=4):
+    pdu.subheader("Cluster Nodes")
+    pdu.badge("Active", color="emerald")
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `direction` | `str` | `"row"` | `"row"` or `"column"`. |
+| `justify` | `str` | `"start"` | `"start"`, `"center"`, `"end"`, `"between"`, `"around"`, `"evenly"`. |
+| `align` | `str` | `"stretch"` | `"stretch"`, `"start"`, `"center"`, `"end"`, `"baseline"`. |
+| `gap` | `int | str` | `3` | Space between child items (`1` through `12` or CSS string like `"16px"`). |
+| `wrap` | `bool | str` | `False` | Whether children wrap onto multiple lines. |
+
+#### `pdu.row(align="center", justify="start", gap=3, wrap=False, **props)`
+Convenience shorthand for `pdu.flex(direction="row", ...)`.
+
+#### `pdu.column(align="stretch", justify="start", gap=3, **props)`
+Convenience shorthand for `pdu.flex(direction="column", ...)`.
+
+#### `pdu.grid(columns=None, min_column_width=None, gap=4, row_gap=None, column_gap=None, **props)`
+Responsive CSS Grid layout container.
+
+```python
+# Auto-responsive card grid: columns automatically wrap when items reach 260px!
+with pdu.grid(min_column_width="260px", gap=4):
+    pdu.stat_card("Node 1", "98%")
+    pdu.stat_card("Node 2", "84%")
+
+# Fixed 3-column grid
+with pdu.grid(columns=3, gap=6):
+    pdu.metric("CPU", "45%")
+    pdu.metric("RAM", "12 GB")
+    pdu.metric("Disk", "68%")
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `columns` | `int | list[int] | dict` | `None` | Number of columns (`3`), ratio list (`[1, 2, 1]`), or breakpoint dict (`{"sm": 1, "md": 2, "lg": 4}`). |
+| `min_column_width`| `str` | `None` | Activates responsive auto-fit grid (`repeat(auto-fit, minmax(width, 1fr))`). |
+| `gap` | `int | str` | `4` | General grid gap. |
+| `row_gap` | `int | str` | `None` | Row-specific gap override. |
+| `column_gap` | `int | str` | `None` | Column-specific gap override. |
+
+#### `pdu.columns(spec, gap="medium")`
+Streamlit-parity multi-column splitter. Accepts integer count (`3`) or relative weights (`[1, 2, 1]`). Returns a list of column context managers.
+
+#### `pdu.tabs(tabs, expand=False, hide_tab_buttons=False, variant="line")`
+Tab container supporting full width distribution and headless multi-step wizards.
+
+```python
+# 1. Standard navigation tabs
+tab1, tab2 = pdu.tabs(["Overview", "Logs"], expand=True)
+
+# 2. Segmented pill tabs
+tab_day, tab_mo = pdu.tabs(["Day", "Month"], variant="pill")
+
+# 3. Headless Multi-Step Wizard (tab headers completely hidden)
+steps = pdu.tabs(["Account", "Billing", "Review"], hide_tab_buttons=True)
+with steps[0]:
+    pdu.text_input("Organization")
+    pdu.button("Next →")
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `tabs` | `list[str]` | Required | Labels for each tab. |
+| `expand` | `bool` | `False` | Distributes tabs equally across 100% of available container width. |
+| `hide_tab_buttons`| `bool` | `False` | Hides the top navigation tab bar completely. Ideal for multi-step wizards. |
+| `variant` | `str` | `"line"` | Tab style: `"line"` (underline indicator) or `"pill"` (segmented pill). |
+
+#### `pdu.pinned(position="bottom", class_name="", **props)`
+Docked sticky viewport container (e.g. sticky bottom action bar, pinned top notice).
+
+#### `pdu.overlay(z_index=50, class_name="", **props)`
+Full-screen or relative overlay backdrop container.
+
+#### `pdu.card(title=None, subtitle=None, position=None, **props)`
+Elevated card container with subtle border and shadow.
+
+#### `pdu.container(border=False, **props)`
+Layout wrapper container with optional border.
+
+#### `pdu.expander(label, expanded=False)`
+Collapsible disclosure panel.
+
+#### `pdu.dialog(title, trigger_label="Open")`
+Modal dialog overlay container.
+
+#### `pdu.status(label, expanded=True, state="running")`
+Live operational status block. Yields status controller with `s.update(label=..., state="complete")`.
+
+#### `pdu.spacer(height=16)`
+Vertical whitespace divider (`height` in pixels or CSS string).
+
+#### `pdu.divider(label=None)`
+Horizontal rule with optional centered text label (e.g. `pdu.divider("OR")`).
+
+---
+
+### 10.3 Component Coordinate Positioning Engine
+
+Every visual component in PyDataUI v1.4.4 accepts coordinate positioning props:
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `position` | `str` | `None` | CSS positioning model: `"relative"`, `"absolute"`, `"fixed"`, `"sticky"`. |
+| `top` | `str | int` | `None` | Top coordinate offset (e.g. `"14px"`, `"1rem"`, `0`). |
+| `bottom` | `str | int` | `None` | Bottom coordinate offset. |
+| `left` | `str | int` | `None` | Left coordinate offset. |
+| `right` | `str | int` | `None` | Right coordinate offset. |
+| `inset` | `str | int` | `None` | Shorthand for all 4 coordinates (e.g. `0` for full fill). |
+| `z_index` | `int` | `None` | Z-index stacking context priority (e.g. `50`). |
+
+**Example: Absolute Floating Badge on Relative Card**
+```python
+with pdu.card(position="relative"):
+    pdu.badge("HIGH PRIORITY", color="rose", position="absolute", top="12px", right="12px")
+    pdu.subheader("Inference Node 04")
+```
+
+---
+
+### 10.4 Commercial Dashboard & Analytics Primitives
+
+#### `pdu.metric(label, value, delta=None, delta_color="normal", icon=None)`
+Executive KPI metric block with delta trend indicator.
+
+#### `pdu.stat_card(title, value, change=None, change_type=None, icon=None, sparkline=None, color="indigo")`
+Commercial dashboard KPI card with integrated inline SVG sparkline and icon.
+
+```python
+pdu.stat_card(
+    title="Monthly Recurring Revenue",
+    value="$154,200",
+    change="+18.2% vs last mo",
+    sparkline=[92, 110, 125, 140, 154],
+    icon="📈",
+    color="emerald"
+)
+```
+
+#### `pdu.sparkline(data, color="indigo", width=120, height=36, stroke_width=2, fill=True)`
+Pure inline SVG sparkline graph. Zero JavaScript, zero external dependencies, renders in 0.001ms.
+
+#### `pdu.badge(label, color="indigo", variant="subtle", icon=None, **props)`
+Status tag badge. `variant` accepts `"subtle"`, `"solid"`, or `"outline"`. `color` accepts any theme preset or custom HEX code.
+
+#### `pdu.pricing_card(tier, price, period="/month", features=[], button_text="Get Started", highlighted=False, badge_label=None)`
+SaaS subscription pricing tier card with highlighted CTA.
+
+---
+
+### 10.5 Forms, Inputs & Temporal Controls
+
+| Function | Signature Summary | Description |
+| :--- | :--- | :--- |
+| `pdu.button(label, on_click=None, type="default")` | `type`: `"primary"`, `"secondary"`, `"destructive"`, `"outline"` | Interactive click button. |
+| `pdu.download_button(label, data, file_name, mime)` | `data`: `str | bytes`, `file_name`: `str` | Client-side file downloader. |
+| `pdu.text_input(label, value="", key=None, ...)` | `type`: `"text"` or `"password"` | Single-line text input field. |
+| `pdu.text_area(label, value="", height=None, ...)`| Multiline text input. | Multi-line textarea. |
+| `pdu.search_input(placeholder="...", on_search=...)`| Instant reactive search bar with HTMX trigger. | Real-time search query field. |
+| `pdu.date_input(label, value=None, min_value=..., key=...)`| Native HTML5 date picker bound to session_state. | Calendar date selector. |
+| `pdu.time_input(label, value=None, key=...)` | Native HTML5 time picker bound to session_state. | 24h / 12h time selector. |
+| `pdu.number_input(label, min_value=None, max_value=None, step=1)` | Numeric stepper input. | Number input field. |
+| `pdu.slider(label, min_value=0, max_value=100, value=None, step=1)` | Visual range slider. | Slider range bar. |
+| `pdu.selectbox(label, options, index=0, key=None)` | Dropdown select menu. | Dropdown select picker. |
+| `pdu.multiselect(label, options, default=None)` | Multi-tag dropdown picker. | Tag multi-selector. |
+| `pdu.checkbox(label, value=False, key=None)` | Boolean checkbox toggle. | Standard checkbox. |
+| `pdu.toggle(label, value=False, key=None)` | iOS-style switch toggle. | Switch toggle. |
+| `pdu.file_uploader(label, accept=None, multiple=False)` | File upload drag & drop zone. | File upload input. |
+| `pdu.color_picker(label, value="#4f46e5")` | Visual color palette picker. | Color selection tool. |
+
+#### Batched Forms (`pdu.form`, `pdu.form_submit_button`)
+Prevents instant state updates on individual keystrokes; gathers inputs and submits in a single batch.
+
+```python
+with pdu.form("user_settings"):
+    name = pdu.text_input("Name")
+    email = pdu.text_input("Email")
+    pdu.form_submit_button("Save Changes", on_click=save_user)
+```
+
+---
+
+### 10.6 Tabular Data & Charts
+
+| Function | Signature Summary | Description |
+| :--- | :--- | :--- |
+| `pdu.dataframe(data, use_container_width=True)` | Universal dataframe viewer (Pandas, Polars, PyArrow, DuckDB, lists of dicts). | Interactive paginated table. |
+| `pdu.table(data)` | Static clean HTML table. | Fast static table. |
+| `pdu.line_chart(data, x=None, y=None, color=None)` | Responsive line chart. | Line chart visualization. |
+| `pdu.bar_chart(data, x=None, y=None, color=None)` | Bar chart with custom or multi-color support. | Bar chart visualization. |
+| `pdu.area_chart(data, x=None, y=None, color=None)`| Area gradient chart. | Area chart visualization. |
+| `pdu.scatter_chart(data, x=None, y=None, color=None)`| Point scatter chart. | Scatter plot visualization. |
+
+---
+
+### 10.7 Feedback & Status Notifications
+
+| Function | Signature Summary | Description |
+| :--- | :--- | :--- |
+| `pdu.success(body, icon=None)` | Green success banner with icon. | Positive confirmation message. |
+| `pdu.error(body, icon=None)` | Red error banner with icon. | Error notification. |
+| `pdu.warning(body, icon=None)` | Amber warning banner with icon. | Warning caution message. |
+| `pdu.info(body, icon=None)` | Blue informative banner with icon. | Informational notice. |
+| `pdu.toast(body, icon=None)` | Transient auto-dismissing toast notification. | Floating toast. |
+| `pdu.spinner(text="In progress...")`| Loading spinner context manager. | Animated loading indicator. |
+| `pdu.progress(value, text=None)`| Progress bar (0 to 100). | Visual progress meter. |
+
+---
+
+### 10.8 State & Production Authentication
+
+```python
+# 1. Procedural Session State
+pdu.session_state["active_node"] = "node-01"
+val = pdu.session_state.get("active_node")
+
+# 2. User Management
+pdu.create_user("alice", "SecurePassword123!", email="alice@company.com", roles=["admin"])
+
+# 3. Authentication
+is_ok = pdu.login("alice", "SecurePassword123!")
+pdu.logout()
+
+# 4. Route Guard
+pdu.require_auth(roles=["admin"], redirect_url="/login")
+```
+
+---
+
+### 10.9 FastAPI Production Hardening & ASGI Methods
+
+#### `pdu.get_fastapi()` or `app.fastapi`
+Returns the underlying native `fastapi.FastAPI` application instance.
+
+```python
+import pydataui as pdu
+from fastapi import APIRouter, BackgroundTasks
+
+fastapi_app = pdu.get_fastapi()
+
+# Mount custom FastAPI router
+router = APIRouter(prefix="/v1")
+
+@router.post("/telemetry")
+def log_telemetry(bg: BackgroundTasks):
+    bg.add_task(persist_to_clickhouse)
+    return {"status": "enqueued"}
+
+fastapi_app.include_router(router)
+```
+
+#### Production Security & Documentation Filtering
+```python
+# 1. Strip docs completely in production:
+pdu.set_page_config(docs_url=None, openapi_url=None)
+
+# 2. Filter Swagger UI endpoints:
+pdu.set_page_config(swagger_ui_parameters={"filter": True, "persistAuthorization": True})
+
+# 3. Lock docs behind RBAC authentication:
+pdu.set_page_config(docs_roles=["admin"])
+```
+
+#### Mounting PyDataUI into Existing FastAPI
+```python
+from fastapi import FastAPI
+import pydataui as pdu
+
+parent_api = FastAPI()
+# Build your PyDataUI views...
+parent_api.mount("/dashboard", pdu.get_fastapi())
+```

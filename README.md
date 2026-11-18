@@ -14,7 +14,7 @@
 **The Full-Stack Python Framework: Streamlit Simplicity on the Surface, Next.js Performance Underneath.**  
 *Data Scientists • AI Engineers • Backend Developers • Full-Stack Pythonistas*
 
-[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Next.js Full-Stack SaaS](#-track-2-nextjs-style-full-stack-saas) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
+[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_v1.4.4.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Next.js Full-Stack SaaS](#-track-2-nextjs-style-full-stack-saas) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
 
 </div>
 
@@ -620,7 +620,7 @@ pdu.set_page_config(theme={
 
 ## 📊 Side-by-Side Performance Comparison
 
-| Metric | Next.js + FastAPI | Streamlit | PyDataUI (v1.3.1) |
+| Metric | Next.js + FastAPI | Streamlit | PyDataUI (v1.4.4) |
 | :--- | :---: | :---: | :---: |
 | **Languages Needed** | 2 (TypeScript + Python) | 1 (Python) | **1 (Pure Python)** |
 | **Execution on Click** | Partial re-render | ❌ **Reruns lines 1-100** |  **Surgical HTMX fragment swap** |
@@ -629,7 +629,7 @@ pdu.set_page_config(theme={
 | **FastAPI Mountable** | ❌ Separate service | ❌ Incompatible (Tornado) |  **Native 1-line mount** |
 | **Auto REST API Docs** | Manual FastAPI config | ❌ None |  **Auto OpenAPI 3.1 Swagger UI** |
 | **Public Demos** | Requires Vercel/Cloud | ❌ Cloud account required |  **`share=True` (3.5s instant tunnel)** |
-| **Automated Tests** | Polyglot setup | Basic | **194 / 194 Passed (100% Green)** |
+| **Automated Tests** | Polyglot setup | Basic | **223 / 223 Passed (100% Green)** |
 
 ---
 

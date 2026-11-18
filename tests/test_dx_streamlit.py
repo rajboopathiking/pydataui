@@ -695,6 +695,137 @@ def test_dialog_status_empty_navigation_rerun():
     assert res.headers.get("HX-Refresh") == "true"
 
 
+def test_card_context_manager_and_direct_syntax():
+    pdu.reset()
+
+    # 1. Test `with pdu.card():` (fixes user reported error: 'Card' object does not support the context manager protocol)
+    with pdu.card():
+        pdu.title("User Profile")
+        pdu.write("Card content inside context manager")
+
+    # 2. Test `with pdu.card(title=..., subtitle=...):`
+    with pdu.card(title="Security", subtitle="Two-factor authentication"):
+        pdu.checkbox("Enable 2FA")
+
+    # 3. Test direct arguments
+    c_direct = pdu.card(pdu.text("Direct child"), title="Direct Card")
+
+    # 4. Test method proxy on card component: `card.write(...)`
+    c_direct.write("Appended via card method proxy")
+
+    html = pdu.get_app()._page_router.get_page("/").handler().render({})
+    assert "pdu-card" in html
+    assert "User Profile" in html
+    assert "Card content inside context manager" in html
+    assert "Security" in html
+    assert "Two-factor authentication" in html
+    assert "Enable 2FA" in html
+    assert "Direct Card" in html
+    assert "Direct child" in html
+    assert "Appended via card method proxy" in html
+
+
+def test_row_column_box_container_context_managers():
+    pdu.reset()
+
+    # 1. Test with pdu.row()
+    with pdu.row():
+        pdu.button("Cancel")
+        pdu.button("Confirm")
+
+    # 2. Test with pdu.column() and with pdu.col()
+    with pdu.column():
+        pdu.write("Col 1")
+    with pdu.col():
+        pdu.write("Col 2")
+
+    # 3. Test with pdu.box()
+    with pdu.box(class_name="bg-muted p-4 rounded-xl"):
+        pdu.write("Box Content")
+
+    # 4. Test with pdu.container() and with pdu.container(border=True)
+    with pdu.container():
+        pdu.write("Regular Container")
+    with pdu.container(border=True):
+        pdu.write("Bordered Card Container")
+
+    html = pdu.get_app()._page_router.get_page("/").handler().render({})
+    assert "pdu-row" in html
+    assert "Cancel" in html
+    assert "Confirm" in html
+    assert "Col 1" in html
+    assert "Col 2" in html
+    assert "Box Content" in html
+    assert "Regular Container" in html
+    assert "Bordered Card Container" in html
+    assert "bg-muted p-4 rounded-xl" in html
+
+
+def test_nested_context_managers_hierarchy():
+    pdu.reset()
+
+    with pdu.card(title="Outer Card"):
+        with pdu.row():
+            with pdu.column():
+                pdu.write("Row 1 - Column 1")
+            with pdu.column():
+                pdu.write("Row 1 - Column 2")
+        with pdu.box(class_name="nested-box"):
+            pdu.write("Nested inside box")
+
+    html = pdu.get_app()._page_router.get_page("/").handler().render({})
+    assert "Outer Card" in html
+    assert "Row 1 - Column 1" in html
+    assert "Row 1 - Column 2" in html
+    assert "Nested inside box" in html
+
+
+def test_container_method_call_proxies():
+    pdu.reset()
+
+    col1, col2 = pdu.columns(2)
+    # Test direct method proxy on ColumnContext without `with`
+    col1.metric("Throughput", "14.2k t/s", delta="+18%")
+    col2.metric("Latency", "12.8 ms", delta="-2.4ms")
+    col1.write("Col1 notes")
+
+    html = pdu.get_app()._page_router.get_page("/").handler().render({})
+    assert "Throughput" in html
+    assert "14.2k t/s" in html
+    assert "Latency" in html
+    assert "12.8 ms" in html
+    assert "Col1 notes" in html
+
+
+@pytest.mark.anyio
+async def test_signup_screen_multipage_exact_user_scenario():
+    """
+    Verifies that the exact scenario reported by the user:
+    File "cluster.py", line 68, in signup_screen
+      with pdu.card():
+    runs cleanly without TypeError: 'Card' object does not support the context manager protocol.
+    """
+    pdu.reset()
+
+    @pdu.page("/signup", public=True)
+    def signup_screen():
+        with pdu.card():
+            pdu.title("Create an Account")
+            pdu.text_input("Username", key="su_user")
+            pdu.text_input("Password", type="password", key="su_pass")
+            pdu.button("Sign Up")
+
+    app = pdu.get_app()
+    status_code, body, _ = await app._engine.dispatch_request('GET', '/signup', '', {}, '')
+    assert status_code == 200
+    assert "Create an Account" in body
+    assert "su_user" in body
+    assert "su_pass" in body
+    assert "Sign Up" in body
+    assert "pdu-card" in body
+
+
+
 
 
 

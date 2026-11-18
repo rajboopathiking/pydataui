@@ -131,6 +131,126 @@ python app.py
 
 ---
 
+### 🧩 Layout Containers & Context Managers Guide
+
+PyDataUI provides first-class support for Python context managers (`with` blocks) as well as direct method chaining across all structural layout primitives:
+
+```python
+import pydataui as pdu
+
+# 1. Elevated Cards with optional Title/Subtitle
+with pdu.card(title="Account Settings", subtitle="Manage security and preferences"):
+    pdu.text_input("Display Name", key="user_name")
+    pdu.checkbox("Enable Two-Factor Authentication")
+    pdu.button("Save Preferences")
+
+# 2. Scoped Containers (with optional card border styling)
+with pdu.container(border=True):
+    pdu.subheader("Audit Log")
+    pdu.write("All system events are synchronized with SIEM.")
+
+# 3. Horizontal & Vertical Stacks
+with pdu.row():
+    pdu.button("Cancel", type="secondary")
+    pdu.button("Submit", type="primary")
+
+with pdu.column():
+    pdu.caption("Step 1: Configuration")
+    pdu.caption("Step 2: Deployment")
+
+# 4. Multi-Column Grid with Direct & Context Syntax
+col1, col2 = pdu.columns([2, 1])
+with col1:
+    pdu.metric("Throughput", "14.2k t/s", delta="+18%")
+# Direct method call without `with` is also 100% supported!
+col2.metric("P99 Latency", "12.8 ms", delta="-2.4ms")
+
+# 5. Collapsible Expanders & Dialog Overlays
+with pdu.expander("💡 Deep Reasoning Trace (1,420 tokens)"):
+    pdu.code("SELECT * FROM cluster_telemetry WHERE latency > 100;")
+
+with pdu.dialog("Confirm Deletion"):
+    pdu.write("This action will permanently revoke the API key.")
+    pdu.button("Revoke Key", type="destructive")
+
+# 6. Live Progress Status Containers
+with pdu.status("Executing cluster deployment...", expanded=True) as s:
+    pdu.write("Validating manifest...")
+    pdu.write("Deploying 32 pods...")
+    s.update(label="Deployment Complete!", state="complete", expanded=False)
+```
+
+---
+
+### 🔐 Multi-Page Apps, Signup & Production Authentication
+
+Create complete enterprise SaaS user flows (Registration, Sign In, Role-Protected Dashboard) in pure procedural Python:
+
+```python
+import pydataui as pdu
+
+pdu.set_page_config(title="SaaS Portal", theme="indigo", dark_mode=True)
+
+# 1. Public Registration Page
+@pdu.page("/signup", public=True)
+def signup_screen():
+    with pdu.card(title="Create Enterprise Account", subtitle="Get started in 30 seconds"):
+        with pdu.form("signup_form"):
+            pdu.text_input("Username", key="reg_user")
+            pdu.text_input("Work Email", key="reg_email")
+            pdu.text_input("Password", type="password", key="reg_pass")
+            
+            def handle_signup():
+                u = pdu.session_state.get("reg_user")
+                p = pdu.session_state.get("reg_pass")
+                e = pdu.session_state.get("reg_email")
+                if not u or not p:
+                    pdu.error("Please fill all required fields")
+                    return
+                pdu.create_user(u, p, email=e, roles=["admin"])
+                pdu.login(u, p)
+                pdu.switch_page("/dashboard")
+
+            pdu.form_submit_button("Create Account & Launch", on_click=handle_signup)
+
+# 2. Public Login Page
+@pdu.page("/login", public=True)
+def login_screen():
+    with pdu.card(title="Sign In", subtitle="Welcome back"):
+        with pdu.form("login_form"):
+            pdu.text_input("Username", key="login_user")
+            pdu.text_input("Password", type="password", key="login_pass")
+
+            def handle_login():
+                u = pdu.session_state.get("login_user")
+                p = pdu.session_state.get("login_pass")
+                if pdu.login(u, p):
+                    pdu.switch_page("/dashboard")
+                else:
+                    pdu.error("Invalid username or password")
+
+            pdu.form_submit_button("Sign In", on_click=handle_login)
+
+# 3. Role-Protected Dashboard
+@pdu.page("/dashboard", roles=["admin"])
+def dashboard_screen():
+    with pdu.sidebar():
+        pdu.title("Ops Console")
+        pdu.write(f"Logged in as: **{pdu.session_state.get('user')}**")
+        pdu.button("Log Out", on_click=lambda: (pdu.logout(), pdu.switch_page("/login")))
+
+    pdu.title("Production Operations Dashboard")
+    col1, col2, col3 = pdu.columns(3)
+    col1.metric("Active Clusters", "32 / 32", delta="100% OK")
+    col2.metric("VRAM Pool", "1,180 GB", delta="92% Utilized")
+    col3.metric("Latency P99", "12.8 ms", delta="-2.4ms")
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
+```
+
+---
+
 ## ⚡ Track 2: Next.js-Style Full-Stack SaaS
 
 When building complex, multi-page web applications, PyDataUI provides a **Next.js App Router equivalent in pure Python**:

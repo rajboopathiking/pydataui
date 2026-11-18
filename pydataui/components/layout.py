@@ -77,10 +77,16 @@ class HStack(Flex):
     def __init__(self, *children, gap='md', align='center', **props):
         super().__init__(*children, direction='row', gap=gap, align=align, **props)
 
+    def _get_classes(self) -> List[str]:
+        return super()._get_classes() + ['pdu-hstack', 'pdu-row']
+
 class VStack(Flex):
     """Vertical stack."""
     def __init__(self, *children, gap='md', align='stretch', **props):
         super().__init__(*children, direction='column', gap=gap, align=align, **props)
+
+    def _get_classes(self) -> List[str]:
+        return super()._get_classes() + ['pdu-vstack', 'pdu-col']
 
 class Row(Flex):
     """Pythonic horizontal layout row shorthand with intuitive gap and alignment."""
@@ -171,7 +177,11 @@ class Card(Component):
             classes.append('pdu-border')
         return classes
         
-    def render(self, state_snapshot: dict) -> str:
+    def render(self, state_snapshot: Optional[Any] = None) -> str:
+        if self.hidden:
+            return ""
+        if state_snapshot is None:
+            state_snapshot = {}
         header_html = ""
         if self.title or self.subtitle:
             t = f"<h3>{escape_html(self.title)}</h3>" if self.title else ""

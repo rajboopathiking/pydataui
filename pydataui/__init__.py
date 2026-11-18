@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.4.1'
+__version__ = '1.4.2'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -189,6 +189,8 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'card': ('.dx', 'card'),
     'row': ('.dx', 'row'),
     'column': ('.dx', 'column'),
+    'col': ('.dx', 'col'),
+    'box': ('.dx', 'box'),
     'divider': ('.dx', 'divider'),
     'code_editor': ('.dx', 'code_editor'),
     'success': ('.dx', 'success'),
@@ -333,7 +335,7 @@ if TYPE_CHECKING:
         plotly_chart, pyplot, button, input, text_input, textarea, text_area,
         number_input, slider, selectbox, multiselect, checkbox, radio, switch,
         toggle, file_uploader, chat_message, chat_input, chat, card, row,
-        column, divider, code_editor, success, info, warning, error, toast,
+        column, col, box, divider, code_editor, success, info, warning, error, toast,
         spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
         form, form_submit_button, dialog, status, empty, cache_data, cache_resource, navigation,
         login, logout, is_authenticated, create_user, run,

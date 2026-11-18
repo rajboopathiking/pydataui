@@ -230,6 +230,53 @@ class Component:
     def _is_void_element(self) -> bool:
         """Check if this is a void/self-closing HTML element."""
         return self.tag in ('br', 'hr', 'img', 'input', 'meta', 'link', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr')
+
+    def __enter__(self) -> "Component":
+        """Support Python context manager protocol (`with pdu.card():`, `with pdu.row():`, etc.)."""
+        try:
+            from ..dx import _get_container_stack
+            _get_container_stack().append(self.children)
+        except Exception:
+            try:
+                from ..dx import _container_stack
+                _container_stack.append(self.children)
+            except Exception:
+                pass
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+        """Exit the container context and pop its children from the active context stack."""
+        try:
+            from ..dx import _get_container_stack
+            stack = _get_container_stack()
+            if stack and stack[-1] is self.children:
+                stack.pop()
+        except Exception:
+            try:
+                from ..dx import _container_stack
+                if _container_stack and _container_stack[-1] is self.children:
+                    _container_stack.pop()
+            except Exception:
+                pass
+        return False
+
+    def __getattr__(self, name: str) -> Any:
+        """
+        Dynamically forward UI method calls (e.g., `card.write(...)`, `col.metric(...)`)
+        into procedural DX functions executed within this component's container context.
+        """
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
     
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(id={self.id!r})'

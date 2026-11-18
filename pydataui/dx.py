@@ -93,8 +93,17 @@ _default_app: Optional[App] = None
 _default_page_components: List[Component] = []
 _sidebar_components: List[Component] = []
 _container_stack: List[List[Component]] = []
+_active_container_stack: ContextVar[Optional[List[List[Component]]]] = ContextVar("_active_container_stack", default=None)
 _active_page_sidebar: ContextVar[Optional[List[Component]]] = ContextVar("_active_page_sidebar", default=None)
 _active_form_stack: List[Any] = []
+
+
+def _get_container_stack() -> List[List[Component]]:
+    """Retrieve the isolated container context stack for current async request, falling back to global."""
+    stack = _active_container_stack.get()
+    if stack is None:
+        return _container_stack
+    return stack
 
 _page_config: Dict[str, Any] = {
     "title": "PyDataUI App",
@@ -518,8 +527,9 @@ def get_app() -> App:
 def _add_component(comp: Component) -> Component:
     """Add a component to the currently active container on the context stack."""
     get_app()  # Ensure app exists
-    if _container_stack:
-        _container_stack[-1].append(comp)
+    stack = _get_container_stack()
+    if stack:
+        stack[-1].append(comp)
     elif _is_event_handling.get():
         _add_flash_banner(comp)
     else:
@@ -533,12 +543,29 @@ class _ContainerContext:
         self.target_list = target_list
 
     def __enter__(self):
-        _container_stack.append(self.target_list)
+        _get_container_stack().append(self.target_list)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if _container_stack and _container_stack[-1] is self.target_list:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        while stack and stack[-1] is not self.target_list:
+            stack.pop()
+        if stack and stack[-1] is self.target_list:
+            stack.pop()
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 # ============================================================================
@@ -618,15 +645,30 @@ class ColumnContext:
         self.col_span = col_span
 
     def __enter__(self):
-        _container_stack.append(self.children)
+        _get_container_stack().append(self.children)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if _container_stack and _container_stack[-1] is self.children:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
 
     def to_component(self) -> Component:
         return Box(*self.children, class_name="flex-1 min-w-0 space-y-4")
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 class _ColumnWrapper(Component):
@@ -691,12 +733,27 @@ class _ExpanderContext:
         self.children: List[Component] = []
 
     def __enter__(self):
-        _container_stack.append(self.children)
+        _get_container_stack().append(self.children)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if _container_stack and _container_stack[-1] is self.children:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 def expander(label: str, expanded: bool = False) -> _ExpanderContext:
@@ -776,11 +833,18 @@ def tabs(tab_names: List[str]) -> List[ColumnContext]:
     return contexts
 
 
-def container() -> _ContainerContext:
-    """Create a scoped container context."""
-    cont_list: List[Component] = []
-    _add_component(Box(cont_list, class_name="w-full space-y-4 my-2"))
-    return _ContainerContext(cont_list)
+def container(*children: Component, border: bool = False, **kwargs) -> Box:
+    """
+    Add a scoped container (Streamlit `st.container` equivalent).
+    Supports both context manager syntax (`with pdu.container():`) and direct component insertion.
+    If border=True, renders with a modern card border, padding, and subtle shadow.
+    """
+    base_cls = "w-full space-y-4 my-2"
+    if border:
+        base_cls += " border border-border/80 rounded-2xl bg-card/60 p-6 shadow-sm"
+    extra_cls = kwargs.pop("class_name", "")
+    full_cls = f"{base_cls} {extra_cls}".strip() if extra_cls else base_cls
+    return _add_component(Box(*children, class_name=full_cls, **kwargs))
 
 
 # ============================================================================
@@ -1197,15 +1261,30 @@ class _FormContext:
         self.children: List[Component] = []
 
     def __enter__(self):
-        _container_stack.append(self.children)
+        _get_container_stack().append(self.children)
         _active_form_stack.append(self)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if _active_form_stack and _active_form_stack[-1] is self:
             _active_form_stack.pop()
-        if _container_stack and _container_stack[-1] is self.children:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 def form(key: str, clear_on_submit: bool = False, border: bool = True, **kwargs) -> _FormContext:
@@ -1584,12 +1663,27 @@ class _ChatMessageContext:
         self.children: List[Component] = []
 
     def __enter__(self):
-        _container_stack.append(self.children)
+        _get_container_stack().append(self.children)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if _container_stack and _container_stack[-1] is self.children:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 def chat_message(name: str = "assistant", avatar: Optional[str] = None) -> _ChatMessageContext:
@@ -1695,19 +1789,39 @@ def chat(messages: Optional[List[Dict[str, str]]] = None, on_send: Optional[Call
 # Structural Containers & Layout Helpers
 # ============================================================================
 
-def card(*children: Component, **kwargs) -> Card:
-    """Add an elevated card container."""
-    return _add_component(Card(*children, **kwargs))
+def card(*children: Component, title: Optional[str] = None, subtitle: Optional[str] = None, **kwargs) -> Card:
+    """
+    Add an elevated card container.
+    Supports both context manager syntax (`with pdu.card():`) and direct component arguments.
+    """
+    return _add_component(Card(*children, title=title, subtitle=subtitle, **kwargs))
+
+
+def box(*children: Component, **kwargs) -> Box:
+    """
+    Add a generic layout box / div container.
+    Supports both context manager syntax (`with pdu.box():`) and direct component arguments.
+    """
+    return _add_component(Box(*children, **kwargs))
 
 
 def row(*children: Component, **kwargs) -> HStack:
-    """Add a horizontal layout row."""
+    """
+    Add a horizontal layout row.
+    Supports both context manager syntax (`with pdu.row():`) and direct component arguments.
+    """
     return _add_component(HStack(*children, **kwargs))
 
 
 def column(*children: Component, **kwargs) -> VStack:
-    """Add a vertical layout column."""
+    """
+    Add a vertical layout column.
+    Supports both context manager syntax (`with pdu.column():`) and direct component arguments.
+    """
     return _add_component(VStack(*children, **kwargs))
+
+
+col = column
 
 
 def divider(**kwargs) -> Divider:
@@ -1798,12 +1912,13 @@ class DialogManager:
         self.dialog_id = generate_id("dialog")
 
     def __enter__(self):
-        _container_stack.append(self.children)
+        _get_container_stack().append(self.children)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if _container_stack and _container_stack[-1] is self.children:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
         _add_component(_DialogWrapper(self.title, self.children, self.dialog_id))
 
     def __call__(self, func: Callable):
@@ -1811,6 +1926,20 @@ class DialogManager:
             with DialogManager(self.title):
                 return func(*args, **kwargs)
         return wrapper
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 def dialog(title: str) -> DialogManager:
@@ -1873,14 +2002,15 @@ class StatusContext:
         self._wrapper: Optional[_StatusWrapper] = None
 
     def __enter__(self):
-        _container_stack.append(self.children)
+        _get_container_stack().append(self.children)
         self._wrapper = _StatusWrapper(self.label, self.state, self.expanded, self.children, self.status_id)
         _add_component(self._wrapper)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if _container_stack and _container_stack[-1] is self.children:
-            _container_stack.pop()
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
         if exc_type is not None:
             self.state = "error"
             if self._wrapper:
@@ -1900,6 +2030,20 @@ class StatusContext:
             self.expanded = expanded
             if self._wrapper:
                 self._wrapper.expanded = expanded
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
 
 def status(label: str, expanded: bool = True, state: str = "running") -> StatusContext:
@@ -2279,12 +2423,15 @@ def page(path: str = "/", title: Optional[str] = None, layout: Optional[Callable
         def procedural_page_wrapper(*args, **kws):
             page_components: List[Component] = []
             page_sidebar: List[Component] = []
+            page_container_stack: List[List[Component]] = []
             token_sb = _active_page_sidebar.set(page_sidebar)
+            token_stack = _active_container_stack.set(page_container_stack)
             try:
                 with _ContainerContext(page_components):
                     res = func(*args, **kws)
             finally:
                 _active_page_sidebar.reset(token_sb)
+                _active_container_stack.reset(token_stack)
 
             if res is not None:
                 return res

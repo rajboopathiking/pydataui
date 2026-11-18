@@ -122,9 +122,9 @@ body {
 .pdu-stack { display: flex; flex-direction: column; }
 .pdu-stack > * + * { margin-top: var(--pdu-spacing-md); }
 
-.pdu-card { background-color: var(--pdu-color-bg); border-radius: var(--pdu-radius-lg); box-shadow: var(--pdu-shadow-md); border: 1px solid var(--pdu-color-border); overflow: hidden; }
+.pdu-card { background-color: var(--pdu-color-card, var(--pdu-color-bg-secondary, var(--pdu-color-bg))); border-radius: var(--pdu-radius-lg); box-shadow: var(--pdu-shadow-md); border: 1px solid var(--pdu-color-border); overflow: hidden; }
 .pdu-card-header { padding: var(--pdu-spacing-md) var(--pdu-spacing-lg); border-bottom: 1px solid var(--pdu-color-border); font-weight: 600; }
-.pdu-card-body { padding: var(--pdu-spacing-lg); }
+.pdu-card-body { padding: var(--pdu-spacing-lg); display: flex; flex-direction: column; gap: var(--pdu-spacing-md); }
 .pdu-card-footer { padding: var(--pdu-spacing-md) var(--pdu-spacing-lg); border-top: 1px solid var(--pdu-color-border); background-color: var(--pdu-color-bg-secondary); }
 
 .pdu-divider { height: 1px; background-color: var(--pdu-color-border); margin: var(--pdu-spacing-md) 0; }

@@ -171,10 +171,29 @@ class MetricCard(Component):
         else:
             accent_style = "background: var(--pdu-color-primary, #3b82f6);"
 
-        return f'''<div id="{self.id}" class="rounded-xl border border-border bg-card text-card-foreground shadow-sm relative overflow-hidden" style="background-color: var(--pdu-color-card, hsl(var(--card))); color: var(--pdu-color-text, hsl(var(--card-foreground)));">
+        # Avoid double-escaping HTML if title contains html (like tooltip badges)
+        rendered_title = self.title if ("<span" in self.title or "<div" in self.title) else escape_html(self.title)
+
+        # Render modern pill badge for delta
+        if self.delta:
+            d_str = str(self.delta).strip()
+            is_pos = d_str.startswith("+")
+            is_neg = d_str.startswith("-")
+            pill_bg = (
+                "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                if is_pos or self.delta_type == "increase"
+                else (
+                    "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+                    if is_neg or self.delta_type == "decrease"
+                    else "bg-muted text-muted-foreground border border-border"
+                )
+            )
+            delta_html = f'<div class="mt-2"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {pill_bg}">{escape_html(d_str)}</span></div>'
+
+        return f'''<div id="{self.id}" class="rounded-xl border border-border bg-card text-card-foreground shadow-sm relative overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/40" style="background-color: var(--pdu-color-card, hsl(var(--card))); color: var(--pdu-color-text, hsl(var(--card-foreground)));">
   <div class="absolute top-0 left-0 right-0 h-[3px]" style="{accent_style}"></div>
   <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-    <h3 class="tracking-tight text-sm font-medium text-muted-foreground">{escape_html(self.title)}</h3>
+    <h3 class="tracking-tight text-sm font-medium text-muted-foreground">{rendered_title}</h3>
     {icon_html}
   </div>
   <div class="p-6 pt-0">
@@ -338,26 +357,34 @@ class CodeBlock(Component):
 
     Usage::
 
-        CodeBlock(code="SELECT * FROM users;", language="sql")
+        CodeBlock(code="SELECT * FROM users;", language="sql", filename="query.sql")
     """
 
-    def __init__(self, code: str, language: str = 'python', **kwargs):
+    def __init__(self, code: str, language: str = 'python', filename: Optional[str] = None, **kwargs):
         super().__init__(**kwargs)
         self.code = code
         self.language = language
+        self.filename = filename
 
     def render(self, state_snapshot=None) -> str:
         safe = escape_html(self.code)
         copy_btn = (
-            '<button onclick="navigator.clipboard.writeText(this.closest(\'div\').querySelector(\'code\').textContent)" '
-            'class="absolute top-2 right-12 text-zinc-400 hover:text-zinc-100 text-xs px-2 py-1 rounded '
-            'border border-zinc-700 hover:border-zinc-500 transition-colors">Copy</button>'
+            '<button onclick="navigator.clipboard.writeText(this.closest(\'div\').querySelector(\'code\').textContent); this.textContent=\'Copied!\'; setTimeout(() => this.textContent=\'Copy\', 2000);" '
+            'class="text-xs px-2.5 py-1 rounded-md border border-border bg-card/80 hover:bg-muted text-muted-foreground hover:text-foreground transition-all cursor-pointer">Copy</button>'
         )
-        return (f'<div id="{self.id}" class="relative rounded-md bg-zinc-950 overflow-x-auto">'
-                f'<span class="absolute top-2 right-2 text-xs text-zinc-500 font-mono">{escape_html(self.language)}</span>'
-                f'{copy_btn}'
-                f'<pre class="pt-8 pb-4 px-4 text-sm text-zinc-100 leading-relaxed">'
-                f'<code>{safe}</code></pre></div>')
+        fn_text = self.filename or f"snippet.{self.language}"
+        header_bar = (
+            f'<div class="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/40 text-xs font-mono text-muted-foreground">'
+            f'<span>{escape_html(fn_text)}</span>'
+            f'<div class="flex items-center gap-2">'
+            f'<span class="text-[11px] font-sans opacity-70">{escape_html(self.language.upper())}</span>'
+            f'{copy_btn}'
+            f'</div>'
+            f'</div>'
+        )
+        return (f'<div id="{self.id}" class="relative my-3 rounded-xl border border-border bg-card overflow-hidden shadow-xs font-mono text-sm" style="background-color: var(--pdu-color-input, #0f0c22);">'
+                f'{header_bar}'
+                f'<pre class="p-4 overflow-x-auto text-sm leading-relaxed text-foreground"><code>{safe}</code></pre></div>')
 
 
 class FileDownload(Component):

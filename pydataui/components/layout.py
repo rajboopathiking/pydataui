@@ -266,8 +266,8 @@ class Card(Component):
             state_snapshot = {}
         header_html = ""
         if self.title or self.subtitle:
-            t = f"<h3>{escape_html(self.title)}</h3>" if self.title else ""
-            s = f"<p>{escape_html(self.subtitle)}</p>" if self.subtitle else ""
+            t = f"<h3 class='font-semibold text-sm tracking-tight text-foreground'>{escape_html(self.title)}</h3>" if self.title else ""
+            s = f"<p class='text-xs text-muted-foreground mt-0.5'>{escape_html(self.subtitle)}</p>" if self.subtitle else ""
             header_html = f"<div class='pdu-card-header'>{t}{s}</div>"
         
         attrs = self._build_attrs(state_snapshot)

@@ -118,26 +118,146 @@ _page_config: Dict[str, Any] = {
 # 20 Official Built-in Color Presets (all standard Shadcn / Tailwind palettes)
 # Developers are NEVER limited to these: custom hex colors or full dict palettes are supported.
 THEME_PRESETS: Dict[str, Dict[str, str]] = {
-    "zinc": {"primary": "#18181b", "primary_hover": "#27272a", "accent": "#71717a"},
-    "slate": {"primary": "#0f172a", "primary_hover": "#1e293b", "accent": "#64748b"},
-    "stone": {"primary": "#1c1917", "primary_hover": "#292524", "accent": "#78716c"},
-    "neutral": {"primary": "#171717", "primary_hover": "#262626", "accent": "#737373"},
-    "gray": {"primary": "#111827", "primary_hover": "#1f2937", "accent": "#6b7280"},
-    "emerald": {"primary": "#059669", "primary_hover": "#10b981", "accent": "#34d399"},
-    "green": {"primary": "#16a34a", "primary_hover": "#22c55e", "accent": "#4ade80"},
-    "teal": {"primary": "#0d9488", "primary_hover": "#14b8a6", "accent": "#2dd4bf"},
-    "cyan": {"primary": "#0891b2", "primary_hover": "#06b6d4", "accent": "#22d3ee"},
-    "blue": {"primary": "#2563eb", "primary_hover": "#3b82f6", "accent": "#60a5fa"},
-    "indigo": {"primary": "#4f46e5", "primary_hover": "#6366f1", "accent": "#818cf8"},
-    "violet": {"primary": "#7c3aed", "primary_hover": "#8b5cf6", "accent": "#a78bfa"},
-    "purple": {"primary": "#9333ea", "primary_hover": "#a855f7", "accent": "#c084fc"},
-    "fuchsia": {"primary": "#c026d3", "primary_hover": "#d946ef", "accent": "#e879f9"},
-    "pink": {"primary": "#db2777", "primary_hover": "#ec4899", "accent": "#f472b6"},
-    "rose": {"primary": "#e11d48", "primary_hover": "#f43f5e", "accent": "#fb7185"},
-    "red": {"primary": "#dc2626", "primary_hover": "#ef4444", "accent": "#f87171"},
-    "orange": {"primary": "#ea580c", "primary_hover": "#f97316", "accent": "#fb923c"},
-    "amber": {"primary": "#d97706", "primary_hover": "#f59e0b", "accent": "#fbbf24"},
-    "yellow": {"primary": "#ca8a04", "primary_hover": "#eab308", "accent": "#fde047"},
+    "zinc": {
+        "primary": "#18181b", "primary_hover": "#27272a", "accent": "#71717a",
+        "dark_bg": "#09090b", "dark_card": "#18181b", "dark_sidebar": "#121215", "dark_border": "#27272a",
+        "dark_text": "#f4f4f5", "dark_muted": "#a1a1aa", "dark_input": "#18181b",
+        "light_bg": "#fafafa", "light_card": "#ffffff", "light_sidebar": "#f4f4f5", "light_border": "#e4e4e7",
+        "light_text": "#09090b", "light_muted": "#71717a", "light_input": "#ffffff",
+    },
+    "slate": {
+        "primary": "#0f172a", "primary_hover": "#1e293b", "accent": "#64748b",
+        "dark_bg": "#0b0f19", "dark_card": "#131b2e", "dark_sidebar": "#0f172a", "dark_border": "#1e293b",
+        "dark_text": "#f8fafc", "dark_muted": "#94a3b8", "dark_input": "#131b2e",
+        "light_bg": "#f8fafc", "light_card": "#ffffff", "light_sidebar": "#f1f5f9", "light_border": "#e2e8f0",
+        "light_text": "#0f172a", "light_muted": "#64748b", "light_input": "#ffffff",
+    },
+    "stone": {
+        "primary": "#1c1917", "primary_hover": "#292524", "accent": "#78716c",
+        "dark_bg": "#0c0a09", "dark_card": "#1c1917", "dark_sidebar": "#171412", "dark_border": "#292524",
+        "dark_text": "#fafaf9", "dark_muted": "#a8a29e", "dark_input": "#1c1917",
+        "light_bg": "#fafaf9", "light_card": "#ffffff", "light_sidebar": "#f5f5f4", "light_border": "#e7e5e4",
+        "light_text": "#1c1917", "light_muted": "#78716c", "light_input": "#ffffff",
+    },
+    "neutral": {
+        "primary": "#171717", "primary_hover": "#262626", "accent": "#737373",
+        "dark_bg": "#0a0a0a", "dark_card": "#171717", "dark_sidebar": "#121212", "dark_border": "#262626",
+        "dark_text": "#fafafa", "dark_muted": "#a3a3a3", "dark_input": "#171717",
+        "light_bg": "#fafafa", "light_card": "#ffffff", "light_sidebar": "#f5f5f5", "light_border": "#e5e5e5",
+        "light_text": "#171717", "light_muted": "#737373", "light_input": "#ffffff",
+    },
+    "gray": {
+        "primary": "#111827", "primary_hover": "#1f2937", "accent": "#6b7280",
+        "dark_bg": "#0d1117", "dark_card": "#161b22", "dark_sidebar": "#11161d", "dark_border": "#30363d",
+        "dark_text": "#f9fafb", "dark_muted": "#9ca3af", "dark_input": "#161b22",
+        "light_bg": "#f9fafb", "light_card": "#ffffff", "light_sidebar": "#f3f4f6", "light_border": "#e5e7eb",
+        "light_text": "#111827", "light_muted": "#6b7280", "light_input": "#ffffff",
+    },
+    "emerald": {
+        "primary": "#059669", "primary_hover": "#10b981", "accent": "#34d399",
+        "dark_bg": "#021a12", "dark_card": "#042a1f", "dark_sidebar": "#03251b", "dark_border": "#065f46",
+        "dark_text": "#ecfdf5", "dark_muted": "#6ee7b7", "dark_input": "#064e3b",
+        "light_bg": "#f0fdf4", "light_card": "#ffffff", "light_sidebar": "#ecfdf5", "light_border": "#a7f3d0",
+        "light_text": "#064e3b", "light_muted": "#047857", "light_input": "#ffffff",
+    },
+    "green": {
+        "primary": "#16a34a", "primary_hover": "#22c55e", "accent": "#4ade80",
+        "dark_bg": "#041708", "dark_card": "#082b0f", "dark_sidebar": "#06210b", "dark_border": "#0d521e",
+        "dark_text": "#f0fdf4", "dark_muted": "#86efac", "dark_input": "#0c3d16",
+        "light_bg": "#f0fdf4", "light_card": "#ffffff", "light_sidebar": "#dcfce7", "light_border": "#bbf7d0",
+        "light_text": "#14532d", "light_muted": "#15803d", "light_input": "#ffffff",
+    },
+    "teal": {
+        "primary": "#0d9488", "primary_hover": "#14b8a6", "accent": "#2dd4bf",
+        "dark_bg": "#031716", "dark_card": "#062b29", "dark_sidebar": "#04201f", "dark_border": "#0d524e",
+        "dark_text": "#f0fdfa", "dark_muted": "#5eead4", "dark_input": "#093d3a",
+        "light_bg": "#f0fdfa", "light_card": "#ffffff", "light_sidebar": "#ccfbf1", "light_border": "#99f6e4",
+        "light_text": "#115e59", "light_muted": "#0f766e", "light_input": "#ffffff",
+    },
+    "cyan": {
+        "primary": "#0891b2", "primary_hover": "#06b6d4", "accent": "#22d3ee",
+        "dark_bg": "#04161a", "dark_card": "#082830", "dark_sidebar": "#051f26", "dark_border": "#0e4856",
+        "dark_text": "#ecfeff", "dark_muted": "#67e8f9", "dark_input": "#0c3742",
+        "light_bg": "#ecfeff", "light_card": "#ffffff", "light_sidebar": "#cffafe", "light_border": "#a5f3fc",
+        "light_text": "#155e75", "light_muted": "#0e7490", "light_input": "#ffffff",
+    },
+    "blue": {
+        "primary": "#2563eb", "primary_hover": "#3b82f6", "accent": "#60a5fa",
+        "dark_bg": "#0b1120", "dark_card": "#111d38", "dark_sidebar": "#0e172e", "dark_border": "#1e3a8a",
+        "dark_text": "#eff6ff", "dark_muted": "#93c5fd", "dark_input": "#162447",
+        "light_bg": "#eff6ff", "light_card": "#ffffff", "light_sidebar": "#dbeafe", "light_border": "#bfdbfe",
+        "light_text": "#1e3a8a", "light_muted": "#1d4ed8", "light_input": "#ffffff",
+    },
+    "indigo": {
+        "primary": "#4f46e5", "primary_hover": "#6366f1", "accent": "#818cf8",
+        "dark_bg": "#0b0c1e", "dark_card": "#141738", "dark_sidebar": "#0e1029", "dark_border": "#2e3878",
+        "dark_text": "#eef2ff", "dark_muted": "#a5b4fc", "dark_input": "#1c204d",
+        "light_bg": "#eef2ff", "light_card": "#ffffff", "light_sidebar": "#e0e7ff", "light_border": "#c7d2fe",
+        "light_text": "#312e81", "light_muted": "#4338ca", "light_input": "#ffffff",
+    },
+    "violet": {
+        "primary": "#7c3aed", "primary_hover": "#8b5cf6", "accent": "#a78bfa",
+        "dark_bg": "#0b0a16", "dark_card": "#140f2b", "dark_sidebar": "#110e24", "dark_border": "#3b2d6e",
+        "dark_text": "#f5f3ff", "dark_muted": "#c4b5fd", "dark_input": "#1e183d",
+        "light_bg": "#faf5ff", "light_card": "#ffffff", "light_sidebar": "#f3e8ff", "light_border": "#e9d5ff",
+        "light_text": "#4c1d95", "light_muted": "#6d28d9", "light_input": "#ffffff",
+    },
+    "purple": {
+        "primary": "#9333ea", "primary_hover": "#a855f7", "accent": "#c084fc",
+        "dark_bg": "#0e071c", "dark_card": "#1a1033", "dark_sidebar": "#140c29", "dark_border": "#3b1d60",
+        "dark_text": "#faf5ff", "dark_muted": "#d8b4fe", "dark_input": "#241647",
+        "light_bg": "#faf5ff", "light_card": "#ffffff", "light_sidebar": "#f3e8ff", "light_border": "#e9d5ff",
+        "light_text": "#581c87", "light_muted": "#7e22ce", "light_input": "#ffffff",
+    },
+    "fuchsia": {
+        "primary": "#c026d3", "primary_hover": "#d946ef", "accent": "#e879f9",
+        "dark_bg": "#18071a", "dark_card": "#2e0e33", "dark_sidebar": "#210a24", "dark_border": "#5c1966",
+        "dark_text": "#fdf4ff", "dark_muted": "#f0abfc", "dark_input": "#3d1245",
+        "light_bg": "#fdf4ff", "light_card": "#ffffff", "light_sidebar": "#fae8ff", "light_border": "#f5d0fe",
+        "light_text": "#701a75", "light_muted": "#a21caf", "light_input": "#ffffff",
+    },
+    "pink": {
+        "primary": "#db2777", "primary_hover": "#ec4899", "accent": "#f472b6",
+        "dark_bg": "#1a0712", "dark_card": "#300e23", "dark_sidebar": "#240a1a", "dark_border": "#611745",
+        "dark_text": "#fdf2f8", "dark_muted": "#f472b6", "dark_input": "#421431",
+        "light_bg": "#fdf2f8", "light_card": "#ffffff", "light_sidebar": "#fce7f3", "light_border": "#fbcfe8",
+        "light_text": "#831843", "light_muted": "#be185d", "light_input": "#ffffff",
+    },
+    "rose": {
+        "primary": "#e11d48", "primary_hover": "#f43f5e", "accent": "#fb7185",
+        "dark_bg": "#1c070d", "dark_card": "#330f1b", "dark_sidebar": "#260b14", "dark_border": "#661833",
+        "dark_text": "#fff1f2", "dark_muted": "#fda4af", "dark_input": "#451424",
+        "light_bg": "#fff1f2", "light_card": "#ffffff", "light_sidebar": "#ffe4e6", "light_border": "#fecdd3",
+        "light_text": "#881337", "light_muted": "#be123c", "light_input": "#ffffff",
+    },
+    "red": {
+        "primary": "#dc2626", "primary_hover": "#ef4444", "accent": "#f87171",
+        "dark_bg": "#1c0606", "dark_card": "#300a0a", "dark_sidebar": "#240808", "dark_border": "#5e1414",
+        "dark_text": "#fef2f2", "dark_muted": "#fca5a5", "dark_input": "#400e0e",
+        "light_bg": "#fef2f2", "light_card": "#ffffff", "light_sidebar": "#fee2e2", "light_border": "#fecaca",
+        "light_text": "#7f1d1d", "light_muted": "#b91c1c", "light_input": "#ffffff",
+    },
+    "orange": {
+        "primary": "#ea580c", "primary_hover": "#f97316", "accent": "#fb923c",
+        "dark_bg": "#1c0c04", "dark_card": "#301607", "dark_sidebar": "#241105", "dark_border": "#5e290d",
+        "dark_text": "#fff7ed", "dark_muted": "#fdba74", "dark_input": "#401d09",
+        "light_bg": "#fff7ed", "light_card": "#ffffff", "light_sidebar": "#ffedd5", "light_border": "#fed7aa",
+        "light_text": "#7c2d12", "light_muted": "#c2410c", "light_input": "#ffffff",
+    },
+    "amber": {
+        "primary": "#d97706", "primary_hover": "#f59e0b", "accent": "#fbbf24",
+        "dark_bg": "#180e03", "dark_card": "#291805", "dark_sidebar": "#211304", "dark_border": "#57330a",
+        "dark_text": "#fffbeb", "dark_muted": "#fcd34d", "dark_input": "#382107",
+        "light_bg": "#fffbeb", "light_card": "#ffffff", "light_sidebar": "#fef3c7", "light_border": "#fde68a",
+        "light_text": "#78350f", "light_muted": "#b45309", "light_input": "#ffffff",
+    },
+    "yellow": {
+        "primary": "#ca8a04", "primary_hover": "#eab308", "accent": "#fde047",
+        "dark_bg": "#171403", "dark_card": "#2b2505", "dark_sidebar": "#211c04", "dark_border": "#574a0a",
+        "dark_text": "#fefce8", "dark_muted": "#fef08a", "dark_input": "#3b3307",
+        "light_bg": "#fefce8", "light_card": "#ffffff", "light_sidebar": "#fef9c3", "light_border": "#fef08a",
+        "light_text": "#713f12", "light_muted": "#a16207", "light_input": "#ffffff",
+    },
 }
 
 
@@ -263,30 +383,109 @@ def _resolve_theme_css(theme: Union[str, Dict[str, str], Any]) -> str:
 
     if isinstance(theme, str):
         theme_clean = theme.strip().lower()
+        is_dark = _page_config.get("dark_mode", True)
         if theme_clean in THEME_PRESETS:
-            p = THEME_PRESETS[theme_clean]["primary"]
-            ph = THEME_PRESETS[theme_clean]["primary_hover"]
-            a = THEME_PRESETS[theme_clean]["accent"]
+            preset = THEME_PRESETS[theme_clean]
+            p = preset["primary"]
+            ph = preset.get("primary_hover", p)
+            a = preset.get("accent", p)
+
+            bg = preset.get("dark_bg" if is_dark else "light_bg", "#09090b" if is_dark else "#fafafa")
+            card = preset.get("dark_card" if is_dark else "light_card", "#18181b" if is_dark else "#ffffff")
+            sidebar = preset.get("dark_sidebar" if is_dark else "light_sidebar", "#121215" if is_dark else "#f4f4f5")
+            border = preset.get("dark_border" if is_dark else "light_border", "#27272a" if is_dark else "#e4e4e7")
+            text = preset.get("dark_text" if is_dark else "light_text", "#f4f4f5" if is_dark else "#09090b")
+            muted = preset.get("dark_muted" if is_dark else "light_muted", "#a1a1aa" if is_dark else "#71717a")
+            input_bg = preset.get("dark_input" if is_dark else "light_input", card)
+
             hsl_p = _hex_to_hsl_str(p)
             hsl_a = _hex_to_hsl_str(a)
+            hsl_bg = _hex_to_hsl_str(bg)
+            hsl_card = _hex_to_hsl_str(card)
+            hsl_border = _hex_to_hsl_str(border)
+            hsl_text = _hex_to_hsl_str(text)
+            hsl_muted = _hex_to_hsl_str(muted)
+
             return (
                 f"<style>:root, .dark, [data-theme='dark'] {{\n"
                 f"  --primary: {hsl_p} !important;\n"
                 f"  --ring: {hsl_p} !important;\n"
                 f"  --accent: {hsl_a} !important;\n"
+                f"  --background: {hsl_bg} !important;\n"
+                f"  --card: {hsl_card} !important;\n"
+                f"  --card-foreground: {hsl_text} !important;\n"
+                f"  --foreground: {hsl_text} !important;\n"
+                f"  --border: {hsl_border} !important;\n"
+                f"  --muted-foreground: {hsl_muted} !important;\n"
                 f"  --pdu-color-primary: {p} !important;\n"
                 f"  --pdu-color-primary-hover: {ph} !important;\n"
                 f"  --pdu-color-accent: {a} !important;\n"
-                f"}}</style>"
+                f"  --pdu-color-bg: {bg} !important;\n"
+                f"  --pdu-color-card: {card} !important;\n"
+                f"  --pdu-color-sidebar: {sidebar} !important;\n"
+                f"  --pdu-color-border: {border} !important;\n"
+                f"  --pdu-color-text: {text} !important;\n"
+                f"  --pdu-color-text-muted: {muted} !important;\n"
+                f"  --pdu-color-input: {input_bg} !important;\n"
+                f"}}\n\n"
+                f"html, body, .pdu-dx-shell {{\n"
+                f"  background-color: {bg} !important;\n"
+                f"  color: {text} !important;\n"
+                f"}}\n"
+                f"aside, .pdu-sidebar {{\n"
+                f"  background-color: {sidebar} !important;\n"
+                f"  border-color: {border} !important;\n"
+                f"}}\n"
+                f".pdu-card, .pdu-stat-card, .pdu-expander, .pdu-metric-card {{\n"
+                f"  background-color: {card} !important;\n"
+                f"  border-color: {border} !important;\n"
+                f"  color: {text} !important;\n"
+                f"}}\n"
+                f"nav.pdu-navbar {{\n"
+                f"  background-color: {card} !important;\n"
+                f"  border-color: {border} !important;\n"
+                f"}}\n"
+                f"input, textarea, select {{\n"
+                f"  background-color: {input_bg} !important;\n"
+                f"  border-color: {border} !important;\n"
+                f"  color: {text} !important;\n"
+                f"}}\n"
+                f"table th {{\n"
+                f"  background-color: {card} !important;\n"
+                f"  border-color: {border} !important;\n"
+                f"  color: {text} !important;\n"
+                f"}}\n"
+                f"table td {{\n"
+                f"  border-color: {border} !important;\n"
+                f"}}\n"
+                f".pdu-popover-content, .pdu-modal-content {{\n"
+                f"  background-color: {card} !important;\n"
+                f"  border-color: {border} !important;\n"
+                f"  color: {text} !important;\n"
+                f"}}\n"
+                f"</style>"
             )
         elif theme.startswith("#"):
             hsl_p = _hex_to_hsl_str(theme)
+            bg = "#09090b" if is_dark else "#fafafa"
+            card = "#18181b" if is_dark else "#ffffff"
+            text = "#f4f4f5" if is_dark else "#09090b"
+            border = "#27272a" if is_dark else "#e4e4e7"
             return (
                 f"<style>:root, .dark, [data-theme='dark'] {{\n"
                 f"  --primary: {hsl_p} !important;\n"
                 f"  --ring: {hsl_p} !important;\n"
                 f"  --pdu-color-primary: {theme} !important;\n"
-                f"}}</style>"
+                f"  --pdu-color-bg: {bg} !important;\n"
+                f"  --pdu-color-card: {card} !important;\n"
+                f"  --pdu-color-text: {text} !important;\n"
+                f"  --pdu-color-border: {border} !important;\n"
+                f"}}\n"
+                f"html, body, .pdu-dx-shell {{\n"
+                f"  background-color: {bg} !important;\n"
+                f"  color: {text} !important;\n"
+                f"}}\n"
+                f"</style>"
             )
 
     return ""
@@ -1006,9 +1205,10 @@ def markdown(content: str, **kwargs) -> Markdown:
     return _add_component(Markdown(content, **kwargs))
 
 
-def code(content: str, language: str = "python", **kwargs) -> Code:
-    """Add a styled code block."""
-    return _add_component(Code(content, language=language, **kwargs))
+def code(content: str, language: str = "python", filename: Optional[str] = None, **kwargs) -> Component:
+    """Add a styled syntax code block with optional filename header, language badge, and one-click copy."""
+    from .components.data_science import CodeBlock
+    return _add_component(CodeBlock(content, language=language, filename=filename, **kwargs))
 
 
 # ============================================================================

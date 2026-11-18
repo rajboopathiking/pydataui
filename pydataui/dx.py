@@ -69,6 +69,7 @@ from .components.forms import (
 )
 from .components.layout import Box, Card, Col, Container, Divider, HStack, Row, VStack
 from .components.typography import Code, Heading, Paragraph, Text
+from .responses import HTMLResponse, RedirectResponse, Response
 from .state import EventHandler, ProceduralState, State, reactive_state, state
 from .utils import escape_html, generate_id
 
@@ -311,6 +312,15 @@ class SessionStateProxy:
         self._local_fallback: Dict[str, Any] = {}
 
     def _get_dict(self) -> Dict[str, Any]:
+        try:
+            from .state import _current_session
+            sess = _current_session.get()
+            if sess:
+                if "dx_session_state" not in sess.data:
+                    sess.data["dx_session_state"] = {}
+                return sess.data["dx_session_state"]
+        except Exception:
+            pass
         try:
             from .request import current_request
             req = current_request.get()
@@ -1482,10 +1492,57 @@ def page_link(page: str, label: Optional[str] = None, icon: Optional[str] = None
     ))
 
 
-def page(path: str = "/", title: Optional[str] = None, **kwargs):
-    """Decorator to register a custom page route on the default application."""
+def switch_page(path: str) -> Response:
+    """
+    Navigate to a different page route (Streamlit `st.switch_page` equivalent).
+    Works seamlessly in both standard HTTP requests and reactive HTMX event callbacks.
+    """
+    session_state["_redirect_url"] = path
+    return HTMLResponse("", status_code=200, headers={"HX-Redirect": path, "Location": path})
+
+
+def page(path: str = "/", title: Optional[str] = None, layout: Optional[Callable] = None, *, public: bool = False, roles=(), **kwargs):
+    """
+    Decorator to register a procedural or component page route on the default application.
+    Enables multi-page apps, login/signup flows, and role-based access control.
+
+    Example::
+
+        @pdu.page("/login", public=True)
+        def login():
+            pdu.title("Sign In")
+            pdu.text_input("Email", key="email")
+            pdu.button("Sign In", on_click=handle_login)
+
+        @pdu.page("/dashboard", roles=["admin"])
+        def dashboard():
+            pdu.title("Telemetry Dashboard")
+            pdu.metric("ARR", "$1.8M")
+    """
     app = get_app()
-    return app.page(path, title=title, **kwargs)
+    def decorator(func: Callable):
+        def procedural_page_wrapper(*args, **kws):
+            page_components: List[Component] = []
+            with _ContainerContext(page_components):
+                res = func(*args, **kws)
+
+            if res is not None:
+                return res
+
+            is_wide = _page_config.get("layout") == "wide"
+            theme_val = _page_config.get("theme", "zinc")
+            theme_css = _resolve_theme_css(theme_val)
+
+            return _ProceduralPageLayout(
+                sidebar_components=_sidebar_components,
+                main_components=page_components,
+                is_wide=is_wide,
+                theme_css=theme_css,
+            )
+
+        procedural_page_wrapper.__name__ = getattr(func, "__name__", "page_wrapper")
+        return app.page(path, title=title, layout=layout, public=public, roles=roles, **kwargs)(procedural_page_wrapper)
+    return decorator
 
 
 def run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, share: bool = False, **kwargs) -> None:

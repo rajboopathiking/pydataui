@@ -448,4 +448,63 @@ def test_chat_bottom_positioning_and_lambda_callbacks():
     assert "hx-post=\"/_pdu/event/ActionState/" in btn_html
 
 
+@pytest.mark.anyio
+async def test_procedural_multipage_and_switch_page():
+    pdu.reset()
+
+    # 1. Register procedural pages
+    @pdu.page("/login", public=True)
+    def login_page():
+        pdu.title("Sign In to DeepAgent")
+        pdu.text_input("Work Email", key="login_email")
+        def do_login():
+            pdu.session_state["authenticated"] = True
+            pdu.switch_page("/dashboard")
+        pdu.button("Sign In", on_click=do_login)
+
+    @pdu.page("/signup", public=True)
+    def signup_page():
+        pdu.title("Create Enterprise Account")
+        pdu.text_input("Full Name", key="signup_name")
+
+    @pdu.page("/dashboard", public=True)
+    def dashboard_page():
+        pdu.title("Production Operations Dashboard")
+        pdu.metric("Active Clusters", "16 / 16")
+
+    app = pdu.get_app()
+
+    # 2. Verify GET /login renders isolated procedural components
+    s1, b1, h1 = await app._engine.dispatch_request('GET', '/login', '', {}, '')
+    assert s1 == 200
+    assert "Sign In to DeepAgent" in b1
+    assert "Work Email" in b1
+
+    # 3. Verify GET /signup renders signup components
+    s_up, b_up, _ = await app._engine.dispatch_request('GET', '/signup', '', {}, '')
+    assert s_up == 200
+    assert "Create Enterprise Account" in b_up
+    assert "Full Name" in b_up
+
+    # 4. Verify switch_page redirect in event callback
+    cookie = h1.get('set-cookie', '')
+    import re
+    csrf = re.search(r'name=\"csrf_token\" value=\"([^\"]+)\"', b1) or re.search(r'meta name=\"pdu-csrf-token\" content=\"([^\"]+)\"', b1)
+    csrf_val = csrf.group(1) if csrf else ''
+
+    from pydataui.dx import ActionState
+    action_name = [a for a in dir(ActionState) if a.endswith('_do_login')][0]
+    headers = {'cookie': cookie, 'x-csrf-token': csrf_val, 'hx-request': 'true'}
+    s2, b2, h2 = await app._engine.dispatch_request('POST', f'/_pdu/event/ActionState/{action_name}', '', headers, '')
+    assert s2 == 200
+    assert h2.get('hx-redirect') == '/dashboard' or h2.get('HX-Redirect') == '/dashboard'
+
+    # 5. Verify GET /dashboard renders dashboard with authenticated state
+    s3, b3, _ = await app._engine.dispatch_request('GET', '/dashboard', '', {'cookie': cookie}, '')
+    assert s3 == 200
+    assert "Production Operations Dashboard" in b3
+    assert "Active Clusters" in b3
+
+
+
 

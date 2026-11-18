@@ -11,7 +11,7 @@ from .responses import JSONResponse, HTMLResponse, Response, RedirectResponse, P
 
 from .request import request_context
 from .config import AppConfig
-from .page import PageRouter
+from .routing import PageRouter
 from .compiler.renderer import Renderer
 from .session import SessionManager, Session
 from .api import APIGenerator
@@ -698,9 +698,10 @@ self.addEventListener('fetch', (event) => {
             is_htmx = str(hx_header).lower() == 'true'
             import html
             render_failed = False
+            target_page = self._page_router.get_page(path) or page
             try:
-                res = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
-                       else page.handler())
+                res = (target_page.handler(request=request) if 'request' in inspect.signature(target_page.handler).parameters
+                       else target_page.handler())
                 component = await res if inspect.isawaitable(res) else res
                 if isinstance(component, (Response, HTMLResponse, PlainTextResponse,
                                           RedirectResponse, JSONResponse, StreamingResponse)):
@@ -760,9 +761,10 @@ self.addEventListener('fetch', (event) => {
             is_htmx = str(hx_header).lower() == 'true'
             import html
             render_failed = False
+            target_page = self._page_router.get_page(path) or page
             try:
-                res = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
-                       else page.handler())
+                res = (target_page.handler(request=request) if 'request' in inspect.signature(target_page.handler).parameters
+                       else target_page.handler())
                 if inspect.isawaitable(res):
                     import asyncio
                     try:
@@ -889,6 +891,7 @@ self.addEventListener('fetch', (event) => {
                 return JSONResponse({'error': 'Invalid state input'}, status_code=422)
 
             handler_error = None
+            res = None
             if hasattr(state_instance, method_name):
                 func = getattr(state_instance, method_name)
                 import inspect
@@ -920,6 +923,15 @@ self.addEventListener('fetch', (event) => {
                     handler_error = f"{type(e).__name__}: {e}" if self.config.debug else "Action failed"
                     print(f"\n[PyDataUI Event Error] In {state_name}.{method_name}(): {e}")
                     traceback.print_exc()
+
+            # Handle explicit Response returns or procedural switch_page redirects
+            if isinstance(res, (Response, HTMLResponse, PlainTextResponse, RedirectResponse, JSONResponse, StreamingResponse)):
+                return res
+
+            dx_state = session.data.get('dx_session_state', {})
+            if isinstance(dx_state, dict) and '_redirect_url' in dx_state:
+                target_url = dx_state.pop('_redirect_url')
+                return HTMLResponse('', headers={'HX-Redirect': target_url, 'Location': target_url})
             
             if state_name == 'LoginState' and self.auth:
                 if method_name == 'login' and state_instance.token:
@@ -963,9 +975,10 @@ self.addEventListener('fetch', (event) => {
                 return denied
             snapshot = self._build_state_snapshot(session)
             token_snap = _current_snapshot.set(snapshot)
+            target_page = self._page_router.get_page(page_path) or page
             try:
-                res = (page.handler(request=request) if 'request' in inspect.signature(page.handler).parameters
-                       else page.handler())
+                res = (target_page.handler(request=request) if 'request' in inspect.signature(target_page.handler).parameters
+                       else target_page.handler())
                 if inspect.isawaitable(res):
                     import asyncio
                     try:

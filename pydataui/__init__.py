@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.3.9'
+__version__ = '1.4.0'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -202,6 +202,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'theme_toggle': ('.dx', 'theme_toggle'),
     'page': ('.dx', 'page'),
     'page_link': ('.dx', 'page_link'),
+    'switch_page': ('.dx', 'switch_page'),
     'run': ('.dx', 'run'),
     'reset': ('.dx', 'reset'),
     'get_app': ('.dx', 'get_app'),
@@ -320,7 +321,7 @@ if TYPE_CHECKING:
         number_input, slider, selectbox, multiselect, checkbox, radio, switch,
         toggle, file_uploader, chat_message, chat_input, chat, card, row,
         column, divider, code_editor, success, info, warning, error, toast,
-        spinner, progress, set_page_config, theme_toggle, page, page_link, run,
+        spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, run,
         get_app, get_default_app
     )
     from . import html, templates, components

@@ -72,7 +72,7 @@ from .components.forms import (
     Switch,
     TextArea,
 )
-from .components.layout import Box, Card, Col, Container, Divider, HStack, Row, VStack
+from .components.layout import Box, Card, Col, Container, Divider, HStack, Row, VStack, Flex, Grid, Spacer
 from .components.typography import Code, Heading, Paragraph, Text
 from .responses import HTMLResponse, RedirectResponse, Response
 from .state import EventHandler, ProceduralState, State, _is_event_handling, reactive_state, state
@@ -771,32 +771,67 @@ def expander(label: str, expanded: bool = False) -> _ExpanderContext:
 
 
 class _TabsWrapper(Component):
-    """Client-side zero-latency tab switcher."""
-    def __init__(self, tab_names: List[str], tab_contexts: List[ColumnContext]):
+    """Client-side zero-latency tab switcher supporting expand, headless wizards, and pill/line styling."""
+    def __init__(
+        self,
+        tab_names: List[str],
+        tab_contexts: List[ColumnContext],
+        expand: bool = False,
+        hide_tab_buttons: bool = False,
+        variant: str = "line",
+        active_tab: int = 0,
+        key: Optional[str] = None,
+    ):
         super().__init__()
         self.tab_names = tab_names
         self.tab_contexts = tab_contexts
+        self.expand = expand
+        self.hide_tab_buttons = hide_tab_buttons
+        self.variant = variant
+        self.active_tab = active_tab
+        self.key = key
         self.tab_id = generate_id("tabs")
 
     def render(self, state_snapshot=None) -> str:
         headers = []
         panels = []
+        active_idx = self.active_tab
+        if self.key and self.key in session_state:
+            try:
+                active_idx = int(session_state[self.key])
+            except (ValueError, TypeError):
+                pass
+
         for i, (name, ctx) in enumerate(zip(self.tab_names, self.tab_contexts)):
-            active_class = "border-primary text-primary font-semibold" if i == 0 else "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-            display_style = "block" if i == 0 else "none"
+            is_active = (i == active_idx)
+            display_style = "block" if is_active else "none"
             panel_id = f"{self.tab_id}-panel-{i}"
             btn_id = f"{self.tab_id}-btn-{i}"
 
+            expand_cls = "flex-1 text-center" if self.expand else ""
+
+            if self.variant == "pill":
+                active_class = "pdu-tab-active bg-background text-primary font-semibold shadow-xs" if is_active else "text-muted-foreground hover:text-foreground"
+                btn_base = "pdu-tab-btn px-4 py-2 text-xs font-medium rounded-lg transition-all cursor-pointer"
+            else:
+                active_class = "pdu-tab-active border-primary text-primary font-semibold" if is_active else "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                btn_base = "pdu-tab-btn px-4 py-2.5 text-sm font-medium border-b-2 transition-all cursor-pointer"
+
             headers.append(
-                f"<button id='{btn_id}' "
+                f"<button id='{btn_id}' type='button' "
                 f"onclick=\"(function(){{"
                 f"  const parent = document.getElementById('{self.tab_id}');"
-                f"  parent.querySelectorAll('.pdu-tab-btn').forEach(b => b.className = b.className.replace('border-primary text-primary font-semibold', 'border-transparent text-muted-foreground'));"
-                f"  document.getElementById('{btn_id}').className += ' border-primary text-primary font-semibold';"
+                f"  parent.querySelectorAll('.pdu-tab-btn').forEach(b => {{"
+                f"    b.classList.remove('pdu-tab-active', 'border-primary', 'text-primary', 'font-semibold', 'bg-background', 'shadow-xs');"
+                f"    b.classList.add('border-transparent', 'text-muted-foreground');"
+                f"  }});"
+                f"  const activeBtn = document.getElementById('{btn_id}');"
+                f"  activeBtn.classList.remove('border-transparent', 'text-muted-foreground');"
+                f"  activeBtn.classList.add('pdu-tab-active', '{'bg-background text-primary shadow-xs' if self.variant == 'pill' else 'border-primary text-primary'}', 'font-semibold');"
                 f"  parent.querySelectorAll('.pdu-tab-panel').forEach(p => p.style.display = 'none');"
                 f"  document.getElementById('{panel_id}').style.display = 'block';"
                 f"}})()\" "
-                f"class='pdu-tab-btn px-4 py-2.5 text-sm font-medium border-b-2 transition-all cursor-pointer {active_class}'>"
+                f"class='{btn_base} {expand_cls} {active_class}'>"
                 f"{escape_html(name)}"
                 f"</button>"
             )
@@ -808,28 +843,60 @@ class _TabsWrapper(Component):
                 f"</div>"
             )
 
+        nav_style = "style='display: none;'" if self.hide_tab_buttons else ""
+        if self.variant == "pill":
+            nav_bar = f"<div class='pdu-tabs-pill flex gap-1 p-1 bg-muted/30 border-b border-border w-full select-none' {nav_style}>{''.join(headers)}</div>"
+        else:
+            nav_bar = f"<div class='flex border-b border-border bg-muted/20 px-2 w-full select-none' {nav_style}>{''.join(headers)}</div>"
+
+        headless_cls = "pdu-tabs-headless" if self.hide_tab_buttons else ""
+        expand_cls = "pdu-tabs-expand" if self.expand else ""
+
         return (
-            f"<div id='{self.tab_id}' class='w-full my-4 border border-border rounded-xl bg-card overflow-hidden shadow-sm'>"
-            f"<div class='flex border-b border-border bg-muted/20 px-2'>{''.join(headers)}</div>"
+            f"<div id='{self.tab_id}' class='pdu-tabs-container w-full my-4 border border-border rounded-xl bg-card overflow-hidden shadow-sm {headless_cls} {expand_cls}'>"
+            f"{nav_bar}"
             f"{''.join(panels)}"
             f"</div>"
         )
 
 
-def tabs(tab_names: List[str]) -> List[ColumnContext]:
+def tabs(
+    tab_names: List[str],
+    expand: bool = False,
+    hide_tab_buttons: bool = False,
+    variant: str = "line",
+    active_tab: int = 0,
+    key: Optional[str] = None,
+    **kwargs
+) -> List[ColumnContext]:
     """
     Create an interactive tabbed view container.
 
+    :param tab_names: List of tab titles.
+    :param expand: If True, distributes tab buttons equally across 100% of container width.
+    :param hide_tab_buttons: If True, hides tab headers for headless multi-step onboarding & wizards.
+    :param variant: Visual tab style ("line" or "pill").
+    :param active_tab: Default active tab index.
+    :param key: Session state key for programmatic tab switching.
+
     Example::
 
-        tab_data, tab_chat = pdu.tabs(["Data View", "Agent Chat"])
+        tab_data, tab_chat = pdu.tabs(["Data View", "Agent Chat"], expand=True)
         with tab_data:
             pdu.write(df)
         with tab_chat:
             pdu.write("Chat history...")
     """
     contexts = [ColumnContext() for _ in tab_names]
-    _add_component(_TabsWrapper(tab_names, contexts))
+    _add_component(_TabsWrapper(
+        tab_names,
+        contexts,
+        expand=expand,
+        hide_tab_buttons=hide_tab_buttons,
+        variant=variant,
+        active_tab=active_tab,
+        key=key,
+    ))
     return contexts
 
 
@@ -1059,9 +1126,10 @@ def _resolve_color(c: Any) -> str:
     return CSS_COLOR_MAP.get(clean, c)
 
 
-def _color_alpha(hex_or_named: str, alpha_hex: str = "33") -> str:
+def _color_alpha(hex_or_named: str, alpha: Union[str, float] = "33") -> str:
     """Safely apply alpha transparency to hex, theme tokens, or named colors."""
     col = _resolve_color(hex_or_named)
+    alpha_hex = f"{max(0, min(255, int(alpha * 255))):02x}" if isinstance(alpha, (int, float)) else str(alpha)
     if col.startswith("#"):
         c = col.lstrip("#")
         if len(c) == 3:
@@ -1933,9 +2001,421 @@ def column(*children: Component, **kwargs) -> VStack:
 col = column
 
 
-def divider(**kwargs) -> Divider:
-    """Add a visual divider line."""
-    return _add_component(Divider(**kwargs))
+def flex(
+    *children: Component,
+    direction: str = "row",
+    align: str = "stretch",
+    justify: str = "start",
+    gap: Union[int, str] = "4",
+    wrap: Union[bool, str] = False,
+    **kwargs
+) -> Flex:
+    """
+    Add a flexible Flexbox container supporting row/column direction, alignment, justification, gap, and wrapping.
+    Supports both context manager syntax (`with pdu.flex():`) and direct child component arguments.
+    """
+    return _add_component(Flex(*children, direction=direction, align=align, justify=justify, gap=gap, wrap=wrap, **kwargs))
+
+
+def grid(
+    *children: Component,
+    columns: Union[int, str, List[Union[int, float]], Dict[str, int]] = 1,
+    gap: Union[int, str] = "4",
+    row_gap: Optional[Union[int, str]] = None,
+    column_gap: Optional[Union[int, str]] = None,
+    min_column_width: Optional[str] = None,
+    template_columns: Optional[str] = None,
+    template_rows: Optional[str] = None,
+    **kwargs
+) -> Grid:
+    """
+    Add a CSS Grid layout container supporting integer columns, fractional ratios, responsive breakpoints,
+    auto-fit wrapping (`min_column_width="260px"`), and custom template rules.
+    Supports both context manager syntax (`with pdu.grid():`) and direct child component arguments.
+    """
+    return _add_component(Grid(
+        *children,
+        columns=columns,
+        gap=gap,
+        row_gap=row_gap,
+        column_gap=column_gap,
+        min_column_width=min_column_width,
+        template_columns=template_columns,
+        template_rows=template_rows,
+        **kwargs
+    ))
+
+
+def spacer(
+    size: Optional[Union[int, str]] = None,
+    height: Optional[Union[int, str]] = None,
+    width: Optional[Union[int, str]] = None,
+    flex: int = 1,
+    **kwargs
+) -> Spacer:
+    """
+    Add an auto-expanding flexible spacer or fixed dimension spacer.
+    - `pdu.spacer(height=24)`: inserts a 24px vertical gap.
+    - `pdu.spacer(flex=1)`: inside a flex row, pushes subsequent items to the opposite end.
+    """
+    return _add_component(Spacer(size=size, height=height, width=width, flex=flex, **kwargs))
+
+
+def divider(
+    label: Optional[str] = None,
+    orientation: str = "horizontal",
+    color: Optional[str] = None,
+    thickness: Optional[str] = None,
+    **kwargs
+) -> Divider:
+    """Add a visual divider line, optionally with a centered label."""
+    return _add_component(Divider(label=label, orientation=orientation, color=color, thickness=thickness, **kwargs))
+
+
+def pinned(*children: Component, position: str = "bottom", z_index: int = 40, **kwargs) -> Box:
+    """
+    Add a pinned container fixed to viewport edges (e.g. pinned footer action bar or header).
+    Supports both context manager syntax (`with pdu.pinned():`) and direct component arguments.
+    """
+    pos_cls = f"fixed {position}-0 left-0 right-0 z-{z_index} p-4 bg-background/90 backdrop-blur border-{'t' if position == 'bottom' else 'b'} border-border shadow-lg"
+    extra_cls = kwargs.pop("class_name", "")
+    full_cls = f"{pos_cls} {extra_cls}".strip() if extra_cls else pos_cls
+    return _add_component(Box(*children, position="fixed", class_name=full_cls, z_index=z_index, **kwargs))
+
+
+def overlay(*children: Component, blur: bool = True, **kwargs) -> Box:
+    """
+    Add an absolute overlay container covering its relative parent.
+    Supports both context manager syntax (`with pdu.overlay():`) and direct component arguments.
+    """
+    blur_cls = "backdrop-blur-sm" if blur else ""
+    cls = f"absolute inset-0 z-20 flex items-center justify-center bg-background/60 {blur_cls}"
+    extra_cls = kwargs.pop("class_name", "")
+    full_cls = f"{cls} {extra_cls}".strip() if extra_cls else cls
+    return _add_component(Box(*children, position="absolute", inset=0, class_name=full_cls, **kwargs))
+
+
+def badge(
+    label: str,
+    color: str = "zinc",
+    variant: str = "subtle",
+    icon: Optional[str] = None,
+    position: Optional[str] = None,
+    top: Optional[Union[int, str]] = None,
+    bottom: Optional[Union[int, str]] = None,
+    left: Optional[Union[int, str]] = None,
+    right: Optional[Union[int, str]] = None,
+    z_index: Optional[Union[int, str]] = None,
+    **kwargs
+) -> Component:
+    """
+    Render a status badge or category tag with optional coordinate positioning and variants.
+    """
+    resolved_color = _resolve_color(color)
+    bg_alpha = _color_alpha(resolved_color, 0.15)
+    border_alpha = _color_alpha(resolved_color, 0.3)
+
+    if variant == "solid":
+        style_rules = f"background-color: {resolved_color}; color: #ffffff;"
+    elif variant == "outline":
+        style_rules = f"background-color: transparent; color: {resolved_color}; border: 1px solid {resolved_color};"
+    else:  # subtle
+        style_rules = f"background-color: {bg_alpha}; color: {resolved_color}; border: 1px solid {border_alpha};"
+
+    pos_rules = []
+    if position:
+        pos_rules.append(f"position: {position};")
+    if top is not None:
+        pos_rules.append(f"top: {top}px;" if isinstance(top, (int, float)) or (isinstance(top, str) and top.isdigit()) else f"top: {top};")
+    if bottom is not None:
+        pos_rules.append(f"bottom: {bottom}px;" if isinstance(bottom, (int, float)) or (isinstance(bottom, str) and bottom.isdigit()) else f"bottom: {bottom};")
+    if left is not None:
+        pos_rules.append(f"left: {left}px;" if isinstance(left, (int, float)) or (isinstance(left, str) and left.isdigit()) else f"left: {left};")
+    if right is not None:
+        pos_rules.append(f"right: {right}px;" if isinstance(right, (int, float)) or (isinstance(right, str) and right.isdigit()) else f"right: {right};")
+    if z_index is not None:
+        pos_rules.append(f"z-index: {z_index};")
+
+    full_style = f"{style_rules} {' '.join(pos_rules)}".strip()
+    icon_html = f"<span class='mr-1'>{escape_html(icon)}</span>" if icon else ""
+
+    extra_class = kwargs.pop("class_name", "")
+    badge_html = (
+        f"<span class='pdu-badge inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-semibold select-none shadow-xs transition-all {extra_class}' "
+        f"style='{full_style}'>"
+        f"{icon_html}<span>{escape_html(str(label))}</span>"
+        f"</span>"
+    )
+    return _add_component(RawHtml(badge_html))
+
+
+def sparkline(
+    data: List[Union[int, float]],
+    color: str = "emerald",
+    height: int = 32,
+    width: Union[str, int] = "100%",
+    fill: bool = True,
+    **kwargs
+) -> Component:
+    """
+    Render a lightweight, zero-dependency inline SVG sparkline mini-chart.
+    """
+    if not data or len(data) < 2:
+        return _add_component(RawHtml("<div class='pdu-sparkline-empty text-xs text-muted-foreground'>—</div>"))
+
+    resolved_color = _resolve_color(color)
+    min_v = min(data)
+    max_v = max(data)
+    span = (max_v - min_v) if max_v != min_v else 1.0
+
+    view_w = 100
+    view_h = height
+    pad = 2
+    pts = []
+    n = len(data)
+    for i, v in enumerate(data):
+        x = round((i / (n - 1)) * view_w, 2)
+        y = round(view_h - pad - ((v - min_v) / span) * (view_h - (pad * 2)), 2)
+        pts.append((x, y))
+
+    points_str = " ".join(f"{x},{y}" for x, y in pts)
+
+    fill_polygon = ""
+    fill_gradient = ""
+    spark_id = generate_id("spark")
+    if fill:
+        area_pts = f"0,{view_h} {points_str} {view_w},{view_h}"
+        fill_gradient = (
+            f"<defs><linearGradient id='{spark_id}_grad' x1='0' y1='0' x2='0' y2='1'>"
+            f"<stop offset='0%' stop-color='{resolved_color}' stop-opacity='0.28'/>"
+            f"<stop offset='100%' stop-color='{resolved_color}' stop-opacity='0.0'/>"
+            f"</linearGradient></defs>"
+        )
+        fill_polygon = f"<polygon points='{area_pts}' fill='url(#{spark_id}_grad)' stroke='none' />"
+
+    w_style = f"width: {width}px;" if isinstance(width, int) or (isinstance(width, str) and width.isdigit()) else f"width: {width};"
+    svg_html = (
+        f"<svg viewBox='0 0 {view_w} {view_h}' preserveAspectRatio='none' "
+        f"class='pdu-sparkline' style='{w_style} height: {height}px; overflow: visible;' "
+        f"xmlns='http://www.w3.org/2000/svg'>"
+        f"{fill_gradient}"
+        f"{fill_polygon}"
+        f"<polyline points='{points_str}' fill='none' stroke='{resolved_color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>"
+        f"</svg>"
+    )
+    return _add_component(RawHtml(svg_html))
+
+
+def stat_card(
+    title: str,
+    value: Any,
+    change: Optional[str] = None,
+    delta: Optional[str] = None,
+    sparkline: Optional[List[Union[int, float]]] = None,
+    icon: Optional[str] = None,
+    color: Optional[str] = None,
+    **kwargs
+) -> Card:
+    """
+    Render an executive KPI card with title, large value, optional change delta, category icon, and inline SVG sparkline.
+    """
+    d = change if change is not None else delta
+    resolved_accent = _resolve_color(color) if color else None
+
+    top_row = []
+    if icon:
+        top_row.append(f"<span class='text-lg'>{escape_html(icon)}</span>")
+    top_row.append(f"<span class='text-xs font-medium uppercase tracking-wider text-muted-foreground'>{escape_html(title)}</span>")
+    header_html = f"<div class='flex items-center justify-between gap-2 mb-2'>{''.join(top_row)}</div>"
+
+    accent_bar = f"<div class='w-full h-1 rounded-full mb-3' style='background: {resolved_accent};'></div>" if resolved_accent else ""
+
+    delta_badge = ""
+    if d:
+        d_str = str(d).strip()
+        is_pos = d_str.startswith("+")
+        is_neg = d_str.startswith("-")
+        delta_bg = "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" if is_pos else ("bg-rose-500/15 text-rose-600 dark:text-rose-400" if is_neg else "bg-muted text-muted-foreground")
+        arrow = "↑" if is_pos else ("↓" if is_neg else "")
+        delta_badge = f"<span class='inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold {delta_bg}'>{arrow} {escape_html(d_str)}</span>"
+
+    sparkline_html = ""
+    if sparkline and len(sparkline) >= 2:
+        spark_color = color or ("#10b981" if (d and str(d).startswith("+")) else ("#f43f5e" if (d and str(d).startswith("-")) else "#6366f1"))
+        min_v, max_v = min(sparkline), max(sparkline)
+        span = (max_v - min_v) if max_v != min_v else 1.0
+        pts = [
+            f"{round((i / (len(sparkline) - 1)) * 80, 2)},{round(28 - 2 - ((v - min_v) / span) * 24, 2)}"
+            for i, v in enumerate(sparkline)
+        ]
+        pts_str = " ".join(pts)
+        res_col = _resolve_color(spark_color)
+        sparkline_html = (
+            f"<svg viewBox='0 0 80 28' class='w-24 h-7 shrink-0' preserveAspectRatio='none'>"
+            f"<polyline points='{pts_str}' fill='none' stroke='{res_col}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>"
+            f"</svg>"
+        )
+
+    bottom_html = f"<div class='flex items-center justify-between gap-2 mt-3'>{delta_badge}{sparkline_html}</div>" if (delta_badge or sparkline_html) else ""
+
+    body_html = (
+        f"<div class='pdu-stat-body'>"
+        f"{accent_bar}"
+        f"{header_html}"
+        f"<div class='text-2xl font-bold tracking-tight text-foreground'>{escape_html(str(value))}</div>"
+        f"{bottom_html}"
+        f"</div>"
+    )
+    extra_class = kwargs.pop("class_name", "")
+    card_comp = Card(RawHtml(body_html), padding="md", class_name=f"pdu-stat-card border border-border/80 bg-card/60 shadow-sm rounded-2xl hover:border-primary/40 transition-all {extra_class}".strip(), **kwargs)
+    _add_component(card_comp)
+    return card_comp
+
+
+def date_input(
+    label: str = "",
+    value: Optional[str] = None,
+    min_value: Optional[str] = None,
+    max_value: Optional[str] = None,
+    key: Optional[str] = None,
+    on_change: Optional[Callable] = None,
+    **kwargs
+) -> Input:
+    """Add a date picker widget bound to session state."""
+    actual_value = value or ""
+    if key:
+        if key in session_state:
+            actual_value = session_state[key]
+        elif value:
+            session_state[key] = value
+    return _add_component(Input(
+        label=label,
+        value=actual_value,
+        type="date",
+        min=min_value,
+        max=max_value,
+        name=key,
+        on_change=on_change,
+        **kwargs
+    ))
+
+
+def time_input(
+    label: str = "",
+    value: Optional[str] = None,
+    key: Optional[str] = None,
+    on_change: Optional[Callable] = None,
+    **kwargs
+) -> Input:
+    """Add a time picker widget bound to session state."""
+    actual_value = value or ""
+    if key:
+        if key in session_state:
+            actual_value = session_state[key]
+        elif value:
+            session_state[key] = value
+    return _add_component(Input(
+        label=label,
+        value=actual_value,
+        type="time",
+        name=key,
+        on_change=on_change,
+        **kwargs
+    ))
+
+
+def search_input(
+    placeholder: str = "Search...",
+    value: str = "",
+    key: Optional[str] = None,
+    on_search: Optional[Callable] = None,
+    **kwargs
+) -> Component:
+    """Add a sleek search bar with instant HTMX callback and magnifying glass icon."""
+    input_key = key or generate_id("search")
+    actual_val = session_state.get(input_key, value)
+
+    action_attr = ""
+    if on_search:
+        action_name = register_callback(on_search)
+        action_attr = (
+            f'hx-post="/_pdu/event/ActionState/{action_name}" '
+            f'hx-trigger="keyup changed delay:300ms, search" '
+            f'hx-target="#pdu-root" '
+            f'hx-swap="innerHTML" '
+            f'hx-include="this" '
+        )
+
+    search_html = (
+        f"<div class='relative w-full max-w-md my-2'>"
+        f"<span class='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground'>"
+        f"<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>"
+        f"</span>"
+        f"<input type='search' name='{input_key}' value='{escape_html(str(actual_val))}' placeholder='{escape_html(placeholder)}' "
+        f"{action_attr}"
+        f"class='w-full pl-9 pr-4 py-2 bg-card border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all shadow-xs' />"
+        f"</div>"
+    )
+    return _add_component(RawHtml(search_html))
+
+
+def pricing_card(
+    title: str,
+    price: str,
+    period: str = "/ mo",
+    description: str = "",
+    features: Optional[List[str]] = None,
+    cta_label: str = "Get Started",
+    highlighted: bool = False,
+    badge_label: Optional[str] = None,
+    on_click: Optional[Callable] = None,
+    **kwargs
+) -> Card:
+    """
+    Render a commercial SaaS tier pricing card with features, CTA button, and optional highlighted badge.
+    """
+    feat_list = features or []
+    feat_html = "".join(
+        f"<li class='flex items-center gap-2 text-sm text-foreground/90'><span class='text-primary font-bold'>✓</span><span>{escape_html(f)}</span></li>"
+        for f in feat_list
+    )
+
+    badge_html = ""
+    if badge_label or highlighted:
+        b_text = badge_label or "MOST POPULAR"
+        badge_html = f"<span class='absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary text-primary-foreground tracking-wider uppercase shadow-xs'>{escape_html(b_text)}</span>"
+
+    border_cls = "border-2 border-primary shadow-lg bg-card" if highlighted else "border border-border/80 bg-card/60 shadow-sm"
+    btn_type = "primary" if highlighted else "secondary"
+
+    action_attr = ""
+    if on_click:
+        action_name = register_callback(on_click)
+        action_attr = f'hx-post="/_pdu/event/ActionState/{action_name}" hx-target="#pdu-root" hx-swap="innerHTML"'
+
+    body_html = (
+        f"<div class='relative p-6 space-y-5'>"
+        f"{badge_html}"
+        f"<div>"
+        f"<h3 class='text-lg font-bold text-foreground'>{escape_html(title)}</h3>"
+        f"<p class='text-xs text-muted-foreground mt-1'>{escape_html(description)}</p>"
+        f"</div>"
+        f"<div class='flex items-baseline gap-1'>"
+        f"<span class='text-3xl font-extrabold text-foreground'>{escape_html(price)}</span>"
+        f"<span class='text-xs text-muted-foreground'>{escape_html(period)}</span>"
+        f"</div>"
+        f"<ul class='space-y-2.5 pt-2 border-t border-border/60'>{feat_html}</ul>"
+        f"<div class='pt-4'>"
+        f"<button type='button' {action_attr} class='w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition-all cursor-pointer "
+        f"{'bg-primary text-primary-foreground hover:opacity-90 shadow-sm' if btn_type == 'primary' else 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}'>"
+        f"{escape_html(cta_label)}"
+        f"</button>"
+        f"</div>"
+        f"</div>"
+    )
+    card_comp = Card(RawHtml(body_html), padding="none", class_name=f"pdu-pricing-card rounded-2xl overflow-hidden {border_cls}".strip(), **kwargs)
+    _add_component(card_comp)
+    return card_comp
 
 
 def code_editor(

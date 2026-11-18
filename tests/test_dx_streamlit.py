@@ -863,6 +863,285 @@ def test_component_level_color_theming():
     assert "#0891b2" in h_a  # Cyan resolved preset hex
 
 
+@pytest.mark.anyio
+async def test_flex_layout_and_alignment():
+    """Verify procedural Flexbox container with direction, align, justify, gap, and wrap."""
+    pdu.reset()
+
+    # 1. Direct invocation
+    fl = pdu.flex(direction="row", align="center", justify="between", gap="4", wrap=True)
+    h_fl = fl.render({})
+    assert "display: flex" in h_fl
+    assert "flex-direction: row" in h_fl
+    assert "align-items: center" in h_fl
+    assert "justify-content: space-between" in h_fl
+    assert "gap: 1.0rem" in h_fl or "gap: var(--pdu-spacing-4" in h_fl
+    assert "flex-wrap: wrap" in h_fl
+
+    # 2. Context manager protocol
+    with pdu.flex(direction="column", align="stretch", justify="start", gap="8"):
+        pdu.write("Item 1")
+        pdu.write("Item 2")
+
+    # 3. Enhanced row and col shorthands
+    rw = pdu.row(gap="2", align="center", justify="center")
+    cl = pdu.column(gap="6", align="stretch")
+    h_rw = rw.render({})
+    h_cl = cl.render({})
+    assert "display: flex" in h_rw
+    assert "align-items: center" in h_rw
+    assert "justify-content: center" in h_rw
+    assert "display: flex" in h_cl
+    assert "flex-direction: column" in h_cl
+
+
+@pytest.mark.anyio
+async def test_grid_layout_columns_and_autofit():
+    """Verify procedural CSS Grid with fixed columns, auto-fit min-width, and ratios."""
+    pdu.reset()
+
+    # 1. Fixed integer columns
+    g1 = pdu.grid(columns=3, gap="4")
+    h_g1 = g1.render({})
+    assert "display: grid" in h_g1
+    assert "grid-template-columns: repeat(3, minmax(0, 1fr))" in h_g1
+
+    # 2. Responsive auto-fit grid
+    g2 = pdu.grid(min_column_width="260px", gap="1.5rem")
+    h_g2 = g2.render({})
+    assert "grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))" in h_g2
+    assert "gap: 1.5rem" in h_g2
+
+    # 3. Fractional column ratios
+    g3 = pdu.grid(columns=[1, 2, 1], row_gap="2", column_gap="4")
+    h_g3 = g3.render({})
+    assert "grid-template-columns: 1fr 2fr 1fr" in h_g3
+    assert "row-gap: 0.5rem" in h_g3 or "row-gap: var" in h_g3
+    assert "column-gap: 1.0rem" in h_g3 or "column-gap: var" in h_g3
+
+    # 4. Context manager usage
+    with pdu.grid(columns=2):
+        pdu.metric("Metric A", "100")
+        pdu.metric("Metric B", "200")
+
+
+@pytest.mark.anyio
+async def test_coordinate_positioning_relative_and_absolute():
+    """Verify absolute and relative positioning props, floating badges, pinned toolbars, and overlays."""
+    pdu.reset()
+
+    # 1. Component with relative position
+    bx = pdu.box(position="relative")
+    h_bx = bx.render({})
+    assert "position: relative" in h_bx
+    assert "pdu-relative" in h_bx
+
+    # 2. Absolute positioned badge
+    bg = pdu.badge("LIVE", color="emerald", position="absolute", top=10, right="15px", z_index=50)
+    h_bg = bg.render({})
+    assert "position: absolute" in h_bg
+    assert "top: 10px" in h_bg
+    assert "right: 15px" in h_bg
+    assert "z-index: 50" in h_bg
+
+    # 3. Card with nested absolute badge
+    with pdu.card(position="relative") as c:
+        pdu.badge("HOT", color="rose", position="absolute", top="12px", right="12px")
+        pdu.header("Cluster GPU 01")
+    h_c = c.render({})
+    assert "position: relative" in h_c
+    assert "position: absolute" in h_c
+    assert "top: 12px" in h_c
+    assert "right: 12px" in h_c
+
+    # 4. Pinned container
+    p_bot = pdu.pinned(position="bottom", z_index=40)
+    h_p = p_bot.render({})
+    assert "fixed bottom-0" in h_p
+    assert "position: fixed" in h_p
+
+    # 5. Overlay container
+    ov = pdu.overlay(blur=True)
+    h_ov = ov.render({})
+    assert "position: absolute" in h_ov
+    assert "inset: 0" in h_ov
+    assert "backdrop-blur-sm" in h_ov
+
+
+@pytest.mark.anyio
+async def test_tabs_expand_and_headless_wizard():
+    """Verify tabs with expand=True, hide_tab_buttons=True (headless wizards), and pill styling."""
+    pdu.reset()
+
+    # 1. Expand=True (equal width buttons spanning 100%)
+    t_exp = pdu.tabs(["Tab 1", "Tab 2"], expand=True)
+    with t_exp[0]:
+        pdu.write("Content 1")
+    with t_exp[1]:
+        pdu.write("Content 2")
+
+    # 2. Headless wizard (hide_tab_buttons=True)
+    t_head = pdu.tabs(["Step 1", "Step 2", "Step 3"], hide_tab_buttons=True)
+    with t_head[0]:
+        pdu.write("Step 1 content")
+
+    # 3. Pill variant
+    t_pill = pdu.tabs(["Overview", "Billing"], variant="pill")
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "pdu-tabs-expand" in body
+    assert "pdu-tabs-headless" in body
+    assert "style='display: none;'" in body
+    assert "pdu-tabs-pill" in body
+
+
+@pytest.mark.anyio
+async def test_spacer_and_labeled_divider():
+    """Verify fixed-height spacer, flexible push spacer, and labeled divider lines."""
+    pdu.reset()
+
+    # 1. Fixed height spacer
+    sp_h = pdu.spacer(height=24)
+    h_sph = sp_h.render({})
+    assert "height: 24px" in h_sph
+
+    # 2. Flexible expanding spacer
+    sp_f = pdu.spacer(flex=1)
+    h_spf = sp_f.render({})
+    assert "flex: 1 1 auto" in h_spf
+
+    # 3. Standard divider vs labeled divider
+    d_plain = pdu.divider()
+    d_label = pdu.divider(label="OR")
+    h_dp = d_plain.render({})
+    h_dl = d_label.render({})
+    assert "<hr" in h_dp
+    assert "pdu-divider-with-label" in h_dl
+    assert "pdu-divider-text" in h_dl
+    assert "OR" in h_dl
+
+
+@pytest.mark.anyio
+async def test_commercial_dashboard_components():
+    """Verify badge variants, SVG sparklines, stat_card, date/time inputs, search, and pricing_card."""
+    pdu.reset()
+
+    # 1. Badge variants (subtle, solid, outline)
+    b_sub = pdu.badge("Operational", color="emerald", variant="subtle")
+    b_sol = pdu.badge("Critical", color="rose", variant="solid")
+    b_out = pdu.badge("Draft", color="zinc", variant="outline")
+    h_sub = b_sub.render({})
+    h_sol = b_sol.render({})
+    h_out = b_out.render({})
+    assert "Operational" in h_sub
+    assert "Critical" in h_sol
+    assert "#ffffff" in h_sol
+    assert "Draft" in h_out
+    assert "border: 1px solid" in h_out
+
+    # 2. Pure SVG inline sparkline
+    spk = pdu.sparkline([10, 25, 18, 32, 28, 45], color="indigo", height=32, fill=True)
+    h_spk = spk.render({})
+    assert "<svg" in h_spk
+    assert "<polyline points=" in h_spk
+    assert "<polygon points=" in h_spk
+    assert "linearGradient" in h_spk
+
+    # 3. Executive StatCard
+    sc = pdu.stat_card(
+        title="Token Throughput",
+        value="18.4k t/s",
+        change="+24.8%",
+        sparkline=[12, 14, 15, 17, 18],
+        icon="⚡",
+        color="amber"
+    )
+    h_sc = sc.render({})
+    assert "Token Throughput" in h_sc
+    assert "18.4k t/s" in h_sc
+    assert "+24.8%" in h_sc
+    assert "⚡" in h_sc
+
+    # 4. Date & Time inputs
+    d_in = pdu.date_input("Start Date", value="2026-11-18", key="start_date")
+    t_in = pdu.time_input("Execution Time", value="14:30", key="exec_time")
+    h_din = d_in.render({})
+    h_tin = t_in.render({})
+    assert 'type="date"' in h_din
+    assert 'value="2026-11-18"' in h_din
+    assert 'type="time"' in h_tin
+    assert 'value="14:30"' in h_tin
+
+    # 5. Search input
+    s_in = pdu.search_input("Search telemetry logs...", value="error")
+    h_sin = s_in.render({})
+    assert "type='search'" in h_sin or 'type="search"' in h_sin
+    assert 'Search telemetry logs...' in h_sin
+    assert 'value="error"' in h_sin or "value='error'" in h_sin
+
+    # 6. Commercial SaaS Pricing Card
+    pc = pdu.pricing_card(
+        title="Pro Tier",
+        price="$149",
+        period="/ month",
+        description="For high-growth engineering teams",
+        features=["Up to 50 GPU clusters", "90-day telemetry retention", "24/7 SLA Guarantee"],
+        highlighted=True,
+        badge_label="BEST VALUE"
+    )
+    h_pc = pc.render({})
+    assert "Pro Tier" in h_pc
+    assert "$149" in h_pc
+    assert "BEST VALUE" in h_pc
+    assert "90-day telemetry retention" in h_pc
+
+
+@pytest.mark.anyio
+async def test_full_commercial_saas_screen_ssr():
+    """Verify an entire commercial SaaS multi-panel application renders cleanly via SSR."""
+    pdu.reset()
+    pdu.set_page_config(title="DataScale AI", theme="indigo", dark_mode=True)
+
+    with pdu.flex(justify="between", align="center", class_name="py-4 border-b border-border"):
+        pdu.header("DataScale AI Console")
+        with pdu.row(gap="2", align="center"):
+            pdu.badge("Online", color="emerald")
+            pdu.badge("v1.4.4", color="indigo")
+
+    with pdu.grid(min_column_width="240px", gap="4"):
+        pdu.stat_card("Active Nodes", "64 / 64", change="100% OK", sparkline=[10, 10, 10], color="emerald")
+        pdu.stat_card("P99 Latency", "8.2 ms", change="-2.1ms", sparkline=[14, 12, 10, 8], color="indigo")
+        pdu.stat_card("VRAM Pool", "2,480 GB", change="+12%", sparkline=[60, 70, 85, 92], color="amber")
+
+    with pdu.card(position="relative"):
+        pdu.badge("HOTSPOT", color="rose", position="absolute", top="12px", right="12px")
+        pdu.title("Cluster Temperature Heatmap")
+        pdu.line_chart([45, 52, 60, 68, 72, 85], color="rose")
+
+    tab1, tab2 = pdu.tabs(["Filters & Controls", "Pricing Tiers"], expand=True)
+    with tab1:
+        pdu.search_input("Search nodes by IP or region...")
+        pdu.date_input("Audit Window", value="2026-11-18")
+    with tab2:
+        with pdu.grid(columns=2, gap="4"):
+            pdu.pricing_card("Starter", "$29", features=["5 nodes", "Community Slack"])
+            pdu.pricing_card("Enterprise", "$299", features=["Unlimited nodes", "Dedicated Support"], highlighted=True)
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "DataScale AI Console" in body
+    assert "Token Throughput" not in body or "Active Nodes" in body
+    assert "VRAM Pool" in body
+    assert "HOTSPOT" in body
+    assert "Pricing Tiers" in body
+    assert "Starter" in body
+    assert "Enterprise" in body
+
+
+
 
 
 

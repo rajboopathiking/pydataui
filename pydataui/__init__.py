@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.4.3'
+__version__ = '1.4.4'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -20,6 +20,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'ProceduralState': ('.state', 'ProceduralState'),
 
     # Layout Primitives
+    'Flex': ('.components.layout', 'Flex'),
     'Row': ('.components.layout', 'Row'),
     'Col': ('.components.layout', 'Col'),
     'Grid': ('.components.layout', 'Grid'),
@@ -191,6 +192,18 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'column': ('.dx', 'column'),
     'col': ('.dx', 'col'),
     'box': ('.dx', 'box'),
+    'flex': ('.dx', 'flex'),
+    'grid': ('.dx', 'grid'),
+    'spacer': ('.dx', 'spacer'),
+    'pinned': ('.dx', 'pinned'),
+    'overlay': ('.dx', 'overlay'),
+    'badge': ('.dx', 'badge'),
+    'sparkline': ('.dx', 'sparkline'),
+    'stat_card': ('.dx', 'stat_card'),
+    'date_input': ('.dx', 'date_input'),
+    'time_input': ('.dx', 'time_input'),
+    'search_input': ('.dx', 'search_input'),
+    'pricing_card': ('.dx', 'pricing_card'),
     'divider': ('.dx', 'divider'),
     'code_editor': ('.dx', 'code_editor'),
     'success': ('.dx', 'success'),
@@ -316,7 +329,7 @@ if TYPE_CHECKING:
     )
     from .components.base import Component, RawHtml, Html
     from .components.advanced import Markdown, CodeEditor, Chat
-    from .components.layout import Row, Col, Grid, Spacer, Container, Box, HStack, VStack, Card, Divider
+    from .components.layout import Row, Col, Grid, Spacer, Container, Box, HStack, VStack, Card, Divider, Flex
     from .components.typography import Heading, Text, Paragraph, Link, Code, Blockquote, Label
     from .components.forms import Button, Input, TextArea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, Form, FileUpload
     from .components.data_display import DataTable, Table, Badge, Tag, Stat, KeyValue, Avatar, Tooltip, List, ListItem, DescriptionList
@@ -335,7 +348,9 @@ if TYPE_CHECKING:
         plotly_chart, pyplot, button, input, text_input, textarea, text_area,
         number_input, slider, selectbox, multiselect, checkbox, radio, switch,
         toggle, file_uploader, chat_message, chat_input, chat, card, row,
-        column, col, box, divider, code_editor, success, info, warning, error, toast,
+        column, col, box, flex, grid, spacer, pinned, overlay, badge, sparkline,
+        stat_card, date_input, time_input, search_input, pricing_card,
+        divider, code_editor, success, info, warning, error, toast,
         spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
         form, form_submit_button, dialog, status, empty, cache_data, cache_resource, navigation,
         login, logout, is_authenticated, create_user, run,

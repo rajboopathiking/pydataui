@@ -35,6 +35,16 @@ class Component:
         self.hidden = hidden
         if 'tag' in props:
             self.tag = props.pop('tag')
+
+        # First-class positioning props
+        self.position = props.pop('position', None)
+        self.top = props.pop('top', None)
+        self.bottom = props.pop('bottom', None)
+        self.left = props.pop('left', None)
+        self.right = props.pop('right', None)
+        self.inset = props.pop('inset', None)
+        self.z_index = props.pop('z_index', props.pop('z-index', None))
+
         self.props = props
         self._event_props: Dict[str, Union[EventHandler, EventSpec]] = {}
         
@@ -217,15 +227,44 @@ class Component:
     
     def _get_classes(self) -> List[str]:
         """Get CSS classes for this component. Override in subclasses."""
-        return [self._class_prefix]
+        classes = [self._class_prefix]
+        if self.position in ('relative', 'absolute', 'fixed', 'sticky'):
+            classes.append(f'pdu-{self.position}')
+        return classes
+
+    @staticmethod
+    def _format_pos_value(val: Any) -> str:
+        if val is None:
+            return ""
+        s = str(val).strip()
+        if s.isdigit() or (s.startswith("-") and s[1:].isdigit()):
+            return f"{s}px"
+        return s
     
     def _get_style_string(self) -> str:
-        """Convert style prop to CSS string."""
-        if isinstance(self.style, str):
-            return self.style
-        if isinstance(self.style, dict):
-            return '; '.join(f'{k}: {to_css_value(v)}' for k, v in self.style.items())
-        return ''
+        """Convert style prop and positioning props to CSS string."""
+        parts = []
+        if isinstance(self.style, str) and self.style.strip():
+            parts.append(self.style.strip().rstrip(';'))
+        elif isinstance(self.style, dict):
+            parts.extend(f'{k}: {to_css_value(v)}' for k, v in self.style.items())
+
+        if self.position:
+            parts.append(f"position: {self.position}")
+        if self.top is not None:
+            parts.append(f"top: {self._format_pos_value(self.top)}")
+        if self.bottom is not None:
+            parts.append(f"bottom: {self._format_pos_value(self.bottom)}")
+        if self.left is not None:
+            parts.append(f"left: {self._format_pos_value(self.left)}")
+        if self.right is not None:
+            parts.append(f"right: {self._format_pos_value(self.right)}")
+        if self.inset is not None:
+            parts.append(f"inset: {self._format_pos_value(self.inset)}")
+        if self.z_index is not None:
+            parts.append(f"z-index: {self.z_index}")
+
+        return ('; '.join(parts) + (';' if parts else '')).strip()
     
     def _is_void_element(self) -> bool:
         """Check if this is a void/self-closing HTML element."""

@@ -108,15 +108,22 @@ class Breadcrumb(Component):
 
 class Tabs(Component):
     tag = 'div'
-    def __init__(self, *children, active_tab=0, variant='line', on_change=None, **props):
+    def __init__(self, *children, active_tab=0, variant='line', expand=False, hide_tab_buttons=False, on_change=None, **props):
         super().__init__(*children, **props)
         self.active_tab = active_tab
         self.variant = variant
+        self.expand = expand
+        self.hide_tab_buttons = hide_tab_buttons
         if on_change:
             self._event_props['on_change'] = on_change
             
     def _get_classes(self) -> List[str]:
-        return super()._get_classes() + ['pdu-tabs', f'pdu-tabs-{self.variant}']
+        classes = super()._get_classes() + ['pdu-tabs', f'pdu-tabs-{self.variant}']
+        if self.expand:
+            classes.append('pdu-tabs-expand')
+        if self.hide_tab_buttons:
+            classes.append('pdu-tabs-headless')
+        return classes
         
     def render(self, state_snapshot: dict) -> str:
         attrs = self._build_attrs(state_snapshot)
@@ -130,13 +137,15 @@ class Tabs(Component):
             if isinstance(child, Tab):
                 is_active = i == active_idx
                 active_cls = "pdu-tab-active" if is_active else ""
+                expand_cls = "flex-1 text-center" if self.expand else ""
                 
-                nav_html.append(f"<button class='pdu-tab-btn {active_cls}'>{escape_html(str(child.label))}</button>")
+                nav_html.append(f"<button class='pdu-tab-btn {active_cls} {expand_cls}'>{escape_html(str(child.label))}</button>")
                 
                 content_cls = "pdu-tab-content-active" if is_active else "pdu-tab-content-hidden"
                 content_html.append(f"<div class='pdu-tab-panel {content_cls}'>{child._render_children(state_snapshot)}</div>")
                 
-        return f"<{self.tag} {attrs}><div class='pdu-tabs-nav'>{''.join(nav_html)}</div><div class='pdu-tabs-body'>{''.join(content_html)}</div></{self.tag}>"
+        nav_style = " style='display: none;'" if self.hide_tab_buttons else ""
+        return f"<{self.tag} {attrs}><div class='pdu-tabs-nav'{nav_style}>{''.join(nav_html)}</div><div class='pdu-tabs-body'>{''.join(content_html)}</div></{self.tag}>"
 
 class Tab(Component):
     tag = 'div'

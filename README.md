@@ -7,7 +7,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/pydataui.svg?color=6366f1&label=PyPI%20Version)](https://pypi.org/project/pydataui/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/pydataui?color=blue&label=Downloads)](https://pypi.org/project/pydataui/)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://pypi.org/project/pydataui/)
-[![Tests](https://img.shields.io/badge/tests-192%20passed%20(100%25)-emerald.svg)](https://github.com/rajboopathiking/pydataui/actions)
+[![Tests](https://img.shields.io/badge/tests-223%20passed%20(100%25)-emerald.svg)](https://github.com/rajboopathiking/pydataui/actions)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-indigo.svg)](https://rajboopathiking.github.io/pydataui/)
 
@@ -128,6 +128,114 @@ python app.py
 * 🌐 **Local Web UI:** `http://127.0.0.1:8000`
 * 🔗 **Instant Public Tunnel:** `https://a1d60ba6d715e7.app.lhr.life`
 * 📖 **Interactive Swagger UI:** `http://127.0.0.1:8000/docs`
+
+---
+
+### 🧩 Advanced Layout, Positioning & Commercial Dashboard Guide (v1.4.4)
+
+PyDataUI v1.4.4 introduces **Next.js-level layout freedom and commercial primitives** directly into Streamlit-style procedural Python:
+
+#### 1. Flexbox Layout Engine (`pdu.flex`, `pdu.row`, `pdu.column`)
+Take complete control over alignment, justification, gaps, and wrapping with both `with` context managers and direct component arguments:
+
+```python
+import pydataui as pdu
+
+# Horizontal navigation bar with Flexbox between-alignment
+with pdu.flex(direction="row", justify="between", align="center", gap=4):
+    pdu.subheader("Production Cluster")
+    with pdu.row(align="center", gap=2):
+        pdu.badge("Operational", color="emerald", variant="subtle")
+        pdu.badge("v1.4.4", color="indigo")
+        pdu.button("+ Deploy Pod", type="primary")
+
+# Vertical stack with stretch alignment
+with pdu.flex(direction="column", align="stretch", gap=3):
+    pdu.caption("Cluster Load")
+    pdu.progress(85)
+```
+
+#### 2. Responsive CSS Grid Engine (`pdu.grid`)
+Build auto-wrapping, responsive dashboard grids without writing a single CSS media query:
+
+```python
+# Auto-responsive card grid: columns automatically wrap when cards reach 260px minimum width!
+with pdu.grid(min_column_width="260px", gap=4):
+    pdu.stat_card("Active Nodes", "32 / 32", change="100% OK", sparkline=[10, 10, 10], color="emerald")
+    pdu.stat_card("P99 Latency", "8.2 ms", change="-2.1ms", sparkline=[14, 12, 10, 8], color="indigo")
+    pdu.stat_card("VRAM Allocated", "1,180 GB", change="+12%", sparkline=[60, 75, 85, 92], color="amber")
+    pdu.stat_card("Token Throughput", "18.4k t/s", change="+24.8%", sparkline=[12, 15, 17, 18], color="rose")
+
+# Fixed 3-column grid with custom row and column gaps:
+with pdu.grid(columns=3, row_gap=3, column_gap=6):
+    pdu.metric("Cluster CPU", "42%")
+    pdu.metric("Memory", "68%")
+    pdu.metric("Network I/O", "1.2 GB/s")
+```
+
+#### 3. Coordinate Positioning Engine (Absolute & Relative)
+Add floating status badges, absolute card overlays, and pinned toolbars:
+
+```python
+# Elevated Card with Floating Absolute Badge pinned to top-right
+with pdu.card(position="relative"):
+    pdu.badge("HOTSPOT DETECTED", color="rose", position="absolute", top="14px", right="14px")
+    pdu.title("Worker Node 04")
+    pdu.line_chart([65, 72, 80, 85, 94, 98, 82], color="rose")
+
+# Pinned Bottom Toolbar (sticky action bar docked to viewport)
+with pdu.pinned(position="bottom"):
+    with pdu.flex(justify="between", align="center", class_name="max-w-4xl mx-auto"):
+        pdu.text("3 worker nodes require kernel updates.")
+        pdu.button("Apply Batch Update", type="primary")
+```
+
+#### 4. Advanced Tabs & Headless Multi-Step Wizards (`pdu.tabs`)
+```python
+# 1. Full-width equal distribution tabs
+tab_a, tab_b = pdu.tabs(["System Telemetry", "Security Audit"], expand=True)
+
+# 2. Modern Segmented Pill Tabs
+tab_week, tab_month = pdu.tabs(["7 Days", "30 Days"], variant="pill")
+
+# 3. Headless Step-by-Step Wizard (tab headers completely hidden)
+# Build custom multi-step onboarding, checkouts, and AI interview forms in 1 line!
+steps = pdu.tabs(["Step 1: Account", "Step 2: Payment", "Step 3: Launch"], hide_tab_buttons=True)
+with steps[0]:
+    pdu.text_input("Company Name")
+    pdu.button("Next: Payment →", on_click=lambda: pdu.session_state.update({"step": 1}))
+```
+
+#### 5. Commercial Dashboard & Analytics Primitives
+```python
+# 1. Status Badges (subtle, solid, outline with preset colors or custom hex)
+pdu.badge("Online", color="emerald", variant="subtle")
+pdu.badge("Critical", color="rose", variant="solid")
+pdu.badge("Draft", color="zinc", variant="outline")
+
+# 2. Pure SVG Inline Sparklines (zero external dependencies, renders in 0.001ms)
+pdu.sparkline([12, 14, 18, 15, 22, 28, 35], color="indigo", height=32, fill=True)
+
+# 3. Executive StatCard with Icon and Sparkline
+pdu.stat_card(title="MRR Velocity", value="$154,200", change="+18.2%", sparkline=[90, 110, 130, 154], icon="📈", color="emerald")
+
+# 4. Temporal Inputs bound to session_state
+pdu.date_input("Audit Window", value="2026-11-18", key="audit_date")
+pdu.time_input("Maintenance Schedule", value="02:00", key="maint_time")
+
+# 5. Search Bar with Instant HTMX Callback
+pdu.search_input(placeholder="Search telemetry logs...", key="log_query", on_search=filter_logs)
+
+# 6. Commercial SaaS Pricing Cards
+with pdu.grid(columns=3, gap=6):
+    pdu.pricing_card("Starter", "$29", features=["Up to 5 nodes", "Community Slack"])
+    pdu.pricing_card("Pro", "$149", features=["50 nodes", "24/7 SLA", "90-day logs"], highlighted=True, badge_label="BEST VALUE")
+    pdu.pricing_card("Enterprise", "Custom", features=["Unlimited nodes", "Dedicated VPC"])
+
+# 7. Spacing Primitives
+pdu.spacer(height=24)        # 24px vertical spacer
+pdu.divider(label="OR")      # Horizontal divider with centered label
+```
 
 ---
 

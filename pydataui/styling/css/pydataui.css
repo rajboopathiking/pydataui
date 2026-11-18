@@ -19,6 +19,31 @@ body {
   background-color: var(--pdu-color-bg);
 }
 
+/* Modern Thin Themed Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pdu-color-border, rgba(150, 150, 150, 0.3)) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pdu-color-border, rgba(150, 150, 150, 0.3));
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pdu-color-accent, var(--pdu-color-primary, rgba(150, 150, 150, 0.6)));
+}
+
 /* 2. CSS Custom Properties */
 :root {
   --pdu-color-primary: #3b82f6;

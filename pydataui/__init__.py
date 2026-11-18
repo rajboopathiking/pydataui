@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.5.1'
+__version__ = '1.5.2'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -177,6 +177,8 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'expander': ('.dx', 'expander'),
     'tabs': ('.dx', 'tabs'),
     'container': ('.dx', 'container'),
+    'scrollable': ('.dx', 'scrollable'),
+    'scroll_container': ('.dx', 'scroll_container'),
     'metric': ('.dx', 'metric'),
     'session_state': ('.dx', 'session_state'),
     'dataframe': ('.dx', 'dataframe'),

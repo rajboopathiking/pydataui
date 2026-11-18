@@ -237,6 +237,26 @@ pdu.spacer(height=24)        # 24px vertical spacer
 pdu.divider(label="OR")      # Horizontal divider with centered label
 ```
 
+#### 6. Scrollable Containers & Streamlit-Style Height Constraints (v1.5.2)
+Full native support for fixed-height scrollable views with sleek, modern themed thin scrollbars (`overflow-y: auto`, `overflow-x: auto`):
+
+```python
+# 1. Streamlit-Style Scrollable Container with Fixed Height and Border
+with pdu.container(height=300, border=True):
+    pdu.subheader("Real-Time Event Stream")
+    for event in event_feed:
+        pdu.write(event)  # Smoothly scrolls vertically with themed thin scrollbars!
+
+# 2. Dedicated Scrollable Container (Horizontal, Vertical, or Both)
+with pdu.scrollable(height=240, direction="y"):
+    pdu.dataframe(large_dataframe)
+
+# 3. Elevated Card with Scrollable Body & Pinned Header Bar
+with pdu.card(title="System Audit Logs", subtitle="Live telemetry traces", height=350, scroll=True):
+    for log in logs:
+        pdu.caption(f"[{log.time}] {log.message}")
+```
+
 ---
 
 ### 🧩 Layout Containers & Context Managers Guide
@@ -565,7 +585,7 @@ pdu.set_page_config(title="DeepAgent Copilot", theme="violet", dark_mode=True)
 # 2. Left Control Sidebar
 with pdu.sidebar():
     pdu.header("DeepAgent Copilot")
-    pdu.caption("Powered by PyDataUI v1.5.1")
+    pdu.caption("Powered by PyDataUI v1.5.2")
     pdu.divider()
 
     model = pdu.selectbox("INFERENCE MODEL", ["DeepSeek-R1-Distill-70B", "Llama-3.3-70B"])
@@ -829,7 +849,7 @@ pdu.navbar(
 # 3. Left Control & Hierarchy Sidebar
 with pdu.sidebar():
     pdu.header("DataMesh OS")
-    pdu.caption("v1.5.1 Production Mesh")
+    pdu.caption("v1.5.2 Production Mesh")
     pdu.divider()
 
     env = pdu.selectbox("Active Environment", ["Production (us-east-1)", "Staging (eu-central-1)"])
@@ -954,7 +974,7 @@ Being completely transparent about what PyDataUI is and is not designed for:
 
 ### 📊 4-Way Comprehensive Architecture Comparison
 
-| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.1 (Full-Stack) |
+| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.2 (Full-Stack) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Languages Required** | 2 (TypeScript + Python) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
 | **UI Presentation Layer** | React / Virtual DOM | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |

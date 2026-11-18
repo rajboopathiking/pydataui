@@ -242,9 +242,9 @@ class Col(Flex):
 
 
 class Card(Component):
-    """Card container with optional header."""
+    """Card container with optional header, height constraint, and scrolling."""
     tag = 'div'
-    def __init__(self, *children, title=None, subtitle=None, padding='lg', shadow='md', radius='md', bordered=True, **props):
+    def __init__(self, *children, title=None, subtitle=None, padding='lg', shadow='md', radius='md', bordered=True, height=None, scroll=False, **props):
         super().__init__(*children, **props)
         self.title = title
         self.subtitle = subtitle
@@ -252,6 +252,8 @@ class Card(Component):
         self.shadow = shadow
         self.radius = radius
         self.bordered = bordered
+        self.height = height
+        self.scroll = scroll or (height is not None)
         
     def _get_classes(self) -> List[str]:
         classes = super()._get_classes() + ['pdu-card', f'pdu-p-{self.padding}', f'pdu-shadow-{self.shadow}', f'pdu-radius-{self.radius}']
@@ -272,7 +274,15 @@ class Card(Component):
         
         attrs = self._build_attrs(state_snapshot)
         children_html = self._render_children(state_snapshot)
-        return f"<{self.tag} {attrs}>{header_html}<div class='pdu-card-body'>{children_html}</div></{self.tag}>"
+
+        body_style = ""
+        if self.height is not None:
+            h_val = f"{self.height}px" if isinstance(self.height, (int, float)) or (isinstance(self.height, str) and str(self.height).isdigit()) else str(self.height)
+            body_style = f" style='max-height: {h_val}; overflow-y: auto;'" if self.scroll else f" style='height: {h_val};'"
+        elif self.scroll:
+            body_style = " style='overflow-y: auto;'"
+
+        return f"<{self.tag} {attrs}>{header_html}<div class='pdu-card-body'{body_style}>{children_html}</div></{self.tag}>"
 
 class Divider(Component):
     """HR or vertical divider with optional centered label."""

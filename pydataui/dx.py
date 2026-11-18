@@ -1117,18 +1117,82 @@ def tabs(
     return contexts
 
 
-def container(*children: Component, border: bool = False, **kwargs) -> Box:
+def container(
+    *children: Component,
+    height: Optional[Union[int, str]] = None,
+    max_height: Optional[Union[int, str]] = None,
+    border: bool = False,
+    scroll: Optional[bool] = None,
+    **kwargs
+) -> Box:
     """
     Add a scoped container (Streamlit `st.container` equivalent).
     Supports both context manager syntax (`with pdu.container():`) and direct component insertion.
-    If border=True, renders with a modern card border, padding, and subtle shadow.
+
+    Parameters:
+    - height: Fixed height constraint (e.g. `300` or `"300px"`). Automatically enables smooth vertical scrolling (`overflow-y: auto`).
+    - max_height: Maximum height constraint with auto scrolling.
+    - border: If True, renders with a modern card border, padding, and subtle shadow.
+    - scroll: Explicitly toggle scrolling (`True` enables `overflow-y: auto`).
     """
-    base_cls = "w-full space-y-4 my-2"
+    base_cls = "w-full my-2"
+    style_parts = []
+
+    is_scrollable = scroll if scroll is not None else (height is not None or max_height is not None)
+    if is_scrollable:
+        base_cls += " overflow-y-auto"
+
+    if height is not None:
+        h_val = f"{height}px" if isinstance(height, (int, float)) or (isinstance(height, str) and str(height).isdigit()) else str(height)
+        style_parts.append(f"height: {h_val}; max-height: {h_val}")
+    elif max_height is not None:
+        mh_val = f"{max_height}px" if isinstance(max_height, (int, float)) or (isinstance(max_height, str) and str(max_height).isdigit()) else str(max_height)
+        style_parts.append(f"max-height: {mh_val}")
+
     if border:
         base_cls += " border border-border/80 rounded-2xl bg-card/60 p-6 shadow-sm"
+    else:
+        base_cls += " space-y-4"
+
     extra_cls = kwargs.pop("class_name", "")
     full_cls = f"{base_cls} {extra_cls}".strip() if extra_cls else base_cls
-    return _add_component(Box(*children, class_name=full_cls, **kwargs))
+
+    existing_style = kwargs.pop("style", None)
+    if existing_style:
+        if isinstance(existing_style, str):
+            style_parts.insert(0, existing_style.rstrip(";"))
+        elif isinstance(existing_style, dict):
+            for sk, sv in existing_style.items():
+                style_parts.insert(0, f"{sk}: {sv}")
+
+    final_style = "; ".join(style_parts) if style_parts else None
+    return _add_component(Box(*children, class_name=full_cls, style=final_style, **kwargs))
+
+
+def scrollable(
+    *children: Component,
+    height: Union[int, str] = 300,
+    max_height: Optional[Union[int, str]] = None,
+    direction: str = "y",
+    border: bool = True,
+    **kwargs
+) -> Box:
+    """
+    Dedicated high-performance scrollable container (Streamlit `st.container(height=...)` equivalent).
+    Supports `with pdu.scrollable(height=300):` to render fixed-height scrollable views with thin modern scrollbars.
+
+    Parameters:
+    - height: Height in pixels or CSS string (default: 300).
+    - direction: 'y' (vertical scroll), 'x' (horizontal scroll), or 'both'.
+    - border: If True, renders with a sleek card border and background.
+    """
+    overflow_cls = "overflow-y-auto" if direction == "y" else ("overflow-x-auto" if direction == "x" else "overflow-auto")
+    return container(*children, height=height, max_height=max_height, border=border, scroll=True, class_name=overflow_cls, **kwargs)
+
+
+def scroll_container(*children: Component, **kwargs) -> Box:
+    """Alias for `scrollable`."""
+    return scrollable(*children, **kwargs)
 
 
 # ============================================================================
@@ -2188,12 +2252,20 @@ def chat(messages: Optional[List[Dict[str, str]]] = None, on_send: Optional[Call
 # Structural Containers & Layout Helpers
 # ============================================================================
 
-def card(*children: Component, title: Optional[str] = None, subtitle: Optional[str] = None, **kwargs) -> Card:
+def card(
+    *children: Component,
+    title: Optional[str] = None,
+    subtitle: Optional[str] = None,
+    height: Optional[Union[int, str]] = None,
+    scroll: bool = False,
+    **kwargs
+) -> Card:
     """
     Add an elevated card container.
     Supports both context manager syntax (`with pdu.card():`) and direct component arguments.
+    If `height` is specified (e.g. `height=300`), the card body automatically enables smooth vertical scrolling.
     """
-    return _add_component(Card(*children, title=title, subtitle=subtitle, **kwargs))
+    return _add_component(Card(*children, title=title, subtitle=subtitle, height=height, scroll=scroll, **kwargs))
 
 
 def box(*children: Component, **kwargs) -> Box:

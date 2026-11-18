@@ -169,14 +169,38 @@ class Popover(Component):
         self.position = position
         
     def _get_classes(self) -> List[str]:
-        return super()._get_classes() + ['pdu-popover-wrapper']
+        return super()._get_classes() + ['pdu-popover-wrapper', 'relative', 'inline-block']
         
     def render(self, state_snapshot: Optional[dict] = None) -> str:
         snap = state_snapshot or {}
         attrs = self._build_attrs(snap)
-        trigger_html = self.trigger.render(snap) if isinstance(self.trigger, Component) else escape_html(str(self.trigger))
-        content_html = self.content.render(snap) if isinstance(self.content, Component) else escape_html(str(self.content))
-        return f"<{self.tag} {attrs}><div class='pdu-popover-trigger'>{trigger_html}</div><div class='pdu-popover-content pdu-popover-{self.position}'>{content_html}</div></{self.tag}>"
+        
+        if self.trigger:
+            trigger_html = self.trigger.render(snap) if isinstance(self.trigger, Component) else escape_html(str(self.trigger))
+        else:
+            trigger_html = "<button type='button' class='px-3 py-1.5 text-xs font-medium rounded-lg border border-border bg-background hover:bg-muted text-foreground transition-colors'>Options</button>"
+
+        if self.content:
+            content_html = self.content.render(snap) if isinstance(self.content, Component) else escape_html(str(self.content))
+        else:
+            content_html = self._render_children(snap)
+            
+        pos_classes = {
+            'bottom': 'top-full left-0 mt-2',
+            'top': 'bottom-full left-0 mb-2',
+            'left': 'right-full top-0 mr-2',
+            'right': 'left-full top-0 ml-2',
+            'bottom-end': 'top-full right-0 mt-2'
+        }.get(self.position, 'top-full left-0 mt-2')
+        
+        return (
+            f"<{self.tag} {attrs}>"
+            f"<div class='pdu-popover-trigger cursor-pointer' onclick='var panel = this.nextElementSibling; panel.classList.toggle(\"hidden\"); event.stopPropagation();'>{trigger_html}</div>"
+            f"<div class='pdu-popover-content hidden absolute z-50 min-w-[200px] p-4 bg-popover text-popover-foreground border border-border/80 rounded-xl shadow-xl backdrop-blur {pos_classes}'>"
+            f"{content_html}"
+            f"</div>"
+            f"</{self.tag}>"
+        )
 
 
 class Dropdown(Component):

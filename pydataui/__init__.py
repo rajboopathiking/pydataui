@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.4.4'
+__version__ = '1.5.0'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -93,6 +93,23 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'Popover': ('.components.overlay', 'Popover'),
     'Dropdown': ('.components.overlay', 'Dropdown'),
 
+    # Media Primitives
+    'Image': ('.components.media', 'Image'),
+    'Video': ('.components.media', 'Video'),
+    'Audio': ('.components.media', 'Audio'),
+    'Icon': ('.components.media', 'Icon'),
+
+    # Procedural Final Extensions
+    'navbar': ('.dx', 'navbar'),
+    'breadcrumb': ('.dx', 'breadcrumb'),
+    'image': ('.dx', 'image'),
+    'video': ('.dx', 'video'),
+    'audio': ('.dx', 'audio'),
+    'popover': ('.dx', 'popover'),
+    'tooltip': ('.dx', 'tooltip'),
+    'write_stream': ('.dx', 'write_stream'),
+    'date_range_picker': ('.dx', 'date_range_picker'),
+    'data_editor': ('.dx', 'data_editor'),
     # TUI
     'tui': ('.tui', 'run_tui'),
     'run_tui': ('.tui', 'run_tui'),

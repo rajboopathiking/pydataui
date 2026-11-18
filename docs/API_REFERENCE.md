@@ -372,7 +372,7 @@ PyDataUI uses clean REST endpoints and HTMX partial swap protocols:
 
 ## 10. Procedural Streamlit-Style DX Reference (`import pydataui as pdu`)
 
-PyDataUI v1.4.4 provides a comprehensive procedural API under the `pydataui` module namespace. All methods support top-to-bottom procedural execution, context managers (`with` syntax), and direct component return values.
+PyDataUI v1.5.0 provides a comprehensive procedural API under the `pydataui` module namespace. All methods support top-to-bottom procedural execution, context managers (`with` syntax), and direct component return values.
 
 ### 10.1 Global Configuration & Lifecycle
 
@@ -538,7 +538,7 @@ Horizontal rule with optional centered text label (e.g. `pdu.divider("OR")`).
 
 ### 10.3 Component Coordinate Positioning Engine
 
-Every visual component in PyDataUI v1.4.4 accepts coordinate positioning props:
+Every visual component in PyDataUI v1.5.0 accepts coordinate positioning props:
 
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -711,3 +711,54 @@ parent_api = FastAPI()
 # Build your PyDataUI views...
 parent_api.mount("/dashboard", pdu.get_fastapi())
 ```
+
+### 10.10 Final Commercial Extensions (v1.5.0)
+
+#### `pdu.navbar(*children, title=None, logo=None, links=None, search=False, user=None, sticky=True, **kwargs)`
+Renders a top commercial application shell with brand logo, title, horizontal nav links, search input, and user profile avatar.
+
+```python
+pdu.navbar(
+    title="CloudAI Ops",
+    logo="⚡",
+    links=[{"label": "Overview", "href": "/"}, {"label": "Telemetry", "href": "/telemetry"}],
+    search=True,
+    user={"name": "Alice", "role": "Admin"}
+)
+```
+
+#### `pdu.breadcrumb(items, separator="/", **kwargs)`
+Renders hierarchical navigation breadcrumbs (`["Home", "Clusters", "Node 04"]`).
+
+#### `pdu.image(src, caption=None, width=None, use_container_width=False, rounded=True)`
+Renders images from URLs, local file paths, raw bytes, or PIL Images (Streamlit `st.image` equivalent).
+
+#### `pdu.video(data, format="video/mp4", caption=None, controls=True, **kwargs)`
+Renders HTML5 video player from URLs or bytes (Streamlit `st.video` equivalent).
+
+#### `pdu.audio(data, format="audio/mp3", caption=None, controls=True, **kwargs)`
+Renders HTML5 audio player from URLs or bytes (Streamlit `st.audio` equivalent).
+
+#### `pdu.popover(label="Options", *children, position="bottom", icon=None)`
+Adds a floating popover card container (Streamlit `st.popover` equivalent). Supports `with pdu.popover("Filter"): ...`.
+
+#### `pdu.tooltip(text, *children, position="top")`
+Renders an accessible hover tooltip popup over children or standalone info icon.
+
+#### `pdu.write_stream(stream_generator, key=None)`
+Streams real-time tokens directly into the UI from OpenAI, Ollama, LangChain, or custom generators (Streamlit `st.write_stream` equivalent).
+
+```python
+def stream():
+    for token in ["Analyzing ", "cluster ", "telemetry..."]:
+        yield token
+
+with pdu.chat_message("assistant"):
+    pdu.write_stream(stream)
+```
+
+#### `pdu.date_range_picker(label, value=None, min_date=None, max_date=None, key=None, help=None)`
+Renders a dual-date range selector (Start Date → End Date) bound to `pdu.session_state`. Returns `(start_date, end_date)`.
+
+#### `pdu.data_editor(data, num_rows="fixed", disabled_columns=None, key=None)`
+Renders an interactive in-place editable spreadsheet table (Streamlit `st.data_editor` equivalent). Double-click to edit cell values; syncs back to `pdu.session_state`.

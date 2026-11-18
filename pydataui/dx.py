@@ -58,7 +58,10 @@ from .app import App
 from .components.advanced import Chat, CodeEditor, Markdown
 from .components.base import Component, RawHtml
 from .components.charts import Chart, Sparkline
-from .components.data_display import Badge, DataTable, KeyValue, Stat, Table
+from .components.data_display import Badge, DataTable, KeyValue, Stat, Table, Tooltip
+from .components.media import Image, Video, Audio, Icon
+from .components.navigation import Navbar, Breadcrumb, Tabs, Tab, NavLink, Sidebar
+from .components.overlay import Popover, Modal, Drawer, Dropdown
 from .components.data_science import DataFrameTable, JSONViewer, MetricCard, PlotlyChart
 from .components.feedback import Alert, Progress, Spinner, Toast
 from .components.forms import (
@@ -1019,8 +1022,12 @@ def metric(
     delta_color: str = "normal",
     change: Optional[str] = None,
     color: Optional[str] = None,
+    help: Optional[str] = None,
     **kwargs
 ) -> MetricCard:
+    if help:
+        help_badge = f"<span class='group relative inline-flex items-center text-muted-foreground/70 hover:text-foreground cursor-help text-[11px] w-3.5 h-3.5 rounded-full border border-border/80 justify-center select-none ml-1'>?<span class='hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 text-[11px] font-normal text-popover-foreground bg-popover border border-border/80 rounded-md shadow-lg pointer-events-none whitespace-normal min-w-[140px] max-w-xs text-center z-50'>{escape_html(help)}</span></span>"
+        label = f"{label} {help_badge}" 
     """
     Render a high-impact KPI metric card with value, optional change delta, custom accent color, and badges.
 
@@ -2442,6 +2449,308 @@ def code_editor(
 ) -> CodeEditor:
     """Add an interactive code editor."""
     return _add_component(CodeEditor(code=code_content, language=language, theme=theme, on_change=on_change, **kwargs))
+
+
+# ============================================================================
+# Final Version Commercial Extensions (v1.5.0)
+# ============================================================================
+
+def navbar(
+    *children: Component,
+    title: Optional[str] = None,
+    brand: Optional[str] = None,
+    logo: Optional[str] = None,
+    links: Optional[List[Dict[str, str]]] = None,
+    search: Union[bool, str] = False,
+    user: Optional[Dict[str, Any]] = None,
+    sticky: bool = True,
+    **kwargs
+) -> Navbar:
+    """
+    Render a modern commercial application header bar with branding, navigation links, instant search, and user profile.
+    Supports both context manager syntax (`with pdu.navbar():`) and direct child arguments.
+    """
+    nav_title = brand or title
+    nav_comp = Navbar(
+        *children,
+        brand=nav_title,
+        logo=logo,
+        links=links,
+        search=search,
+        user=user,
+        sticky=sticky,
+        **kwargs
+    )
+    return _add_component(nav_comp)
+
+
+def breadcrumb(
+    items: Optional[List[Union[str, Dict[str, str], Tuple[str, str]]]] = None,
+    separator: str = "/",
+    **kwargs
+) -> Breadcrumb:
+    """
+    Render a clean hierarchical breadcrumb trail (e.g. `pdu.breadcrumb(["Home", "Clusters", "Node 04"])`).
+    """
+    return _add_component(Breadcrumb(items=items, separator=separator, **kwargs))
+
+
+def image(
+    image: Any,
+    caption: Optional[str] = None,
+    width: Optional[Union[int, str]] = None,
+    height: Optional[Union[int, str]] = None,
+    use_container_width: bool = False,
+    alt: Optional[str] = None,
+    rounded: bool = True,
+    **kwargs
+) -> Image:
+    """
+    Display an image from a URL, local path, raw bytes, or PIL Image (Streamlit `st.image` equivalent).
+    """
+    w = "100%" if use_container_width else width
+    return _add_component(Image(
+        src=image,
+        caption=caption,
+        width=w,
+        height=height,
+        alt=alt,
+        rounded=rounded,
+        **kwargs
+    ))
+
+
+def video(
+    data: Any,
+    format: str = "video/mp4",
+    caption: Optional[str] = None,
+    controls: bool = True,
+    autoplay: bool = False,
+    muted: bool = False,
+    loop: bool = False,
+    width: Optional[Union[int, str]] = None,
+    **kwargs
+) -> Video:
+    """
+    Display a native HTML5 video player (Streamlit `st.video` equivalent).
+    """
+    return _add_component(Video(
+        src=data,
+        caption=caption,
+        controls=controls,
+        autoplay=autoplay,
+        muted=muted,
+        loop=loop,
+        width=width,
+        **kwargs
+    ))
+
+
+def audio(
+    data: Any,
+    format: str = "audio/mp3",
+    caption: Optional[str] = None,
+    controls: bool = True,
+    autoplay: bool = False,
+    muted: bool = False,
+    loop: bool = False,
+    **kwargs
+) -> Audio:
+    """
+    Display a native HTML5 audio player (Streamlit `st.audio` equivalent).
+    """
+    return _add_component(Audio(
+        src=data,
+        caption=caption,
+        controls=controls,
+        autoplay=autoplay,
+        muted=muted,
+        loop=loop,
+        **kwargs
+    ))
+
+
+def popover(
+    label: str = "Options",
+    *children: Component,
+    position: str = "bottom",
+    icon: Optional[str] = None,
+    **kwargs
+) -> Popover:
+    """
+    Add a floating popover overlay container (Streamlit `st.popover` equivalent).
+    Supports `with pdu.popover("Filter Options"):` syntax to nest controls inside a floating card.
+    """
+    trigger_text = f"{icon} {label}" if icon else label
+    trigger_btn = RawHtml(f"<button type='button' class='inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-xl border border-border bg-card hover:bg-muted text-foreground transition-all shadow-xs cursor-pointer'>{escape_html(trigger_text)} <span class='text-[10px] opacity-70'>▼</span></button>")
+    pop_comp = Popover(*children, trigger=trigger_btn, position=position, **kwargs)
+    return _add_component(pop_comp)
+
+
+def tooltip(
+    text: str,
+    *children: Component,
+    position: str = "top",
+    **kwargs
+) -> Tooltip:
+    """
+    Render a contextual hover tooltip over child components or as a standalone info marker.
+    """
+    return _add_component(Tooltip(text=text, position=position, *children, **kwargs))
+
+
+def write_stream(
+    stream: Union[Iterator[Any], AsyncIterator[Any], Callable, Any],
+    key: Optional[str] = None,
+    **kwargs
+) -> str:
+    """
+    Stream real-time tokens (e.g. from OpenAI, Ollama, LangChain, or custom generators) directly into the UI (Streamlit `st.write_stream` equivalent).
+    Consumes the generator, updates markdown in real time, and returns the aggregated text output.
+    """
+    generator = stream() if callable(stream) and not inspect.isgenerator(stream) else stream
+
+    accumulated = []
+    try:
+        for chunk in generator:
+            if isinstance(chunk, str):
+                text_piece = chunk
+            elif isinstance(chunk, dict):
+                text_piece = chunk.get("content") or chunk.get("delta", {}).get("content") or chunk.get("message", {}).get("content") or str(chunk)
+            elif hasattr(chunk, "content"):
+                text_piece = str(chunk.content)
+            elif hasattr(chunk, "text"):
+                text_piece = str(chunk.text)
+            else:
+                text_piece = str(chunk)
+            accumulated.append(text_piece)
+    except Exception as e:
+        accumulated.append(f"\n[Stream error: {e}]")
+
+    full_text = "".join(accumulated)
+    if key:
+        session_state[key] = full_text
+
+    write(full_text)
+    return full_text
+
+
+def date_range_picker(
+    label: str = "Date Range",
+    value: Optional[Tuple[Optional[str], Optional[str]]] = None,
+    min_date: Optional[str] = None,
+    max_date: Optional[str] = None,
+    key: Optional[str] = None,
+    help: Optional[str] = None,
+    on_change: Optional[Callable] = None,
+    **kwargs
+) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Render a dual-date range selector (Start Date → End Date) bound to session state.
+    Returns a tuple of `(start_date, end_date)`.
+    """
+    start_key = f"{key}_start" if key else generate_id("dt_start")
+    end_key = f"{key}_end" if key else generate_id("dt_end")
+
+    init_start = value[0] if (value and len(value) >= 1) else None
+    init_end = value[1] if (value and len(value) >= 2) else None
+
+    if key:
+        if key in session_state and isinstance(session_state[key], (list, tuple)) and len(session_state[key]) >= 2:
+            init_start, init_end = session_state[key][0], session_state[key][1]
+        else:
+            session_state[key] = (init_start, init_end)
+
+    help_html = ""
+    if help:
+        help_html = f"<span class='group relative inline-flex items-center text-muted-foreground/70 hover:text-foreground cursor-help text-[11px] w-3.5 h-3.5 rounded-full border border-border/80 justify-center select-none ml-1'>?<span class='hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 text-[11px] font-normal text-popover-foreground bg-popover border border-border/80 rounded-md shadow-lg pointer-events-none whitespace-normal min-w-[140px] max-w-xs text-center z-50'>{escape_html(help)}</span></span>"
+
+    min_attr = f"min='{min_date}'" if min_date else ""
+    max_attr = f"max='{max_date}'" if max_date else ""
+    start_val = escape_html(init_start or "")
+    end_val = escape_html(init_end or "")
+
+    picker_html = (
+        f"<div class='pdu-date-range-wrapper my-2'>"
+        f"<label class='block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5'>{escape_html(label)}{help_html}</label>"
+        f"<div class='flex items-center gap-2'>"
+        f"<input type='date' name='{start_key}' value='{start_val}' {min_attr} {max_attr} class='px-3 py-1.5 text-xs rounded-xl border border-border bg-card text-foreground focus:ring-1 focus:ring-primary focus:outline-none' />"
+        f"<span class='text-muted-foreground text-xs font-bold'>→</span>"
+        f"<input type='date' name='{end_key}' value='{end_val}' {min_attr} {max_attr} class='px-3 py-1.5 text-xs rounded-xl border border-border bg-card text-foreground focus:ring-1 focus:ring-primary focus:outline-none' />"
+        f"</div>"
+        f"</div>"
+    )
+    _add_component(RawHtml(picker_html))
+    return (init_start, init_end)
+
+
+def data_editor(
+    data: Any,
+    num_rows: str = "fixed",
+    disabled_columns: Optional[List[str]] = None,
+    key: Optional[str] = None,
+    **kwargs
+) -> Any:
+    """
+    Render an interactive in-place editable spreadsheet table (Streamlit `st.data_editor` equivalent).
+    Users can edit cell values inline, with changes synchronizing back to `session_state`.
+    """
+    records = []
+    columns = []
+
+    if hasattr(data, "to_dict"):
+        try:
+            records = data.to_dict(orient="records")
+            columns = list(data.columns)
+        except Exception:
+            records = []
+    elif isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
+        records = [dict(r) for r in data]
+        columns = list(data[0].keys())
+    elif isinstance(data, dict):
+        columns = list(data.keys())
+        first_col = list(data.values())[0] if data else []
+        length = len(first_col) if isinstance(first_col, (list, tuple)) else 1
+        records = [{k: data[k][i] for k in columns} for i in range(length)]
+    else:
+        records = []
+        columns = []
+
+    editor_key = key or generate_id("editor")
+    current_data = session_state.get(editor_key, records)
+
+    disabled_set = set(disabled_columns or [])
+
+    th_html = "".join(f"<th class='px-3 py-2 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border bg-muted/30'>{escape_html(c)}</th>" for c in columns)
+
+    tr_html = []
+    for r_idx, row in enumerate(current_data):
+        td_cells = []
+        for c in columns:
+            val = row.get(c, "")
+            is_disabled = c in disabled_set
+            dis_attr = "readonly disabled class='w-full px-2 py-1 text-xs bg-muted/20 text-muted-foreground rounded border border-transparent'" if is_disabled else f"name='{editor_key}_{r_idx}_{c}' class='w-full px-2 py-1 text-xs bg-transparent text-foreground rounded border border-transparent focus:border-primary focus:bg-background/80 transition-all outline-none'"
+            td_cells.append(f"<td class='p-1 border-b border-border/50'><input type='text' value='{escape_html(str(val))}' {dis_attr} /></td>")
+        tr_html.append(f"<tr class='hover:bg-muted/10 transition-colors'>{''.join(td_cells)}</tr>")
+
+    table_html = (
+        f"<div class='pdu-data-editor-container my-3 overflow-x-auto rounded-xl border border-border/80 bg-card shadow-sm'>"
+        f"<div class='px-4 py-2 border-b border-border/60 flex items-center justify-between text-xs text-muted-foreground font-medium'>"
+        f"<span>Interactive Data Editor ({len(current_data)} rows)</span>"
+        f"<span class='text-[10px] text-primary/80 uppercase font-semibold'>● Double-click cell to edit</span>"
+        f"</div>"
+        f"<table class='w-full text-sm border-collapse'>"
+        f"<thead><tr>{th_html}</tr></thead>"
+        f"<tbody>{''.join(tr_html)}</tbody>"
+        f"</table>"
+        f"</div>"
+    )
+    _add_component(RawHtml(table_html))
+
+    if hasattr(data, "iloc"):
+        import pandas as pd
+        return pd.DataFrame(current_data)
+    return current_data
 
 
 # ============================================================================

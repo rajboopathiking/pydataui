@@ -7,14 +7,14 @@
 [![PyPI version](https://img.shields.io/pypi/v/pydataui.svg?color=6366f1&label=PyPI%20Version)](https://pypi.org/project/pydataui/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/pydataui?color=blue&label=Downloads)](https://pypi.org/project/pydataui/)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://pypi.org/project/pydataui/)
-[![Tests](https://img.shields.io/badge/tests-223%20passed%20(100%25)-emerald.svg)](https://github.com/rajboopathiking/pydataui/actions)
+[![Tests](https://img.shields.io/badge/tests-242%20passed%20(100%25)-emerald.svg)](https://github.com/rajboopathiking/pydataui/actions)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-indigo.svg)](https://rajboopathiking.github.io/pydataui/)
 
 **The Full-Stack Python Framework: Streamlit Simplicity on the Surface, Next.js Performance Underneath.**  
 *Data Scientists • AI Engineers • Backend Developers • Full-Stack Pythonistas*
 
-[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_v1.4.4.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Next.js Full-Stack SaaS](#-track-2-nextjs-style-full-stack-saas) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
+[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_v1.5.0.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Next.js Full-Stack SaaS](#-track-2-nextjs-style-full-stack-saas) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
 
 </div>
 
@@ -661,7 +661,7 @@ Being completely transparent about what PyDataUI is and is not designed for:
 
 ### 📊 4-Way Comprehensive Architecture Comparison
 
-| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.4.4 (Full-Stack) |
+| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.0 (Full-Stack) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Languages Required** | 2 (TypeScript + Python) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
 | **UI Presentation Layer** | React / Virtual DOM | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |

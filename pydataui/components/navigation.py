@@ -5,31 +5,73 @@ from ..utils import escape_html
 
 class Navbar(Component):
     tag = 'nav'
-    def __init__(self, *children, brand=None, brand_href='/', sticky=True, variant='dark', **props):
-        title = props.pop('title', None)
+    def __init__(self, *children, brand=None, title=None, logo=None, brand_href='/', links=None, search=False, user=None, sticky=True, variant='dark', **props):
         if brand is None and title is not None:
             brand = title
         super().__init__(*children, **props)
         self.brand = brand
+        self.logo = logo
         self.brand_href = brand_href
+        self.links = links or []
+        self.search = search
+        self.user = user
         self.sticky = sticky
         self.variant = variant
         
     def _get_classes(self) -> List[str]:
-        classes = super()._get_classes() + ['pdu-navbar', f'pdu-navbar-{self.variant}']
-        if self.sticky: classes.append('pdu-navbar-sticky')
+        classes = super()._get_classes() + ['pdu-navbar', f'pdu-navbar-{self.variant}', 'w-full', 'px-6', 'py-3', 'flex', 'items-center', 'justify-between', 'border-b', 'border-border/60', 'bg-background/95', 'backdrop-blur']
+        if self.sticky: classes.append('sticky top-0 z-40')
         return classes
         
     def render(self, state_snapshot: dict) -> str:
         attrs = self._build_attrs(state_snapshot)
         children = self._render_children(state_snapshot)
         
-        brand_html = ""
+        # Brand (Logo + Title)
+        brand_parts = []
+        if self.logo:
+            brand_parts.append(f"<span class='text-xl mr-2'>{escape_html(str(self.logo))}</span>")
         if self.brand:
             b = self.brand.render(state_snapshot) if isinstance(self.brand, Component) else escape_html(str(self.brand))
-            brand_html = f"<a href='{escape_html(self.brand_href)}' class='pdu-navbar-brand'>{b}</a>"
+            brand_parts.append(f"<span class='font-bold text-lg tracking-tight text-foreground'>{b}</span>")
+        
+        brand_html = ""
+        if brand_parts:
+            brand_html = f"<a href='{escape_html(self.brand_href)}' class='flex items-center no-underline hover:opacity-90 transition-opacity'>{''.join(brand_parts)}</a>"
+
+        # Links
+        links_html = ""
+        if self.links:
+            link_tags = []
+            for lnk in self.links:
+                lbl = escape_html(str(lnk.get('label', lnk.get('title', ''))))
+                hrf = escape_html(str(lnk.get('href', '#')))
+                act = "text-primary font-semibold" if lnk.get('active') else "text-muted-foreground hover:text-foreground"
+                link_tags.append(f"<a href='{hrf}' class='text-sm {act} transition-colors'>{lbl}</a>")
+            links_html = f"<div class='hidden md:flex items-center gap-6 ml-8'>{''.join(link_tags)}</div>"
+
+        # Search Bar
+        search_html = ""
+        if self.search:
+            ph = self.search if isinstance(self.search, str) else "Search anything..."
+            search_html = f"<div class='relative max-w-xs w-full ml-4'><input type='search' placeholder='{escape_html(ph)}' class='w-full text-xs px-3 py-1.5 rounded-lg border border-border/80 bg-muted/40 focus:bg-background focus:outline-none focus:ring-1 focus:ring-primary text-foreground'/></div>"
+
+        # User Menu / Avatar
+        user_html = ""
+        if self.user:
+            uname = escape_html(str(self.user.get('name', self.user.get('username', 'User'))))
+            uavatar = self.user.get('avatar')
+            urole = self.user.get('role', self.user.get('roles', [''])[0] if isinstance(self.user.get('roles'), list) and self.user.get('roles') else '')
+            role_badge = f"<span class='text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary'>{escape_html(urole)}</span>" if urole else ""
             
-        return f"<{self.tag} {attrs}><div class='pdu-navbar-container'>{brand_html}<div class='pdu-navbar-content'>{children}</div></div></{self.tag}>"
+            if uavatar:
+                av_html = f"<img src='{escape_html(uavatar)}' class='w-7 h-7 rounded-full object-cover border border-border/80'/>"
+            else:
+                initial = uname[0].upper() if uname else "U"
+                av_html = f"<div class='w-7 h-7 rounded-full bg-primary/20 text-primary font-bold text-xs flex items-center justify-center'>{initial}</div>"
+            user_html = f"<div class='flex items-center gap-2.5 ml-4 pl-4 border-l border-border/60'>{av_html}<span class='text-xs font-medium text-foreground'>{uname}</span>{role_badge}</div>"
+            
+        return f"<{self.tag} {attrs}><div class='flex items-center'>{brand_html}{links_html}</div><div class='flex items-center gap-3'>{search_html}{children}{user_html}</div></{self.tag}>"
 
 class NavLink(Component):
     tag = 'a'
@@ -88,23 +130,37 @@ class Breadcrumb(Component):
         self.props['aria-label'] = 'Breadcrumb'
         
     def _get_classes(self) -> List[str]:
-        return super()._get_classes() + ['pdu-breadcrumb']
+        return super()._get_classes() + ['pdu-breadcrumb', 'my-2']
         
     def render(self, state_snapshot: dict) -> str:
         attrs = self._build_attrs(state_snapshot)
-        items = self._resolve_value(self.items, state_snapshot)
+        raw_items = self._resolve_value(self.items, state_snapshot) or []
         
         ol_html = []
-        for i, item in enumerate(items):
-            lbl = escape_html(str(item.get('label', '')))
-            href = item.get('href')
-            
-            if i < len(items) - 1:
-                ol_html.append(f"<li class='pdu-breadcrumb-item'><a href='{escape_html(href or '#')}'>{lbl}</a><span class='pdu-breadcrumb-separator'>{escape_html(self.separator)}</span></li>")
+        for i, item in enumerate(raw_items):
+            if isinstance(item, str):
+                lbl = escape_html(item)
+                href = None
+            elif isinstance(item, dict):
+                lbl = escape_html(str(item.get('label', item.get('title', ''))))
+                href = item.get('href')
+            elif isinstance(item, (list, tuple)) and len(item) >= 2:
+                lbl = escape_html(str(item[0]))
+                href = str(item[1])
             else:
-                ol_html.append(f"<li class='pdu-breadcrumb-item pdu-breadcrumb-active' aria-current='page'>{lbl}</li>")
+                lbl = escape_html(str(item))
+                href = None
                 
-        return f"<{self.tag} {attrs}><ol>{''.join(ol_html)}</ol></{self.tag}>"
+            is_last = (i == len(raw_items) - 1)
+            sep_html = f"<span class='pdu-breadcrumb-separator mx-2 text-muted-foreground/60 select-none'>{escape_html(self.separator)}</span>" if not is_last else ""
+            if not is_last and href:
+                ol_html.append(f"<li class='pdu-breadcrumb-item inline-flex items-center text-xs font-medium text-muted-foreground hover:text-foreground transition-colors'><a href='{escape_html(href)}'>{lbl}</a>{sep_html}</li>")
+            elif not is_last:
+                ol_html.append(f"<li class='pdu-breadcrumb-item inline-flex items-center text-xs font-medium text-muted-foreground'>{lbl}{sep_html}</li>")
+            else:
+                ol_html.append(f"<li class='pdu-breadcrumb-item pdu-breadcrumb-active inline-flex items-center text-xs font-semibold text-foreground' aria-current='page'>{lbl}</li>")
+                
+        return f"<{self.tag} {attrs}><ol class='flex items-center flex-wrap gap-0.5'>{''.join(ol_html)}</ol></{self.tag}>"
 
 class Tabs(Component):
     tag = 'div'

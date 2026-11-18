@@ -511,10 +511,20 @@ class Tooltip(Component):
         self.position = position
         
     def _get_classes(self) -> List[str]:
-        return super()._get_classes() + ['pdu-tooltip-wrapper']
+        return super()._get_classes() + ['pdu-tooltip-wrapper', 'relative', 'inline-flex', 'items-center', 'group']
         
     def render(self, state_snapshot: dict) -> str:
         attrs = self._build_attrs(state_snapshot)
         children = self._render_children(state_snapshot)
+        if not children:
+            children = "<span class='text-muted-foreground/80 hover:text-foreground cursor-help text-xs ml-1 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-border/80'>?</span>"
         txt = escape_html(str(self._resolve_value(self.text, state_snapshot)))
-        return f"<{self.tag} {attrs}>{children}<span class='pdu-tooltip pdu-tooltip-{self.position}'>{txt}</span></{self.tag}>"
+        
+        pos_classes = {
+            'top': 'bottom-full left-1/2 -translate-x-1/2 mb-1.5',
+            'bottom': 'top-full left-1/2 -translate-x-1/2 mt-1.5',
+            'left': 'right-full top-1/2 -translate-y-1/2 mr-1.5',
+            'right': 'left-full top-1/2 -translate-y-1/2 ml-1.5'
+        }.get(self.position, 'bottom-full left-1/2 -translate-x-1/2 mb-1.5')
+        
+        return f"<{self.tag} {attrs}>{children}<span class='pdu-tooltip hidden group-hover:block absolute z-50 px-2 py-1 text-[11px] font-medium text-popover-foreground bg-popover border border-border/80 rounded-md shadow-lg pointer-events-none whitespace-normal min-w-[120px] max-w-xs text-center {pos_classes}'>{txt}</span></{self.tag}>"

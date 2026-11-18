@@ -15,6 +15,10 @@
         <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/STREAMLIT_TO_PYDATAUI_COOKBOOK/">
       
       
+        <link rel="prev" href="../STREAMLIT_MIGRATION_AND_RAPID_PROTOTYPING_GUIDE/">
+      
+      
+        <link rel="next" href="../PYDATAUI_VS_REACT_AND_STREAMLIT/">
       
       
         
@@ -25,7 +29,7 @@
     
     
       
-        <title>The Complete Streamlit-to-PyDataUI Feature Cookbook - PyDataUI</title>
+        <title>Streamlit to PyDataUI Cookbook - PyDataUI</title>
       
     
     
@@ -110,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              The Complete Streamlit-to-PyDataUI Feature Cookbook
+              Streamlit to PyDataUI Cookbook
             
           </span>
         </div>
@@ -240,10 +244,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../STREAMLIT_MIGRATION_AND_RAPID_PROTOTYPING_GUIDE/" class="md-tabs__link">
           
   
@@ -488,8 +494,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -499,23 +507,28 @@
       
         
       
+        
+      
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -533,7 +546,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -567,6 +580,413 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streamlit to PyDataUI Cookbook
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streamlit to PyDataUI Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-page-configuration-theming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Page Configuration &amp; Theming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-layout-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Layout &amp; Containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Layout &amp; Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sticky-sidebar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sticky Sidebar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-column-responsive-grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Column Responsive Grid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collapsible-panel-expander" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collapsible Panel (expander)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive-in-memory-tabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive In-Memory Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#card-box-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Card &amp; Box Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-typography-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Typography &amp; Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-polymorphic-pduwrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Polymorphic pdu.write()
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-data-science-telemetry-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Data Science &amp; Telemetry Display
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Data Science &amp; Telemetry Display">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interactive-dataframes-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive DataFrames &amp; Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executive-kpi-metric-cards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive KPI Metric Cards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json-tree-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON Tree Inspector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-built-in-interactive-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Built-In Interactive Charts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-interactive-form-input-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Interactive Form &amp; Input Widgets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ai-chat-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. AI &amp; Chat Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-feedback-status-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Feedback &amp; Status Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-session-state-reactive-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Session State &amp; Reactive Binding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-production-deployment-fastapi-mounting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Production Deployment &amp; FastAPI Mounting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Production Deployment &amp; FastAPI Mounting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-line-native-fastapi-mounting-zero-reverse-proxy-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1-Line Native FastAPI Mounting (Zero Reverse Proxy Needed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instant-35s-zero-config-public-https-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant 3.5s Zero-Config Public HTTPS Link
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-advanced-layouts-coordinate-positioning-v144" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Advanced Layouts &amp; Coordinate Positioning (v1.4.4)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Advanced Layouts &amp; Coordinate Positioning (v1.4.4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flexbox-layout-engine-pduflex-pdurow-pducolumn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flexbox Layout Engine (pdu.flex, pdu.row, pdu.column)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsive-css-grid-engine-pdugrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsive CSS Grid Engine (pdu.grid)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-positioning-absolute-relative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate Positioning (Absolute &amp; Relative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-advanced-tabs-headless-multi-step-wizards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Advanced Tabs &amp; Headless Multi-Step Wizards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-commercial-dashboard-analytics-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Commercial Dashboard &amp; Analytics Suite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-fastapi-production-hardening-swagger-ui-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. FastAPI Production Hardening &amp; Swagger UI Filtering
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2387,6 +2807,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#12-advanced-layouts-coordinate-positioning-v144" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Advanced Layouts &amp; Coordinate Positioning (v1.4.4)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Advanced Layouts &amp; Coordinate Positioning (v1.4.4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flexbox-layout-engine-pduflex-pdurow-pducolumn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flexbox Layout Engine (pdu.flex, pdu.row, pdu.column)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsive-css-grid-engine-pdugrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsive CSS Grid Engine (pdu.grid)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-positioning-absolute-relative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate Positioning (Absolute &amp; Relative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-advanced-tabs-headless-multi-step-wizards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Advanced Tabs &amp; Headless Multi-Step Wizards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-commercial-dashboard-analytics-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Commercial Dashboard &amp; Analytics Suite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-fastapi-production-hardening-swagger-ui-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. FastAPI Production Hardening &amp; Swagger UI Filtering
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2648,7 +3151,7 @@ This cookbook provides high-level code snippets and best practices for every pro
 </span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="n">pdu</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Live telemetry..."</span><span class="p">)</span>
 </span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
 </span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># Mount inside FastAPI — 1 process, 1 port, 0ms shared in-memory access!</span>
-</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="n">api</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/dashboard"</span><span class="p">,</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="n">api</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/dashboard"</span><span class="p">,</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_fastapi</span><span class="p">())</span>
 </span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
 </span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 </span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
@@ -2657,6 +3160,132 @@ This cookbook provides high-level code snippets and best practices for every pro
 <h3 id="instant-35s-zero-config-public-https-link">Instant 3.5s Zero-Config Public HTTPS Link</h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Gives instant public HTTPS tunnel for stakeholders</span>
+</span></code></pre></div>
+<hr />
+<h2 id="12-advanced-layouts-coordinate-positioning-v144">12. Advanced Layouts &amp; Coordinate Positioning (v1.4.4)</h2>
+<p>PyDataUI v1.4.4 introduces full Flexbox, Responsive CSS Grid, and Coordinate Positioning directly into procedural Python:</p>
+<h3 id="flexbox-layout-engine-pduflex-pdurow-pducolumn">Flexbox Layout Engine (<code>pdu.flex</code>, <code>pdu.row</code>, <code>pdu.column</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Horizontal navigation bar with Flexbox between-alignment</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">"row"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">"Production Cluster"</span><span class="p">)</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"Operational"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"subtle"</span><span class="p">)</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"v1.4.4"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"indigo"</span><span class="p">)</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"+ Deploy Pod"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">)</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># Vertical stack with stretch alignment</span>
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">"column"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"stretch"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">"Cluster Load"</span><span class="p">)</span>
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">85</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="responsive-css-grid-engine-pdugrid">Responsive CSS Grid Engine (<code>pdu.grid</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Auto-responsive card grid: columns automatically wrap when cards reach 260px minimum width!</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">min_column_width</span><span class="o">=</span><span class="s2">"260px"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Active Nodes"</span><span class="p">,</span> <span class="s2">"32 / 32"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"100% OK"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"P99 Latency"</span><span class="p">,</span> <span class="s2">"8.2 ms"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"-2.1ms"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"indigo"</span><span class="p">)</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"VRAM Allocated"</span><span class="p">,</span> <span class="s2">"1,180 GB"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+12%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">92</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"amber"</span><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Token Throughput"</span><span class="p">,</span> <span class="s2">"18.4k t/s"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+24.8%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">)</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1"># Fixed 3-column grid with custom row and column gaps:</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">row_gap</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column_gap</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Cluster CPU"</span><span class="p">,</span> <span class="s2">"42%"</span><span class="p">)</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Memory"</span><span class="p">,</span> <span class="s2">"68%"</span><span class="p">)</span>
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Network I/O"</span><span class="p">,</span> <span class="s2">"1.2 GB/s"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="coordinate-positioning-absolute-relative">Coordinate Positioning (Absolute &amp; Relative)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Elevated Card with Floating Absolute Badge pinned to top-right</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">card</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="s2">"relative"</span><span class="p">):</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"HOTSPOT DETECTED"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">"absolute"</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="s2">"14px"</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="s2">"14px"</span><span class="p">)</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Worker Node 04"</span><span class="p">)</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">line_chart</span><span class="p">([</span><span class="mi">65</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">94</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">)</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Pinned Bottom Toolbar (sticky action bar docked to viewport)</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">pinned</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="s2">"bottom"</span><span class="p">):</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"max-w-4xl mx-auto"</span><span class="p">):</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">"3 worker nodes require kernel updates."</span><span class="p">)</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Apply Batch Update"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="13-advanced-tabs-headless-multi-step-wizards">13. Advanced Tabs &amp; Headless Multi-Step Wizards</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># 1. Full-width equal distribution tabs</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">tab_a</span><span class="p">,</span> <span class="n">tab_b</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"System Telemetry"</span><span class="p">,</span> <span class="s2">"Security Audit"</span><span class="p">],</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># 2. Modern Segmented Pill Tabs</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">tab_week</span><span class="p">,</span> <span class="n">tab_month</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"7 Days"</span><span class="p">,</span> <span class="s2">"30 Days"</span><span class="p">],</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"pill"</span><span class="p">)</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># 3. Headless Step-by-Step Wizard (tab headers completely hidden)</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="c1"># Build custom multi-step onboarding, checkouts, and AI interview forms in 1 line!</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="n">steps</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"Step 1: Account"</span><span class="p">,</span> <span class="s2">"Step 2: Payment"</span><span class="p">,</span> <span class="s2">"Step 3: Launch"</span><span class="p">],</span> <span class="n">hide_tab_buttons</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="k">with</span> <span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Company Name"</span><span class="p">)</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Next: Payment →"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"step"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+</span></code></pre></div>
+<hr />
+<h2 id="14-commercial-dashboard-analytics-suite">14. Commercial Dashboard &amp; Analytics Suite</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># 1. Status Badges (subtle, solid, outline with preset colors or custom hex)</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"Online"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"subtle"</span><span class="p">)</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"Critical"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"solid"</span><span class="p">)</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"Draft"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"outline"</span><span class="p">)</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># 2. Pure SVG Inline Sparklines (zero external dependencies, renders in 0.001ms)</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="n">pdu</span><span class="o">.</span><span class="n">sparkline</span><span class="p">([</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"indigo"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="c1"># 3. Executive StatCard with Icon and Sparkline</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"MRR Velocity"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">"$154,200"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+18.2%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">154</span><span class="p">],</span> <span class="n">icon</span><span class="o">=</span><span class="s2">"📈"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="c1"># 4. Temporal Inputs bound to session_state</span>
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="n">pdu</span><span class="o">.</span><span class="n">date_input</span><span class="p">(</span><span class="s2">"Audit Window"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">"2026-11-18"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"audit_date"</span><span class="p">)</span>
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="n">pdu</span><span class="o">.</span><span class="n">time_input</span><span class="p">(</span><span class="s2">"Maintenance Schedule"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">"02:00"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"maint_time"</span><span class="p">)</span>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="c1"># 5. Search Bar with Instant HTMX Callback</span>
+</span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="n">pdu</span><span class="o">.</span><span class="n">search_input</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">"Search telemetry logs..."</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"log_query"</span><span class="p">,</span> <span class="n">on_search</span><span class="o">=</span><span class="n">filter_logs</span><span class="p">)</span>
+</span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>
+</span><span id="__span-22-19"><a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="c1"># 6. Commercial SaaS Pricing Cards</span>
+</span><span id="__span-22-20"><a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+</span><span id="__span-22-21"><a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">pricing_card</span><span class="p">(</span><span class="s2">"Starter"</span><span class="p">,</span> <span class="s2">"$29"</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s2">"Up to 5 nodes"</span><span class="p">,</span> <span class="s2">"Community Slack"</span><span class="p">])</span>
+</span><span id="__span-22-22"><a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">pricing_card</span><span class="p">(</span><span class="s2">"Pro"</span><span class="p">,</span> <span class="s2">"$149"</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s2">"50 nodes"</span><span class="p">,</span> <span class="s2">"24/7 SLA"</span><span class="p">,</span> <span class="s2">"90-day logs"</span><span class="p">],</span> <span class="n">highlighted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">badge_label</span><span class="o">=</span><span class="s2">"BEST VALUE"</span><span class="p">)</span>
+</span><span id="__span-22-23"><a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">pricing_card</span><span class="p">(</span><span class="s2">"Enterprise"</span><span class="p">,</span> <span class="s2">"Custom"</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s2">"Unlimited nodes"</span><span class="p">,</span> <span class="s2">"Dedicated VPC"</span><span class="p">])</span>
+</span><span id="__span-22-24"><a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a>
+</span><span id="__span-22-25"><a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a><span class="c1"># 7. Spacing Primitives</span>
+</span><span id="__span-22-26"><a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a><span class="n">pdu</span><span class="o">.</span><span class="n">spacer</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>        <span class="c1"># 24px vertical spacer</span>
+</span><span id="__span-22-27"><a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a><span class="n">pdu</span><span class="o">.</span><span class="n">divider</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"OR"</span><span class="p">)</span>      <span class="c1"># Horizontal divider with centered label</span>
+</span></code></pre></div>
+<hr />
+<h2 id="15-fastapi-production-hardening-swagger-ui-filtering">15. FastAPI Production Hardening &amp; Swagger UI Filtering</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">BackgroundTasks</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># 1. Access the underlying native FastAPI instance</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">fastapi_app</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_fastapi</span><span class="p">()</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># 2. Attach APIRouter and BackgroundTasks</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"/v1"</span><span class="p">)</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/notify"</span><span class="p">)</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">send_notification</span><span class="p">(</span><span class="n">bg</span><span class="p">:</span> <span class="n">BackgroundTasks</span><span class="p">):</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>    <span class="n">bg</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">send_async_slack_alert</span><span class="p">,</span> <span class="s2">"Deployment succeeded"</span><span class="p">)</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"enqueued"</span><span class="p">}</span>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="n">fastapi_app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">router</span><span class="p">)</span>
+</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>
+</span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="c1"># 3. Production Swagger UI Hardening</span>
+</span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="c1"># Option A: Completely disable docs in production</span>
+</span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">docs_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openapi_url</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="__span-23-20"><a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>
+</span><span id="__span-23-21"><a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="c1"># Option B: Filter and customize Swagger UI parameters</span>
+</span><span id="__span-23-22"><a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span>
+</span><span id="__span-23-23"><a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>    <span class="n">swagger_ui_parameters</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-23-24"><a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>        <span class="s2">"filter"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-23-25"><a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>        <span class="s2">"defaultModelsExpandDepth"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-23-26"><a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a>        <span class="s2">"syntaxHighlight.theme"</span><span class="p">:</span> <span class="s2">"monokai"</span><span class="p">,</span>
+</span><span id="__span-23-27"><a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a>        <span class="s2">"persistAuthorization"</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-23-28"><a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a>    <span class="p">}</span>
+</span><span id="__span-23-29"><a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a><span class="p">)</span>
+</span><span id="__span-23-30"><a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a>
+</span><span id="__span-23-31"><a id="__codelineno-23-31" name="__codelineno-23-31" href="#__codelineno-23-31"></a><span class="c1"># Option C: Lock docs behind Role-Based Access Control</span>
+</span><span id="__span-23-32"><a id="__codelineno-23-32" name="__codelineno-23-32" href="#__codelineno-23-32"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">docs_roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">])</span>
 </span></code></pre></div>
 
 

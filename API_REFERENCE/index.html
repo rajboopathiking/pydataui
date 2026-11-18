@@ -505,6 +505,8 @@
       
         
       
+        
+      
     
     
     
@@ -565,6 +567,34 @@
     
   
     10-Second Quickstart & Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../STREAMLIT_TO_PYDATAUI_COOKBOOK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streamlit to PyDataUI Cookbook
   
 
     
@@ -2371,6 +2401,471 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#10-procedural-streamlit-style-dx-reference-import-pydataui-as-pdu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Procedural Streamlit-Style DX Reference (import pydataui as pdu)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Procedural Streamlit-Style DX Reference (import pydataui as pdu)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-global-configuration-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Global Configuration &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.1 Global Configuration &amp; Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pduset_page_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.set_page_config(...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdurunappnone-host127001-port8000-reloadfalse-sharefalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.run(app=None, host="127.0.0.1", port=8000, reload=False, share=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupagepath-titlenone-rolesnone-publicfalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.page(path, title=None, roles=None, public=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupage_linkpath-labelnone-iconnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.page_link(path, label=None, icon=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduswitch_pagepath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.switch_page(path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-structural-layout-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Structural Layout &amp; Containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2 Structural Layout &amp; Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pduflexdirectionrow-justifystart-alignstretch-gap3-wrapfalse-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.flex(direction="row", justify="start", align="stretch", gap=3, wrap=False, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdurowaligncenter-justifystart-gap3-wrapfalse-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.row(align="center", justify="start", gap=3, wrap=False, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducolumnalignstretch-justifystart-gap3-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.column(align="stretch", justify="start", gap=3, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdugridcolumnsnone-min_column_widthnone-gap4-row_gapnone-column_gapnone-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.grid(columns=None, min_column_width=None, gap=4, row_gap=None, column_gap=None, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducolumnsspec-gapmedium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.columns(spec, gap="medium")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdutabstabs-expandfalse-hide_tab_buttonsfalse-variantline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.tabs(tabs, expand=False, hide_tab_buttons=False, variant="line")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupinnedpositionbottom-class_name-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.pinned(position="bottom", class_name="", **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduoverlayz_index50-class_name-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.overlay(z_index=50, class_name="", **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducardtitlenone-subtitlenone-positionnone-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.card(title=None, subtitle=None, position=None, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducontainerborderfalse-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.container(border=False, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduexpanderlabel-expandedfalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.expander(label, expanded=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdudialogtitle-trigger_labelopen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.dialog(title, trigger_label="Open")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdustatuslabel-expandedtrue-staterunning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.status(label, expanded=True, state="running")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduspacerheight16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.spacer(height=16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdudividerlabelnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.divider(label=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-component-coordinate-positioning-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Component Coordinate Positioning Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-commercial-dashboard-analytics-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Commercial Dashboard &amp; Analytics Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.4 Commercial Dashboard &amp; Analytics Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pdumetriclabel-value-deltanone-delta_colornormal-iconnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.metric(label, value, delta=None, delta_color="normal", icon=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdustat_cardtitle-value-changenone-change_typenone-iconnone-sparklinenone-colorindigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.stat_card(title, value, change=None, change_type=None, icon=None, sparkline=None, color="indigo")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdusparklinedata-colorindigo-width120-height36-stroke_width2-filltrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.sparkline(data, color="indigo", width=120, height=36, stroke_width=2, fill=True)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdubadgelabel-colorindigo-variantsubtle-iconnone-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.badge(label, color="indigo", variant="subtle", icon=None, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupricing_cardtier-price-periodmonth-features-button_textget-started-highlightedfalse-badge_labelnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.pricing_card(tier, price, period="/month", features=[], button_text="Get Started", highlighted=False, badge_label=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-forms-inputs-temporal-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Forms, Inputs &amp; Temporal Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.5 Forms, Inputs &amp; Temporal Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batched-forms-pduform-pduform_submit_button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batched Forms (pdu.form, pdu.form_submit_button)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-tabular-data-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Tabular Data &amp; Charts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#107-feedback-status-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.7 Feedback &amp; Status Notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#108-state-production-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.8 State &amp; Production Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#109-fastapi-production-hardening-asgi-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.9 FastAPI Production Hardening &amp; ASGI Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.9 FastAPI Production Hardening &amp; ASGI Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pduget_fastapi-or-appfastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.get_fastapi() or app.fastapi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-security-documentation-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Security &amp; Documentation Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mounting-pydataui-into-existing-fastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mounting PyDataUI into Existing FastAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3022,6 +3517,471 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#10-procedural-streamlit-style-dx-reference-import-pydataui-as-pdu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Procedural Streamlit-Style DX Reference (import pydataui as pdu)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Procedural Streamlit-Style DX Reference (import pydataui as pdu)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-global-configuration-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Global Configuration &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.1 Global Configuration &amp; Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pduset_page_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.set_page_config(...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdurunappnone-host127001-port8000-reloadfalse-sharefalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.run(app=None, host="127.0.0.1", port=8000, reload=False, share=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupagepath-titlenone-rolesnone-publicfalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.page(path, title=None, roles=None, public=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupage_linkpath-labelnone-iconnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.page_link(path, label=None, icon=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduswitch_pagepath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.switch_page(path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-structural-layout-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Structural Layout &amp; Containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2 Structural Layout &amp; Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pduflexdirectionrow-justifystart-alignstretch-gap3-wrapfalse-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.flex(direction="row", justify="start", align="stretch", gap=3, wrap=False, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdurowaligncenter-justifystart-gap3-wrapfalse-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.row(align="center", justify="start", gap=3, wrap=False, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducolumnalignstretch-justifystart-gap3-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.column(align="stretch", justify="start", gap=3, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdugridcolumnsnone-min_column_widthnone-gap4-row_gapnone-column_gapnone-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.grid(columns=None, min_column_width=None, gap=4, row_gap=None, column_gap=None, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducolumnsspec-gapmedium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.columns(spec, gap="medium")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdutabstabs-expandfalse-hide_tab_buttonsfalse-variantline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.tabs(tabs, expand=False, hide_tab_buttons=False, variant="line")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupinnedpositionbottom-class_name-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.pinned(position="bottom", class_name="", **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduoverlayz_index50-class_name-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.overlay(z_index=50, class_name="", **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducardtitlenone-subtitlenone-positionnone-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.card(title=None, subtitle=None, position=None, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pducontainerborderfalse-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.container(border=False, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduexpanderlabel-expandedfalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.expander(label, expanded=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdudialogtitle-trigger_labelopen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.dialog(title, trigger_label="Open")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdustatuslabel-expandedtrue-staterunning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.status(label, expanded=True, state="running")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pduspacerheight16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.spacer(height=16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdudividerlabelnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.divider(label=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-component-coordinate-positioning-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Component Coordinate Positioning Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-commercial-dashboard-analytics-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Commercial Dashboard &amp; Analytics Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.4 Commercial Dashboard &amp; Analytics Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pdumetriclabel-value-deltanone-delta_colornormal-iconnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.metric(label, value, delta=None, delta_color="normal", icon=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdustat_cardtitle-value-changenone-change_typenone-iconnone-sparklinenone-colorindigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.stat_card(title, value, change=None, change_type=None, icon=None, sparkline=None, color="indigo")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdusparklinedata-colorindigo-width120-height36-stroke_width2-filltrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.sparkline(data, color="indigo", width=120, height=36, stroke_width=2, fill=True)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdubadgelabel-colorindigo-variantsubtle-iconnone-props" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.badge(label, color="indigo", variant="subtle", icon=None, **props)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdupricing_cardtier-price-periodmonth-features-button_textget-started-highlightedfalse-badge_labelnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.pricing_card(tier, price, period="/month", features=[], button_text="Get Started", highlighted=False, badge_label=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-forms-inputs-temporal-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Forms, Inputs &amp; Temporal Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.5 Forms, Inputs &amp; Temporal Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batched-forms-pduform-pduform_submit_button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batched Forms (pdu.form, pdu.form_submit_button)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-tabular-data-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Tabular Data &amp; Charts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#107-feedback-status-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.7 Feedback &amp; Status Notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#108-state-production-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.8 State &amp; Production Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#109-fastapi-production-hardening-asgi-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.9 FastAPI Production Hardening &amp; ASGI Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.9 FastAPI Production Hardening &amp; ASGI Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pduget_fastapi-or-appfastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pdu.get_fastapi() or app.fastapi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-security-documentation-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Security &amp; Documentation Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mounting-pydataui-into-existing-fastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mounting PyDataUI into Existing FastAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3056,6 +4016,7 @@
 <li><a href="#7-terminal-user-interface-engine-tui">Terminal User Interface Engine (<code>tui</code>, <code>run_tui</code>)</a></li>
 <li><a href="#8-cli-command-reference">CLI Command Reference</a></li>
 <li><a href="#9-internal-http-event-wire-protocol">Internal HTTP &amp; Event Wire Protocol</a></li>
+<li><a href="#10-procedural-streamlit-style-dx-reference-import-pydataui-as-pdu">Procedural Streamlit-Style DX Reference (<code>pydataui as pdu</code>)</a></li>
 </ol>
 <hr />
 <h2 id="1-application-core-app">1. Application Core (<code>App</code>)</h2>
@@ -3554,6 +4515,638 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="10-procedural-streamlit-style-dx-reference-import-pydataui-as-pdu">10. Procedural Streamlit-Style DX Reference (<code>import pydataui as pdu</code>)</h2>
+<p>PyDataUI v1.4.4 provides a comprehensive procedural API under the <code>pydataui</code> module namespace. All methods support top-to-bottom procedural execution, context managers (<code>with</code> syntax), and direct component return values.</p>
+<h3 id="101-global-configuration-lifecycle">10.1 Global Configuration &amp; Lifecycle</h3>
+<h4 id="pduset_page_config"><code>pdu.set_page_config(...)</code></h4>
+<p>Configures application metadata, layout mode, visual theme, and production FastAPI OpenAPI/Swagger settings.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Cluster Operations"</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">layout</span><span class="o">=</span><span class="s2">"wide"</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">theme</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">dark_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">docs_url</span><span class="o">=</span><span class="s2">"/docs"</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">openapi_url</span><span class="o">=</span><span class="s2">"/openapi.json"</span><span class="p">,</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">swagger_ui_parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">"filter"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"syntaxHighlight.theme"</span><span class="p">:</span> <span class="s2">"monokai"</span><span class="p">},</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">docs_roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">]</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>title</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"PyDataUI App"</code></td>
+<td style="text-align: left;">HTML <code>&lt;title&gt;</code> tag and browser tab name.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>layout</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"centered"</code></td>
+<td style="text-align: left;">Layout width: <code>"centered"</code> (max 1200px) or <code>"wide"</code> (100% responsive fluid width).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>theme</code></td>
+<td style="text-align: left;"><code>str | dict</code></td>
+<td style="text-align: left;"><code>"indigo"</code></td>
+<td style="text-align: left;">Theme name (e.g. <code>"zinc"</code>, <code>"emerald"</code>, <code>"violet"</code>), custom HEX (<code>"#4f46e5"</code>), or palette dict.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dark_mode</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Forces dark mode if <code>True</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>docs_url</code></td>
+<td style="text-align: left;"><code>Optional[str]</code></td>
+<td style="text-align: left;"><code>"/docs"</code></td>
+<td style="text-align: left;">Path to Swagger UI docs. Pass <code>None</code> to completely disable in production.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>openapi_url</code></td>
+<td style="text-align: left;"><code>Optional[str]</code></td>
+<td style="text-align: left;"><code>"/openapi.json"</code></td>
+<td style="text-align: left;">Path to OpenAPI JSON schema. Pass <code>None</code> to disable in production.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>swagger_ui_parameters</code></td>
+<td style="text-align: left;"><code>Optional[dict]</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Dictionary of Swagger UI config parameters (e.g. <code>{"filter": True}</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>docs_roles</code></td>
+<td style="text-align: left;"><code>Optional[list[str]]</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">List of user roles allowed to access <code>/docs</code> (e.g. <code>["admin"]</code>).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="pdurunappnone-host127001-port8000-reloadfalse-sharefalse"><code>pdu.run(app=None, host="127.0.0.1", port=8000, reload=False, share=False)</code></h4>
+<p>Starts the ASGI web application and optional instant public HTTPS tunnel.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>app</code></td>
+<td style="text-align: left;"><code>Optional[App]</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Custom App instance. If <code>None</code>, runs the active default procedural app.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>host</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"127.0.0.1"</code></td>
+<td style="text-align: left;">Bind interface IP. Use <code>"0.0.0.0"</code> for Docker containers.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>port</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;"><code>8000</code></td>
+<td style="text-align: left;">Port number to listen on.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>reload</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Enables auto-reload on source code modification.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>share</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Starts an instant, secure public HTTPS tunnel (ready in ~3.5s).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="pdupagepath-titlenone-rolesnone-publicfalse"><code>pdu.page(path, title=None, roles=None, public=False)</code></h4>
+<p>Decorator for defining multi-page routes in procedural apps.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nd">@pdu</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/analytics"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Telemetry"</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">])</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">analytics_view</span><span class="p">():</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Telemetry Dashboard"</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="pdupage_linkpath-labelnone-iconnone"><code>pdu.page_link(path, label=None, icon=None)</code></h4>
+<p>Renders an interactive internal page navigation anchor.</p>
+<h4 id="pduswitch_pagepath"><code>pdu.switch_page(path)</code></h4>
+<p>Programmatically redirects the user to a different route.</p>
+<hr />
+<h3 id="102-structural-layout-containers">10.2 Structural Layout &amp; Containers</h3>
+<h4 id="pduflexdirectionrow-justifystart-alignstretch-gap3-wrapfalse-props"><code>pdu.flex(direction="row", justify="start", align="stretch", gap=3, wrap=False, **props)</code></h4>
+<p>Flexbox container context manager. Provides granular control over CSS flexbox layout.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">"row"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">"Cluster Nodes"</span><span class="p">)</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"Active"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>direction</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"row"</code></td>
+<td style="text-align: left;"><code>"row"</code> or <code>"column"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>justify</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"start"</code></td>
+<td style="text-align: left;"><code>"start"</code>, <code>"center"</code>, <code>"end"</code>, <code>"between"</code>, <code>"around"</code>, <code>"evenly"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>align</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"stretch"</code></td>
+<td style="text-align: left;"><code>"stretch"</code>, <code>"start"</code>, <code>"center"</code>, <code>"end"</code>, <code>"baseline"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gap</code></td>
+<td style="text-align: left;"><code>int | str</code></td>
+<td style="text-align: left;"><code>3</code></td>
+<td style="text-align: left;">Space between child items (<code>1</code> through <code>12</code> or CSS string like <code>"16px"</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wrap</code></td>
+<td style="text-align: left;"><code>bool | str</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Whether children wrap onto multiple lines.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="pdurowaligncenter-justifystart-gap3-wrapfalse-props"><code>pdu.row(align="center", justify="start", gap=3, wrap=False, **props)</code></h4>
+<p>Convenience shorthand for <code>pdu.flex(direction="row", ...)</code>.</p>
+<h4 id="pducolumnalignstretch-justifystart-gap3-props"><code>pdu.column(align="stretch", justify="start", gap=3, **props)</code></h4>
+<p>Convenience shorthand for <code>pdu.flex(direction="column", ...)</code>.</p>
+<h4 id="pdugridcolumnsnone-min_column_widthnone-gap4-row_gapnone-column_gapnone-props"><code>pdu.grid(columns=None, min_column_width=None, gap=4, row_gap=None, column_gap=None, **props)</code></h4>
+<p>Responsive CSS Grid layout container.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Auto-responsive card grid: columns automatically wrap when items reach 260px!</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">min_column_width</span><span class="o">=</span><span class="s2">"260px"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Node 1"</span><span class="p">,</span> <span class="s2">"98%"</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Node 2"</span><span class="p">,</span> <span class="s2">"84%"</span><span class="p">)</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Fixed 3-column grid</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"CPU"</span><span class="p">,</span> <span class="s2">"45%"</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"RAM"</span><span class="p">,</span> <span class="s2">"12 GB"</span><span class="p">)</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Disk"</span><span class="p">,</span> <span class="s2">"68%"</span><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>columns</code></td>
+<td style="text-align: left;"><code>int | list[int] | dict</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Number of columns (<code>3</code>), ratio list (<code>[1, 2, 1]</code>), or breakpoint dict (<code>{"sm": 1, "md": 2, "lg": 4}</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>min_column_width</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Activates responsive auto-fit grid (<code>repeat(auto-fit, minmax(width, 1fr))</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gap</code></td>
+<td style="text-align: left;"><code>int | str</code></td>
+<td style="text-align: left;"><code>4</code></td>
+<td style="text-align: left;">General grid gap.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>row_gap</code></td>
+<td style="text-align: left;"><code>int | str</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Row-specific gap override.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>column_gap</code></td>
+<td style="text-align: left;"><code>int | str</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Column-specific gap override.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="pducolumnsspec-gapmedium"><code>pdu.columns(spec, gap="medium")</code></h4>
+<p>Streamlit-parity multi-column splitter. Accepts integer count (<code>3</code>) or relative weights (<code>[1, 2, 1]</code>). Returns a list of column context managers.</p>
+<h4 id="pdutabstabs-expandfalse-hide_tab_buttonsfalse-variantline"><code>pdu.tabs(tabs, expand=False, hide_tab_buttons=False, variant="line")</code></h4>
+<p>Tab container supporting full width distribution and headless multi-step wizards.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Standard navigation tabs</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"Overview"</span><span class="p">,</span> <span class="s2">"Logs"</span><span class="p">],</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># 2. Segmented pill tabs</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">tab_day</span><span class="p">,</span> <span class="n">tab_mo</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"Day"</span><span class="p">,</span> <span class="s2">"Month"</span><span class="p">],</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"pill"</span><span class="p">)</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># 3. Headless Multi-Step Wizard (tab headers completely hidden)</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">steps</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"Account"</span><span class="p">,</span> <span class="s2">"Billing"</span><span class="p">,</span> <span class="s2">"Review"</span><span class="p">],</span> <span class="n">hide_tab_buttons</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">with</span> <span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Organization"</span><span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Next →"</span><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>tabs</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Required</td>
+<td style="text-align: left;">Labels for each tab.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>expand</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Distributes tabs equally across 100% of available container width.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hide_tab_buttons</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Hides the top navigation tab bar completely. Ideal for multi-step wizards.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>variant</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"line"</code></td>
+<td style="text-align: left;">Tab style: <code>"line"</code> (underline indicator) or <code>"pill"</code> (segmented pill).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="pdupinnedpositionbottom-class_name-props"><code>pdu.pinned(position="bottom", class_name="", **props)</code></h4>
+<p>Docked sticky viewport container (e.g. sticky bottom action bar, pinned top notice).</p>
+<h4 id="pduoverlayz_index50-class_name-props"><code>pdu.overlay(z_index=50, class_name="", **props)</code></h4>
+<p>Full-screen or relative overlay backdrop container.</p>
+<h4 id="pducardtitlenone-subtitlenone-positionnone-props"><code>pdu.card(title=None, subtitle=None, position=None, **props)</code></h4>
+<p>Elevated card container with subtle border and shadow.</p>
+<h4 id="pducontainerborderfalse-props"><code>pdu.container(border=False, **props)</code></h4>
+<p>Layout wrapper container with optional border.</p>
+<h4 id="pduexpanderlabel-expandedfalse"><code>pdu.expander(label, expanded=False)</code></h4>
+<p>Collapsible disclosure panel.</p>
+<h4 id="pdudialogtitle-trigger_labelopen"><code>pdu.dialog(title, trigger_label="Open")</code></h4>
+<p>Modal dialog overlay container.</p>
+<h4 id="pdustatuslabel-expandedtrue-staterunning"><code>pdu.status(label, expanded=True, state="running")</code></h4>
+<p>Live operational status block. Yields status controller with <code>s.update(label=..., state="complete")</code>.</p>
+<h4 id="pduspacerheight16"><code>pdu.spacer(height=16)</code></h4>
+<p>Vertical whitespace divider (<code>height</code> in pixels or CSS string).</p>
+<h4 id="pdudividerlabelnone"><code>pdu.divider(label=None)</code></h4>
+<p>Horizontal rule with optional centered text label (e.g. <code>pdu.divider("OR")</code>).</p>
+<hr />
+<h3 id="103-component-coordinate-positioning-engine">10.3 Component Coordinate Positioning Engine</h3>
+<p>Every visual component in PyDataUI v1.4.4 accepts coordinate positioning props:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Prop</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>position</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">CSS positioning model: <code>"relative"</code>, <code>"absolute"</code>, <code>"fixed"</code>, <code>"sticky"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>top</code></td>
+<td style="text-align: left;"><code>str | int</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Top coordinate offset (e.g. <code>"14px"</code>, <code>"1rem"</code>, <code>0</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bottom</code></td>
+<td style="text-align: left;"><code>str | int</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Bottom coordinate offset.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>left</code></td>
+<td style="text-align: left;"><code>str | int</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Left coordinate offset.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>right</code></td>
+<td style="text-align: left;"><code>str | int</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Right coordinate offset.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>inset</code></td>
+<td style="text-align: left;"><code>str | int</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Shorthand for all 4 coordinates (e.g. <code>0</code> for full fill).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>z_index</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Z-index stacking context priority (e.g. <code>50</code>).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example: Absolute Floating Badge on Relative Card</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">card</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="s2">"relative"</span><span class="p">):</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"HIGH PRIORITY"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">"absolute"</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="s2">"12px"</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="s2">"12px"</span><span class="p">)</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">"Inference Node 04"</span><span class="p">)</span>
+</span></code></pre></div></p>
+<hr />
+<h3 id="104-commercial-dashboard-analytics-primitives">10.4 Commercial Dashboard &amp; Analytics Primitives</h3>
+<h4 id="pdumetriclabel-value-deltanone-delta_colornormal-iconnone"><code>pdu.metric(label, value, delta=None, delta_color="normal", icon=None)</code></h4>
+<p>Executive KPI metric block with delta trend indicator.</p>
+<h4 id="pdustat_cardtitle-value-changenone-change_typenone-iconnone-sparklinenone-colorindigo"><code>pdu.stat_card(title, value, change=None, change_type=None, icon=None, sparkline=None, color="indigo")</code></h4>
+<p>Commercial dashboard KPI card with integrated inline SVG sparkline and icon.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Monthly Recurring Revenue"</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">value</span><span class="o">=</span><span class="s2">"$154,200"</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">change</span><span class="o">=</span><span class="s2">"+18.2% vs last mo"</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">92</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">154</span><span class="p">],</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="n">icon</span><span class="o">=</span><span class="s2">"📈"</span><span class="p">,</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="pdusparklinedata-colorindigo-width120-height36-stroke_width2-filltrue"><code>pdu.sparkline(data, color="indigo", width=120, height=36, stroke_width=2, fill=True)</code></h4>
+<p>Pure inline SVG sparkline graph. Zero JavaScript, zero external dependencies, renders in 0.001ms.</p>
+<h4 id="pdubadgelabel-colorindigo-variantsubtle-iconnone-props"><code>pdu.badge(label, color="indigo", variant="subtle", icon=None, **props)</code></h4>
+<p>Status tag badge. <code>variant</code> accepts <code>"subtle"</code>, <code>"solid"</code>, or <code>"outline"</code>. <code>color</code> accepts any theme preset or custom HEX code.</p>
+<h4 id="pdupricing_cardtier-price-periodmonth-features-button_textget-started-highlightedfalse-badge_labelnone"><code>pdu.pricing_card(tier, price, period="/month", features=[], button_text="Get Started", highlighted=False, badge_label=None)</code></h4>
+<p>SaaS subscription pricing tier card with highlighted CTA.</p>
+<hr />
+<h3 id="105-forms-inputs-temporal-controls">10.5 Forms, Inputs &amp; Temporal Controls</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Signature Summary</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>pdu.button(label, on_click=None, type="default")</code></td>
+<td style="text-align: left;"><code>type</code>: <code>"primary"</code>, <code>"secondary"</code>, <code>"destructive"</code>, <code>"outline"</code></td>
+<td style="text-align: left;">Interactive click button.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.download_button(label, data, file_name, mime)</code></td>
+<td style="text-align: left;"><code>data</code>: <code>str | bytes</code>, <code>file_name</code>: <code>str</code></td>
+<td style="text-align: left;">Client-side file downloader.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.text_input(label, value="", key=None, ...)</code></td>
+<td style="text-align: left;"><code>type</code>: <code>"text"</code> or <code>"password"</code></td>
+<td style="text-align: left;">Single-line text input field.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.text_area(label, value="", height=None, ...)</code></td>
+<td style="text-align: left;">Multiline text input.</td>
+<td style="text-align: left;">Multi-line textarea.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.search_input(placeholder="...", on_search=...)</code></td>
+<td style="text-align: left;">Instant reactive search bar with HTMX trigger.</td>
+<td style="text-align: left;">Real-time search query field.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.date_input(label, value=None, min_value=..., key=...)</code></td>
+<td style="text-align: left;">Native HTML5 date picker bound to session_state.</td>
+<td style="text-align: left;">Calendar date selector.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.time_input(label, value=None, key=...)</code></td>
+<td style="text-align: left;">Native HTML5 time picker bound to session_state.</td>
+<td style="text-align: left;">24h / 12h time selector.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.number_input(label, min_value=None, max_value=None, step=1)</code></td>
+<td style="text-align: left;">Numeric stepper input.</td>
+<td style="text-align: left;">Number input field.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.slider(label, min_value=0, max_value=100, value=None, step=1)</code></td>
+<td style="text-align: left;">Visual range slider.</td>
+<td style="text-align: left;">Slider range bar.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.selectbox(label, options, index=0, key=None)</code></td>
+<td style="text-align: left;">Dropdown select menu.</td>
+<td style="text-align: left;">Dropdown select picker.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.multiselect(label, options, default=None)</code></td>
+<td style="text-align: left;">Multi-tag dropdown picker.</td>
+<td style="text-align: left;">Tag multi-selector.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.checkbox(label, value=False, key=None)</code></td>
+<td style="text-align: left;">Boolean checkbox toggle.</td>
+<td style="text-align: left;">Standard checkbox.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.toggle(label, value=False, key=None)</code></td>
+<td style="text-align: left;">iOS-style switch toggle.</td>
+<td style="text-align: left;">Switch toggle.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.file_uploader(label, accept=None, multiple=False)</code></td>
+<td style="text-align: left;">File upload drag &amp; drop zone.</td>
+<td style="text-align: left;">File upload input.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.color_picker(label, value="#4f46e5")</code></td>
+<td style="text-align: left;">Visual color palette picker.</td>
+<td style="text-align: left;">Color selection tool.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="batched-forms-pduform-pduform_submit_button">Batched Forms (<code>pdu.form</code>, <code>pdu.form_submit_button</code>)</h4>
+<p>Prevents instant state updates on individual keystrokes; gathers inputs and submits in a single batch.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">form</span><span class="p">(</span><span class="s2">"user_settings"</span><span class="p">):</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">name</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Name"</span><span class="p">)</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">email</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Email"</span><span class="p">)</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">form_submit_button</span><span class="p">(</span><span class="s2">"Save Changes"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">save_user</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="106-tabular-data-charts">10.6 Tabular Data &amp; Charts</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Signature Summary</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>pdu.dataframe(data, use_container_width=True)</code></td>
+<td style="text-align: left;">Universal dataframe viewer (Pandas, Polars, PyArrow, DuckDB, lists of dicts).</td>
+<td style="text-align: left;">Interactive paginated table.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.table(data)</code></td>
+<td style="text-align: left;">Static clean HTML table.</td>
+<td style="text-align: left;">Fast static table.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.line_chart(data, x=None, y=None, color=None)</code></td>
+<td style="text-align: left;">Responsive line chart.</td>
+<td style="text-align: left;">Line chart visualization.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.bar_chart(data, x=None, y=None, color=None)</code></td>
+<td style="text-align: left;">Bar chart with custom or multi-color support.</td>
+<td style="text-align: left;">Bar chart visualization.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.area_chart(data, x=None, y=None, color=None)</code></td>
+<td style="text-align: left;">Area gradient chart.</td>
+<td style="text-align: left;">Area chart visualization.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.scatter_chart(data, x=None, y=None, color=None)</code></td>
+<td style="text-align: left;">Point scatter chart.</td>
+<td style="text-align: left;">Scatter plot visualization.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="107-feedback-status-notifications">10.7 Feedback &amp; Status Notifications</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Signature Summary</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>pdu.success(body, icon=None)</code></td>
+<td style="text-align: left;">Green success banner with icon.</td>
+<td style="text-align: left;">Positive confirmation message.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.error(body, icon=None)</code></td>
+<td style="text-align: left;">Red error banner with icon.</td>
+<td style="text-align: left;">Error notification.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.warning(body, icon=None)</code></td>
+<td style="text-align: left;">Amber warning banner with icon.</td>
+<td style="text-align: left;">Warning caution message.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.info(body, icon=None)</code></td>
+<td style="text-align: left;">Blue informative banner with icon.</td>
+<td style="text-align: left;">Informational notice.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.toast(body, icon=None)</code></td>
+<td style="text-align: left;">Transient auto-dismissing toast notification.</td>
+<td style="text-align: left;">Floating toast.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.spinner(text="In progress...")</code></td>
+<td style="text-align: left;">Loading spinner context manager.</td>
+<td style="text-align: left;">Animated loading indicator.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pdu.progress(value, text=None)</code></td>
+<td style="text-align: left;">Progress bar (0 to 100).</td>
+<td style="text-align: left;">Visual progress meter.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="108-state-production-authentication">10.8 State &amp; Production Authentication</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. Procedural Session State</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">"active_node"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"node-01"</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">val</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"active_node"</span><span class="p">)</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># 2. User Management</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="n">pdu</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s2">"alice"</span><span class="p">,</span> <span class="s2">"SecurePassword123!"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"alice@company.com"</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">])</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># 3. Authentication</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="n">is_ok</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="s2">"alice"</span><span class="p">,</span> <span class="s2">"SecurePassword123!"</span><span class="p">)</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="n">pdu</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># 4. Route Guard</span>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="n">pdu</span><span class="o">.</span><span class="n">require_auth</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">],</span> <span class="n">redirect_url</span><span class="o">=</span><span class="s2">"/login"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="109-fastapi-production-hardening-asgi-methods">10.9 FastAPI Production Hardening &amp; ASGI Methods</h3>
+<h4 id="pduget_fastapi-or-appfastapi"><code>pdu.get_fastapi()</code> or <code>app.fastapi</code></h4>
+<p>Returns the underlying native <code>fastapi.FastAPI</code> application instance.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">BackgroundTasks</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">fastapi_app</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_fastapi</span><span class="p">()</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># Mount custom FastAPI router</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"/v1"</span><span class="p">)</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/telemetry"</span><span class="p">)</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">log_telemetry</span><span class="p">(</span><span class="n">bg</span><span class="p">:</span> <span class="n">BackgroundTasks</span><span class="p">):</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="n">bg</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">persist_to_clickhouse</span><span class="p">)</span>
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"enqueued"</span><span class="p">}</span>
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="n">fastapi_app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">router</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="production-security-documentation-filtering">Production Security &amp; Documentation Filtering</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># 1. Strip docs completely in production:</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">docs_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openapi_url</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># 2. Filter Swagger UI endpoints:</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">swagger_ui_parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">"filter"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"persistAuthorization"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># 3. Lock docs behind RBAC authentication:</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">docs_roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">])</span>
+</span></code></pre></div>
+<h4 id="mounting-pydataui-into-existing-fastapi">Mounting PyDataUI into Existing FastAPI</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">parent_api</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1"># Build your PyDataUI views...</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">parent_api</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/dashboard"</span><span class="p">,</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_fastapi</span><span class="p">())</span>
+</span></code></pre></div>
 
 
 

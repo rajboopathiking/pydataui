@@ -505,6 +505,8 @@
       
         
       
+        
+      
     
     
     
@@ -565,6 +567,34 @@
     
   
     10-Second Quickstart & Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../STREAMLIT_TO_PYDATAUI_COOKBOOK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streamlit to PyDataUI Cookbook
   
 
     
@@ -1627,6 +1657,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#recipe-10-advanced-flexbox-responsive-css-grid-layouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 10: Advanced Flexbox &amp; Responsive CSS Grid Layouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-11-absolute-floating-badges-sticky-action-bars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 11: Absolute Floating Badges &amp; Sticky Action Bars
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-12-headless-multi-step-interactive-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 12: Headless Multi-Step Interactive Wizard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-13-commercial-fintech-executive-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 13: Commercial FinTech Executive Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-14-fastapi-production-hardening-swagger-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 14: FastAPI Production Hardening &amp; Swagger Filtering
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2528,6 +2613,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#recipe-10-advanced-flexbox-responsive-css-grid-layouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 10: Advanced Flexbox &amp; Responsive CSS Grid Layouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-11-absolute-floating-badges-sticky-action-bars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 11: Absolute Floating Badges &amp; Sticky Action Bars
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-12-headless-multi-step-interactive-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 12: Headless Multi-Step Interactive Wizard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-13-commercial-fintech-executive-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 13: Commercial FinTech Executive Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recipe-14-fastapi-production-hardening-swagger-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe 14: FastAPI Production Hardening &amp; Swagger Filtering
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2566,6 +2706,11 @@ Build reactive web apps and interactive terminal dashboards in pure Python witho
 <li><a href="#recipe-7-dual-surface-terminal-ui-tui-mode">Recipe 7: Dual-Surface Terminal UI (TUI) Mode</a></li>
 <li><a href="#recipe-8-fastapi-native-mounting">Recipe 8: FastAPI Native Mounting &amp; Microservices</a></li>
 <li><a href="#recipe-9-production-deployment-dockerization">Recipe 9: Production Deployment &amp; Dockerization</a></li>
+<li><a href="#recipe-10-advanced-flexbox-responsive-css-grid-layouts">Recipe 10: Advanced Flexbox &amp; Responsive CSS Grid Layouts</a></li>
+<li><a href="#recipe-11-absolute-floating-badges-sticky-action-bars">Recipe 11: Absolute Floating Badges &amp; Sticky Action Bars</a></li>
+<li><a href="#recipe-12-headless-multi-step-interactive-wizard">Recipe 12: Headless Multi-Step Interactive Wizard</a></li>
+<li><a href="#recipe-13-commercial-fintech-executive-dashboard">Recipe 13: Commercial FinTech Executive Dashboard</a></li>
+<li><a href="#recipe-14-fastapi-production-hardening-swagger-filtering">Recipe 14: FastAPI Production Hardening &amp; Swagger Filtering</a></li>
 </ol>
 <hr />
 <h2 id="1-the-pydataui-mental-model">1. The PyDataUI Mental Model</h2>
@@ -2894,6 +3039,197 @@ Build reactive web apps and interactive terminal dashboards in pure Python witho
 <li>[x] Run with multiple Uvicorn workers (<code>--workers 4</code>).</li>
 <li>[x] Pre-validate routes with <code>pydataui check app.py</code>.</li>
 </ul>
+<hr />
+<h2 id="recipe-10-advanced-flexbox-responsive-css-grid-layouts">Recipe 10: Advanced Flexbox &amp; Responsive CSS Grid Layouts</h2>
+<p>Build modern, auto-wrapping dashboard layouts without writing CSS media queries.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Cluster Telemetry"</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"wide"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span> <span class="n">dark_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># 1. Navigation Header with Flexbox distribution</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">"row"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">"Production Cluster Alpha"</span><span class="p">)</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"US-EAST-1"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"outline"</span><span class="p">)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"32/32 PODS HEALTHY"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">"subtle"</span><span class="p">)</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Drain Nodes"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"destructive"</span><span class="p">)</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"+ Deploy Pod"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">)</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="n">pdu</span><span class="o">.</span><span class="n">spacer</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># 2. Responsive CSS Grid: Cards automatically wrap when screen or card reaches 260px width!</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">min_column_width</span><span class="o">=</span><span class="s2">"260px"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Active Pods"</span><span class="p">,</span> <span class="s2">"32 / 32"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"100% OK"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"P99 Latency"</span><span class="p">,</span> <span class="s2">"8.2 ms"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"-2.1ms"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"indigo"</span><span class="p">)</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"VRAM Allocated"</span><span class="p">,</span> <span class="s2">"1,180 GB"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+12%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">92</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"amber"</span><span class="p">)</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Token Throughput"</span><span class="p">,</span> <span class="s2">"18.4k t/s"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+24.8%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">)</span>
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="recipe-11-absolute-floating-badges-sticky-action-bars">Recipe 11: Absolute Floating Badges &amp; Sticky Action Bars</h2>
+<p>Combine relative parent containers with absolute children and viewport-docked action bars.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Incident Remediation"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"slate"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Relative Card with Absolute Floating Badge</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">card</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="s2">"relative"</span><span class="p">):</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="c1"># Pinned to the top-right corner of this card</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"HOTSPOT DETECTED"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">"absolute"</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="s2">"14px"</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="s2">"14px"</span><span class="p">)</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Worker Node 04"</span><span class="p">)</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">"High thermal signature detected during distributed LLM checkpointing."</span><span class="p">)</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">line_chart</span><span class="p">([</span><span class="mi">65</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">94</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"rose"</span><span class="p">)</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Sticky Docked Viewport Action Bar (docked to bottom of browser window)</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">pinned</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="s2">"bottom"</span><span class="p">):</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"max-w-4xl mx-auto py-2"</span><span class="p">):</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">"⚠️ 3 worker nodes require kernel updates before next training run."</span><span class="p">)</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>        <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">gap</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Ignore for 24h"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"outline"</span><span class="p">)</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Apply Batch Update"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">)</span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="recipe-12-headless-multi-step-interactive-wizard">Recipe 12: Headless Multi-Step Interactive Wizard</h2>
+<p>Create checkout flows, multi-stage data pipelines, and AI interview wizards in 1 line by setting <code>hide_tab_buttons=True</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"SaaS Onboarding Wizard"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"violet"</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Initialize current step in session_state</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">if</span> <span class="s2">"step"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">"step"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Multi-Step Tabs with navigation buttons completely hidden</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">steps</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">"Account"</span><span class="p">,</span> <span class="s2">"Organization"</span><span class="p">,</span> <span class="s2">"Billing"</span><span class="p">,</span> <span class="s2">"Finish"</span><span class="p">],</span> <span class="n">hide_tab_buttons</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># Step 0: Account Details</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="k">with</span> <span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">card</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Step 1: Account Information"</span><span class="p">,</span> <span class="n">subtitle</span><span class="o">=</span><span class="s2">"Create your admin login"</span><span class="p">):</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Full Name"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"wiz_name"</span><span class="p">)</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Work Email"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"wiz_email"</span><span class="p">)</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Next: Organization →"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"step"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="c1"># Step 1: Organization Details</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="k">with</span> <span class="n">steps</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">card</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Step 2: Organization Setup"</span><span class="p">):</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">"Company Name"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"wiz_company"</span><span class="p">)</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">"Team Size"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"1-10"</span><span class="p">,</span> <span class="s2">"11-50"</span><span class="p">,</span> <span class="s2">"51-200"</span><span class="p">,</span> <span class="s2">"200+"</span><span class="p">])</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>        <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">):</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"← Back"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"step"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}))</span>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Next: Billing →"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"step"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>
+</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="c1"># Step 2: Plan Selection</span>
+</span><span id="__span-13-29"><a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="k">with</span> <span class="n">steps</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+</span><span id="__span-13-30"><a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">card</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Step 3: Select Plan"</span><span class="p">):</span>
+</span><span id="__span-13-31"><a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>        <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-13-32"><a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">pricing_card</span><span class="p">(</span><span class="s2">"Pro"</span><span class="p">,</span> <span class="s2">"$49"</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s2">"Up to 10 nodes"</span><span class="p">,</span> <span class="s2">"Shared cluster"</span><span class="p">])</span>
+</span><span id="__span-13-33"><a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">pricing_card</span><span class="p">(</span><span class="s2">"Enterprise"</span><span class="p">,</span> <span class="s2">"$199"</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s2">"Unlimited nodes"</span><span class="p">,</span> <span class="s2">"Dedicated VPC"</span><span class="p">],</span> <span class="n">highlighted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-13-34"><a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>        <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">):</span>
+</span><span id="__span-13-35"><a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"← Back"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"step"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+</span><span id="__span-13-36"><a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Complete Setup 🚀"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"step"</span><span class="p">:</span> <span class="mi">3</span><span class="p">}))</span>
+</span><span id="__span-13-37"><a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>
+</span><span id="__span-13-38"><a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a><span class="c1"># Step 3: Success Screen</span>
+</span><span id="__span-13-39"><a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="k">with</span> <span class="n">steps</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+</span><span id="__span-13-40"><a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">"🎉 Welcome aboard! Your cluster workspace is provisioned."</span><span class="p">)</span>
+</span><span id="__span-13-41"><a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Launch Dashboard"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">pdu</span><span class="o">.</span><span class="n">switch_page</span><span class="p">(</span><span class="s2">"/dashboard"</span><span class="p">))</span>
+</span><span id="__span-13-42"><a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>
+</span><span id="__span-13-43"><a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-13-44"><a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="recipe-13-commercial-fintech-executive-dashboard">Recipe 13: Commercial FinTech Executive Dashboard</h2>
+<p>Renders ARR/MRR velocity, customer cohorts, and pure inline SVG sparklines in ~0.001ms.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"ApexPay FinTech Analytics"</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"wide"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"ApexPay Revenue Operations &amp; Cohorts"</span><span class="p">)</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">pdu</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">"Stripe Webhook Sync: Active • 99.99</span><span class="si">% G</span><span class="s2">ateway Uptime"</span><span class="p">)</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># 1. Executive Stat Cards with inline Sparklines</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Annual Run Rate (ARR)"</span><span class="p">,</span> <span class="s2">"$1,840,500"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+24.8%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">184</span><span class="p">],</span> <span class="n">icon</span><span class="o">=</span><span class="s2">"💳"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Monthly Recurring (MRR)"</span><span class="p">,</span> <span class="s2">"$154,200"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+18.2%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">92</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">132</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">154</span><span class="p">],</span> <span class="n">icon</span><span class="o">=</span><span class="s2">"📈"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Active Accounts"</span><span class="p">,</span> <span class="s2">"2,840"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"+142 mo"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">2200</span><span class="p">,</span> <span class="mi">2400</span><span class="p">,</span> <span class="mi">2600</span><span class="p">,</span> <span class="mi">2840</span><span class="p">],</span> <span class="n">icon</span><span class="o">=</span><span class="s2">"👥"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"indigo"</span><span class="p">)</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">stat_card</span><span class="p">(</span><span class="s2">"Net Retention Rate"</span><span class="p">,</span> <span class="s2">"118.4%"</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="s2">"TOP 5%"</span><span class="p">,</span> <span class="n">sparkline</span><span class="o">=</span><span class="p">[</span><span class="mi">112</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">118</span><span class="p">],</span> <span class="n">icon</span><span class="o">=</span><span class="s2">"⚡"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"amber"</span><span class="p">)</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="n">pdu</span><span class="o">.</span><span class="n">spacer</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># 2. Date Filtering &amp; Revenue Cohorts Table</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">"row"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">):</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">"Revenue Ingestion Ledger"</span><span class="p">)</span>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">date_input</span><span class="p">(</span><span class="s2">"Audit Window"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">"2026-11-18"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">"ledger_date"</span><span class="p">)</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"Export CSV"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"outline"</span><span class="p">)</span>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+</span><span id="__span-14-26"><a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>    <span class="s2">"Transaction ID"</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"tx-894</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)],</span>
+</span><span id="__span-14-27"><a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>    <span class="s2">"Customer"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Acme Corp"</span><span class="p">,</span> <span class="s2">"BioHealth AI"</span><span class="p">,</span> <span class="s2">"FinFlow Inc"</span><span class="p">,</span> <span class="s2">"DataMesh Labs"</span><span class="p">,</span> <span class="s2">"ScaleOps"</span><span class="p">],</span>
+</span><span id="__span-14-28"><a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>    <span class="s2">"Tier"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Enterprise"</span><span class="p">,</span> <span class="s2">"Pro"</span><span class="p">,</span> <span class="s2">"Pro"</span><span class="p">,</span> <span class="s2">"Enterprise"</span><span class="p">,</span> <span class="s2">"Pro"</span><span class="p">],</span>
+</span><span id="__span-14-29"><a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>    <span class="s2">"Amount"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"$12,400"</span><span class="p">,</span> <span class="s2">"$4,900"</span><span class="p">,</span> <span class="s2">"$4,900"</span><span class="p">,</span> <span class="s2">"$15,200"</span><span class="p">,</span> <span class="s2">"$4,900"</span><span class="p">],</span>
+</span><span id="__span-14-30"><a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>    <span class="s2">"Status"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Settled"</span><span class="p">,</span> <span class="s2">"Settled"</span><span class="p">,</span> <span class="s2">"Settled"</span><span class="p">,</span> <span class="s2">"Processing"</span><span class="p">,</span> <span class="s2">"Settled"</span><span class="p">]</span>
+</span><span id="__span-14-31"><a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="p">})</span>
+</span><span id="__span-14-32"><a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="n">pdu</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span id="__span-14-33"><a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>
+</span><span id="__span-14-34"><a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-14-35"><a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="recipe-14-fastapi-production-hardening-swagger-filtering">Recipe 14: FastAPI Production Hardening &amp; Swagger Filtering</h2>
+<p>Access the native FastAPI engine directly to integrate background tasks, add CORS middleware, and harden Swagger UI for production.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">BackgroundTasks</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">starlette.middleware.cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORSMiddleware</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># 1. Configure production Swagger UI security</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Production Hardened App"</span><span class="p">,</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="c1"># Enable search filtering in Swagger UI</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">swagger_ui_parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">"filter"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"syntaxHighlight.theme"</span><span class="p">:</span> <span class="s2">"monokai"</span><span class="p">},</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="c1"># Only allow users with the 'admin' role to view /docs</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">docs_roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">]</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="p">)</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># 2. Access the native FastAPI application</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="n">fastapi_app</span> <span class="o">=</span> <span class="n">pdu</span><span class="o">.</span><span class="n">get_fastapi</span><span class="p">()</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># 3. Attach standard Starlette / FastAPI middlewares</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="n">fastapi_app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    <span class="n">CORSMiddleware</span><span class="p">,</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://mycompany.com"</span><span class="p">],</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-15-22"><a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">,</span> <span class="s2">"POST"</span><span class="p">],</span>
+</span><span id="__span-15-23"><a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">]</span>
+</span><span id="__span-15-24"><a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="p">)</span>
+</span><span id="__span-15-25"><a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
+</span><span id="__span-15-26"><a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="c1"># 4. Attach APIRouter with Starlette BackgroundTasks</span>
+</span><span id="__span-15-27"><a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"/v1"</span><span class="p">)</span>
+</span><span id="__span-15-28"><a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>
+</span><span id="__span-15-29"><a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="k">def</span><span class="w"> </span><span class="nf">audit_log_worker</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-15-30"><a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[AUDIT WORKER] Logging event: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-15-31"><a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>
+</span><span id="__span-15-32"><a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/trigger-audit"</span><span class="p">)</span>
+</span><span id="__span-15-33"><a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a><span class="k">def</span><span class="w"> </span><span class="nf">trigger_audit</span><span class="p">(</span><span class="n">bg</span><span class="p">:</span> <span class="n">BackgroundTasks</span><span class="p">):</span>
+</span><span id="__span-15-34"><a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>    <span class="n">bg</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">audit_log_worker</span><span class="p">,</span> <span class="s2">"User initiated cluster security scan"</span><span class="p">)</span>
+</span><span id="__span-15-35"><a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"enqueued"</span><span class="p">,</span> <span class="s2">"queue"</span><span class="p">:</span> <span class="s2">"background"</span><span class="p">}</span>
+</span><span id="__span-15-36"><a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>
+</span><span id="__span-15-37"><a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="n">fastapi_app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">router</span><span class="p">)</span>
+</span><span id="__span-15-38"><a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>
+</span><span id="__span-15-39"><a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="c1"># 5. Build procedural UI</span>
+</span><span id="__span-15-40"><a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a><span class="n">pdu</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Hardened Operations Center"</span><span class="p">)</span>
+</span><span id="__span-15-41"><a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a><span class="n">pdu</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"All requests secured with CORS and authenticated Swagger UI."</span><span class="p">)</span>
+</span><span id="__span-15-42"><a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>
+</span><span id="__span-15-43"><a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-15-44"><a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</span></code></pre></div>
 
 
 

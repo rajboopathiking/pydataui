@@ -565,7 +565,7 @@ pdu.set_page_config(title="DeepAgent Copilot", theme="violet", dark_mode=True)
 # 2. Left Control Sidebar
 with pdu.sidebar():
     pdu.header("DeepAgent Copilot")
-    pdu.caption("Powered by PyDataUI v1.5.0")
+    pdu.caption("Powered by PyDataUI v1.5.1")
     pdu.divider()
 
     model = pdu.selectbox("INFERENCE MODEL", ["DeepSeek-R1-Distill-70B", "Llama-3.3-70B"])
@@ -819,7 +819,7 @@ Being completely transparent about what PyDataUI is and is not designed for:
 
 ### 📊 4-Way Comprehensive Architecture Comparison
 
-| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.0 (Full-Stack) |
+| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.1 (Full-Stack) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Languages Required** | 2 (TypeScript + Python) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
 | **UI Presentation Layer** | React / Virtual DOM | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |

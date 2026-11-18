@@ -188,6 +188,28 @@ def test_theme_system_presets_and_custom_palettes():
     assert "--bg: #0f172a" in dict_css
     assert "--accent: #a855f7" in dict_css
 
+    # 4. Custom Dictionary Palette with light background
+    light_dict = {"primary": "#6366f1", "primary_hover": "#4f46e5", "bg": "#eceef3", "accent": "#eceef3"}
+    light_css = _resolve_theme_css(light_dict)
+    assert "--primary:" in light_css
+    assert "--background:" in light_css
+    assert "--card: 0 0% 100%" in light_css
+    assert "--foreground: 222.2 47.4% 11.2%" in light_css
+    assert "background-color: #eceef3 !important" in light_css
+
+
+@pytest.mark.anyio
+async def test_chartjs_inclusion_and_custom_theme_render():
+    pdu.reset()
+    pdu.set_page_config(title="FinTech Test", theme={"primary": "#6366f1", "bg": "#eceef3"}, layout="wide")
+    pdu.area_chart([10, 20, 30])
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "chart.umd.min.js" in body
+    assert "#6366f1" in body
+    assert "#eceef3" in body
+
 
 @pytest.mark.anyio
 async def test_sidebar_and_fastapi_mount_workflow():

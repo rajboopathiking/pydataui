@@ -502,6 +502,8 @@ def get_base_html(
     </style>
     <!-- HTMX -->
     <script src="{htmx_url}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/htmx.org@{htmx_version}/dist/htmx.min.js'"></script>
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <!-- PyDataUI CSS -->
     <link rel="stylesheet" href="{css_url}">
     {stylesheets_html}

@@ -149,19 +149,97 @@ def _hex_to_hsl_str(hex_code: str) -> str:
     return f"{round(h, 1)} {round(s * 100, 1)}% {round(l * 100, 1)}%"
 
 
+def _hex_lightness(hex_code: str) -> float:
+    """Return relative perceptual lightness (0.0 to 1.0) of a hex color."""
+    hex_clean = hex_code.lstrip("#")
+    if len(hex_clean) == 3:
+        hex_clean = "".join(c * 2 for c in hex_clean)
+    try:
+        r = int(hex_clean[0:2], 16) / 255.0
+        g = int(hex_clean[2:4], 16) / 255.0
+        b = int(hex_clean[4:6], 16) / 255.0
+    except Exception:
+        return 0.5
+    return (max(r, g, b) + min(r, g, b)) / 2.0
+
+
 def _resolve_theme_css(theme: Union[str, Dict[str, str], Any]) -> str:
     """Generate dynamic CSS variable overrides for built-in presets or unlimited custom palettes."""
     if hasattr(theme, "to_css"):
         return f"<style>{theme.to_css()}</style>"
 
     if isinstance(theme, dict):
-        lines = [f"  --pdu-color-{k}: {v} !important; --{k}: {v} !important;" for k, v in theme.items()]
+        lines = []
+        for k, v in theme.items():
+            lines.append(f"  --pdu-color-{k}: {v} !important;")
+            lines.append(f"  --{k}: {v} !important;")
+
         p = theme.get("primary")
         if p and p.startswith("#"):
             hsl_p = _hex_to_hsl_str(p)
             lines.append(f"  --primary: {hsl_p} !important;")
             lines.append(f"  --ring: {hsl_p} !important;")
-        return "<style>:root, .dark, [data-theme='dark'] {\n" + "\n".join(lines) + "\n}</style>"
+
+        accent = theme.get("accent")
+        if accent and accent.startswith("#"):
+            hsl_accent = _hex_to_hsl_str(accent)
+            lines.append(f"  --accent: {hsl_accent} !important;")
+
+        bg = theme.get("bg") or theme.get("background")
+        if bg and bg.startswith("#"):
+            hsl_bg = _hex_to_hsl_str(bg)
+            lines.append(f"  --background: {hsl_bg} !important;")
+            lines.append(f"  --pdu-color-bg: {bg} !important;")
+            is_light_bg = _hex_lightness(bg) > 0.5
+            if is_light_bg:
+                if "foreground" not in theme and "text" not in theme:
+                    lines.append("  --foreground: 222.2 47.4% 11.2% !important;")
+                    lines.append("  --pdu-color-text: #0f172a !important;")
+                if "card" not in theme:
+                    lines.append("  --card: 0 0% 100% !important;")
+                    lines.append("  --card-foreground: 222.2 47.4% 11.2% !important;")
+                    lines.append("  --pdu-color-card: #ffffff !important;")
+                lines.append("  --border: 214.3 31.8% 88% !important;")
+                lines.append("  --muted: 210 40% 96.1% !important;")
+                lines.append("  --muted-foreground: 215.4 16.3% 46.9% !important;")
+            else:
+                if "foreground" not in theme and "text" not in theme:
+                    lines.append("  --foreground: 210 40% 98% !important;")
+                    lines.append("  --pdu-color-text: #f8fafc !important;")
+                if "card" not in theme:
+                    lines.append("  --card: 222.2 47.4% 11.2% !important;")
+                    lines.append("  --card-foreground: 210 40% 98% !important;")
+                    lines.append("  --pdu-color-card: #0f172a !important;")
+
+        card = theme.get("card")
+        if card and card.startswith("#"):
+            hsl_card = _hex_to_hsl_str(card)
+            lines.append(f"  --card: {hsl_card} !important;")
+            lines.append(f"  --pdu-color-card: {card} !important;")
+
+        text_col = theme.get("text") or theme.get("foreground")
+        if text_col and text_col.startswith("#"):
+            hsl_text = _hex_to_hsl_str(text_col)
+            lines.append(f"  --foreground: {hsl_text} !important;")
+            lines.append(f"  --pdu-color-text: {text_col} !important;")
+
+        global_shell_override = ""
+        if bg and bg.startswith("#"):
+            text_val = theme.get("text") or ("#0f172a" if _hex_lightness(bg) > 0.5 else "#f8fafc")
+            global_shell_override = (
+                f"\nhtml, body, .pdu-dx-shell {{\n"
+                f"  background-color: {bg} !important;\n"
+                f"  color: {text_val} !important;\n"
+                f"}}"
+            )
+
+        return (
+            "<style>:root, .dark, [data-theme='dark'] {\n"
+            + "\n".join(lines)
+            + "\n}"
+            + global_shell_override
+            + "\n</style>"
+        )
 
     if isinstance(theme, str):
         theme_clean = theme.strip().lower()
@@ -307,11 +385,11 @@ class _ProceduralPageLayout(Component):
             return (
                 f"{theme_html}"
                 f"<div class='pdu-dx-shell flex flex-row min-h-screen w-full bg-background text-foreground' "
-                f"style='display: flex !important; flex-direction: row !important; min-height: 100vh; width: 100%;'>"
-                f"<aside class='w-72 min-w-[18rem] border-r border-border bg-card/60 backdrop-blur-md p-6 space-y-6 shrink-0 h-screen sticky top-0 overflow-y-auto flex flex-col justify-start z-20 shadow-sm'>"
+                f"style='display: flex !important; flex-direction: row !important; min-height: 100vh; width: 100%; background-color: var(--pdu-color-bg, hsl(var(--background))); color: var(--pdu-color-text, hsl(var(--foreground)));'>"
+                f"<aside class='w-72 min-w-[18rem] border-r border-border bg-card/60 backdrop-blur-md p-6 space-y-6 shrink-0 h-screen sticky top-0 overflow-y-auto flex flex-col justify-start z-20 shadow-sm' style='background-color: var(--pdu-color-card, var(--pdu-color-bg-secondary, hsl(var(--card))));'>"
                 f"{sidebar_html}"
                 f"</aside>"
-                f"<div class='flex-1 min-w-0 {content_wrap} flex flex-col min-h-screen' style='flex: 1 1 0%; min-width: 0;'>"
+                f"<div class='flex-1 min-w-0 {content_wrap} flex flex-col min-h-screen' style='flex: 1 1 0%; min-width: 0; background-color: var(--pdu-color-bg, hsl(var(--background))); color: var(--pdu-color-text, hsl(var(--foreground)));'>"
                 f"<main class='flex-1 p-6 md:p-8 space-y-6 overflow-y-auto'>{main_html}</main>"
                 f"</div>"
                 f"</div>"
@@ -319,7 +397,7 @@ class _ProceduralPageLayout(Component):
         else:
             return (
                 f"{theme_html}"
-                f"<div class='pdu-dx-shell min-h-screen w-full bg-background text-foreground flex flex-col' style='min-height: 100vh; width: 100%;'>"
+                f"<div class='pdu-dx-shell min-h-screen w-full bg-background text-foreground flex flex-col' style='min-height: 100vh; width: 100%; background-color: var(--pdu-color-bg, hsl(var(--background))); color: var(--pdu-color-text, hsl(var(--foreground)));'>"
                 f"<div class='{content_wrap} p-6 md:p-8 space-y-6 flex-1'>"
                 f"<main class='space-y-6'>{main_html}</main>"
                 f"</div>"

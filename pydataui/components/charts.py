@@ -40,16 +40,38 @@ class Chart(Component):
         
         script = f"""
         <script>
-        document.addEventListener('DOMContentLoaded', function() {{
-            if (typeof Chart !== 'undefined') {{
-                const ctx = document.getElementById('{canvas_id}').getContext('2d');
-                new Chart(ctx, {{
-                    type: '{self.type}',
-                    data: {data_json},
-                    options: {options_json}
-                }});
+        (function() {{
+            function initChart() {{
+                const el = document.getElementById('{canvas_id}');
+                if (!el) return;
+                if (typeof Chart !== 'undefined') {{
+                    if (el._chartInstance) {{
+                        try {{ el._chartInstance.destroy(); }} catch(e) {{}}
+                    }}
+                    const ctx = el.getContext('2d');
+                    el._chartInstance = new Chart(ctx, {{
+                        type: '{self.type}',
+                        data: {data_json},
+                        options: {options_json}
+                    }});
+                }} else {{
+                    if (!window._pdu_loading_chartjs) {{
+                        window._pdu_loading_chartjs = true;
+                        const s = document.createElement('script');
+                        s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js';
+                        s.onload = function() {{ initChart(); }};
+                        document.head.appendChild(s);
+                    }} else {{
+                        setTimeout(initChart, 50);
+                    }}
+                }}
             }}
-        }});
+            if (document.readyState === 'loading') {{
+                document.addEventListener('DOMContentLoaded', initChart);
+            }} else {{
+                initChart();
+            }}
+        }})();
         </script>
         """
         

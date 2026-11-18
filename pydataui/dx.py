@@ -936,21 +936,23 @@ def metric(
     delta: Optional[str] = None,
     delta_color: str = "normal",
     change: Optional[str] = None,
+    color: Optional[str] = None,
     **kwargs
 ) -> MetricCard:
     """
-    Render a high-impact KPI metric card with value, optional change delta, and badges.
+    Render a high-impact KPI metric card with value, optional change delta, custom accent color, and badges.
 
     :param label: Title of the metric.
     :param value: Main display value (e.g., "$45,200", "1.4M").
     :param delta: Change indicator (e.g., "+12.4%", "-2.1ms").
     :param delta_color: "normal", "inverse", or "off".
+    :param color: Custom accent color (preset name like "emerald", CSS name like "grey", or hex "#6366f1").
     """
     d = delta if delta is not None else change
     delta_type = "positive" if (d and str(d).startswith("+")) else ("negative" if (d and str(d).startswith("-")) else "neutral")
     if delta_color == "inverse":
         delta_type = "negative" if delta_type == "positive" else "positive"
-    return _add_component(MetricCard(title=label, value=value, delta=d or "", delta_type=delta_type, **kwargs))
+    return _add_component(MetricCard(title=label, value=value, delta=d or "", delta_type=delta_type, color=color, **kwargs))
 
 
 # ============================================================================
@@ -1022,7 +1024,60 @@ def progress(value: int, text_label: str = "") -> Component:
 # Interactive Charts & Data Science Visualizations
 # ============================================================================
 
-def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]:
+def _resolve_color(c: Any) -> str:
+    """Resolve theme preset names, CSS color aliases, or raw hex/rgb into valid color strings."""
+    if not isinstance(c, str):
+        return str(c)
+    clean = c.strip().lower()
+    if clean in THEME_PRESETS:
+        return THEME_PRESETS[clean]["primary"]
+    CSS_COLOR_MAP = {
+        "grey": "#71717a",
+        "gray": "#71717a",
+        "zinc": "#71717a",
+        "slate": "#64748b",
+        "stone": "#78716c",
+        "neutral": "#737373",
+        "blue": "#3b82f6",
+        "green": "#22c55e",
+        "emerald": "#10b981",
+        "teal": "#14b8a6",
+        "cyan": "#06b6d4",
+        "indigo": "#6366f1",
+        "violet": "#8b5cf6",
+        "purple": "#a855f7",
+        "fuchsia": "#d946ef",
+        "pink": "#ec4899",
+        "rose": "#f43f5e",
+        "red": "#ef4444",
+        "orange": "#f97316",
+        "amber": "#f59e0b",
+        "yellow": "#eab308",
+        "black": "#09090b",
+        "white": "#ffffff",
+    }
+    return CSS_COLOR_MAP.get(clean, c)
+
+
+def _color_alpha(hex_or_named: str, alpha_hex: str = "33") -> str:
+    """Safely apply alpha transparency to hex, theme tokens, or named colors."""
+    col = _resolve_color(hex_or_named)
+    if col.startswith("#"):
+        c = col.lstrip("#")
+        if len(c) == 3:
+            c = "".join(x * 2 for x in c)
+        if len(c) == 6:
+            return f"#{c}{alpha_hex}"
+        if len(c) == 8:
+            return f"#{c[:6]}{alpha_hex}"
+    return col
+
+
+def _normalize_chart_data(
+    data: Any,
+    chart_type: str = "line",
+    color: Optional[Union[str, List[str]]] = None
+) -> Dict[str, Any]:
     """Helper to convert Pandas, list, or dict structures into Chart.js format."""
     theme_val = _page_config.get("theme", "zinc")
     primary_color = "#3b82f6"
@@ -1035,19 +1090,30 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
     elif isinstance(theme_val, dict) and "primary" in theme_val:
         primary_color = theme_val["primary"]
 
-    colors = [primary_color, "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#06b6d4"]
+    default_palette = [primary_color, "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#06b6d4"]
+
+    has_custom_color = color is not None
+    if isinstance(color, str):
+        custom_single = _resolve_color(color)
+        colors = [custom_single]
+    elif isinstance(color, (list, tuple)) and len(color) > 0:
+        custom_single = None
+        colors = [_resolve_color(c) for c in color]
+    else:
+        custom_single = None
+        colors = default_palette
 
     # 1. Pandas DataFrame
     if hasattr(data, "columns") and hasattr(data, "values"):
         labels = [str(x) for x in data.index]
         datasets = []
-        for i, col in enumerate(data.columns):
-            color = colors[i % len(colors)]
+        for i, col_name in enumerate(data.columns):
+            c = custom_single if custom_single else colors[i % len(colors)]
             datasets.append({
-                "label": str(col),
-                "data": [None if (v != v) else v for v in data[col].tolist()],
-                "borderColor": color,
-                "backgroundColor": color + "33" if chart_type in ("area", "bar") else color,
+                "label": str(col_name),
+                "data": [None if (v != v) else v for v in data[col_name].tolist()],
+                "borderColor": c,
+                "backgroundColor": _color_alpha(c, "40") if chart_type in ("area", "bar") else c,
                 "fill": chart_type == "area",
             })
         return {"labels": labels, "datasets": datasets}
@@ -1055,14 +1121,20 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
     # 2. List or Tuple of numbers
     if isinstance(data, (list, tuple)):
         labels = [str(i + 1) for i in range(len(data))]
-        bar_colors = [colors[i % len(colors)] for i in range(len(data))] if chart_type == "bar" else primary_color
+        if chart_type == "bar":
+            bar_colors = custom_single if custom_single else [colors[i % len(colors)] for i in range(len(data))]
+            bg_colors = _color_alpha(custom_single, "40") if custom_single else [_color_alpha(c, "40") for c in bar_colors]
+        else:
+            bar_colors = custom_single or primary_color
+            bg_colors = _color_alpha(bar_colors, "33") if chart_type == "area" else bar_colors
+
         return {
             "labels": labels,
             "datasets": [{
                 "label": "Value",
                 "data": list(data),
-                "borderColor": bar_colors if chart_type == "bar" else primary_color,
-                "backgroundColor": bar_colors if chart_type == "bar" else (primary_color + "33" if chart_type == "area" else primary_color),
+                "borderColor": bar_colors,
+                "backgroundColor": bg_colors,
                 "borderWidth": 1,
                 "borderRadius": 6 if chart_type == "bar" else 0,
                 "fill": chart_type == "area",
@@ -1080,14 +1152,20 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
         if isinstance(first_val, (int, float)) or (isinstance(first_val, str) and not isinstance(first_val, (list, tuple, dict))):
             labels = [str(k) for k in data.keys()]
             vals = [float(v) if isinstance(v, (int, float)) else v for v in data.values()]
-            bar_colors = [colors[i % len(colors)] for i in range(len(vals))] if chart_type == "bar" else primary_color
+            if chart_type == "bar":
+                bar_colors = custom_single if custom_single else [colors[i % len(colors)] for i in range(len(vals))]
+                bg_colors = _color_alpha(custom_single, "40") if custom_single else [_color_alpha(c, "40") for c in (bar_colors if isinstance(bar_colors, list) else [bar_colors]*len(vals))]
+            else:
+                bar_colors = custom_single or primary_color
+                bg_colors = _color_alpha(bar_colors, "33") if chart_type == "area" else bar_colors
+
             return {
                 "labels": labels,
                 "datasets": [{
                     "label": "Value",
                     "data": vals,
-                    "borderColor": bar_colors if chart_type == "bar" else primary_color,
-                    "backgroundColor": bar_colors if chart_type == "bar" else (primary_color + "33" if chart_type == "area" else primary_color),
+                    "borderColor": bar_colors,
+                    "backgroundColor": bg_colors,
                     "borderWidth": 1,
                     "borderRadius": 6 if chart_type == "bar" else 0,
                     "fill": chart_type == "area",
@@ -1099,12 +1177,12 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
         for i, (k, vals) in enumerate(data.items()):
             if isinstance(vals, (list, tuple)):
                 max_len = max(max_len, len(vals))
-                color = colors[i % len(colors)]
+                c = custom_single if custom_single else colors[i % len(colors)]
                 datasets.append({
                     "label": str(k),
                     "data": list(vals),
-                    "borderColor": color,
-                    "backgroundColor": color + "33" if chart_type in ("area", "bar") else color,
+                    "borderColor": c,
+                    "backgroundColor": _color_alpha(c, "40") if chart_type in ("area", "bar") else c,
                     "borderWidth": 1,
                     "borderRadius": 6 if chart_type == "bar" else 0,
                     "fill": chart_type == "area",
@@ -1115,9 +1193,17 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
     return {"labels": [], "datasets": []}
 
 
-def line_chart(data: Any, width: Optional[str] = None, height: str = "320px", options: Optional[Dict[str, Any]] = None, **kwargs) -> Chart:
-    """Render a responsive multi-series line chart."""
-    chart_data = _normalize_chart_data(data, "line")
+def line_chart(
+    data: Any,
+    width: Optional[str] = None,
+    height: str = "320px",
+    color: Optional[Union[str, List[str]]] = None,
+    options: Optional[Dict[str, Any]] = None,
+    **kwargs
+) -> Chart:
+    """Render a responsive multi-series line chart with optional custom color / palette."""
+    c = color if color is not None else kwargs.pop("color", None)
+    chart_data = _normalize_chart_data(data, "line", color=c)
     opts = {"responsive": True, "maintainAspectRatio": False}
     if len(chart_data.get("datasets", [])) == 1:
         opts["plugins"] = {"legend": {"display": False}}
@@ -1126,9 +1212,17 @@ def line_chart(data: Any, width: Optional[str] = None, height: str = "320px", op
     return _add_component(Chart(type="line", data=chart_data, options=opts, width=width, height=height, **kwargs))
 
 
-def bar_chart(data: Any, width: Optional[str] = None, height: str = "320px", options: Optional[Dict[str, Any]] = None, **kwargs) -> Chart:
-    """Render a responsive bar chart."""
-    chart_data = _normalize_chart_data(data, "bar")
+def bar_chart(
+    data: Any,
+    width: Optional[str] = None,
+    height: str = "320px",
+    color: Optional[Union[str, List[str]]] = None,
+    options: Optional[Dict[str, Any]] = None,
+    **kwargs
+) -> Chart:
+    """Render a responsive bar chart with optional custom single color or multiple-color palette."""
+    c = color if color is not None else kwargs.pop("color", None)
+    chart_data = _normalize_chart_data(data, "bar", color=c)
     opts = {
         "responsive": True,
         "maintainAspectRatio": False,
@@ -1143,9 +1237,17 @@ def bar_chart(data: Any, width: Optional[str] = None, height: str = "320px", opt
     return _add_component(Chart(type="bar", data=chart_data, options=opts, width=width, height=height, **kwargs))
 
 
-def area_chart(data: Any, width: Optional[str] = None, height: str = "320px", options: Optional[Dict[str, Any]] = None, **kwargs) -> Chart:
-    """Render a responsive filled area chart."""
-    chart_data = _normalize_chart_data(data, "area")
+def area_chart(
+    data: Any,
+    width: Optional[str] = None,
+    height: str = "320px",
+    color: Optional[Union[str, List[str]]] = None,
+    options: Optional[Dict[str, Any]] = None,
+    **kwargs
+) -> Chart:
+    """Render a responsive filled area chart with optional custom color / palette."""
+    c = color if color is not None else kwargs.pop("color", None)
+    chart_data = _normalize_chart_data(data, "area", color=c)
     opts = {"responsive": True, "maintainAspectRatio": False}
     if len(chart_data.get("datasets", [])) == 1:
         opts["plugins"] = {"legend": {"display": False}}
@@ -1154,9 +1256,16 @@ def area_chart(data: Any, width: Optional[str] = None, height: str = "320px", op
     return _add_component(Chart(type="line", data=chart_data, options=opts, width=width, height=height, **kwargs))
 
 
-def scatter_chart(data: Any, width: Optional[str] = None, height: str = "320px", **kwargs) -> Chart:
-    """Render a responsive scatter chart."""
-    chart_data = _normalize_chart_data(data, "scatter")
+def scatter_chart(
+    data: Any,
+    width: Optional[str] = None,
+    height: str = "320px",
+    color: Optional[Union[str, List[str]]] = None,
+    **kwargs
+) -> Chart:
+    """Render a responsive scatter chart with optional custom color."""
+    c = color if color is not None else kwargs.pop("color", None)
+    chart_data = _normalize_chart_data(data, "scatter", color=c)
     return _add_component(Chart(type="scatter", data=chart_data, width=width, height=height, **kwargs))
 
 

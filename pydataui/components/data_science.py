@@ -128,7 +128,7 @@ class MetricCard(Component):
 
     def __init__(self, title: str, value: Any, format: str = '',
                  delta: str = '', delta_type: str = 'neutral',
-                 icon: str = '', description: str = '', **kwargs):
+                 icon: str = '', description: str = '', color: Optional[str] = None, **kwargs):
         super().__init__(**kwargs)
         self.title = title
         self.value = value
@@ -137,6 +137,7 @@ class MetricCard(Component):
         self.delta_type = delta_type
         self.icon = icon
         self.description = description
+        self.color = color
 
     def render(self, state_snapshot=None) -> str:
         DELTA_COLORS = {
@@ -160,8 +161,18 @@ class MetricCard(Component):
         desc_html = (f'<p class="text-xs text-muted-foreground mt-1">{escape_html(self.description)}</p>'
                      if self.description else '')
 
+        if self.color:
+            try:
+                from ..dx import _resolve_color
+                resolved_accent = _resolve_color(self.color)
+            except Exception:
+                resolved_accent = self.color
+            accent_style = f"background: {resolved_accent} !important;"
+        else:
+            accent_style = "background: var(--pdu-color-primary, #3b82f6);"
+
         return f'''<div id="{self.id}" class="rounded-xl border border-border bg-card text-card-foreground shadow-sm relative overflow-hidden" style="background-color: var(--pdu-color-card, hsl(var(--card))); color: var(--pdu-color-text, hsl(var(--card-foreground)));">
-  <div class="absolute top-0 left-0 right-0 h-[3px]" style="background: var(--pdu-color-primary, #3b82f6);"></div>
+  <div class="absolute top-0 left-0 right-0 h-[3px]" style="{accent_style}"></div>
   <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
     <h3 class="tracking-tight text-sm font-medium text-muted-foreground">{escape_html(self.title)}</h3>
     {icon_html}

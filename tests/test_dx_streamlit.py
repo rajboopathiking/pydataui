@@ -825,6 +825,45 @@ async def test_signup_screen_multipage_exact_user_scenario():
     assert "pdu-card" in body
 
 
+def test_component_level_color_theming():
+    pdu.reset()
+    pdu.set_page_config(title="Cluster Telemetry", theme="zinc", dark_mode=False)
+
+    # 1. Test metric with component-specific accent colors
+    m1 = pdu.metric("P99 Latency", "12.8 ms", delta="-2.4ms", color="rose")
+    m2 = pdu.metric("Active Pods", "32 / 32", delta="100% OK", color="emerald")
+    m3 = pdu.metric("VRAM Allocated", "1,180 GB", delta="92.1%", color="#6366f1")
+
+    h_m1 = m1.render({})
+    h_m2 = m2.render({})
+    h_m3 = m3.render({})
+
+    assert "#e11d48" in h_m1  # Rose resolved preset hex
+    assert "#059669" in h_m2 or "#10b981" in h_m2  # Emerald resolved hex
+    assert "#6366f1" in h_m3  # Custom hex
+
+    # 2. Test bar_chart with single color (e.g. `color="grey"`)
+    b_grey = pdu.bar_chart({"lat1": 140, "lat2": 110, "lat3": 125}, color="grey")
+    h_bgrey = b_grey.render({})
+    assert "#71717a" in h_bgrey  # Grey resolved hex
+
+    # 3. Test bar_chart with multiple-color palette list
+    b_pal = pdu.bar_chart({"A": 10, "B": 20, "C": 30}, color=["#ef4444", "#10b981", "#3b82f6"])
+    h_bpal = b_pal.render({})
+    assert "#ef4444" in h_bpal
+    assert "#10b981" in h_bpal
+    assert "#3b82f6" in h_bpal
+
+    # 4. Test line_chart and area_chart with custom color
+    l_chart = pdu.line_chart([10, 20, 30], color="#8b5cf6")
+    a_chart = pdu.area_chart([5, 15, 25], color="cyan")
+    h_l = l_chart.render({})
+    h_a = a_chart.render({})
+    assert "#8b5cf6" in h_l
+    assert "#0891b2" in h_a  # Cyan resolved preset hex
+
+
+
 
 
 

@@ -862,6 +862,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-the-5-concrete-limitations-of-pydataui-vs-nextjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The 5 Concrete Limitations of PyDataUI vs. Next.js
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-4-way-comprehensive-architecture-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 4-Way Comprehensive Architecture Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2592,6 +2614,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-the-5-concrete-limitations-of-pydataui-vs-nextjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The 5 Concrete Limitations of PyDataUI vs. Next.js
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-4-way-comprehensive-architecture-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 4-Way Comprehensive Architecture Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2834,6 +2878,111 @@ Behind the scenes, PyDataUI sets standard CSS variables:
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>or operational tools with low latency, commercial UI, and dual Web + TUI execution?
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  └──► Choose PyDataUI
 </span></code></pre></div>
+<hr />
+<h2 id="6-the-5-concrete-limitations-of-pydataui-vs-nextjs">6. The 5 Concrete Limitations of PyDataUI vs. Next.js</h2>
+<p>Being completely transparent about architectural boundaries:</p>
+<ol>
+<li><strong>Zero Offline-First Apps (Network &amp; Server Dependency)</strong>:</li>
+<li><em>Next.js</em>: Bundles client-side React code running entirely in the user's browser without a backend connection (e.g. offline PWAs, local SQLite via WASM).</li>
+<li><em>PyDataUI</em>: Is server-driven. User clicks trigger HTMX requests to the Python ASGI backend. If connection drops, interactive callbacks pause until reconnect.</li>
+<li><strong>Canvas-Heavy, 120 FPS Client-Side Tools (Figma, Canva, Video Editors)</strong>:</li>
+<li><em>Next.js</em>: Excels at client-only apps executing thousands of vector calculations at 120 FPS directly on the GPU canvas.</li>
+<li><em>PyDataUI</em>: Built for analytical applications, AI copilots, executive dashboards, and B2B SaaS. It is not designed to be an in-browser vector editor or game engine.</li>
+<li><strong>The Vast 3rd-Party NPM React Component Ecosystem (2M+ Packages)</strong>:</li>
+<li><em>Next.js</em>: Instant access to 2M+ NPM packages (e.g. <code>react-flow</code>, <code>tiptap</code>).</li>
+<li><em>PyDataUI</em>: Ships with 40+ curated Shadcn/Tailwind enterprise components. Niche React widgets require custom web component or iframe encapsulation.</li>
+<li><strong>Python GIL &amp; CPU-Bound Blocking Concurrency</strong>:</li>
+<li><em>Next.js / Node.js</em>: V8 handles high non-blocking concurrent I/O.</li>
+<li><em>PyDataUI</em>: Multi-minute CPU-bound ML computations must be explicitly offloaded to <code>BackgroundTasks</code>, <code>multiprocessing</code>, or Celery/Redis workers to prevent blocking the async event loop.</li>
+<li><strong>0ms Optimistic Client UI Updates</strong>:</li>
+<li><em>Next.js</em>: React can flip button states optimistically in 0ms before server response.</li>
+<li><em>PyDataUI</em>: Waits for the 10ms–25ms server roundtrip before surgical DOM morphing.</li>
+</ol>
+<hr />
+<h2 id="7-4-way-comprehensive-architecture-comparison">7. 4-Way Comprehensive Architecture Comparison</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature / Dimension</th>
+<th style="text-align: center;">Next.js (Node.js)</th>
+<th style="text-align: center;">FastAPI (Backend Only)</th>
+<th style="text-align: center;">Streamlit (Python)</th>
+<th style="text-align: center;">PyDataUI v1.4.4 (Full-Stack)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Languages Required</strong></td>
+<td style="text-align: center;">2 (TypeScript + Python)</td>
+<td style="text-align: center;">1 (Python backend only)</td>
+<td style="text-align: center;">1 (Python)</td>
+<td style="text-align: center;"><strong>1 (Pure Python Full-Stack)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>UI Presentation Layer</strong></td>
+<td style="text-align: center;">React / Virtual DOM</td>
+<td style="text-align: center;">❌ None (API only)</td>
+<td style="text-align: center;">Python procedural widgets</td>
+<td style="text-align: center;"><strong>Server-Side HTMX DOM Morphing</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Execution on Click</strong></td>
+<td style="text-align: center;">Client-side re-render</td>
+<td style="text-align: center;">N/A (REST endpoint)</td>
+<td style="text-align: center;">❌ <strong>Reruns script lines 1-100</strong></td>
+<td style="text-align: center;"><strong>Surgical fragment swap (0 rerun)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Model / Data Latency</strong></td>
+<td style="text-align: center;">15ms–60ms (JSON HTTP hop)</td>
+<td style="text-align: center;">0.02ms (In-Memory)</td>
+<td style="text-align: center;">0.02ms (In-Memory)</td>
+<td style="text-align: center;"><strong>0.02ms (Direct process memory)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Build &amp; Dependencies</strong></td>
+<td style="text-align: center;">450 MB+ <code>node_modules</code></td>
+<td style="text-align: center;">Clean Python</td>
+<td style="text-align: center;">Clean Python</td>
+<td style="text-align: center;"><strong>Clean Python (0 MB npm)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Built-in REST API &amp; Docs</strong></td>
+<td style="text-align: center;">Manual route handlers</td>
+<td style="text-align: center;">OpenAPI 3.1 Swagger</td>
+<td style="text-align: center;">❌ None</td>
+<td style="text-align: center;"><strong>Auto OpenAPI 3.1 Swagger UI</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Responsive Flex &amp; Grid</strong></td>
+<td style="text-align: center;">Tailwind CSS</td>
+<td style="text-align: center;">❌ None</td>
+<td style="text-align: center;">❌ Primitive columns only</td>
+<td style="text-align: center;"><strong>Native <code>pdu.flex</code> &amp; <code>pdu.grid</code></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Coordinate Positioning</strong></td>
+<td style="text-align: center;">Tailwind CSS</td>
+<td style="text-align: center;">❌ None</td>
+<td style="text-align: center;">❌ None</td>
+<td style="text-align: center;"><strong>Native props (<code>top</code>, <code>right</code>, etc.)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Public Sharing Demos</strong></td>
+<td style="text-align: center;">Manual Vercel / Cloud</td>
+<td style="text-align: center;">Manual cloud hosting</td>
+<td style="text-align: center;">Cloud login required</td>
+<td style="text-align: center;"><strong><code>share=True</code> (3.5s instant tunnel)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Memory per User Session</strong></td>
+<td style="text-align: center;">Low (Client-side)</td>
+<td style="text-align: center;">Stateless</td>
+<td style="text-align: center;">❌ High (Duplicate DataFrames)</td>
+<td style="text-align: center;"><strong>Ultra-Low (Shared memory)</strong></td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -409,6 +409,30 @@ if __name__ == "__main__":
 
 ---
 
+### ⚖️ Streamlit-Style (Track 1) vs. Next.js-Style (Track 2): Which is Production-Grade?
+
+A frequent question when adopting PyDataUI is whether **Track 1 (Streamlit-style procedural `pdu.*`)** is only for prototypes while **Track 2 (Next.js-style declarative `App()`, `Container()`)** is for production.
+
+**In PyDataUI, BOTH Track 1 and Track 2 are 100% Production-Grade.**
+
+Here is the architectural reason why:
+* **Track 1 is NOT Streamlit under the hood:** It borrows Streamlit's ergonomic procedural syntax (`pdu.text_input`, `pdu.button`, `pdu.metric`), but compiles to the exact same ASGI FastAPI backend and surgical HTMX DOM-diffing engine as Track 2. It **never** re-runs your script from line 1. It shares process memory, runs in Uvicorn multi-worker clusters, and exposes full Swagger docs at `/docs`.
+* **Track 2 provides Next.js / React mental models:** It uses explicit component trees (`Container`, `Row`, `Card`) and declarative state bindings (`s = state()`, `@s.action`), which is ideal for large multi-engineer teams building modular component libraries.
+
+#### When to Choose Which Track:
+
+| Dimension | Track 1: Procedural (`pdu.*`) | Track 2: Declarative (`App()`, `Container()`) |
+| :--- | :--- | :--- |
+| **Syntax Style** | Linear procedural Python (Streamlit-like) | Component tree & State objects (Next.js / React-like) |
+| **Production Ready?** |  **Yes (100% FastAPI + HTMX)** |  **Yes (100% FastAPI + HTMX)** |
+| **Full-Script Re-runs?**| ❌ **Never** (Surgical DOM fragment morphing)| ❌ **Never** (Targeted `@s.action` dispatch) |
+| **FastAPI Access & Docs**| `pdu.get_fastapi()`, auto `/docs` | `app.fastapi`, auto `/docs` |
+| **Best Team Fit** | Solo developers, ML/AI engineers, fast MVPs | Multi-developer teams, large modular codebases |
+| **Component Layout** | Scoped context managers (`with pdu.card():`) | Hierarchical nesting (`Container(Row(Card(...)))`) |
+| **Server Concurrency** | 1,000+ concurrent ASGI sessions | 1,000+ concurrent ASGI sessions |
+
+---
+
 ## 🔌 Full FastAPI & Starlette Production Integration
 
 Because PyDataUI runs on native FastAPI and Starlette, **100% of FastAPI and Starlette features work out of the box**:
@@ -535,22 +559,63 @@ Built for LLM workbenches, multi-turn chat agents, and real-time inference telem
 ```python
 import pydataui as pdu
 
-# Activate Violet AI theme in 1 line
+# 1. Page Configuration & Theme
 pdu.set_page_config(title="DeepAgent Copilot", theme="violet", dark_mode=True)
 
+# 2. Left Control Sidebar
 with pdu.sidebar():
-    model = pdu.selectbox("Inference Model", ["DeepSeek-R1-Distill-70B", "Llama-3.3"])
-    temp = pdu.slider("Temperature", 0.0, 1.0, 0.70)
+    pdu.header("DeepAgent Copilot")
+    pdu.caption("Powered by PyDataUI v1.5.0")
+    pdu.divider()
 
+    model = pdu.selectbox("INFERENCE MODEL", ["DeepSeek-R1-Distill-70B", "Llama-3.3-70B"])
+    temp = pdu.slider("TEMPERATURE (0.70)", 0.0, 1.0, 0.70)
+
+    pdu.caption("CONTEXT (32k / 64k)")
+    pdu.progress(50)
+
+    pdu.text_area(
+        "SYSTEM PROMPT",
+        value="You are an autonomous SRE copilot monitoring 16 H100 distributed worker nodes...",
+        height=80
+    )
+    pdu.button("+ New Agent Session", type="primary")
+
+# 3. Main Chat Top Bar with Live Telemetry Badges
+with pdu.flex(justify="between", align="center", class_name="mb-4 pb-3 border-b border-border/40"):
+    with pdu.column(gap=0):
+        pdu.subheader("Cluster Diagnostic Agent")
+        pdu.caption("Session: #agent-session-8492 • Zero-latency in-memory bridge")
+    with pdu.row(gap=2):
+        pdu.badge("⚡ 84.6 t/s", color="violet", variant="subtle")
+        pdu.badge("✓ Latency: 12ms", color="emerald", variant="subtle")
+
+# 4. Multi-Turn Diagnostic Chat Stream
 with pdu.chat_message("user"):
     pdu.write("Analyze the P99 latency spike on cluster node-04 and remediate.")
 
 with pdu.chat_message("assistant"):
-    with pdu.expander("💡 Thought Process: 1,420 tokens analyzed (0.4s)"):
-        pdu.write("Inspected Prometheus traces. Found cache compaction lock.")
-    pdu.write("Remediation executed: Pods re-routed. Current P99: 12.1ms")
+    with pdu.expander("💡 Thought Process: 1,420 tokens analyzed (0.4s)", expanded=True):
+        pdu.write(
+            "I inspected real-time Prometheus traces on **node-04**. A cache compaction deadlock "
+            "triggered temporary VRAM starvation. Executing zero-downtime rebalance:"
+        )
 
-pdu.chat_input("Ask Copilot or type /command...")
+    pdu.code("""import pydataui as pdu
+
+await cluster.isolate_node("node-04", drain_timeout=15)
+# In-memory execution: 0ms network hop, cluster stabilized!""", language="python")
+
+    pdu.success(
+        "**Remediation Executed Successfully**  \n"
+        "P99 Latency dropped from 284ms to 12.1ms • All 32 pods re-routed to node-05 and node-06"
+    )
+
+# 5. Bottom Interactive Prompt Input
+pdu.chat_input("Ask Copilot to run cluster commands, query metrics, or debug models...")
+
+if __name__ == "__main__":
+    pdu.run(port=8000, share=True)  # Instantly generates public HTTPS link!
 ```
 
 #### 💎 2. FinTech, Billing & Revenue Analytics (`theme="emerald"`)
@@ -560,21 +625,62 @@ Engineered for SaaS metrics, ARR/MRR acceleration, transaction ledgers, and exec
 
 ```python
 import pydataui as pdu
+import pandas as pd
 
-# Activate Emerald FinTech theme
-pdu.set_page_config(title="ApexPay Financial", theme="emerald", layout="wide")
+# 1. Page Configuration & Theme
+pdu.set_page_config(title="ApexPay Financial", theme="emerald", layout="wide", dark_mode=True)
 
-pdu.title("ApexPay Financial & Revenue Operations")
-pdu.success("Stripe sync active • 99.99% payment gateway uptime")
+# 2. Commercial Top Navigation Bar
+pdu.navbar(
+    title="ApexPay",
+    logo="💳",
+    links=[
+        {"label": "Overview", "href": "/"},
+        {"label": "Invoices", "href": "/invoices"},
+        {"label": "Customers", "href": "/customers"},
+        {"label": "Webhooks", "href": "/webhooks"},
+        {"label": "REST API", "href": "/docs"}
+    ],
+    search=False
+)
 
+# 3. 4 Executive KPI Cards
 col1, col2, col3, col4 = pdu.columns([1, 1, 1, 1])
-with col1: pdu.metric("Annual Run Rate (ARR)", "$1,840,500", delta="+24.8%", icon="💳")
-with col2: pdu.metric("Monthly Recurring (MRR)", "$154,200", delta="+18.2%", icon="📈")
-with col3: pdu.metric("Paying Accounts", "2,840", delta="+142 mo", icon="👥")
-with col4: pdu.metric("Net Retention Rate", "118.4%", delta="TOP 5%", icon="⚡")
+with col1: pdu.metric("Annual Run Rate (ARR)", "$1,840,500", delta="+24.8%")
+with col2: pdu.metric("Monthly Recurring (MRR)", "$154,200", delta="+18.2%")
+with col3: pdu.metric("Paying Accounts", "2,840", delta="+142 mo")
+with col4: pdu.metric("Net Retention Rate", "118.4%", delta="TOP 5%")
 
-pdu.subheader("ARR Growth Trajectory ($k)")
-pdu.area_chart([92, 104, 118, 132, 145, 154])
+# 4. Main Chart & Billing Channels Split Row
+chart_col, split_col = pdu.columns([2, 1])
+
+with chart_col:
+    with pdu.card(title="MRR Acceleration & Cohort Revenue", subtitle="Real-time telemetry morphing via HTMX • In-memory compute"):
+        pdu.area_chart([92, 104, 118, 132, 145, 154])  # Peaks at $154,200 (Nov)
+
+with split_col:
+    with pdu.card(title="Billing Channels", subtitle="Enterprise vs Self-Serve"):
+        pdu.caption("Enterprise Wire / Invoicing (68%) — **$104.8k**")
+        pdu.progress(68)
+        pdu.caption("Credit Card Auto-Billing (24%) — **$37.0k**")
+        pdu.progress(24)
+        pdu.caption("Automated ACH Direct (8%) — **$12.4k**")
+        pdu.progress(8)
+
+# 5. Recent Commercial Invoices Ledger
+pdu.subheader("Recent Commercial Invoices")
+df_invoices = pd.DataFrame({
+    "CUSTOMER": ["Stripe Global AI Labs", "HuggingFace Enterprise", "Anthropic Partner Node"],
+    "INVOICE ID": ["inv_2026_9841", "inv_2026_9842", "inv_2026_9843"],
+    "PLAN TIER": ["Enterprise Dedicated (128x H100)", "Scale AI Tier (64x A100)", "Claude 3.5 Sonnet Integration"],
+    "BILLING CYCLE": ["Annual (Prepaid)", "Monthly Usage", "Net-15 Invoice"],
+    "AMOUNT": ["$48,000.00", "$22,450.00", "$18,900.00"],
+    "STATUS": ["PAID ✓", "PAID ✓", "PENDING"]
+})
+pdu.table(df_invoices)
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
 ```
 
 #### ⚡ 3. DevOps, Cluster Telemetry & Dark Mode Analytics (`theme="zinc"`, `dark_mode=True`)
@@ -584,17 +690,69 @@ High-density, low-eye-strain telemetry for Kubernetes clusters, GPU farms, and r
 
 ```python
 import pydataui as pdu
+import pandas as pd
 
-# Activate Zinc Dark Mode theme
-pdu.set_page_config(title="Cluster Telemetry", theme="zinc", dark_mode=True)
+# 1. Page Configuration & Theme
+pdu.set_page_config(title="Cluster Telemetry", theme="zinc", layout="wide", dark_mode=True)
 
-col1, col2, col3, col4 = pdu.columns([1, 1, 1, 1])
-with col1: pdu.metric("P99 Latency", "12.8 ms", delta="-2.4ms")
+# 2. Left Telemetry & Node Navigation Sidebar
+with pdu.sidebar():
+    pdu.header("Cluster Telemetry")
+    pdu.caption("Kubernetes H100 Mesh")
+    pdu.divider()
+
+    cluster = pdu.selectbox("ACTIVE CLUSTER", ["us-east-h100-prod", "eu-central-a100-prod"])
+    pdu.radio("Navigation", [
+        "📊 Overview & Health",
+        "🖥️ GPU Nodes (16)",
+        "📦 Active Pods (128)",
+        "⚡ Token Throughput",
+        "🚨 Alert Channels (0)",
+        "🛠️ OpenAPI REST /docs"
+    ])
+
+    with pdu.card(title="Cluster Resources"):
+        pdu.caption("CPU Allocation (48%)")
+        pdu.progress(48)
+        pdu.caption("VRAM Usage (88%)")
+        pdu.progress(88)
+        pdu.caption("PCIe Bandwidth (94%)")
+        pdu.progress(94)
+        pdu.caption("🟢 All 16 nodes operating at 100%")
+
+# 3. Main Dashboard Header & Quick Action Buttons
+with pdu.flex(justify="between", align="center", class_name="mb-4 pb-3 border-b border-border/40"):
+    with pdu.column(gap=0):
+        pdu.subheader("Real-Time Cluster Telemetry")
+        pdu.caption("Streaming in-process telemetry • 0ms API overhead")
+    with pdu.row(gap=2):
+        pdu.button("📥 Export Parquet")
+        pdu.button("⚡ Drain & Rebalance", type="destructive")
+
+# 4. 4 High-Density KPI Metrics
+col1, col2, col3, col4 = pdu.columns(4)
+with col1: pdu.metric("P99 Inference Latency", "12.8 ms", delta="-2.4ms")
 with col2: pdu.metric("VRAM Allocated", "1,180 GB", delta="92.1%")
-with col3: pdu.metric("Active Pods", "32 / 32", delta="100% OK")
+with col3: pdu.metric("Active Model Pods", "32 / 32", delta="100% OK")
 with col4: pdu.metric("Token Throughput", "14.2k t/s", delta="+18%")
 
-pdu.line_chart([140, 110, 125, 75, 60, 45])
+# 5. Dual-Series Telemetry Line Chart
+with pdu.card(title="Token Throughput (t/s) vs Inference Latency (ms)"):
+    pdu.line_chart([140, 110, 125, 75, 60, 45])
+
+# 6. Worker Nodes Real-Time Status Table
+pdu.subheader("Active Worker Nodes")
+df_nodes = pd.DataFrame({
+    "WORKER NODE": ["us-east-h100-01", "us-east-h100-02", "us-east-h100-03"],
+    "HARDWARE": ["8x H100 SXM5 80GB", "8x H100 SXM5 80GB", "8x H100 SXM5 80GB"],
+    "TEMP": ["64°C", "66°C", "71°C"],
+    "GPU LOAD": ["94% VRAM", "92% VRAM", "98% VRAM"],
+    "STATUS": ["ONLINE", "ONLINE", "ONLINE"]
+})
+pdu.table(df_nodes)
+
+if __name__ == "__main__":
+    pdu.run(port=8000)
 ```
 
 ### **Zero Theme Limitations: Custom Palettes & Brand Colors**

@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.4.0'
+__version__ = '1.4.1'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -203,6 +203,19 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'page': ('.dx', 'page'),
     'page_link': ('.dx', 'page_link'),
     'switch_page': ('.dx', 'switch_page'),
+    'rerun': ('.dx', 'rerun'),
+    'form': ('.dx', 'form'),
+    'form_submit_button': ('.dx', 'form_submit_button'),
+    'dialog': ('.dx', 'dialog'),
+    'status': ('.dx', 'status'),
+    'empty': ('.dx', 'empty'),
+    'cache_data': ('.dx', 'cache_data'),
+    'cache_resource': ('.dx', 'cache_resource'),
+    'navigation': ('.dx', 'navigation'),
+    'login': ('.dx', 'login'),
+    'logout': ('.dx', 'logout'),
+    'is_authenticated': ('.dx', 'is_authenticated'),
+    'create_user': ('.dx', 'create_user'),
     'run': ('.dx', 'run'),
     'reset': ('.dx', 'reset'),
     'get_app': ('.dx', 'get_app'),
@@ -321,7 +334,9 @@ if TYPE_CHECKING:
         number_input, slider, selectbox, multiselect, checkbox, radio, switch,
         toggle, file_uploader, chat_message, chat_input, chat, card, row,
         column, divider, code_editor, success, info, warning, error, toast,
-        spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, run,
+        spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
+        form, form_submit_button, dialog, status, empty, cache_data, cache_resource, navigation,
+        login, logout, is_authenticated, create_user, run,
         get_app, get_default_app
     )
     from . import html, templates, components

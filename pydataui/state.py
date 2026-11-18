@@ -14,6 +14,9 @@ _current_session: contextvars.ContextVar[Optional[Any]] = contextvars.ContextVar
 _current_root_path: contextvars.ContextVar[str] = contextvars.ContextVar(
     'current_root_path', default=''
 )
+_is_event_handling: contextvars.ContextVar[bool] = contextvars.ContextVar(
+    'is_event_handling', default=False
+)
 
 class StateVarRef:
     """A reference to a state variable, used in components for reactive rendering.

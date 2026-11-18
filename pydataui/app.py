@@ -830,7 +830,7 @@ self.addEventListener('fetch', (event) => {
             return PlainTextResponse('Action not found', status_code=404)
         if state_name == 'LoginState' and not self.auth:
             return PlainTextResponse('Authentication not configured', status_code=401)
-        public = state_name == 'LoginState' and method_name == 'login'
+        public = (state_name == 'LoginState' and method_name == 'login') or (state_name == 'ActionState' and not getattr(cls, '__roles__', ()))
         with session.lock:
             denied = self._guard_request(request, session, scope='write', roles=cls.__roles__,
                                          public=public, force_csrf=True)
@@ -847,6 +847,8 @@ self.addEventListener('fetch', (event) => {
         root_path = scope.get('root_path', '') or getattr(self.config, 'root_path', '') or ''
         token_root = _current_root_path.set(root_path)
         token_sess = _current_session.set(session)
+        from .state import _is_event_handling
+        token_evt = _is_event_handling.set(True)
         try:
             if state_name not in session.state_instances:
                 if state_name in StateMeta._registry:
@@ -890,6 +892,13 @@ self.addEventListener('fetch', (event) => {
             except ValueError:
                 return JSONResponse({'error': 'Invalid state input'}, status_code=422)
 
+            # Synchronize client form/input values into procedural session_state
+            if 'dx_session_state' not in session.data:
+                session.data['dx_session_state'] = {}
+            for k, v in kwargs.items():
+                if not k.startswith('_') and k != 'csrf_token':
+                    session.data['dx_session_state'][k] = v
+
             handler_error = None
             res = None
             if hasattr(state_instance, method_name):
@@ -929,9 +938,14 @@ self.addEventListener('fetch', (event) => {
                 return res
 
             dx_state = session.data.get('dx_session_state', {})
-            if isinstance(dx_state, dict) and '_redirect_url' in dx_state:
-                target_url = dx_state.pop('_redirect_url')
-                return HTMLResponse('', headers={'HX-Redirect': target_url, 'Location': target_url})
+            if isinstance(dx_state, dict):
+                if '_redirect_url' in dx_state:
+                    target_url = dx_state.pop('_redirect_url')
+                    return HTMLResponse('', headers={'HX-Redirect': target_url, 'Location': target_url})
+                if dx_state.pop('_rerun_requested', False):
+                    scope = dx_state.pop('_rerun_scope', 'app')
+                    if scope == 'app':
+                        return HTMLResponse('', headers={'HX-Refresh': 'true'})
             
             if state_name == 'LoginState' and self.auth:
                 if method_name == 'login' and state_instance.token:
@@ -1044,6 +1058,7 @@ self.addEventListener('fetch', (event) => {
                     resp_headers["X-PDU-Dirty"] = ",".join(sorted(dirty))
             return HTMLResponse(content=content, status_code=200, headers=resp_headers)
         finally:
+            _is_event_handling.reset(token_evt)
             _current_session.reset(token_sess)
             _current_root_path.reset(token_root)
     def _register_api_endpoints(self):

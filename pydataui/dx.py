@@ -43,10 +43,15 @@ Usage::
 from __future__ import annotations
 
 import base64
+from contextvars import ContextVar
+import copy
+import functools
+import hashlib
 import html as _html_mod
 import inspect
 import io
 import json as _json_mod
+import time
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from .app import App
@@ -70,7 +75,7 @@ from .components.forms import (
 from .components.layout import Box, Card, Col, Container, Divider, HStack, Row, VStack
 from .components.typography import Code, Heading, Paragraph, Text
 from .responses import HTMLResponse, RedirectResponse, Response
-from .state import EventHandler, ProceduralState, State, reactive_state, state
+from .state import EventHandler, ProceduralState, State, _is_event_handling, reactive_state, state
 from .utils import escape_html, generate_id
 
 
@@ -88,6 +93,8 @@ _default_app: Optional[App] = None
 _default_page_components: List[Component] = []
 _sidebar_components: List[Component] = []
 _container_stack: List[List[Component]] = []
+_active_page_sidebar: ContextVar[Optional[List[Component]]] = ContextVar("_active_page_sidebar", default=None)
+_active_form_stack: List[Any] = []
 
 _page_config: Dict[str, Any] = {
     "title": "PyDataUI App",
@@ -288,7 +295,7 @@ def register_callback(func: Callable) -> str:
             if has_var_keyword:
                 return cb(*args, **kwargs)
             call_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
-            if not call_kwargs and kwargs:
+            if not call_kwargs and kwargs and len(sig.parameters) == 1:
                 return cb(next(iter(kwargs.values())))
             return cb(**call_kwargs)
 
@@ -352,8 +359,20 @@ class SessionStateProxy:
     def __setitem__(self, key: str, value: Any) -> None:
         self._get_dict()[key] = value
 
+    def __delitem__(self, key: str) -> None:
+        del self._get_dict()[key]
+
     def __contains__(self, key: str) -> bool:
         return key in self._get_dict()
+
+    def __len__(self) -> int:
+        return len(self._get_dict())
+
+    def __iter__(self):
+        return iter(self._get_dict())
+
+    def __repr__(self) -> str:
+        return repr(self._get_dict())
 
     def get(self, key: str, default: Any = None) -> Any:
         return self._get_dict().get(key, default)
@@ -361,8 +380,57 @@ class SessionStateProxy:
     def setdefault(self, key: str, default: Any = None) -> Any:
         return self._get_dict().setdefault(key, default)
 
+    def pop(self, key: str, default: Any = ...) -> Any:
+        if default is ...:
+            return self._get_dict().pop(key)
+        return self._get_dict().pop(key, default)
+
+    def clear(self) -> None:
+        self._get_dict().clear()
+
+    def update(self, *args, **kwargs) -> None:
+        self._get_dict().update(*args, **kwargs)
+
+    def keys(self):
+        return self._get_dict().keys()
+
+    def values(self):
+        return self._get_dict().values()
+
+    def items(self):
+        return self._get_dict().items()
+
 
 session_state = SessionStateProxy()
+
+
+def _add_flash_banner(comp: Component) -> None:
+    """Store feedback notification banner triggered during event handling."""
+    try:
+        from .state import _current_session
+        sess = _current_session.get()
+        if sess:
+            if "dx_session_state" not in sess.data:
+                sess.data["dx_session_state"] = {}
+            flashes = sess.data["dx_session_state"].setdefault("_flash_banners", [])
+            flashes.append(comp)
+            return
+    except Exception:
+        pass
+    flashes = session_state.setdefault("_flash_banners", [])
+    flashes.append(comp)
+
+
+def _pop_flash_banners() -> List[Component]:
+    """Retrieve and clear pending feedback notification banners."""
+    try:
+        from .state import _current_session
+        sess = _current_session.get()
+        if sess and "dx_session_state" in sess.data:
+            return sess.data["dx_session_state"].pop("_flash_banners", [])
+    except Exception:
+        pass
+    return session_state.pop("_flash_banners", [])
 
 
 # ============================================================================
@@ -388,7 +456,10 @@ class _ProceduralPageLayout(Component):
         theme_html = f"<style>{self.theme_css}</style>" if self.theme_css and not self.theme_css.startswith("<style>") else self.theme_css
         content_wrap = "w-full" if self.is_wide else "max-w-6xl mx-auto"
         
-        main_html = "".join(c.render(state_snapshot) for c in self.main_components)
+        flash_components = _pop_flash_banners()
+        flash_html = "".join(c.render(state_snapshot) for c in flash_components)
+
+        main_html = flash_html + "".join(c.render(state_snapshot) for c in self.main_components)
 
         if self.sidebar_components:
             sidebar_html = "".join(c.render(state_snapshot) for c in self.sidebar_components)
@@ -449,6 +520,8 @@ def _add_component(comp: Component) -> Component:
     get_app()  # Ensure app exists
     if _container_stack:
         _container_stack[-1].append(comp)
+    elif _is_event_handling.get():
+        _add_flash_banner(comp)
     else:
         _default_page_components.append(comp)
     return comp
@@ -533,7 +606,9 @@ def sidebar() -> _ContainerContext:
             pdu.title("Controls")
             pdu.slider("Temp", 0.0, 1.0)
     """
-    return _ContainerContext(_sidebar_components)
+    active_sb = _active_page_sidebar.get()
+    target = active_sb if active_sb is not None else _sidebar_components
+    return _ContainerContext(target)
 
 
 class ColumnContext:
@@ -1087,11 +1162,137 @@ def json(data: Any, max_height: str = "400px", **kwargs) -> Component:
 
 
 # ============================================================================
-# Input Widgets
+# Input Widgets & Forms
 # ============================================================================
+
+class _FormWrapper(Component):
+    """
+    Renders an HTML5 form container wired to HTMX for batched form submission.
+    """
+    def __init__(self, key: str, children: List[Component], clear_on_submit: bool = False, border: bool = True, class_name: str = ""):
+        super().__init__()
+        self.key = key
+        self.children_list = children
+        self.clear_on_submit = clear_on_submit
+        self.border = border
+        self.class_name = class_name
+
+    def render(self, state_snapshot=None) -> str:
+        rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        border_cls = "border border-border/80 rounded-2xl bg-card/60 p-6 space-y-4 shadow-sm" if self.border else "space-y-4"
+        reset_attr = " hx-on::after-request='this.reset()'" if self.clear_on_submit else ""
+        return (
+            f"<form id='form_{escape_html(self.key)}' class='pdu-form {border_cls} {self.class_name}'{reset_attr}>"
+            f"<input type='hidden' name='_form_key' value='{escape_html(self.key)}' />"
+            f"{rendered_children}"
+            f"</form>"
+        )
+
+
+class _FormContext:
+    def __init__(self, key: str, clear_on_submit: bool = False, border: bool = True):
+        self.key = key
+        self.clear_on_submit = clear_on_submit
+        self.border = border
+        self.children: List[Component] = []
+
+    def __enter__(self):
+        _container_stack.append(self.children)
+        _active_form_stack.append(self)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if _active_form_stack and _active_form_stack[-1] is self:
+            _active_form_stack.pop()
+        if _container_stack and _container_stack[-1] is self.children:
+            _container_stack.pop()
+
+
+def form(key: str, clear_on_submit: bool = False, border: bool = True, **kwargs) -> _FormContext:
+    """
+    Context manager to create a batched form container (Streamlit `st.form` equivalent).
+    Widgets inside the form batch their inputs until `form_submit_button` is clicked.
+
+    Example::
+
+        with pdu.form("login_form"):
+            pdu.text_input("Username", key="username")
+            pdu.text_input("Password", type="password", key="password")
+            pdu.form_submit_button("Sign In", on_click=handle_login)
+    """
+    ctx = _FormContext(key, clear_on_submit=clear_on_submit, border=border)
+    _add_component(_FormWrapper(key, ctx.children, clear_on_submit=clear_on_submit, border=border, **kwargs))
+    return ctx
+
+
+class FormSubmitButton(Component):
+    """Submit button for a form supporting both callback and boolean evaluation."""
+    def __init__(self, label: str, action_id: str, was_submitted: bool = False, type: str = "primary", **kwargs):
+        super().__init__()
+        self.label = label
+        self.action_id = action_id
+        self.was_submitted = was_submitted
+        self.btn_type = type
+
+    def __bool__(self) -> bool:
+        return self.was_submitted
+
+    def render(self, state_snapshot=None) -> str:
+        action_attr = (
+            f'hx-post="/_pdu/event/ActionState/{self.action_id}" '
+            f'hx-target="#pdu-root" '
+            f'hx-swap="innerHTML" '
+            f'hx-include="closest form" '
+        )
+        btn_type_cls = (
+            "bg-primary text-primary-foreground hover:opacity-90 shadow-sm"
+            if self.btn_type == "primary"
+            else "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        )
+        return (
+            f"<button type='submit' {action_attr} "
+            f"class='inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer {btn_type_cls}'>"
+            f"{escape_html(self.label)}"
+            f"</button>"
+        )
+
+
+def form_submit_button(
+    label: str = "Submit",
+    on_click: Optional[Union[Callable, EventHandler]] = None,
+    type: str = "primary",
+    **kwargs
+) -> FormSubmitButton:
+    """
+    Submit button for a `pdu.form()` container (Streamlit `st.form_submit_button` equivalent).
+    Supports both procedural condition checking (`if pdu.form_submit_button("Submit"): ...`)
+    and explicit event callbacks (`pdu.form_submit_button("Submit", on_click=my_func)`).
+    """
+    form_key = _active_form_stack[-1].key if _active_form_stack else "default"
+    submit_flag_key = f"_form_{form_key}_submitted"
+    was_submitted = session_state.pop(submit_flag_key, False)
+
+    def _default_submit_handler(**kws):
+        session_state[submit_flag_key] = True
+        if on_click:
+            sig = inspect.signature(on_click)
+            if len(sig.parameters) == 0:
+                return on_click()
+            call_k = {k: v for k, v in kws.items() if k in sig.parameters}
+            if not call_k and len(sig.parameters) == 1:
+                return on_click(kws)
+            return on_click(**call_k)
+
+    action_id = register_callback(_default_submit_handler)
+    btn_comp = FormSubmitButton(label=label, action_id=action_id, was_submitted=was_submitted, type=type, **kwargs)
+    _add_component(btn_comp)
+    return btn_comp
+
 
 def button(label: str, on_click: Optional[Union[Callable, EventHandler]] = None, **kwargs) -> Button:
     """Add an interactive button with a Python event callback."""
+    if _active_form_stack and "hx_include" not in kwargs and "include" not in kwargs:
+        kwargs["include"] = "closest form"
     return _add_component(Button(label, on_click=on_click, **kwargs))
 
 
@@ -1105,7 +1306,13 @@ def text_input(
     **kwargs
 ) -> Input:
     """Add a single-line text input field."""
-    return _add_component(Input(label=label, value=value, placeholder=placeholder, name=key, type=type, on_change=on_change, **kwargs))
+    actual_value = value
+    if key:
+        if key in session_state:
+            actual_value = session_state[key]
+        elif value:
+            session_state[key] = value
+    return _add_component(Input(label=label, value=actual_value, placeholder=placeholder, name=key, type=type, on_change=on_change, **kwargs))
 
 
 input = text_input
@@ -1120,7 +1327,13 @@ def text_area(
     **kwargs
 ) -> TextArea:
     """Add a multiline text area."""
-    return _add_component(TextArea(label=label, value=value, placeholder=placeholder, name=key, on_change=on_change, **kwargs))
+    actual_value = value
+    if key:
+        if key in session_state:
+            actual_value = session_state[key]
+        elif value:
+            session_state[key] = value
+    return _add_component(TextArea(label=label, value=actual_value, placeholder=placeholder, name=key, on_change=on_change, **kwargs))
 
 
 textarea = text_area
@@ -1137,12 +1350,21 @@ def number_input(
     **kwargs
 ) -> Input:
     """Add a numerical input widget."""
+    actual_value = value
+    if key:
+        if key in session_state:
+            try:
+                actual_value = float(session_state[key]) if ("." in str(session_state[key])) else int(session_state[key])
+            except (ValueError, TypeError):
+                actual_value = session_state[key]
+        elif value != 0:
+            session_state[key] = value
     if step is None:
-        if any(isinstance(x, float) for x in (min_value, max_value, value)):
+        if any(isinstance(x, float) for x in (min_value, max_value, actual_value)):
             step = 0.01
         else:
             step = 1
-    return _add_component(Input(label=label, value=value, type="number", min=min_value, max=max_value, step=step, name=key, on_change=on_change, **kwargs))
+    return _add_component(Input(label=label, value=actual_value, type="number", min=min_value, max=max_value, step=step, name=key, on_change=on_change, **kwargs))
 
 
 def slider(
@@ -1157,24 +1379,30 @@ def slider(
 ) -> Slider:
     """
     Add an interactive slider widget supporting both integer and floating-point ranges.
-
-    If min_value, max_value, or value is a float and step is omitted, step automatically
-    defaults to 0.01 (or 0.1 for ranges <= 10.0), matching Streamlit behavior.
     """
-    is_float = any(isinstance(x, float) for x in (min_value, max_value, value, step) if x is not None)
+    actual_value = value
+    if key:
+        if key in session_state:
+            try:
+                actual_value = float(session_state[key]) if ("." in str(session_state[key])) else int(session_state[key])
+            except (ValueError, TypeError):
+                actual_value = session_state[key]
+        elif value is not None:
+            session_state[key] = value
+    is_float = any(isinstance(x, float) for x in (min_value, max_value, actual_value, step) if x is not None)
     if min_value is None:
         min_value = 0.0 if is_float else 0
     if max_value is None:
         max_value = 100.0 if is_float else 100
-    if value is None:
-        value = min_value
+    if actual_value is None:
+        actual_value = min_value
     if step is None:
-        if is_float or any(isinstance(x, float) for x in (min_value, max_value, value)):
+        if is_float or any(isinstance(x, float) for x in (min_value, max_value, actual_value)):
             diff = abs(max_value - min_value)
             step = 0.01 if diff <= 1.0 else (0.1 if diff <= 10.0 else 0.01)
         else:
             step = 1
-    return _add_component(Slider(label=label, min=min_value, max=max_value, value=value, step=step, name=key, on_change=on_change, **kwargs))
+    return _add_component(Slider(label=label, min=min_value, max=max_value, value=actual_value, step=step, name=key, on_change=on_change, **kwargs))
 
 
 def selectbox(
@@ -1187,7 +1415,12 @@ def selectbox(
 ) -> Select:
     """Add a dropdown selectbox widget."""
     opts = options or []
-    val = opts[index] if (opts and 0 <= index < len(opts)) else None
+    if key and key in session_state:
+        val = session_state[key]
+    else:
+        val = opts[index] if (opts and 0 <= index < len(opts)) else None
+        if key and val is not None:
+            session_state[key] = val
     return _add_component(Select(label=label, options=opts, value=val, name=key, on_change=on_change, **kwargs))
 
 
@@ -1200,7 +1433,14 @@ def multiselect(
     **kwargs
 ) -> Select:
     """Add a multi-select dropdown widget."""
-    return _add_component(Select(label=label, options=options or [], value=default, multiple=True, name=key, on_change=on_change, **kwargs))
+    opts = options or []
+    if key and key in session_state:
+        val = session_state[key]
+    else:
+        val = default
+        if key and val is not None:
+            session_state[key] = val
+    return _add_component(Select(label=label, options=opts, value=val, multiple=True, name=key, on_change=on_change, **kwargs))
 
 
 def checkbox(
@@ -1211,7 +1451,13 @@ def checkbox(
     **kwargs
 ) -> Checkbox:
     """Add a checkbox toggle widget."""
-    return _add_component(Checkbox(label=label, checked=value, name=key, on_change=on_change, **kwargs))
+    actual_value = value
+    if key:
+        if key in session_state:
+            actual_value = bool(session_state[key])
+        elif value:
+            session_state[key] = value
+    return _add_component(Checkbox(label=label, checked=actual_value, name=key, on_change=on_change, **kwargs))
 
 
 def radio(
@@ -1225,6 +1471,10 @@ def radio(
     """Add a radio button selection group."""
     opts = options or []
     selected = opts[index] if (opts and 0 <= index < len(opts)) else None
+    if key and key in session_state:
+        selected = session_state[key]
+    elif key and selected is not None:
+        session_state[key] = selected
     radios = [Radio(label=str(opt), value=opt, checked=(opt == selected), name=key, on_change=on_change) for opt in opts]
     return _add_component(VStack(Text(label, class_name="font-medium text-sm"), *radios, class_name="space-y-2 my-2"))
 
@@ -1237,7 +1487,13 @@ def switch(
     **kwargs
 ) -> Switch:
     """Add a toggle switch widget."""
-    return _add_component(Switch(label=label, checked=value, name=key, on_change=on_change, **kwargs))
+    actual_value = value
+    if key:
+        if key in session_state:
+            actual_value = bool(session_state[key])
+        elif value:
+            session_state[key] = value
+    return _add_component(Switch(label=label, checked=actual_value, name=key, on_change=on_change, **kwargs))
 
 
 toggle = switch
@@ -1501,6 +1757,505 @@ def switch_page(path: str) -> Response:
     return HTMLResponse("", status_code=200, headers={"HX-Redirect": path, "Location": path})
 
 
+def rerun(scope: str = "app") -> Response:
+    """
+    Rerun the Python script / re-render the view immediately (Streamlit `st.rerun` equivalent).
+    """
+    session_state["_rerun_requested"] = True
+    session_state["_rerun_scope"] = scope
+    return HTMLResponse("", status_code=200, headers={"HX-Refresh": "true"} if scope == "app" else {})
+
+
+class _DialogWrapper(Component):
+    """Accessible modal dialog overlay."""
+    def __init__(self, title_text: str, children: List[Component], dialog_id: str):
+        super().__init__()
+        self.title_text = title_text
+        self.children_list = children
+        self.dialog_id = dialog_id
+
+    def render(self, state_snapshot=None) -> str:
+        rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        return (
+            f"<div id='{self.dialog_id}' class='pdu-dialog-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200'>"
+            f"<div class='relative w-full max-w-lg rounded-2xl bg-card border border-border p-6 shadow-2xl space-y-4 text-foreground' onclick='event.stopPropagation()'>"
+            f"<div class='flex items-center justify-between border-b border-border/60 pb-3'>"
+            f"<h3 class='text-lg font-semibold tracking-tight'>{escape_html(self.title_text)}</h3>"
+            f"<button type='button' onclick=\"document.getElementById('{self.dialog_id}').remove()\" "
+            f"class='p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted text-lg leading-none cursor-pointer'>&times;</button>"
+            f"</div>"
+            f"<div class='space-y-4'>{rendered_children}</div>"
+            f"</div>"
+            f"</div>"
+        )
+
+
+class DialogManager:
+    """Manages modal dialogs supporting both decorator and context manager syntax."""
+    def __init__(self, title: str):
+        self.title = title
+        self.children: List[Component] = []
+        self.dialog_id = generate_id("dialog")
+
+    def __enter__(self):
+        _container_stack.append(self.children)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if _container_stack and _container_stack[-1] is self.children:
+            _container_stack.pop()
+        _add_component(_DialogWrapper(self.title, self.children, self.dialog_id))
+
+    def __call__(self, func: Callable):
+        def wrapper(*args, **kwargs):
+            with DialogManager(self.title):
+                return func(*args, **kwargs)
+        return wrapper
+
+
+def dialog(title: str) -> DialogManager:
+    """
+    Decorator or context manager to create a modal dialog overlay (Streamlit `st.dialog` equivalent).
+
+    Example as context manager::
+
+        with pdu.dialog("Confirm Action"):
+            pdu.write("Are you sure?")
+            pdu.button("Yes", on_click=do_it)
+
+    Example as decorator::
+
+        @pdu.dialog("User Details")
+        def show_user(user):
+            pdu.write(user)
+    """
+    return DialogManager(title)
+
+
+class _StatusWrapper(Component):
+    """Live status container showing progress of multi-step operations."""
+    def __init__(self, label: str, state: str, expanded: bool, children: List[Component], status_id: str):
+        super().__init__()
+        self.label = label
+        self.state = state
+        self.expanded = expanded
+        self.children_list = children
+        self.status_id = status_id
+
+    def render(self, state_snapshot=None) -> str:
+        icons = {
+            "running": "<span class='inline-block animate-spin text-primary'>⏳</span>",
+            "complete": "<span class='text-emerald-500 font-bold'>✓</span>",
+            "error": "<span class='text-rose-500 font-bold'>✕</span>",
+        }
+        icon_html = icons.get(self.state, icons["running"])
+        border_col = "border-primary/40" if self.state == "running" else ("border-emerald-500/40" if self.state == "complete" else "border-rose-500/40")
+        rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        open_attr = " open" if self.expanded else ""
+        return (
+            f"<details id='{self.status_id}' class='pdu-status border {border_col} rounded-2xl bg-card/60 shadow-sm transition-all my-3'{open_attr}>"
+            f"<summary class='px-4 py-3 font-medium cursor-pointer text-sm select-none hover:bg-muted/40 transition-colors rounded-2xl flex items-center justify-between text-foreground'>"
+            f"<span class='flex items-center gap-2.5'>{icon_html}<span class='font-semibold'>{escape_html(self.label)}</span></span>"
+            f"<span class='text-muted-foreground text-xs'>▼</span>"
+            f"</summary>"
+            f"<div class='px-4 py-3 border-t border-border/50 text-sm space-y-3'>{rendered_children}</div>"
+            f"</details>"
+        )
+
+
+class StatusContext:
+    def __init__(self, label: str, state: str = "running", expanded: bool = True):
+        self.label = label
+        self.state = state
+        self.expanded = expanded
+        self.children: List[Component] = []
+        self.status_id = generate_id("status")
+        self._wrapper: Optional[_StatusWrapper] = None
+
+    def __enter__(self):
+        _container_stack.append(self.children)
+        self._wrapper = _StatusWrapper(self.label, self.state, self.expanded, self.children, self.status_id)
+        _add_component(self._wrapper)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if _container_stack and _container_stack[-1] is self.children:
+            _container_stack.pop()
+        if exc_type is not None:
+            self.state = "error"
+            if self._wrapper:
+                self._wrapper.state = "error"
+
+    def update(self, label: Optional[str] = None, state: Optional[str] = None, expanded: Optional[bool] = None):
+        """Update the status label, visual state ('running', 'complete', 'error'), and expanded flag."""
+        if label is not None:
+            self.label = label
+            if self._wrapper:
+                self._wrapper.label = label
+        if state is not None:
+            self.state = state
+            if self._wrapper:
+                self._wrapper.state = state
+        if expanded is not None:
+            self.expanded = expanded
+            if self._wrapper:
+                self._wrapper.expanded = expanded
+
+
+def status(label: str, expanded: bool = True, state: str = "running") -> StatusContext:
+    """
+    Context manager to display multi-step progress with expandable logs (Streamlit `st.status` equivalent).
+
+    Example::
+
+        with pdu.status("Executing agent workflow...", expanded=True) as s:
+            pdu.write("Querying telemetry nodes...")
+            pdu.write("Synthesizing analysis...")
+            s.update(label="Analysis complete!", state="complete", expanded=False)
+    """
+    return StatusContext(label, state=state, expanded=expanded)
+
+
+class _EmptyContainer(Component):
+    def __init__(self, element_id: str):
+        super().__init__()
+        self.element_id = element_id
+        self.children_list: List[Component] = []
+
+    def render(self, state_snapshot=None) -> str:
+        if not self.children_list:
+            return f"<div id='{self.element_id}' class='pdu-empty'></div>"
+        rendered = "".join(c.render(state_snapshot) for c in self.children_list)
+        return f"<div id='{self.element_id}' class='pdu-empty'>{rendered}</div>"
+
+
+class EmptyPlaceholder:
+    def __init__(self):
+        self.element_id = generate_id("empty")
+        self._container = _EmptyContainer(self.element_id)
+        _add_component(self._container)
+
+    def write(self, *args, **kwargs):
+        self._container.children_list.clear()
+        with _ContainerContext(self._container.children_list):
+            write(*args, **kwargs)
+
+    def text(self, content: str, **kwargs):
+        self._container.children_list.clear()
+        with _ContainerContext(self._container.children_list):
+            text(content, **kwargs)
+
+    def empty(self):
+        self._container.children_list.clear()
+
+    def container(self) -> _ContainerContext:
+        self._container.children_list.clear()
+        return _ContainerContext(self._container.children_list)
+
+
+def empty() -> EmptyPlaceholder:
+    """
+    Create a single-element placeholder container that can be cleared or overwritten (Streamlit `st.empty` equivalent).
+    """
+    return EmptyPlaceholder()
+
+
+# ============================================================================
+# Caching Engines (`@pdu.cache_data`, `@pdu.cache_resource`)
+# ============================================================================
+
+_DATA_CACHE: Dict[str, Tuple[float, Any]] = {}
+_RESOURCE_CACHE: Dict[str, Tuple[float, Any]] = {}
+
+def _cache_func_prefix(func: Callable) -> str:
+    return f"{getattr(func, '__module__', '')}:{getattr(func, '__qualname__', getattr(func, '__name__', 'fn'))}:"
+
+def _cache_key(func: Callable, args: tuple, kwargs: dict) -> str:
+    prefix = _cache_func_prefix(func)
+    try:
+        raw_args = f"{str(args)}:{str(sorted(kwargs.items()))}"
+    except Exception:
+        raw_args = str(id(args))
+    args_hash = hashlib.sha256(raw_args.encode("utf-8", errors="ignore")).hexdigest()
+    return f"{prefix}{args_hash}"
+
+class _CacheDataDecorator:
+    def __init__(self, ttl: Optional[float] = None, max_entries: Optional[int] = None):
+        self.ttl = ttl
+        self.max_entries = max_entries
+
+    def __call__(self, func: Callable):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            key = _cache_key(func, args, kwargs)
+            now = time.time()
+            if key in _DATA_CACHE:
+                cached_time, val = _DATA_CACHE[key]
+                if self.ttl is None or (now - cached_time) < self.ttl:
+                    return copy.deepcopy(val)
+            res = func(*args, **kwargs)
+            if self.max_entries and len(_DATA_CACHE) >= self.max_entries:
+                oldest_key = min(_DATA_CACHE.keys(), key=lambda k: _DATA_CACHE[k][0])
+                _DATA_CACHE.pop(oldest_key, None)
+            _DATA_CACHE[key] = (now, copy.deepcopy(res))
+            return res
+
+        def clear():
+            prefix = _cache_func_prefix(func)
+            to_del = [k for k in _DATA_CACHE if k.startswith(prefix)]
+            for k in to_del:
+                _DATA_CACHE.pop(k, None)
+
+        wrapper.clear = clear
+        return wrapper
+
+    @staticmethod
+    def clear():
+        _DATA_CACHE.clear()
+
+
+class _CacheResourceDecorator:
+    def __init__(self, ttl: Optional[float] = None, max_entries: Optional[int] = None):
+        self.ttl = ttl
+        self.max_entries = max_entries
+
+    def __call__(self, func: Callable):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            key = _cache_key(func, args, kwargs)
+            now = time.time()
+            if key in _RESOURCE_CACHE:
+                cached_time, val = _RESOURCE_CACHE[key]
+                if self.ttl is None or (now - cached_time) < self.ttl:
+                    return val
+            res = func(*args, **kwargs)
+            if self.max_entries and len(_RESOURCE_CACHE) >= self.max_entries:
+                oldest_key = min(_RESOURCE_CACHE.keys(), key=lambda k: _RESOURCE_CACHE[k][0])
+                _RESOURCE_CACHE.pop(oldest_key, None)
+            _RESOURCE_CACHE[key] = (now, res)
+            return res
+
+        def clear():
+            prefix = _cache_func_prefix(func)
+            to_del = [k for k in _RESOURCE_CACHE if k.startswith(prefix)]
+            for k in to_del:
+                _RESOURCE_CACHE.pop(k, None)
+
+        wrapper.clear = clear
+        return wrapper
+
+    @staticmethod
+    def clear():
+        _RESOURCE_CACHE.clear()
+
+
+def cache_data(func: Optional[Callable] = None, *, ttl: Optional[float] = None, max_entries: Optional[int] = None):
+    """
+    Decorator to cache function results (DataFrames, queries, computations) (Streamlit `st.cache_data` equivalent).
+    Supports time-to-live (`ttl` in seconds) and `max_entries` eviction.
+    """
+    if func is not None and callable(func):
+        return _CacheDataDecorator(ttl=ttl, max_entries=max_entries)(func)
+    return _CacheDataDecorator(ttl=ttl, max_entries=max_entries)
+
+cache_data.clear = _CacheDataDecorator.clear
+
+
+def cache_resource(func: Optional[Callable] = None, *, ttl: Optional[float] = None, max_entries: Optional[int] = None):
+    """
+    Decorator to cache shared global singleton resources (ML models, DB pools, API clients) (Streamlit `st.cache_resource` equivalent).
+    """
+    if func is not None and callable(func):
+        return _CacheResourceDecorator(ttl=ttl, max_entries=max_entries)(func)
+    return _CacheResourceDecorator(ttl=ttl, max_entries=max_entries)
+
+cache_resource.clear = _CacheResourceDecorator.clear
+
+
+# ============================================================================
+# Navigation & Menus
+# ============================================================================
+
+def navigation(pages: Optional[Union[List[str], Dict[str, List[str]]]] = None) -> Component:
+    """
+    Render a modern, styled sidebar navigation menu (Streamlit `st.navigation` equivalent).
+    Automatically highlights the currently active page and filters by user permissions.
+
+    Example::
+
+        with pdu.sidebar():
+            pdu.navigation()  # Auto-discovers all @pdu.page routes
+    """
+    app = get_app()
+    all_pages = app._page_router.get_all_pages()
+
+    curr_path = "/"
+    try:
+        from .state import _current_session
+        sess = _current_session.get()
+        if sess and sess.current_page:
+            curr_path = sess.current_page
+    except Exception:
+        pass
+
+    links_html = []
+
+    if isinstance(pages, dict):
+        for section, section_pages in pages.items():
+            links_html.append(f"<div class='px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{escape_html(section)}</div>")
+            for p_path in section_pages:
+                page_obj = app._page_router.get_page(p_path)
+                display_label = (page_obj.title if page_obj and page_obj.title else None) or p_path.replace('/', '').replace('_', ' ').replace('-', ' ').title() or "Home"
+                active = (p_path == curr_path)
+                active_cls = "bg-primary text-primary-foreground font-semibold shadow-sm" if active else "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                links_html.append(
+                    f"<a href='{escape_html(p_path)}' class='flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors w-full {active_cls}'>"
+                    f"<span>{escape_html(display_label)}</span></a>"
+                )
+    else:
+        route_list = pages if isinstance(pages, list) else [p.path for p in all_pages]
+        for p_path in route_list:
+            page_obj = app._page_router.get_page(p_path)
+            display_label = (page_obj.title if page_obj and page_obj.title else None) or p_path.replace('/', '').replace('_', ' ').replace('-', ' ').title() or "Home"
+            active = (p_path == curr_path)
+            active_cls = "bg-primary text-primary-foreground font-semibold shadow-sm" if active else "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            links_html.append(
+                f"<a href='{escape_html(p_path)}' class='flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors w-full {active_cls}'>"
+                f"<span>{escape_html(display_label)}</span></a>"
+            )
+
+    return _add_component(RawHtml(f"<nav class='space-y-1 w-full my-2'>{''.join(links_html)}</nav>"))
+
+
+# ============================================================================
+# Production Authentication Helpers
+# ============================================================================
+
+def login(username: str, password: str) -> bool:
+    """
+    Authenticate a user in procedural Streamlit mode.
+    Integrates directly with PyDataUI's AuthManager, sets session JWT tokens, and updates session_state.
+    Returns True if authentication succeeded, False otherwise.
+    """
+    app = get_app()
+    from .auth.manager import AuthManager
+    if app.auth is None:
+        auth_mgr = AuthManager.get_default() or AuthManager()
+        app.auth = auth_mgr
+        AuthManager.set_default(auth_mgr)
+    auth_mgr = app.auth
+
+    token = auth_mgr.authenticate(username, password)
+    if token:
+        user = auth_mgr.verify_token(token)
+        try:
+            from .state import _current_session
+            sess = _current_session.get()
+            if sess:
+                sess.data["auth_token"] = token
+                sess.data["auth_user_id"] = user.id if user else username
+                if "dx_session_state" not in sess.data:
+                    sess.data["dx_session_state"] = {}
+                sess.data["dx_session_state"]["authenticated"] = True
+                sess.data["dx_session_state"]["user"] = user.username if user else username
+                sess.data["dx_session_state"]["user_roles"] = list(user.roles) if user else []
+        except Exception:
+            pass
+        session_state["authenticated"] = True
+        session_state["user"] = user.username if user else username
+        session_state["user_roles"] = list(user.roles) if user else []
+        session_state.pop("auth_error", None)
+        return True
+    else:
+        session_state["authenticated"] = False
+        session_state["auth_error"] = "Invalid username or password"
+        return False
+
+
+def logout() -> None:
+    """
+    Sign out the current user and revoke their session.
+    """
+    try:
+        from .state import _current_session
+        sess = _current_session.get()
+        if sess:
+            auth_token = sess.data.get("auth_token")
+            if auth_token:
+                app = get_app()
+                if app.auth:
+                    app.auth.revoke_token(auth_token)
+            sess.data["auth_token"] = ""
+            sess.data["auth_user_id"] = None
+            if "dx_session_state" in sess.data:
+                sess.data["dx_session_state"]["authenticated"] = False
+                sess.data["dx_session_state"]["user"] = None
+                sess.data["dx_session_state"]["user_roles"] = []
+    except Exception:
+        pass
+    session_state["authenticated"] = False
+    session_state["user"] = None
+    session_state["user_roles"] = []
+
+
+def is_authenticated() -> bool:
+    """Return True if a user is currently authenticated in this session."""
+    try:
+        from .state import _current_session
+        sess = _current_session.get()
+        if sess and sess.data.get("auth_token"):
+            return True
+    except Exception:
+        pass
+    return bool(session_state.get("authenticated", False))
+
+
+def current_user() -> Optional[Any]:
+    """Return the currently authenticated User instance or username."""
+    try:
+        from .state import _current_session
+        sess = _current_session.get()
+        if sess and sess.data.get("auth_token"):
+            app = get_app()
+            if app.auth:
+                user = app.auth.verify_token(sess.data["auth_token"])
+                if user:
+                    return user
+    except Exception:
+        pass
+    return session_state.get("user")
+
+
+def create_user(username: str, password: str, email: str = "", roles: Optional[List[str]] = None) -> Any:
+    """
+    Register a new user account with specified roles.
+    """
+    app = get_app()
+    from .auth.manager import AuthManager
+    if app.auth is None:
+        auth_mgr = AuthManager()
+        app.auth = auth_mgr
+        AuthManager.set_default(auth_mgr)
+    return app.auth.add_user(username, password, email=email, roles=roles or ["user"])
+
+
+def require_auth(roles: Optional[List[str]] = None, redirect_to: str = "/login") -> bool:
+    """
+    Procedural authentication guard. Call at the start of a page function.
+    If not authenticated or role check fails, immediately switches page to `redirect_to`.
+    """
+    if not is_authenticated():
+        switch_page(redirect_to)
+        return False
+    if roles:
+        user = current_user()
+        user_roles = getattr(user, "roles", []) if hasattr(user, "roles") else session_state.get("user_roles", [])
+        if not any(r in user_roles for r in roles):
+            switch_page(redirect_to)
+            return False
+    return True
+
+
 def page(path: str = "/", title: Optional[str] = None, layout: Optional[Callable] = None, *, public: bool = False, roles=(), **kwargs):
     """
     Decorator to register a procedural or component page route on the default application.
@@ -1523,8 +2278,13 @@ def page(path: str = "/", title: Optional[str] = None, layout: Optional[Callable
     def decorator(func: Callable):
         def procedural_page_wrapper(*args, **kws):
             page_components: List[Component] = []
-            with _ContainerContext(page_components):
-                res = func(*args, **kws)
+            page_sidebar: List[Component] = []
+            token_sb = _active_page_sidebar.set(page_sidebar)
+            try:
+                with _ContainerContext(page_components):
+                    res = func(*args, **kws)
+            finally:
+                _active_page_sidebar.reset(token_sb)
 
             if res is not None:
                 return res
@@ -1533,8 +2293,10 @@ def page(path: str = "/", title: Optional[str] = None, layout: Optional[Callable
             theme_val = _page_config.get("theme", "zinc")
             theme_css = _resolve_theme_css(theme_val)
 
+            effective_sidebar = page_sidebar if page_sidebar else _sidebar_components
+
             return _ProceduralPageLayout(
-                sidebar_components=_sidebar_components,
+                sidebar_components=effective_sidebar,
                 main_components=page_components,
                 is_wide=is_wide,
                 theme_css=theme_css,
@@ -1560,12 +2322,26 @@ def run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, share: 
 
 def reset() -> None:
     """Reset the global procedural DX state (useful for test isolation or script re-execution)."""
-    global _default_app, _default_page_components, _sidebar_components, _container_stack, _callbacks
+    global _default_app, _default_page_components, _sidebar_components, _container_stack, _callbacks, _active_form_stack
     _default_app = None
     _default_page_components.clear()
     _sidebar_components.clear()
     _container_stack.clear()
     _callbacks.clear()
+    _active_form_stack.clear()
+    for name in list(dir(ActionState)):
+        if name.startswith("act_"):
+            try:
+                delattr(ActionState, name)
+            except AttributeError:
+                pass
+    cache_data.clear()
+    cache_resource.clear()
+    try:
+        from .auth.manager import AuthManager
+        AuthManager.set_default(None)
+    except Exception:
+        pass
     _page_config.update({
         "title": "PyDataUI App",
         "layout": "centered",

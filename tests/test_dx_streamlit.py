@@ -506,5 +506,195 @@ async def test_procedural_multipage_and_switch_page():
     assert "Active Clusters" in b3
 
 
+@pytest.mark.anyio
+async def test_form_batching_and_session_state_sync():
+    pdu.reset()
+    
+    @pdu.page("/test_form", public=True)
+    def form_page():
+        pdu.title("Form Test")
+        with pdu.form("user_form"):
+            pdu.text_input("Username", key="form_user")
+            pdu.text_input("Email", key="form_email")
+            btn = pdu.form_submit_button("Submit")
+            if btn:
+                pdu.success(f"Saved: {pdu.session_state.get('form_user')}")
+
+    app = pdu.get_app()
+    s1, b1, h1 = await app._engine.dispatch_request('GET', '/test_form', '', {}, '')
+    assert s1 == 200
+    assert "form_user_form" in b1
+    assert "form_user" in b1
+    assert "form_email" in b1
+
+    # Find the submit action
+    import re
+    action_match = re.search(r'hx-post=\"/_pdu/event/ActionState/([^\"]+)\"', b1)
+    action_name = action_match.group(1) if action_match else ''
+    cookie = h1.get('set-cookie', '')
+    csrf = re.search(r'name=\"csrf_token\" value=\"([^\"]+)\"', b1) or re.search(r'meta name=\"pdu-csrf-token\" content=\"([^\"]+)\"', b1)
+    csrf_val = csrf.group(1) if csrf else ''
+
+    # Post form data
+    body = "form_user=Alice&form_email=alice%40example.com"
+    headers = {
+        'cookie': cookie,
+        'x-csrf-token': csrf_val,
+        'hx-request': 'true',
+        'content-type': 'application/x-www-form-urlencoded'
+    }
+    s2, b2, _ = await app._engine.dispatch_request('POST', f'/_pdu/event/ActionState/{action_name}', '', headers, body)
+    assert s2 == 200
+    assert "Saved: Alice" in b2
+    assert 'value="Alice"' in b2
+    assert 'value="alice@example.com"' in b2
+
+
+@pytest.mark.anyio
+async def test_production_auth_login_and_role_protection():
+    pdu.reset()
+
+    # 1. Create user with roles
+    pdu.create_user("ops_admin", "SuperSecret123!", email="ops@example.com", roles=["admin"])
+
+    @pdu.page("/login", public=True)
+    def login_page():
+        pdu.title("Sign In")
+        with pdu.form("login_form"):
+            pdu.text_input("Username", key="u_name")
+            pdu.text_input("Password", type="password", key="p_word")
+            def do_login():
+                u = pdu.session_state.get("u_name")
+                p = pdu.session_state.get("p_word")
+                if pdu.login(u, p):
+                    pdu.switch_page("/telemetry")
+                else:
+                    pdu.error("Invalid credentials")
+            pdu.form_submit_button("Sign In", on_click=do_login)
+
+    @pdu.page("/telemetry", roles=["admin"])
+    def telemetry_page():
+        pdu.title("Protected Telemetry Dashboard")
+        pdu.metric("Health", "100%")
+
+    app = pdu.get_app()
+
+    # 2. Accessing /telemetry unauthenticated should be denied (401 or redirect)
+    s_denied, _, _ = await app._engine.dispatch_request('GET', '/telemetry', '', {}, '')
+    assert s_denied in (401, 303, 307)
+
+    # 3. GET /login
+    s_login, b_login, h_login = await app._engine.dispatch_request('GET', '/login', '', {}, '')
+    assert s_login == 200
+    cookie = h_login.get('set-cookie', '')
+    import re
+    csrf = re.search(r'name=\"csrf_token\" value=\"([^\"]+)\"', b_login) or re.search(r'meta name=\"pdu-csrf-token\" content=\"([^\"]+)\"', b_login)
+    csrf_val = csrf.group(1) if csrf else ''
+
+    # Find action directly from rendered button
+    action_match = re.search(r'hx-post=\"/_pdu/event/ActionState/([^\"]+)\"', b_login)
+    action_name = action_match.group(1) if action_match else ''
+
+    # 4. Attempt login with bad password
+    bad_body = "u_name=ops_admin&p_word=WrongPassword"
+    headers = {
+        'cookie': cookie,
+        'x-csrf-token': csrf_val,
+        'hx-request': 'true',
+        'content-type': 'application/x-www-form-urlencoded'
+    }
+    s_bad, b_bad, _ = await app._engine.dispatch_request('POST', f'/_pdu/event/ActionState/{action_name}', '', headers, bad_body)
+    assert s_bad == 200
+    assert "Invalid credentials" in b_bad
+
+    # 5. Login with correct credentials
+    good_body = "u_name=ops_admin&p_word=SuperSecret123!"
+    s_good, _, h_good = await app._engine.dispatch_request('POST', f'/_pdu/event/ActionState/{action_name}', '', headers, good_body)
+    assert s_good == 200
+    assert h_good.get('hx-redirect') == '/telemetry' or h_good.get('HX-Redirect') == '/telemetry'
+    if h_good.get('set-cookie'):
+        cookie = h_good.get('set-cookie')
+
+    # 6. Access /telemetry with session cookie -> 200 Allowed!
+    s_tel, b_tel, _ = await app._engine.dispatch_request('GET', '/telemetry', '', {'cookie': cookie}, '')
+    assert s_tel == 200
+    assert "Protected Telemetry Dashboard" in b_tel
+
+
+def test_cache_data_and_cache_resource():
+    pdu.reset()
+    counter = 0
+
+    @pdu.cache_data(ttl=60)
+    def fetch_data(x: int):
+        nonlocal counter
+        counter += 1
+        return {"result": x * 2, "counter": counter}
+
+    # Call twice with same arg -> returns cached result, counter stays 1
+    r1 = fetch_data(10)
+    r2 = fetch_data(10)
+    assert r1["counter"] == 1
+    assert r2["counter"] == 1
+    assert counter == 1
+
+    # Call with different arg -> computes fresh
+    r3 = fetch_data(20)
+    assert r3["counter"] == 2
+    assert counter == 2
+
+    # Clear cache -> recomputes
+    fetch_data.clear()
+    r4 = fetch_data(10)
+    assert r4["counter"] == 3
+    assert counter == 3
+
+    # Test cache_resource
+    res_counter = 0
+
+    @pdu.cache_resource
+    def get_model():
+        nonlocal res_counter
+        res_counter += 1
+        return f"ModelInstance_{res_counter}"
+
+    m1 = get_model()
+    m2 = get_model()
+    assert m1 == "ModelInstance_1"
+    assert m2 == "ModelInstance_1"
+    assert res_counter == 1
+
+
+def test_dialog_status_empty_navigation_rerun():
+    pdu.reset()
+
+    # 1. Dialog (both context manager and decorator)
+    with pdu.dialog("User Delete Confirmation"):
+        pdu.write("Are you sure you want to delete this?")
+    
+    @pdu.dialog("Edit Profile Dialog")
+    def edit_dialog(name):
+        pdu.write(f"Editing {name}")
+    edit_dialog("Charlie")
+
+    # 2. Status container
+    with pdu.status("Loading cluster telemetry...", expanded=True) as s:
+        pdu.write("Connecting to nodes...")
+        s.update(label="Cluster ready", state="complete", expanded=False)
+
+    # 3. Empty container
+    ph = pdu.empty()
+    ph.text("First text")
+    ph.text("Replaced text")
+
+    # 4. Navigation
+    pdu.navigation({"Dashboards": ["/"], "Settings": ["/config"]})
+
+    # 5. Rerun
+    res = pdu.rerun(scope="app")
+    assert res.headers.get("HX-Refresh") == "true"
+
+
+
 
 

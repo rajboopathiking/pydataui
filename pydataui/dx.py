@@ -1284,7 +1284,11 @@ class _ChatMessageWrapper(Component):
     def render(self, state_snapshot=None) -> str:
         is_user = self.name == "user"
         align = "justify-end" if is_user else "justify-start"
-        bubble_bg = "bg-primary text-primary-foreground" if is_user else "bg-muted text-foreground border border-border/50"
+        bubble_bg = (
+            "bg-primary text-primary-foreground rounded-tr-sm"
+            if is_user
+            else "bg-card text-card-foreground border border-border/80 rounded-tl-sm shadow-sm"
+        )
         default_avatar = "👤" if is_user else "🤖"
         avatar_content = self.avatar or default_avatar
         rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
@@ -1293,13 +1297,13 @@ class _ChatMessageWrapper(Component):
             bot_avatar = ""
             user_avatar = f"<div class='w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm shrink-0 select-none shadow-sm'>{avatar_content}</div>"
         else:
-            bot_avatar = f"<div class='w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm shrink-0 select-none shadow-sm'>{avatar_content}</div>"
+            bot_avatar = f"<div class='w-8 h-8 rounded-full bg-muted border border-border/60 flex items-center justify-center text-sm shrink-0 select-none shadow-sm'>{avatar_content}</div>"
             user_avatar = ""
 
         return (
             f"<div class='flex gap-3 my-3 {align} items-start'>"
             f"{bot_avatar}"
-            f"<div class='max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm space-y-2 {bubble_bg}'>"
+            f"<div class='max-w-[82%] rounded-2xl px-4 py-3 text-sm shadow-sm space-y-2 {bubble_bg}'>"
             f"{rendered_children}"
             f"</div>"
             f"{user_avatar}"
@@ -1343,45 +1347,77 @@ def chat_input(
     placeholder: str = "Type a message...",
     key: Optional[str] = None,
     on_submit: Optional[Callable] = None,
+    position: str = "bottom",
+    target: Optional[str] = None,
+    swap: Optional[str] = None,
     **kwargs
 ) -> Component:
     """
     Add a sleek, modern chat input prompt bar.
 
-    When submitted, user input is passed to `on_submit(prompt)` and automatically
-    stored in `pdu.session_state[key]` and `pdu.session_state["last_chat_input"]`.
-    The input bar auto-resets on submit.
+    Parameters:
+    - placeholder: Text shown when input is empty.
+    - key: Session state key to bind and store the user's input.
+    - on_submit: Python callback invoked when user submits the prompt (receives prompt string).
+    - position: 'bottom' (default, docked at the bottom of viewport like ChatGPT/Streamlit)
+                or 'inline' (renders directly in the container layout flow).
+    - target: HTMX target ID to swap into (defaults to '#pdu-root').
+    - swap: HTMX swap strategy (defaults to 'innerHTML').
     """
     input_id = key or generate_id("chat_input")
-    action_attr = ""
-    if on_submit or key:
-        def _chat_callback(msg=None, **kws):
-            text_val = msg or (next(iter(kws.values())) if kws else "")
-            if key:
-                session_state[key] = text_val
-            session_state["last_chat_input"] = text_val
-            if on_submit:
-                sig = inspect.signature(on_submit)
-                if len(sig.parameters) == 0:
-                    return on_submit()
-                call_k = {k: v for k, v in kws.items() if k in sig.parameters}
-                if not call_k and len(sig.parameters) == 1:
-                    return on_submit(text_val)
-                return on_submit(**call_k)
+    target_id = target or "#pdu-root"
+    swap_strategy = swap or "innerHTML"
 
-        action_name = register_callback(_chat_callback)
-        action_attr = f'hx-post="/_pdu/event/ActionState/{action_name}" hx-trigger="submit" hx-include="this" hx-on::after-request="this.reset()"'
+    def _chat_callback(msg=None, **kws):
+        text_val = msg or (next(iter(kws.values())) if kws else "")
+        if key:
+            session_state[key] = text_val
+        session_state["last_chat_input"] = text_val
+        if on_submit:
+            sig = inspect.signature(on_submit)
+            if len(sig.parameters) == 0:
+                return on_submit()
+            call_k = {k: v for k, v in kws.items() if k in sig.parameters}
+            if not call_k and len(sig.parameters) == 1:
+                return on_submit(text_val)
+            return on_submit(**call_k)
+
+    action_name = register_callback(_chat_callback)
+    action_attr = (
+        f'hx-post="/_pdu/event/ActionState/{action_name}" '
+        f'hx-trigger="submit" '
+        f'hx-target="{target_id}" '
+        f'hx-swap="{swap_strategy}" '
+        f'hx-include="this" '
+        f'hx-on::after-request="this.reset()" '
+        f'hx-on::after-settle="window.scrollTo({{top: document.body.scrollHeight, behavior: \'smooth\'}});"'
+    )
 
     form_id = f"form_{input_id}"
-    return _add_component(RawHtml(
-        f"<form id='{form_id}' class='flex gap-2 items-center w-full my-4 p-2 bg-card border border-border rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-primary/40 transition-all' {action_attr}>"
+    form_html = (
+        f"<form id='{form_id}' class='flex gap-2 items-center w-full p-2 bg-card/95 border border-border/80 rounded-2xl shadow-lg focus-within:ring-2 focus-within:ring-primary/40 focus-within:border-primary transition-all' {action_attr}>"
         f"<input type='text' name='{input_id}' placeholder='{escape_html(placeholder)}' autocomplete='off' "
-        f"class='flex-1 bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none' />"
-        f"<button type='submit' class='p-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center'>"
+        f"class='flex-1 bg-transparent px-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none' />"
+        f"<button type='submit' class='p-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center shrink-0'>"
         f"<svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m22 2-7 20-4-9-9-4Z'/><path d='M22 2 11 13'/></svg>"
         f"</button>"
         f"</form>"
-    ))
+    )
+
+    if position == "bottom":
+        html_code = (
+            f"<div class='fixed bottom-0 left-0 right-0 z-40 p-4 bg-gradient-to-t from-background via-background/95 to-transparent backdrop-blur-sm pointer-events-none'>"
+            f"  <div class='max-w-3xl mx-auto pointer-events-auto'>"
+            f"    {form_html}"
+            f"    <div class='text-center text-[10px] text-muted-foreground/60 mt-1.5'>Press Enter to send • PyDataUI Copilot</div>"
+            f"  </div>"
+            f"</div>"
+            f"<div class='h-24 w-full shrink-0'></div>"
+        )
+    else:
+        html_code = f"<div class='w-full my-4'>{form_html}</div>"
+
+    return _add_component(RawHtml(html_code))
 
 
 def chat(messages: Optional[List[Dict[str, str]]] = None, on_send: Optional[Callable] = None, **kwargs) -> Chat:

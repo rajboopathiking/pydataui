@@ -425,3 +425,27 @@ def test_bar_chart_categorical_dict_normalization():
     assert "type: 'bar'" in html
 
 
+def test_chat_bottom_positioning_and_lambda_callbacks():
+    pdu.reset()
+    pdu.set_page_config(title="DeepAgent Copilot", theme="violet", dark_mode=True)
+
+    # 1. Test docked bottom positioning (default)
+    bottom_input = pdu.chat_input("Ask Copilot...", position="bottom")
+    b_html = bottom_input.render({})
+    assert "fixed bottom-0" in b_html
+    assert "backdrop-blur" in b_html
+    assert "hx-target=\"#pdu-root\"" in b_html
+    assert "max-w-3xl" in b_html
+
+    # 2. Test inline positioning
+    inline_input = pdu.chat_input("Ask Copilot inline...", position="inline")
+    i_html = inline_input.render({})
+    assert "fixed bottom-0" not in i_html
+
+    # 3. Test lambda callback in Button (verifies base.py fallback to ActionState)
+    lambda_btn = pdu.button("Clear", on_click=lambda: pdu.session_state.clear())
+    btn_html = lambda_btn.render({})
+    assert "hx-post=\"/_pdu/event/ActionState/" in btn_html
+
+
+

@@ -343,27 +343,126 @@ class FastAPIEngine:
         await self.app(scope, receive, send)
 
 
+def _wrap_rustapi_handler(func: Callable, rust_mod: Any) -> Callable:
+    """Wrap route handler to ensure Starlette responses are converted to PyRustAPI responses."""
+    def _convert_response(res: Any) -> Any:
+        from starlette.responses import (
+            Response as StarletteResponse,
+            HTMLResponse as StarletteHTMLResponse,
+            JSONResponse as StarletteJSONResponse,
+            PlainTextResponse as StarlettePlainTextResponse,
+        )
+
+        if isinstance(res, StarletteHTMLResponse):
+            body = res.body.decode("utf-8") if isinstance(res.body, bytes) else str(res.body)
+            return rust_mod.HTMLResponse(content=body, status_code=res.status_code, headers=dict(res.headers))
+        if isinstance(res, StarletteJSONResponse):
+            body_str = res.body.decode("utf-8") if isinstance(res.body, bytes) else str(res.body)
+            try:
+                data = json.loads(body_str)
+            except Exception:
+                data = body_str
+            return rust_mod.JSONResponse(content=data, status_code=res.status_code, headers=dict(res.headers))
+        if isinstance(res, StarlettePlainTextResponse):
+            body = res.body.decode("utf-8") if isinstance(res.body, bytes) else str(res.body)
+            return rust_mod.PlainTextResponse(content=body, status_code=res.status_code, headers=dict(res.headers))
+        if isinstance(res, StarletteResponse):
+            return rust_mod.Response(content=res.body, status_code=res.status_code, headers=dict(res.headers), media_type=getattr(res, "media_type", None))
+        return res
+
+    if inspect.iscoroutinefunction(func):
+        @functools.wraps(func)
+        async def async_wrapper(*args, **kwargs):
+            res = await func(*args, **kwargs)
+            return _convert_response(res)
+        return async_wrapper
+    else:
+        @functools.wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            res = func(*args, **kwargs)
+            return _convert_response(res)
+        return sync_wrapper
+
+
 class RustAPIEngine:
     """Optional PyRustAPI engine for PyDataUI."""
 
     def __init__(self, *args, **kwargs):
         try:
-            from rustapi import FastAPI as RustAPIApp
-        except ImportError as e:
-            raise ImportError(
-                "PyRustAPI backend requested, but 'pyrustapi' / 'rustapi' is not installed. "
-                "Install it with: pip install 'pydataui[pyrustapi]'"
-            ) from e
+            import rustapi as rust_mod
+        except ImportError:
+            try:
+                import pyrustapi as rust_mod
+            except ImportError as e:
+                raise ImportError(
+                    "PyRustAPI backend requested, but 'pyrustapi' / 'rustapi' is not installed. "
+                    "Install it with: pip install 'pydataui[pyrustapi]'"
+                ) from e
+        self._rust_mod = rust_mod
+        RustAPIApp = getattr(rust_mod, "FastAPI")
         self._engine = RustAPIApp(*args, **kwargs)
+
+    def get(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            wrapped = _wrap_rustapi_handler(func, self._rust_mod)
+            return self._engine.get(path, **kwargs)(wrapped)
+        return decorator
+
+    def post(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            wrapped = _wrap_rustapi_handler(func, self._rust_mod)
+            return self._engine.post(path, **kwargs)(wrapped)
+        return decorator
+
+    def put(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            wrapped = _wrap_rustapi_handler(func, self._rust_mod)
+            return self._engine.put(path, **kwargs)(wrapped)
+        return decorator
+
+    def delete(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            wrapped = _wrap_rustapi_handler(func, self._rust_mod)
+            return self._engine.delete(path, **kwargs)(wrapped)
+        return decorator
+
+    def patch(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            wrapped = _wrap_rustapi_handler(func, self._rust_mod)
+            return self._engine.patch(path, **kwargs)(wrapped)
+        return decorator
+
+    def add_api_route(self, path: str, endpoint: Callable, **kwargs):
+        wrapped = _wrap_rustapi_handler(endpoint, self._rust_mod)
+        if hasattr(self._engine, "add_api_route"):
+            return self._engine.add_api_route(path, wrapped, **kwargs)
+        methods = kwargs.get("methods", ["GET"])
+        for m in methods:
+            dec = getattr(self._engine, m.lower(), self._engine.get)
+            dec(path, **kwargs)(wrapped)
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._engine, name)
 
     def __setattr__(self, name: str, value: Any) -> None:
-        if name == "_engine":
+        if name in ("_engine", "_rust_mod"):
             super().__setattr__(name, value)
         else:
             setattr(self._engine, name, value)
+
+    async def dispatch_request(
+        self,
+        method: str,
+        path: str,
+        query_string: str = "",
+        headers: Optional[Dict[str, str]] = None,
+        body: Union[str, bytes] = "",
+    ) -> Tuple[int, str, Dict[str, str]]:
+        if hasattr(self._engine, "dispatch_request"):
+            return await self._engine.dispatch_request(
+                method, path, query_string, headers or {}, body or ""
+            )
+        raise NotImplementedError("RustAPI engine does not implement dispatch_request.")
 
     async def __call__(self, scope: Dict[str, Any], receive: Callable, send: Callable) -> None:
         if hasattr(self._engine, "__call__"):

@@ -72,7 +72,10 @@ async def test_fastapi_endpoints_and_pydantic_support():
 # -----------------------------------------------------------------------------
 # 2. Optional PyRustAPI Engine
 # -----------------------------------------------------------------------------
-def test_backend_selection():
+@pytest.mark.anyio
+async def test_backend_selection():
+    import os
+    import pydataui as pdu
     app_fastapi = App(backend="fastapi")
     assert isinstance(app_fastapi._engine, FastAPIEngine)
 
@@ -80,8 +83,28 @@ def test_backend_selection():
     try:
         app_rust = App(backend="pyrustapi")
         assert isinstance(app_rust._engine, RustAPIEngine)
+
+        # Procedural DX set_page_config test
+        pdu.reset()
+        pdu.set_page_config(backend="pyrustapi")
+        assert isinstance(pdu.get_app()._engine, RustAPIEngine)
+
+        # Environment variable activation test
+        pdu.reset()
+        os.environ["PYDATAUI_BACKEND"] = "pyrustapi"
+        app_env = App()
+        assert isinstance(app_env._engine, RustAPIEngine)
+        del os.environ["PYDATAUI_BACKEND"]
+
+        # Dispatch request test
+        status, body, headers = await app_rust._engine.dispatch_request("GET", "/_pdu/health")
+        assert status in (200, 404)
     except ImportError as e:
         assert "pyrustapi" in str(e).lower()
+    finally:
+        pdu.reset()
+        if "PYDATAUI_BACKEND" in os.environ:
+            del os.environ["PYDATAUI_BACKEND"]
 
 
 # -----------------------------------------------------------------------------

@@ -849,7 +849,7 @@ pdu.navbar(
 # 3. Left Control & Hierarchy Sidebar
 with pdu.sidebar():
     pdu.header("DataMesh OS")
-    pdu.caption("v1.5.2 Production Mesh")
+    pdu.caption("v1.5.3 Production Mesh")
     pdu.divider()
 
     env = pdu.selectbox("Active Environment", ["Production (us-east-1)", "Staging (eu-central-1)"])
@@ -974,7 +974,7 @@ Being completely transparent about what PyDataUI is and is not designed for:
 
 ### 📊 4-Way Comprehensive Architecture Comparison
 
-| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.2 (Full-Stack) |
+| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.3 (Full-Stack) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Languages Required** | 2 (TypeScript + Python) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
 | **UI Presentation Layer** | React / Virtual DOM | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |
@@ -1011,6 +1011,57 @@ PyDataUI delivers the core architecture developers love about **Next.js**, imple
 * **Modern Design Tokens:** Native Tailwind utility classes (`class_name="..."`) and 20+ official Shadcn theme presets.
 
 See [docs/PYDATAUI_VS_REACT_AND_STREAMLIT.md](docs/PYDATAUI_VS_REACT_AND_STREAMLIT.md) for the full architectural breakdown.
+
+---
+
+## ⚡ High-Performance Compiled Rust Backend: PyRustAPI Support
+
+PyDataUI features a **dual-backend pluggable architecture**:
+1. **`fastapi` (Default)**: Standard Python ASGI ecosystem powered by Starlette, FastAPI, and Uvicorn.
+2. **`pyrustapi` (High-Performance Rust)**: Compiled multi-threaded Rust engine powered by Tokio and Hyper, delivering sub-millisecond route dispatch and high-concurrency throughput with zero external ASGI server overhead.
+
+### Installation
+```bash
+pip install "pydataui[pyrustapi]"
+```
+
+### 3 Flexible Ways to Activate PyRustAPI
+
+#### Option 1: Next.js Style (`App`)
+```python
+import pydataui as pdu
+
+app = pdu.App(title="Ultra-Low Latency Rust UI", backend="pyrustapi")
+
+@app.page("/")
+def home():
+    pdu.title("Powered by Compiled Rust & Tokio")
+    pdu.metric("Throughput", "120,000 req/s", delta="Sub-millisecond")
+
+if __name__ == "__main__":
+    app.run(port=8000)
+```
+
+#### Option 2: Streamlit Procedural Style
+```python
+import pydataui as pdu
+
+# Configure backend via set_page_config or run()
+pdu.set_page_config(title="Rust-Accelerated Analytics", backend="pyrustapi")
+
+pdu.title("Real-Time Financial Telemetry")
+pdu.metric("P99 Latency", "0.42 ms", delta="-75% vs standard ASGI")
+
+if __name__ == "__main__":
+    pdu.run(port=8000, backend="pyrustapi")
+```
+
+#### Option 3: Zero-Code Environment Variable
+Switch any existing PyDataUI application to the PyRustAPI compiled Rust engine without modifying a single line of code:
+```bash
+export PYDATAUI_BACKEND=pyrustapi
+python app.py
+```
 
 ---
 

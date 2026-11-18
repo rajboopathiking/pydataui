@@ -51,6 +51,7 @@ import html as _html_mod
 import inspect
 import io
 import json as _json_mod
+import os
 import time
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
@@ -705,10 +706,12 @@ def get_app() -> App:
         init_palette = _page_config.get("theme", "zinc")
         if not isinstance(init_palette, str) or init_palette not in THEME_PRESETS:
             init_palette = "zinc"
+        init_backend = _page_config.get("backend") or os.environ.get("PYDATAUI_BACKEND", "fastapi")
         _default_app = App(
             title=_page_config.get("title", "PyDataUI App"),
             theme=init_theme,
             palette=init_palette,
+            backend=init_backend,
         )
 
         @_default_app.page("/")
@@ -783,10 +786,11 @@ def set_page_config(
     openapi_url: Any = ...,
     swagger_ui_parameters: Optional[Dict[str, Any]] = None,
     docs_roles: Optional[List[str]] = None,
+    backend: Optional[str] = None,
     **kwargs
 ) -> None:
     """
-    Configure global app metadata, responsive layout, visual theme tokens, and production FastAPI OpenAPI docs.
+    Configure global app metadata, responsive layout, visual theme tokens, production FastAPI OpenAPI docs, and optional PyRustAPI backend engine.
 
     :param title: Browser window title and header.
     :param layout: "centered" (standard 5xl content width) or "wide" (full width).
@@ -796,6 +800,7 @@ def set_page_config(
     :param openapi_url: Path to OpenAPI JSON schema, or None to disable in production.
     :param swagger_ui_parameters: Dictionary of Swagger UI settings (e.g. {"filter": True, "syntaxHighlight.theme": "monokai"}).
     :param docs_roles: Restrict /docs access to users with specific roles (e.g. ["admin"]).
+    :param backend: Engine backend ("fastapi" or "pyrustapi").
     """
     if title:
         _page_config["title"] = title
@@ -803,6 +808,8 @@ def set_page_config(
     _page_config["theme"] = theme
     if dark_mode is not None:
         _page_config["dark_mode"] = dark_mode
+    if backend is not None:
+        _page_config["backend"] = backend
 
     app = get_app()
     if title:
@@ -819,6 +826,23 @@ def set_page_config(
         app.config.swagger_ui_parameters = swagger_ui_parameters
     if docs_roles is not None:
         app.config.docs_roles = docs_roles
+    if backend is not None and app.backend != backend.lower():
+        from .backend import create_engine
+        app.backend = backend.lower()
+        app.config.backend = backend.lower()
+        app._engine = create_engine(
+            backend=app.backend,
+            title=app.config.title,
+            description=app.config.description,
+            version=app.config.version,
+            docs_url=app.config.docs_url if app.config.docs_url else None,
+            openapi_url=app.config.openapi_url if app.config.openapi_url else None,
+            max_request_size=app.config.max_request_size,
+            gzip=app.config.gzip,
+            swagger_ui_parameters=app.config.swagger_ui_parameters,
+        )
+        app._setup_internal_routes()
+        app._register_api_endpoints()
 
 
 def get_fastapi() -> Any:
@@ -3676,7 +3700,7 @@ def page(path: str = "/", title: Optional[str] = None, layout: Optional[Callable
     return decorator
 
 
-def run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, share: bool = False, **kwargs) -> None:
+def run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, share: bool = False, backend: Optional[str] = None, **kwargs) -> None:
     """
     Launch the high-performance ASGI application server.
 
@@ -3684,7 +3708,10 @@ def run(host: str = "127.0.0.1", port: int = 8000, reload: bool = False, share: 
     :param port: Port number to bind (default 8000).
     :param reload: Enable auto-reloading during development.
     :param share: Launch zero-config public HTTPS tunnel (e.g. for demos).
+    :param backend: Engine backend ("fastapi" or "pyrustapi").
     """
+    if backend:
+        set_page_config(backend=backend)
     app = get_app()
     app.run(host=host, port=port, reload=reload, share=share, **kwargs)
 
@@ -3716,6 +3743,7 @@ def reset() -> None:
         "layout": "centered",
         "theme": "zinc",
         "dark_mode": True,
+        "backend": "fastapi",
     })
 
 

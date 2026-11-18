@@ -36,9 +36,10 @@ class App:
         scripts: Optional[List[str]] = None,
         head: Optional[Union[str, List[str]]] = None,
         storage: Optional[str] = None,
-        backend: str = 'fastapi',
+        backend: Optional[str] = None,
         **kwargs
     ):
+        effective_backend = (backend or os.environ.get("PYDATAUI_BACKEND", "fastapi")).lower()
         self.config = AppConfig(
             title=title,
             description=description,
@@ -52,13 +53,13 @@ class App:
             scripts=scripts,
             head=head,
             storage=storage,
-            backend=backend,
+            backend=effective_backend,
             **kwargs
         )
         if storage is not None:
             self.config.storage = storage
 
-        self.backend = (backend or 'fastapi').lower()
+        self.backend = effective_backend
         docs_url = self.config.docs_url if self.config.docs_url else None
         openapi_url = self.config.openapi_url if self.config.openapi_url else None
         self._engine = create_engine(

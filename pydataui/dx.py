@@ -906,19 +906,45 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
     # 2. List or Tuple of numbers
     if isinstance(data, (list, tuple)):
         labels = [str(i + 1) for i in range(len(data))]
+        bar_colors = [colors[i % len(colors)] for i in range(len(data))] if chart_type == "bar" else primary_color
         return {
             "labels": labels,
             "datasets": [{
                 "label": "Value",
                 "data": list(data),
-                "borderColor": primary_color,
-                "backgroundColor": primary_color + "33" if chart_type in ("area", "bar") else primary_color,
+                "borderColor": bar_colors if chart_type == "bar" else primary_color,
+                "backgroundColor": bar_colors if chart_type == "bar" else (primary_color + "33" if chart_type == "area" else primary_color),
+                "borderWidth": 1,
+                "borderRadius": 6 if chart_type == "bar" else 0,
                 "fill": chart_type == "area",
             }],
         }
 
-    # 3. Dict of series: {"A": [1, 2, 3], "B": [4, 5, 6]}
+    # 3. Dict of categories or series:
+    #    a) {"lat1": 140, "lat2": 110} (Single-series categorical)
+    #    b) {"Series A": [10, 20], "Series B": [15, 25]} (Multi-series)
     if isinstance(data, dict):
+        if not data:
+            return {"labels": [], "datasets": []}
+
+        first_val = next(iter(data.values()))
+        if isinstance(first_val, (int, float)) or (isinstance(first_val, str) and not isinstance(first_val, (list, tuple, dict))):
+            labels = [str(k) for k in data.keys()]
+            vals = [float(v) if isinstance(v, (int, float)) else v for v in data.values()]
+            bar_colors = [colors[i % len(colors)] for i in range(len(vals))] if chart_type == "bar" else primary_color
+            return {
+                "labels": labels,
+                "datasets": [{
+                    "label": "Value",
+                    "data": vals,
+                    "borderColor": bar_colors if chart_type == "bar" else primary_color,
+                    "backgroundColor": bar_colors if chart_type == "bar" else (primary_color + "33" if chart_type == "area" else primary_color),
+                    "borderWidth": 1,
+                    "borderRadius": 6 if chart_type == "bar" else 0,
+                    "fill": chart_type == "area",
+                }],
+            }
+
         datasets = []
         max_len = 0
         for i, (k, vals) in enumerate(data.items()):
@@ -930,6 +956,8 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
                     "data": list(vals),
                     "borderColor": color,
                     "backgroundColor": color + "33" if chart_type in ("area", "bar") else color,
+                    "borderWidth": 1,
+                    "borderRadius": 6 if chart_type == "bar" else 0,
                     "fill": chart_type == "area",
                 })
         labels = [str(i + 1) for i in range(max_len)]
@@ -938,22 +966,43 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
     return {"labels": [], "datasets": []}
 
 
-def line_chart(data: Any, width: Optional[str] = None, height: str = "320px", **kwargs) -> Chart:
+def line_chart(data: Any, width: Optional[str] = None, height: str = "320px", options: Optional[Dict[str, Any]] = None, **kwargs) -> Chart:
     """Render a responsive multi-series line chart."""
     chart_data = _normalize_chart_data(data, "line")
-    return _add_component(Chart(type="line", data=chart_data, width=width, height=height, **kwargs))
+    opts = {"responsive": True, "maintainAspectRatio": False}
+    if len(chart_data.get("datasets", [])) == 1:
+        opts["plugins"] = {"legend": {"display": False}}
+    if options:
+        opts.update(options)
+    return _add_component(Chart(type="line", data=chart_data, options=opts, width=width, height=height, **kwargs))
 
 
-def bar_chart(data: Any, width: Optional[str] = None, height: str = "320px", **kwargs) -> Chart:
+def bar_chart(data: Any, width: Optional[str] = None, height: str = "320px", options: Optional[Dict[str, Any]] = None, **kwargs) -> Chart:
     """Render a responsive bar chart."""
     chart_data = _normalize_chart_data(data, "bar")
-    return _add_component(Chart(type="bar", data=chart_data, width=width, height=height, **kwargs))
+    opts = {
+        "responsive": True,
+        "maintainAspectRatio": False,
+        "scales": {
+            "y": {"beginAtZero": True}
+        }
+    }
+    if len(chart_data.get("datasets", [])) == 1:
+        opts["plugins"] = {"legend": {"display": False}}
+    if options:
+        opts.update(options)
+    return _add_component(Chart(type="bar", data=chart_data, options=opts, width=width, height=height, **kwargs))
 
 
-def area_chart(data: Any, width: Optional[str] = None, height: str = "320px", **kwargs) -> Chart:
+def area_chart(data: Any, width: Optional[str] = None, height: str = "320px", options: Optional[Dict[str, Any]] = None, **kwargs) -> Chart:
     """Render a responsive filled area chart."""
     chart_data = _normalize_chart_data(data, "area")
-    return _add_component(Chart(type="line", data=chart_data, width=width, height=height, **kwargs))
+    opts = {"responsive": True, "maintainAspectRatio": False}
+    if len(chart_data.get("datasets", [])) == 1:
+        opts["plugins"] = {"legend": {"display": False}}
+    if options:
+        opts.update(options)
+    return _add_component(Chart(type="line", data=chart_data, options=opts, width=width, height=height, **kwargs))
 
 
 def scatter_chart(data: Any, width: Optional[str] = None, height: str = "320px", **kwargs) -> Chart:

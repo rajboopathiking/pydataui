@@ -411,3 +411,17 @@ def test_table_with_file_uploader_widget_binding():
     assert "200" in html_after
 
 
+def test_bar_chart_categorical_dict_normalization():
+    pdu.reset()
+    pdu.set_page_config(title="Cluster Telemetry", theme="zinc", dark_mode=False)
+
+    chart = pdu.bar_chart({"lat1": 140, "lat2": 110, "lat3": 125, "lat4": 75, "lat5": 60, "lat6": 45})
+    html = chart.render({})
+
+    assert "lat1" in html
+    assert "lat2" in html
+    assert "140" in html
+    assert "beginAtZero" in html
+    assert "type: 'bar'" in html
+
+

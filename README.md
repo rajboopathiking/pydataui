@@ -409,9 +409,74 @@ if __name__ == "__main__":
 
 ---
 
-## 🔌 Native FastAPI Mounting
+## 🔌 Full FastAPI & Starlette Production Integration
 
-Already have an existing FastAPI backend or microservice? Unlike Streamlit (which runs on Tornado and cannot be mounted inside FastAPI), **PyDataUI mounts with a single line**:
+Because PyDataUI runs on native FastAPI and Starlette, **100% of FastAPI and Starlette features work out of the box**:
+
+### 1. Direct Access to Underlying FastAPI Application
+Access the underlying FastAPI instance at any time to register routers, background tasks, custom exception handlers, or dependency injection:
+
+```python
+import pydataui as pdu
+from fastapi import APIRouter, BackgroundTasks
+
+# Access the FastAPI instance in Procedural DX or Full-Stack mode
+fastapi_app = pdu.get_fastapi()  # or app.fastapi
+
+# Attach FastAPI APIRouter
+router = APIRouter(prefix="/v1")
+
+@router.post("/notify")
+def send_notification(bg: BackgroundTasks):
+    bg.add_task(send_async_slack_alert, "Deployment succeeded")
+    return {"status": "enqueued"}
+
+fastapi_app.include_router(router)
+```
+
+### 2. Starlette & FastAPI Middlewares (CORS, GZip, Security)
+Attach any Starlette or FastAPI middleware directly:
+
+```python
+from starlette.middleware.cors import CORSMiddleware
+import pydataui as pdu
+
+app = pdu.get_app()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+### 3. Production Swagger UI Hardening & Customization
+Take full control over API documentation when moving to production:
+
+```python
+import pydataui as pdu
+
+# Option A: Completely remove /docs and /openapi.json in production
+pdu.set_page_config(docs_url=None, openapi_url=None)
+
+# Option B: Filter and customize Swagger UI parameters
+pdu.set_page_config(
+    swagger_ui_parameters={
+        "filter": True,                              # Enable instant search filter in Swagger
+        "defaultModelsExpandDepth": -1,              # Hide data models by default
+        "syntaxHighlight.theme": "monokai",          # Custom code highlighting theme
+        "persistAuthorization": True                 # Remember auth tokens across refreshes
+    }
+)
+
+# Option C: Lock down /docs behind Role-Based Authentication
+# Only users logged in with the "admin" role can access the Swagger UI!
+pdu.set_page_config(docs_roles=["admin"])
+```
+
+### 4. 1-Line FastAPI Mounting
+Already have an existing FastAPI backend or microservice? Mount PyDataUI with a single line:
 
 ```python
 from fastapi import FastAPI
@@ -432,7 +497,7 @@ def ops_home():
     return Container(Heading("Operations Portal"))
 
 # 3. Mount directly — 1 process, 1 port, 0ms in-memory access!
-api.mount("/dashboard", dashboard._engine.app)
+api.mount("/dashboard", dashboard.fastapi)
 ```
 
 Run with standard Uvicorn:

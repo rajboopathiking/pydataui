@@ -577,21 +577,23 @@ def set_page_config(
     layout: str = "centered",
     theme: Union[str, Dict[str, str], Any] = "zinc",
     dark_mode: Optional[bool] = None,
+    docs_url: Any = ...,
+    openapi_url: Any = ...,
+    swagger_ui_parameters: Optional[Dict[str, Any]] = None,
+    docs_roles: Optional[List[str]] = None,
     **kwargs
 ) -> None:
     """
-    Configure global app metadata, responsive layout, and visual theme tokens.
+    Configure global app metadata, responsive layout, visual theme tokens, and production FastAPI OpenAPI docs.
 
     :param title: Browser window title and header.
     :param layout: "centered" (standard 5xl content width) or "wide" (full width).
-    :param theme: Theme configuration. Accepts:
-                  1. Any of 20 built-in presets: "zinc", "slate", "stone", "neutral", "gray",
-                     "emerald", "green", "teal", "cyan", "blue", "indigo", "violet", "purple",
-                     "fuchsia", "pink", "rose", "red", "orange", "amber", "yellow".
-                  2. A custom hex code: e.g., "#4f46e5".
-                  3. A custom dictionary palette: e.g., {"primary": "#6366f1", "bg": "#0f172a"}.
-                  4. A full `Theme` instance.
+    :param theme: Theme configuration. Accepts preset name, hex string, or dict.
     :param dark_mode: Enable dark mode by default.
+    :param docs_url: Path to Swagger UI docs (e.g. "/docs"), or None to disable in production.
+    :param openapi_url: Path to OpenAPI JSON schema, or None to disable in production.
+    :param swagger_ui_parameters: Dictionary of Swagger UI settings (e.g. {"filter": True, "syntaxHighlight.theme": "monokai"}).
+    :param docs_roles: Restrict /docs access to users with specific roles (e.g. ["admin"]).
     """
     if title:
         _page_config["title"] = title
@@ -607,6 +609,19 @@ def set_page_config(
         app.config.theme = "dark" if dark_mode else "light"
     if isinstance(theme, str) and theme.strip().lower() in THEME_PRESETS:
         app.config.palette = theme.strip().lower()
+    if docs_url is not ...:
+        app.config.docs_url = docs_url
+    if openapi_url is not ...:
+        app.config.openapi_url = openapi_url
+    if swagger_ui_parameters is not None:
+        app.config.swagger_ui_parameters = swagger_ui_parameters
+    if docs_roles is not None:
+        app.config.docs_roles = docs_roles
+
+
+def get_fastapi() -> Any:
+    """Return the underlying FastAPI application instance."""
+    return get_app().fastapi
 
 
 def theme_toggle(**kwargs) -> Component:

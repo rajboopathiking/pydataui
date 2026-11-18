@@ -165,6 +165,7 @@ class FastAPIEngine:
         self.max_request_size = int(max_request_size)
         self.auth = None
         self.gzip = gzip
+        self.swagger_ui_parameters = kwargs.get("swagger_ui_parameters")
 
         self.app = FastAPI(
             title=title,
@@ -231,11 +232,24 @@ class FastAPIEngine:
             return func
         return decorator
 
-    def _get_swagger_ui_html(self) -> str:
+    def _get_swagger_ui_html(self, swagger_ui_parameters: Optional[Dict[str, Any]] = None) -> str:
         from fastapi.openapi.docs import get_swagger_ui_html
         api_openapi_url = self.openapi_url or "/openapi.json"
-        response = get_swagger_ui_html(openapi_url=api_openapi_url, title=f"{self.title} - Swagger UI")
+        params = swagger_ui_parameters or getattr(self, "swagger_ui_parameters", None)
+        response = get_swagger_ui_html(
+            openapi_url=api_openapi_url,
+            title=f"{self.title} - Swagger UI",
+            swagger_ui_parameters=params,
+        )
         return response.body.decode("utf-8")
+
+    def add_middleware(self, middleware_class: Any, **options: Any) -> None:
+        """Attach Starlette or FastAPI middleware directly to the underlying FastAPI application."""
+        self.app.add_middleware(middleware_class, **options)
+
+    def include_router(self, router: Any, **options: Any) -> None:
+        """Mount a FastAPI APIRouter directly onto the application."""
+        self.app.include_router(router, **options)
 
     def openapi(self) -> Dict[str, Any]:
         from fastapi.openapi.utils import get_openapi

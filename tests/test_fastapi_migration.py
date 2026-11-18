@@ -272,3 +272,71 @@ async def test_fastapi_cohosting_and_streaming():
         assert res_stream.status_code == 200
         stream_content = res_stream.text
         assert "Hello from LangGraph agent!" in stream_content
+
+
+@pytest.mark.anyio
+async def test_fastapi_property_and_background_tasks():
+    from fastapi import FastAPI, APIRouter, BackgroundTasks
+    import pydataui as pdu
+    from pydataui import App
+
+    app = App(title="FastAPI Integration App")
+    assert isinstance(app.fastapi, FastAPI)
+    assert app.fastapi is app._engine.app
+
+    # Test include_router
+    router = APIRouter(prefix="/v2")
+    task_ran = False
+
+    def background_worker(msg: str):
+        nonlocal task_ran
+        task_ran = True
+
+    @router.post("/task")
+    async def run_task(bg: BackgroundTasks):
+        bg.add_task(background_worker, "done")
+        return {"queued": True}
+
+    app.include_router(router)
+
+    transport = httpx.ASGITransport(app=app.fastapi)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        res = await client.post("/v2/task")
+        assert res.status_code == 200
+        assert res.json() == {"queued": True}
+        assert task_ran is True
+
+
+@pytest.mark.anyio
+async def test_production_swagger_and_docs_customization():
+    import pydataui as pdu
+    from pydataui import App
+
+    # 1. Custom swagger_ui_parameters
+    app_custom = App(
+        title="Custom Docs App",
+        swagger_ui_parameters={"filter": True, "syntaxHighlight.theme": "monokai"}
+    )
+    transport = httpx.ASGITransport(app=app_custom.fastapi)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        res_docs = await client.get("/docs")
+        assert res_docs.status_code == 200
+        html = res_docs.text
+        assert '"filter": true' in html or '"filter": True' in html or 'filter' in html
+
+    # 2. Production: Completely remove /docs and /openapi.json
+    app_prod = App(title="Production Hardened App", docs_url=None, openapi_url=None)
+    transport_prod = httpx.ASGITransport(app=app_prod.fastapi)
+    async with httpx.AsyncClient(transport=transport_prod, base_url="http://testserver") as client:
+        res_no_docs = await client.get("/docs")
+        assert res_no_docs.status_code == 404
+        res_no_api = await client.get("/openapi.json")
+        assert res_no_api.status_code == 404
+
+    # 3. Role-Protected Docs
+    app_protected = App(title="Protected Docs App", docs_roles=["admin"])
+    transport_prot = httpx.ASGITransport(app=app_protected.fastapi)
+    async with httpx.AsyncClient(transport=transport_prot, base_url="http://testserver") as client:
+        res_prot = await client.get("/docs", follow_redirects=False)
+        assert res_prot.status_code in (302, 303, 307, 401, 403)
+

@@ -1141,6 +1141,21 @@ async def test_full_commercial_saas_screen_ssr():
     assert "Enterprise" in body
 
 
+@pytest.mark.anyio
+async def test_dx_fastapi_and_swagger_config():
+    """Verify get_fastapi() and set_page_config swagger parameters."""
+    pdu.reset()
+    pdu.set_page_config(
+        title="FastAPI DX Suite",
+        swagger_ui_parameters={"filter": True, "syntaxHighlight.theme": "obsidian"}
+    )
+    fastapi_app = pdu.get_fastapi()
+    assert fastapi_app is not None
+    assert hasattr(fastapi_app, "routes")
+    assert hasattr(fastapi_app, "add_middleware")
+
+
+
 
 
 

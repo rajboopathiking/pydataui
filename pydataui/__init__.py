@@ -234,6 +234,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'run': ('.dx', 'run'),
     'reset': ('.dx', 'reset'),
     'get_app': ('.dx', 'get_app'),
+    'get_fastapi': ('.dx', 'get_fastapi'),
     'get_default_app': ('.dx', 'get_default_app'),
     
     # Modern Dashboards & Extensibility
@@ -354,6 +355,6 @@ if TYPE_CHECKING:
         spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
         form, form_submit_button, dialog, status, empty, cache_data, cache_resource, navigation,
         login, logout, is_authenticated, create_user, run,
-        get_app, get_default_app
+        get_app, get_fastapi, get_default_app
     )
     from . import html, templates, components

@@ -59,8 +59,8 @@ class App:
             self.config.storage = storage
 
         self.backend = (backend or 'fastapi').lower()
-        docs_url = f"{self.config.api_prefix}/docs"
-        openapi_url = f"{self.config.api_prefix}/openapi.json"
+        docs_url = self.config.docs_url if self.config.docs_url else None
+        openapi_url = self.config.openapi_url if self.config.openapi_url else None
         self._engine = create_engine(
             backend=self.backend,
             title=title,
@@ -70,6 +70,7 @@ class App:
             openapi_url=openapi_url,
             max_request_size=self.config.max_request_size,
             gzip=self.config.gzip,
+            swagger_ui_parameters=self.config.swagger_ui_parameters,
         )
         self.auth = None
         self._page_security = {}
@@ -122,6 +123,23 @@ class App:
     def api_routes(self) -> Dict[str, Dict[str, Any]]:
         """Dictionary of registered custom API endpoints."""
         return {path: {'method': method, 'handler': func} for method, path, func in self._custom_api_routes}
+
+    @property
+    def fastapi(self) -> Any:
+        """Return the underlying FastAPI application instance."""
+        if hasattr(self._engine, "app"):
+            return self._engine.app
+        return self._engine
+
+    def add_middleware(self, middleware_class: Any, **options: Any) -> None:
+        """Attach Starlette or FastAPI middleware directly to the underlying application."""
+        if hasattr(self._engine, "add_middleware"):
+            self._engine.add_middleware(middleware_class, **options)
+
+    def include_router(self, router: Any, **options: Any) -> None:
+        """Mount a FastAPI APIRouter directly onto the application."""
+        if hasattr(self._engine, "include_router"):
+            self._engine.include_router(router, **options)
 
     @property
     def asgi_app(self) -> Any:
@@ -445,21 +463,49 @@ class App:
                                 headers={'Set-Cookie': self._session_cookie(session),
                                          'Cache-Control': 'no-store'})
 
-        @self._engine.get('/docs')
-        def docs_handler(request):
-            return HTMLResponse(content=self._engine._get_swagger_ui_html(), status_code=200)
+        if self.config.docs_url is not None:
+            @self._engine.get(self.config.docs_url)
+            def docs_handler(request):
+                request = request_context(request, self)
+                if self.config.docs_roles:
+                    session = self._get_session(request)
+                    denied = self._guard_request(request, session, roles=self.config.docs_roles, public=False)
+                    if denied:
+                        return denied
+                return HTMLResponse(content=self._engine._get_swagger_ui_html(self.config.swagger_ui_parameters), status_code=200)
 
-        @self._engine.get(f'{self.config.api_prefix}/docs')
-        def api_docs_handler(request):
-            return HTMLResponse(content=self._engine._get_swagger_ui_html(), status_code=200)
+            if self.config.api_prefix and self.config.docs_url != f'{self.config.api_prefix}/docs':
+                @self._engine.get(f'{self.config.api_prefix}/docs')
+                def api_docs_handler(request):
+                    request = request_context(request, self)
+                    if self.config.docs_roles:
+                        session = self._get_session(request)
+                        denied = self._guard_request(request, session, roles=self.config.docs_roles, public=False)
+                        if denied:
+                            return denied
+                    return HTMLResponse(content=self._engine._get_swagger_ui_html(self.config.swagger_ui_parameters), status_code=200)
 
-        @self._engine.get('/openapi.json')
-        def openapi_handler(request):
-            return self._engine.openapi()
+        if self.config.openapi_url is not None:
+            @self._engine.get(self.config.openapi_url)
+            def openapi_handler(request):
+                request = request_context(request, self)
+                if self.config.docs_roles:
+                    session = self._get_session(request)
+                    denied = self._guard_request(request, session, roles=self.config.docs_roles, public=False)
+                    if denied:
+                        return denied
+                return self._engine.openapi()
 
-        @self._engine.get(f'{self.config.api_prefix}/openapi.json')
-        def api_openapi_handler(request):
-            return self._engine.openapi()
+            if self.config.api_prefix and self.config.openapi_url != f'{self.config.api_prefix}/openapi.json':
+                @self._engine.get(f'{self.config.api_prefix}/openapi.json')
+                def api_openapi_handler(request):
+                    request = request_context(request, self)
+                    if self.config.docs_roles:
+                        session = self._get_session(request)
+                        denied = self._guard_request(request, session, roles=self.config.docs_roles, public=False)
+                        if denied:
+                            return denied
+                    return self._engine.openapi()
 
         @self._engine.post(f'{self.config.internal_prefix}/event/{{state_name}}/{{method_name}}')
         def event_handler(request, state_name: str, method_name: str):

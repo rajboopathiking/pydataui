@@ -38,6 +38,11 @@ class AppConfig:
     mobile_mode: bool = False
     gzip: bool = False
     partial_re_render: bool = False
+    docs_url: Optional[str] = '/docs'
+    openapi_url: Optional[str] = '/openapi.json'
+    redoc_url: Optional[str] = None
+    swagger_ui_parameters: Optional[Dict[str, Any]] = None
+    docs_roles: Optional[List[str]] = None
     
     def __init__(self, **kwargs: Any):
         self.session_secret = secrets.token_hex(32)

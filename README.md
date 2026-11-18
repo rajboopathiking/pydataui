@@ -271,12 +271,16 @@ import pydataui as pdu
 # Activate Emerald FinTech theme
 pdu.set_page_config(title="ApexPay Financial", theme="emerald", layout="wide")
 
-col1, col2, col3, col4 = pdu.columns([1, 1, 1, 1])
-with col1: pdu.metric("Annual Run Rate (ARR)", "$1,840,500", delta="+24.8%")
-with col2: pdu.metric("Monthly Recurring (MRR)", "$154,200", delta="+18.2%")
-with col3: pdu.metric("Paying Accounts", "2,840", delta="+142 mo")
-with col4: pdu.metric("Net Retention Rate", "118.4%", delta="TOP 5%")
+pdu.title("ApexPay Financial & Revenue Operations")
+pdu.success("Stripe sync active • 99.99% payment gateway uptime")
 
+col1, col2, col3, col4 = pdu.columns([1, 1, 1, 1])
+with col1: pdu.metric("Annual Run Rate (ARR)", "$1,840,500", delta="+24.8%", icon="💳")
+with col2: pdu.metric("Monthly Recurring (MRR)", "$154,200", delta="+18.2%", icon="📈")
+with col3: pdu.metric("Paying Accounts", "2,840", delta="+142 mo", icon="👥")
+with col4: pdu.metric("Net Retention Rate", "118.4%", delta="TOP 5%", icon="⚡")
+
+pdu.subheader("ARR Growth Trajectory ($k)")
 pdu.area_chart([92, 104, 118, 132, 145, 154])
 ```
 

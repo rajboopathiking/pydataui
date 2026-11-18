@@ -121,14 +121,47 @@ THEME_PRESETS: Dict[str, Dict[str, str]] = {
 }
 
 
+def _hex_to_hsl_str(hex_code: str) -> str:
+    """Convert hex color (#4f46e5 or #fff) to Tailwind/Shadcn HSL string 'H S% L%'."""
+    hex_clean = hex_code.lstrip("#")
+    if len(hex_clean) == 3:
+        hex_clean = "".join(c * 2 for c in hex_clean)
+    try:
+        r = int(hex_clean[0:2], 16) / 255.0
+        g = int(hex_clean[2:4], 16) / 255.0
+        b = int(hex_clean[4:6], 16) / 255.0
+    except (ValueError, IndexError):
+        return "221.2 83.2% 53.3%"
+    max_c = max(r, g, b)
+    min_c = min(r, g, b)
+    delta = max_c - min_c
+    l = (max_c + min_c) / 2.0
+    if delta == 0:
+        h, s = 0.0, 0.0
+    else:
+        s = delta / (1.0 - abs(2.0 * l - 1.0)) if (1.0 - abs(2.0 * l - 1.0)) != 0 else 0
+        if max_c == r:
+            h = 60.0 * (((g - b) / delta) % 6)
+        elif max_c == g:
+            h = 60.0 * (((b - r) / delta) + 2)
+        else:
+            h = 60.0 * (((r - g) / delta) + 4)
+    return f"{round(h, 1)} {round(s * 100, 1)}% {round(l * 100, 1)}%"
+
+
 def _resolve_theme_css(theme: Union[str, Dict[str, str], Any]) -> str:
     """Generate dynamic CSS variable overrides for built-in presets or unlimited custom palettes."""
     if hasattr(theme, "to_css"):
         return f"<style>{theme.to_css()}</style>"
 
     if isinstance(theme, dict):
-        lines = [f"  --pdu-color-{k}: {v}; --{k}: {v};" for k, v in theme.items()]
-        return "<style>:root {\n" + "\n".join(lines) + "\n}</style>"
+        lines = [f"  --pdu-color-{k}: {v} !important; --{k}: {v} !important;" for k, v in theme.items()]
+        p = theme.get("primary")
+        if p and p.startswith("#"):
+            hsl_p = _hex_to_hsl_str(p)
+            lines.append(f"  --primary: {hsl_p} !important;")
+            lines.append(f"  --ring: {hsl_p} !important;")
+        return "<style>:root, .dark, [data-theme='dark'] {\n" + "\n".join(lines) + "\n}</style>"
 
     if isinstance(theme, str):
         theme_clean = theme.strip().lower()
@@ -136,9 +169,27 @@ def _resolve_theme_css(theme: Union[str, Dict[str, str], Any]) -> str:
             p = THEME_PRESETS[theme_clean]["primary"]
             ph = THEME_PRESETS[theme_clean]["primary_hover"]
             a = THEME_PRESETS[theme_clean]["accent"]
-            return f"<style>:root {{ --primary: {p}; --primary-hover: {ph}; --accent: {a}; --pdu-color-primary: {p}; --pdu-color-primary-hover: {ph}; }}</style>"
-        elif theme.startswith("#") or theme.startswith("rgb") or theme.startswith("hsl"):
-            return f"<style>:root {{ --primary: {theme}; --pdu-color-primary: {theme}; }}</style>"
+            hsl_p = _hex_to_hsl_str(p)
+            hsl_a = _hex_to_hsl_str(a)
+            return (
+                f"<style>:root, .dark, [data-theme='dark'] {{\n"
+                f"  --primary: {hsl_p} !important;\n"
+                f"  --ring: {hsl_p} !important;\n"
+                f"  --accent: {hsl_a} !important;\n"
+                f"  --pdu-color-primary: {p} !important;\n"
+                f"  --pdu-color-primary-hover: {ph} !important;\n"
+                f"  --pdu-color-accent: {a} !important;\n"
+                f"}}</style>"
+            )
+        elif theme.startswith("#"):
+            hsl_p = _hex_to_hsl_str(theme)
+            return (
+                f"<style>:root, .dark, [data-theme='dark'] {{\n"
+                f"  --primary: {hsl_p} !important;\n"
+                f"  --ring: {hsl_p} !important;\n"
+                f"  --pdu-color-primary: {theme} !important;\n"
+                f"}}</style>"
+            )
 
     return ""
 
@@ -746,7 +797,18 @@ def progress(value: int, text_label: str = "") -> Component:
 
 def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]:
     """Helper to convert Pandas, list, or dict structures into Chart.js format."""
-    colors = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#06b6d4"]
+    theme_val = _page_config.get("theme", "zinc")
+    primary_color = "#3b82f6"
+    if isinstance(theme_val, str):
+        theme_clean = theme_val.strip().lower()
+        if theme_clean in THEME_PRESETS:
+            primary_color = THEME_PRESETS[theme_clean]["primary"]
+        elif theme_val.startswith("#"):
+            primary_color = theme_val
+    elif isinstance(theme_val, dict) and "primary" in theme_val:
+        primary_color = theme_val["primary"]
+
+    colors = [primary_color, "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#06b6d4"]
 
     # 1. Pandas DataFrame
     if hasattr(data, "columns") and hasattr(data, "values"):
@@ -771,8 +833,8 @@ def _normalize_chart_data(data: Any, chart_type: str = "line") -> Dict[str, Any]
             "datasets": [{
                 "label": "Value",
                 "data": list(data),
-                "borderColor": "#3b82f6",
-                "backgroundColor": "#3b82f633" if chart_type in ("area", "bar") else "#3b82f6",
+                "borderColor": primary_color,
+                "backgroundColor": primary_color + "33" if chart_type in ("area", "bar") else primary_color,
                 "fill": chart_type == "area",
             }],
         }

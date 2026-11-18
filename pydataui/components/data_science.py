@@ -160,7 +160,8 @@ class MetricCard(Component):
         desc_html = (f'<p class="text-xs text-muted-foreground mt-1">{escape_html(self.description)}</p>'
                      if self.description else '')
 
-        return f'''<div id="{self.id}" class="rounded-xl border bg-card text-card-foreground shadow">
+        return f'''<div id="{self.id}" class="rounded-xl border bg-card text-card-foreground shadow relative overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-[3px]" style="background: var(--pdu-color-primary, #3b82f6);"></div>
   <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
     <h3 class="tracking-tight text-sm font-medium text-muted-foreground">{escape_html(self.title)}</h3>
     {icon_html}

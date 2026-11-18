@@ -178,7 +178,8 @@ def test_theme_system_presets_and_custom_palettes():
 
     # 2. Custom Hex Theme
     hex_css = _resolve_theme_css("#4f46e5")
-    assert "--primary: #4f46e5" in hex_css
+    assert "--primary:" in hex_css
+    assert "--pdu-color-primary: #4f46e5" in hex_css
 
     # 3. Custom Dictionary Palette
     custom_dict = {"primary": "#6366f1", "bg": "#0f172a", "accent": "#a855f7"}

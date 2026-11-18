@@ -216,3 +216,43 @@ Do you need production-grade internal tools, AI Copilots, MLops dashboards,
 or operational tools with low latency, commercial UI, and dual Web + TUI execution?
   └──► Choose PyDataUI
 ```
+
+---
+
+## 6. The 5 Concrete Limitations of PyDataUI vs. Next.js
+
+Being completely transparent about architectural boundaries:
+
+1. **Zero Offline-First Apps (Network & Server Dependency)**:
+   * *Next.js*: Bundles client-side React code running entirely in the user's browser without a backend connection (e.g. offline PWAs, local SQLite via WASM).
+   * *PyDataUI*: Is server-driven. User clicks trigger HTMX requests to the Python ASGI backend. If connection drops, interactive callbacks pause until reconnect.
+2. **Canvas-Heavy, 120 FPS Client-Side Tools (Figma, Canva, Video Editors)**:
+   * *Next.js*: Excels at client-only apps executing thousands of vector calculations at 120 FPS directly on the GPU canvas.
+   * *PyDataUI*: Built for analytical applications, AI copilots, executive dashboards, and B2B SaaS. It is not designed to be an in-browser vector editor or game engine.
+3. **The Vast 3rd-Party NPM React Component Ecosystem (2M+ Packages)**:
+   * *Next.js*: Instant access to 2M+ NPM packages (e.g. `react-flow`, `tiptap`).
+   * *PyDataUI*: Ships with 40+ curated Shadcn/Tailwind enterprise components. Niche React widgets require custom web component or iframe encapsulation.
+4. **Python GIL & CPU-Bound Blocking Concurrency**:
+   * *Next.js / Node.js*: V8 handles high non-blocking concurrent I/O.
+   * *PyDataUI*: Multi-minute CPU-bound ML computations must be explicitly offloaded to `BackgroundTasks`, `multiprocessing`, or Celery/Redis workers to prevent blocking the async event loop.
+5. **0ms Optimistic Client UI Updates**:
+   * *Next.js*: React can flip button states optimistically in 0ms before server response.
+   * *PyDataUI*: Waits for the 10ms–25ms server roundtrip before surgical DOM morphing.
+
+---
+
+## 7. 4-Way Comprehensive Architecture Comparison
+
+| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.4.4 (Full-Stack) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Languages Required** | 2 (TypeScript + Python) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
+| **UI Presentation Layer** | React / Virtual DOM | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |
+| **Execution on Click** | Client-side re-render | N/A (REST endpoint) | ❌ **Reruns script lines 1-100** | **Surgical fragment swap (0 rerun)** |
+| **Model / Data Latency** | 15ms–60ms (JSON HTTP hop) | 0.02ms (In-Memory) | 0.02ms (In-Memory) | **0.02ms (Direct process memory)** |
+| **Build & Dependencies** | 450 MB+ `node_modules` | Clean Python | Clean Python | **Clean Python (0 MB npm)** |
+| **Built-in REST API & Docs** | Manual route handlers |  OpenAPI 3.1 Swagger | ❌ None | **Auto OpenAPI 3.1 Swagger UI** |
+| **Responsive Flex & Grid** |  Tailwind CSS | ❌ None | ❌ Primitive columns only | **Native `pdu.flex` & `pdu.grid`** |
+| **Coordinate Positioning** |  Tailwind CSS | ❌ None | ❌ None | **Native props (`top`, `right`, etc.)** |
+| **Public Sharing Demos** | Manual Vercel / Cloud | Manual cloud hosting | Cloud login required | **`share=True` (3.5s instant tunnel)** |
+| **Memory per User Session** | Low (Client-side) | Stateless | ❌ High (Duplicate DataFrames) | **Ultra-Low (Shared memory)** |
+

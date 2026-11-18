@@ -676,6 +676,31 @@ Being completely transparent about what PyDataUI is and is not designed for:
 
 ---
 
+### 💡 Is Streamlit Only for Prototyping or Full-Stack MVPs?
+
+**Streamlit is architecturally optimized for rapid exploratory prototyping and internal data apps, not commercial full-stack SaaS MVPs.**
+
+* **The Re-Run Barrier:** Every user click re-runs your script from line 1. For complex customer-facing workflows, payment flows, or stateful onboarding, this leads to state race conditions, flashing spinners, and accidental duplicate database queries.
+* **No Real Backend/Webhooks:** Streamlit lacks a REST API routing engine. You cannot easily listen for Stripe webhooks (`/api/webhooks/stripe`) or expose API endpoints for mobile or external clients.
+* **Memory & Concurrency Ceiling:** Persistent WebSockets per tab and duplicated in-memory DataFrames often cause memory exhaustion (OOM) at 20–50 concurrent users.
+* **Why PyDataUI Bridges the Gap:** PyDataUI retains Streamlit's 1-line procedural simplicity (`pdu.text_input`, `pdu.button`, `pdu.metric`) while running on **FastAPI and HTMX**—giving you surgical DOM updates (0 script reruns), real REST endpoints, background tasks, and commercial Shadcn visual polish.
+
+---
+
+### ⚡ Next.js-Style Architecture in Pure Python
+
+PyDataUI delivers the core architecture developers love about **Next.js**, implemented in 100% pure Python without `node_modules`:
+
+* **Next.js App Router Equivalent:** `@app.page("/dashboard")` route decorators with automatic layout nesting.
+* **Route Handlers / API Equivalent:** `@app.api("/api/v1/generate", method="POST")` with automatic OpenAPI 3.1 Swagger docs.
+* **React Server Components (RSC) Equivalent:** Server-rendered Python component trees compiled directly to semantic HTML.
+* **Next.js Streaming Equivalent:** `pdu.write_stream(gen)` for real-time LLM token streaming over Server-Sent Events (SSE).
+* **Modern Design Tokens:** Native Tailwind utility classes (`class_name="..."`) and 20+ official Shadcn theme presets.
+
+See [docs/PYDATAUI_VS_REACT_AND_STREAMLIT.md](docs/PYDATAUI_VS_REACT_AND_STREAMLIT.md) for the full architectural breakdown.
+
+---
+
 ## 📦 Optional Extensions (Mobile, Desktop, TUI)
 
 PyDataUI keeps its web core ultra-lean. Specialized native deployment targets are available as optional extensions:

@@ -884,6 +884,73 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#8-streamlit-prototyping-tool-vs-production-grade-full-stack-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Streamlit: Prototyping Tool vs. Production-Grade Full-Stack MVP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Streamlit: Prototyping Tool vs. Production-Grade Full-Stack MVP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-5-fatal-bottlenecks-of-streamlit-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 5 Fatal Bottlenecks of Streamlit in Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-achieving-nextjs-style-architecture-in-pure-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Achieving Next.js-Style Architecture in Pure Python
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Achieving Next.js-Style Architecture in Pure Python">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nextjs-architecture-vs-pydataui-python-equivalent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next.js Architecture vs. PyDataUI Python Equivalent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-nextjs-style-app-in-pure-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete "Next.js-Style" App in Pure Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2636,6 +2703,73 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#8-streamlit-prototyping-tool-vs-production-grade-full-stack-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Streamlit: Prototyping Tool vs. Production-Grade Full-Stack MVP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Streamlit: Prototyping Tool vs. Production-Grade Full-Stack MVP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-5-fatal-bottlenecks-of-streamlit-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 5 Fatal Bottlenecks of Streamlit in Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-achieving-nextjs-style-architecture-in-pure-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Achieving Next.js-Style Architecture in Pure Python
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Achieving Next.js-Style Architecture in Pure Python">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nextjs-architecture-vs-pydataui-python-equivalent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next.js Architecture vs. PyDataUI Python Equivalent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-nextjs-style-app-in-pure-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete "Next.js-Style" App in Pure Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2907,7 +3041,7 @@ Behind the scenes, PyDataUI sets standard CSS variables:
 <th style="text-align: center;">Next.js (Node.js)</th>
 <th style="text-align: center;">FastAPI (Backend Only)</th>
 <th style="text-align: center;">Streamlit (Python)</th>
-<th style="text-align: center;">PyDataUI v1.4.4 (Full-Stack)</th>
+<th style="text-align: center;">PyDataUI v1.5.0 (Full-Stack)</th>
 </tr>
 </thead>
 <tbody>
@@ -2983,6 +3117,148 @@ Behind the scenes, PyDataUI sets standard CSS variables:
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="8-streamlit-prototyping-tool-vs-production-grade-full-stack-mvp">8. Streamlit: Prototyping Tool vs. Production-Grade Full-Stack MVP</h2>
+<p>A frequent debate in the Python community is whether <strong>Streamlit</strong> can serve as a production-grade commercial MVP. The short answer: <strong>Streamlit is architecturally optimized for rapid exploratory prototyping and internal dashboards, not commercial full-stack SaaS MVPs.</strong></p>
+<h3 id="the-5-fatal-bottlenecks-of-streamlit-in-production">The 5 Fatal Bottlenecks of Streamlit in Production</h3>
+<ol>
+<li><strong>Top-to-Bottom Script Re-Execution</strong>:</li>
+<li><em>Problem</em>: Clicking any widget re-runs lines 1–100 of your Python file. </li>
+<li><em>Commercial Impact</em>: Multi-step onboarding flows, checkout forms, and transactional dashboards require defensive <code>st.session_state</code> flags and caching workarounds. Flashing spinners and input resets degrade user trust.</li>
+<li>
+<p><em>PyDataUI Fix</em>: Event-driven dispatch. A button click triggers only the targeted Python action and morphs only the updated DOM element.</p>
+</li>
+<li>
+<p><strong>Absence of a Real Backend, API &amp; Webhook Layer</strong>:</p>
+</li>
+<li><em>Problem</em>: Streamlit has no HTTP API routing engine.</li>
+<li><em>Commercial Impact</em>: You cannot listen for Stripe checkout webhooks (<code>/api/v1/stripe</code>), expose REST endpoints for mobile apps, or integrate third-party services.</li>
+<li>
+<p><em>PyDataUI Fix</em>: Powered directly by <strong>FastAPI and Starlette</strong>. Your application is simultaneously an interactive UI and a production REST API with interactive Swagger docs at <code>/docs</code>.</p>
+</li>
+<li>
+<p><strong>Memory Footprint &amp; Concurrency Degradation</strong>:</p>
+</li>
+<li><em>Problem</em>: Stateful persistent WebSockets per browser tab and cloned in-memory DataFrames per user.</li>
+<li><em>Commercial Impact</em>: A single Streamlit node often runs out of memory (OOM) at just 20–50 concurrent users.</li>
+<li>
+<p><em>PyDataUI Fix</em>: Stateless ASGI HTTP requests with shared process memory and Uvicorn horizontal worker clustering handling 1,000+ concurrent sessions per container.</p>
+</li>
+<li>
+<p><strong>Rigid Layout &amp; Academic "Toy" Look</strong>:</p>
+</li>
+<li><em>Problem</em>: Confined to primitive column splits and vertical stacks without CSS Grid, Flexbox alignment, or native navigation bars.</li>
+<li><em>Commercial Impact</em>: Customers immediately recognize the prototype appearance, impacting perceived product value.</li>
+<li>
+<p><em>PyDataUI Fix</em>: Native <code>pdu.flex</code>, <code>pdu.grid</code>, <code>pdu.navbar</code>, <code>pdu.popover</code>, <code>pdu.tooltip</code>, and 20+ Shadcn enterprise design themes.</p>
+</li>
+<li>
+<p><strong>Lack of Clean Dynamic URL Routing</strong>:</p>
+</li>
+<li><em>Problem</em>: Script-based multipage navigation cannot handle RESTful parameterized paths (<code>/projects/{id}/analytics</code>) or deep-linking.</li>
+<li><em>Commercial Impact</em>: Customers cannot bookmark, share, or deep-link to specific resource states.</li>
+<li><em>PyDataUI Fix</em>: Standard parameterized route decorators (<code>@app.page("/projects/{project_id}")</code>).</li>
+</ol>
+<hr />
+<h2 id="9-achieving-nextjs-style-architecture-in-pure-python">9. Achieving Next.js-Style Architecture in Pure Python</h2>
+<p>Developers love <strong>Next.js</strong> because it combines frontend components, file/URL routing, API routes, and Tailwind styling into a single coherent framework. <strong>PyDataUI brings this exact Next.js architecture to Python</strong>, eliminating Node.js, TypeScript, and <code>npm</code>:</p>
+<h3 id="nextjs-architecture-vs-pydataui-python-equivalent">Next.js Architecture vs. PyDataUI Python Equivalent</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Next.js Feature</th>
+<th style="text-align: left;">Next.js (TypeScript)</th>
+<th style="text-align: left;">PyDataUI (Pure Python)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>App Routing</strong></td>
+<td style="text-align: left;"><code>app/dashboard/page.tsx</code></td>
+<td style="text-align: left;"><code>@app.page("/dashboard")</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Route Handlers / APIs</strong></td>
+<td style="text-align: left;"><code>app/api/generate/route.ts</code></td>
+<td style="text-align: left;"><code>@app.api("/api/generate", method="POST")</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Server Components</strong></td>
+<td style="text-align: left;">React Server Components (RSC)</td>
+<td style="text-align: left;">Native Python Component Tree (AST SSR)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Token Streaming</strong></td>
+<td style="text-align: left;">Vercel AI SDK (<code>useChat</code>, Streaming)</td>
+<td style="text-align: left;"><code>pdu.write_stream(token_generator)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Styling &amp; Tokens</strong></td>
+<td style="text-align: left;">Tailwind CSS (<code>className="..."</code>)</td>
+<td style="text-align: left;">Tailwind CSS (<code>class_name="..."</code>) + Shadcn tokens</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Design System</strong></td>
+<td style="text-align: left;">Shadcn UI (<code>components/ui/...</code>)</td>
+<td style="text-align: left;">Native 40+ Shadcn Python components</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>State Mutation</strong></td>
+<td style="text-align: left;">Server Actions (<code>"use server"</code>)</td>
+<td style="text-align: left;">Procedural Actions (<code>@s.action</code>, <code>on_click=...</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Build &amp; Toolchain</strong></td>
+<td style="text-align: left;">Node.js, Webpack, Turbopack, 450MB <code>node_modules</code></td>
+<td style="text-align: left;"><strong>0 MB npm, 0 build tools (<code>pip install pydataui</code>)</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="complete-nextjs-style-app-in-pure-python">Complete "Next.js-Style" App in Pure Python</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pydataui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pdu</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 1. Next.js-style Page Configuration</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">pdu</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"SaaS Analytics"</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">"zinc"</span><span class="p">,</span> <span class="n">dark_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 2. Top Navigation Bar (Next.js layout.tsx header)</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">pdu</span><span class="o">.</span><span class="n">navbar</span><span class="p">(</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Acme Cloud"</span><span class="p">,</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">logo</span><span class="o">=</span><span class="s2">"⚡"</span><span class="p">,</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="n">links</span><span class="o">=</span><span class="p">[{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Overview"</span><span class="p">,</span> <span class="s2">"href"</span><span class="p">:</span> <span class="s2">"/"</span><span class="p">},</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Billing"</span><span class="p">,</span> <span class="s2">"href"</span><span class="p">:</span> <span class="s2">"/billing"</span><span class="p">}],</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="n">search</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Alex"</span><span class="p">,</span> <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Owner"</span><span class="p">}</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="p">)</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># 3. Next.js App Router Page</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nd">@pdu</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">breadcrumb</span><span class="p">([</span><span class="s2">"Home"</span><span class="p">,</span> <span class="s2">"Analytics"</span><span class="p">,</span> <span class="s2">"Real-Time"</span><span class="p">])</span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="c1"># Next.js Flexbox &amp; CSS Grid</span>
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">flex</span><span class="p">(</span><span class="n">justify</span><span class="o">=</span><span class="s2">"between"</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"mb-6"</span><span class="p">):</span>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">"Compute Fleet Telemetry"</span><span class="p">)</span>
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>        <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">gap</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">badge</span><span class="p">(</span><span class="s2">"Cluster Active"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"emerald"</span><span class="p">)</span>
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            <span class="n">pdu</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">"+ Deploy Node"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"primary"</span><span class="p">)</span>
+</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
+</span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>    <span class="c1"># Responsive Grid of KPI Cards</span>
+</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="k">with</span> <span class="n">pdu</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"sm"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"md"</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="n">gap</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Active Pods"</span><span class="p">,</span> <span class="s2">"48 / 48"</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s2">"100% OK"</span><span class="p">)</span>
+</span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Inference P99"</span><span class="p">,</span> <span class="s2">"11.4 ms"</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s2">"-2.1ms"</span><span class="p">)</span>
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>        <span class="n">pdu</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">"Throughput"</span><span class="p">,</span> <span class="s2">"18.4k req/s"</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s2">"+12.4%"</span><span class="p">)</span>
+</span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>
+</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="c1"># 4. Built-in Next.js Route Handler / FastAPI Endpoint</span>
+</span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="k">class</span><span class="w"> </span><span class="nc">QueryRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-12-36"><a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-12-37"><a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>
+</span><span id="__span-12-38"><a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="nd">@pdu</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="s2">"/api/v1/query"</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"POST"</span><span class="p">)</span>
+</span><span id="__span-12-39"><a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">api_query</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">QueryRequest</span><span class="p">):</span>
+</span><span id="__span-12-40"><a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span><span class="p">,</span> <span class="s2">"results"</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"Processed: </span><span class="si">{</span><span class="n">body</span><span class="o">.</span><span class="n">query</span><span class="si">}</span><span class="s2">"</span><span class="p">]}</span>
+</span><span id="__span-12-41"><a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>
+</span><span id="__span-12-42"><a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-12-43"><a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>    <span class="n">pdu</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</span></code></pre></div>
 
 
 

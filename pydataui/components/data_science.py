@@ -213,10 +213,10 @@ class MetricCard(Component):
             is_pos = d_str.startswith("+")
             is_neg = d_str.startswith("-")
             pill_bg = (
-                "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                "bg-emerald-500/15 text-emerald-600 text-green-600 dark:text-emerald-400 border border-emerald-500/20"
                 if is_pos or self.delta_type == "increase"
                 else (
-                    "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+                    "bg-rose-500/15 text-rose-600 text-red-600 dark:text-rose-400 border border-rose-500/20"
                     if is_neg or self.delta_type == "decrease"
                     else "bg-muted text-muted-foreground border border-border"
                 )

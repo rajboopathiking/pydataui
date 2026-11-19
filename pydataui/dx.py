@@ -4699,8 +4699,16 @@ def reset() -> None:
     _container_stack.clear()
     _callbacks.clear()
     _active_form_stack.clear()
+    session_state._local_fallback.clear()
+    try:
+        from .state import _current_session, _current_snapshot, _current_root_path
+        _current_session.set(None)
+        _current_snapshot.set(None)
+        _current_root_path.set('')
+    except Exception:
+        pass
     for name in list(dir(ActionState)):
-        if name.startswith("act_"):
+        if name.startswith("act_") or name.startswith("frag_") or name.startswith("_chat_callback"):
             try:
                 delattr(ActionState, name)
             except AttributeError:

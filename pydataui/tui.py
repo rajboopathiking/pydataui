@@ -281,61 +281,66 @@ def _dispatch_action(act_fn: Any, scls: Any = None, **kwargs) -> Any:
     if act_fn is None:
         return None
 
+    token_sess = None
     if _current_session.get() is None:
-        _current_session.set(Session(session_id="tui_action_session"))
-
-    # Inspect signature
-    sig = None
-    try:
-        sig = inspect.signature(act_fn)
-    except (ValueError, TypeError):
-        pass
-
-    call_args = []
-    call_kwargs = {}
-
-    if scls is not None and sig and len(sig.parameters) > 0:
-        first_param = list(sig.parameters.values())[0]
-        if first_param.name in ('self', 'cls', 'state', 'self_inst'):
-            call_args.append(scls)
-
-    if sig:
-        has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
-        if has_var_kw:
-            call_kwargs.update(kwargs)
-        else:
-            for p_name, param in sig.parameters.items():
-                if p_name in ('self', 'cls', 'state', 'self_inst'):
-                    continue
-                if p_name in kwargs:
-                    call_kwargs[p_name] = kwargs[p_name]
-                elif p_name in ('message', 'user_input', 'prompt', 'text', 'query', 'content'):
-                    for text_key in ('message', 'user_input', 'prompt', 'text', 'query', 'content'):
-                        if text_key in kwargs:
-                            call_kwargs[p_name] = kwargs[text_key]
-                            break
-    else:
-        call_kwargs.update(kwargs)
+        token_sess = _current_session.set(Session(session_id="tui_action_session"))
 
     try:
-        res = act_fn(*call_args, **call_kwargs)
-    except TypeError:
+        # Inspect signature
+        sig = None
         try:
-            res = act_fn(**call_kwargs)
-        except TypeError:
-            first_val = next(iter(kwargs.values())) if kwargs else None
-            res = act_fn(first_val) if first_val is not None else act_fn()
+            sig = inspect.signature(act_fn)
+        except (ValueError, TypeError):
+            pass
 
-    if inspect.isawaitable(res) or inspect.iscoroutine(res):
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                return asyncio.run_coroutine_threadsafe(res, loop).result(timeout=120)
+        call_args = []
+        call_kwargs = {}
+
+        if scls is not None and sig and len(sig.parameters) > 0:
+            first_param = list(sig.parameters.values())[0]
+            if first_param.name in ('self', 'cls', 'state', 'self_inst'):
+                call_args.append(scls)
+
+        if sig:
+            has_var_kw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+            if has_var_kw:
+                call_kwargs.update(kwargs)
             else:
-                return loop.run_until_complete(res)
-        except RuntimeError:
-            return asyncio.run(res)
-    return res
+                for p_name, param in sig.parameters.items():
+                    if p_name in ('self', 'cls', 'state', 'self_inst'):
+                        continue
+                    if p_name in kwargs:
+                        call_kwargs[p_name] = kwargs[p_name]
+                    elif p_name in ('message', 'user_input', 'prompt', 'text', 'query', 'content'):
+                        for text_key in ('message', 'user_input', 'prompt', 'text', 'query', 'content'):
+                            if text_key in kwargs:
+                                call_kwargs[p_name] = kwargs[text_key]
+                                break
+        else:
+            call_kwargs.update(kwargs)
+
+        try:
+            res = act_fn(*call_args, **call_kwargs)
+        except TypeError:
+            try:
+                res = act_fn(**call_kwargs)
+            except TypeError:
+                first_val = next(iter(kwargs.values())) if kwargs else None
+                res = act_fn(first_val) if first_val is not None else act_fn()
+
+        if inspect.isawaitable(res) or inspect.iscoroutine(res):
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    return asyncio.run_coroutine_threadsafe(res, loop).result(timeout=120)
+                else:
+                    return loop.run_until_complete(res)
+            except RuntimeError:
+                return asyncio.run(res)
+        return res
+    finally:
+        if token_sess is not None:
+            _current_session.reset(token_sess)
 
 
 def _resolve_chat_action(chat_comp: Any, actions_map: Dict[str, Any]) -> tuple[Optional[Any], Optional[Any]]:
@@ -513,7 +518,7 @@ def _run_chat_tui(app: Any, handler: Any, current_page: str, initial_chat_comp: 
             printed_count = len(current_msgs)
 
 
-def run_tui(
+def _run_tui_impl(
     app: Any,
     file_path: Optional[str] = None,
     refresh_interval: float = 1.0,
@@ -521,15 +526,6 @@ def run_tui(
     once: bool = False,
     interactive: Optional[bool] = None,
 ) -> None:
-    """Launch the application dashboard in interactive Terminal UI mode.
-
-    Supports interactive commands, getting input, running actions, page switching,
-    and live reactive output updates.
-    """
-    from .session import Session
-    from .state import _current_session
-    if _current_session.get() is None:
-        _current_session.set(Session(session_id="tui_session"))
     routes = getattr(app, 'routes', {})
     current_page = page_path if page_path in routes else (list(routes.keys())[0] if routes else "/")
     handler = routes.get(current_page)
@@ -763,3 +759,32 @@ def run_tui(
                 _dispatch_action(act_fn, scls, message=cmd, user_input=cmd, text=cmd, prompt=cmd)
             except Exception:
                 pass
+
+
+def run_tui(
+    app: Any,
+    file_path: Optional[str] = None,
+    refresh_interval: float = 1.0,
+    page_path: str = "/",
+    once: bool = False,
+    interactive: Optional[bool] = None,
+) -> None:
+    """Launch the application dashboard in interactive Terminal UI mode."""
+    from .session import Session
+    from .state import _current_session
+    token = None
+    if _current_session.get() is None:
+        token = _current_session.set(Session(session_id="tui_session"))
+    try:
+        _run_tui_impl(
+            app=app,
+            file_path=file_path,
+            refresh_interval=refresh_interval,
+            page_path=page_path,
+            once=once,
+            interactive=interactive,
+        )
+    finally:
+        if token is not None:
+            _current_session.reset(token)
+

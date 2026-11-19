@@ -25,6 +25,7 @@ class Renderer:
         prefix = prefix.rstrip('/')
         css_url = f'{prefix}{self.config.internal_prefix}/static/pydataui.css'
         htmx_url = f'{prefix}{self.config.internal_prefix}/static/htmx.min.js'
+        bridge_url = f'{prefix}{self.config.internal_prefix}/static/js/pdu-bridge.js'
         pwa = getattr(self.config, 'pwa', True)
         manifest_url = f'{prefix}{self.config.internal_prefix}/manifest.json' if pwa else None
         sw_url = f'{prefix}{self.config.internal_prefix}/sw.js' if pwa else None
@@ -39,6 +40,7 @@ class Renderer:
             content=content,
             css_url=css_url,
             htmx_url=htmx_url,
+            bridge_url=bridge_url,
             theme=getattr(self.config, 'theme', 'light'),
             palette=getattr(self.config, 'palette', 'zinc'),
             tailwind_config=getattr(self.config, 'tailwind_config', None),

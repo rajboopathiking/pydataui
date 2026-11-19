@@ -326,8 +326,16 @@ def get_base_html(
     pwa_sw_url: Optional[str] = None,
     live_reload: bool = False,
     health_url: str = '/_pdu/health',
+    bridge_url: Optional[str] = None,
 ) -> str:
     """Generate the full HTML shell with HTMX, Tailwind, and theme customization."""
+    if bridge_url is None:
+        if '/static/' in htmx_url:
+            static_base = htmx_url.split('/static/')[0]
+            bridge_url = f"{static_base}/static/js/pdu-bridge.js"
+        else:
+            bridge_url = '/_pdu/static/js/pdu-bridge.js'
+
     theme_lower = theme.lower().strip()
     theme_class = 'dark' if theme_lower == 'dark' else ''
     
@@ -514,7 +522,7 @@ def get_base_html(
         {content}
     </div>
     <!-- PyDataUI Client Bridge -->
-    <script src="/_pdu/static/js/pdu-bridge.js"></script>
+    <script src="{bridge_url}"></script>
     {scripts_html}
     {pwa_sw_script}
     {extra_body}

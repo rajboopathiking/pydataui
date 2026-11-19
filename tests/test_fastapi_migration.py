@@ -146,6 +146,8 @@ async def test_native_mounting_inside_fastapi():
         assert "Admin Dashboard" in html
         # Static asset link must include mount root path
         assert "/dashboard/_pdu/static/" in html
+        assert 'src="/dashboard/_pdu/static/js/pdu-bridge.js"' in html or "src='/dashboard/_pdu/static/js/pdu-bridge.js'" in html
+        assert 'src="/_pdu/static/js/pdu-bridge.js"' not in html and "src='/_pdu/static/js/pdu-bridge.js'" not in html
 
         # 3. Internal static file can be retrieved through the mount path
         res_static = await client.get("/dashboard/_pdu/static/css/pydataui.css")

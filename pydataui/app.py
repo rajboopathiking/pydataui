@@ -777,12 +777,20 @@ self.addEventListener('fetch', (event) => {
                 if is_htmx:
                     content = error_body
                 else:
-                    css_url = f'{self.config.internal_prefix}/static/pydataui.css'
+                    prefix = getattr(self.config, 'root_path', '') or ''
+                    if _current_root_path.get():
+                        prefix = _current_root_path.get()
+                    prefix = prefix.rstrip('/')
+                    css_url = f'{prefix}{self.config.internal_prefix}/static/pydataui.css'
+                    htmx_url = f'{prefix}{self.config.internal_prefix}/static/htmx.min.js'
+                    bridge_url = f'{prefix}{self.config.internal_prefix}/static/js/pdu-bridge.js'
                     from .compiler.templates import get_base_html
                     content = get_base_html(
                         title="Error - " + self.config.title,
                         content=error_body,
                         css_url=css_url,
+                        htmx_url=htmx_url,
+                        bridge_url=bridge_url,
                         theme=getattr(self.config, 'theme', 'light'),
                         palette=getattr(self.config, 'palette', 'zinc')
                     )
@@ -852,12 +860,20 @@ self.addEventListener('fetch', (event) => {
                 if is_htmx:
                     content = error_body
                 else:
-                    css_url = f'{self.config.internal_prefix}/static/pydataui.css'
+                    prefix = getattr(self.config, 'root_path', '') or ''
+                    if _current_root_path.get():
+                        prefix = _current_root_path.get()
+                    prefix = prefix.rstrip('/')
+                    css_url = f'{prefix}{self.config.internal_prefix}/static/pydataui.css'
+                    htmx_url = f'{prefix}{self.config.internal_prefix}/static/htmx.min.js'
+                    bridge_url = f'{prefix}{self.config.internal_prefix}/static/js/pdu-bridge.js'
                     from .compiler.templates import get_base_html
                     content = get_base_html(
                         title="Error - " + self.config.title,
                         content=error_body,
                         css_url=css_url,
+                        htmx_url=htmx_url,
+                        bridge_url=bridge_url,
                         theme=getattr(self.config, 'theme', 'light'),
                         palette=getattr(self.config, 'palette', 'zinc')
                     )

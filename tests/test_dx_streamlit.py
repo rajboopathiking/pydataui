@@ -1251,6 +1251,81 @@ async def test_chat_interface_dynamic_history_and_tabs():
     assert "Telemetry analysis" in body
 
 
+@pytest.mark.anyio
+async def test_theme_toggle_and_dual_mode_css():
+    """Verify theme toggle button and dual light/dark CSS tokens."""
+    pdu.reset()
+    pdu.set_page_config(title="Theme Test", theme="blue", dark_mode=False)
+    pdu.theme_toggle()
+
+    from pydataui.dx import _resolve_theme_css
+    css = _resolve_theme_css("blue")
+    assert ":root, [data-theme='light']" in css
+    assert ".dark, [data-theme='dark']" in css
+    assert "var(--pdu-color-bg)" in css
+    assert "var(--pdu-color-card)" in css
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "Toggle Theme" in body
+    assert "localStorage.setItem('pdu-theme'" in body
+    assert "pdu-bridge.js" in body
+
+
+@pytest.mark.anyio
+async def test_table_and_dataframe_live_search():
+    """Verify DataTable and DataFrameTable render live oninput search filters."""
+    import pandas as pd
+    pdu.reset()
+    pdu.set_page_config(title="Table Search Test")
+
+    df = pd.DataFrame({"Host": ["node-01", "node-02"], "RAM": ["64GB", "128GB"]})
+    pdu.write(df)  # DataFrameTable with searchable=True
+    pdu.table([{"Task": "build", "Status": "success"}])  # DataTable
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "Search records..." in body
+    assert "oninput=" in body
+    assert "node-01" in body
+    assert "node-02" in body
+
+
+@pytest.mark.anyio
+async def test_async_context_manager_and_onchange_alias():
+    """Verify async with context managers and onchange alias work seamlessly."""
+    pdu.reset()
+    pdu.set_page_config(title="Async & Aliases Test")
+
+    callback_called = []
+    def handle_change(file=None):
+        callback_called.append(True)
+
+    # Test async with
+    async with pdu.sidebar():
+        pdu.title("Controls")
+        dataset = pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"], onchange=handle_change)
+        # Verify pdu.write(dataset) works without error
+        pdu.write(dataset)
+
+    assert dataset is not None
+    assert hasattr(dataset, "get_data")
+
+    # Simulate upload
+    from pydataui.request import UploadedFile
+    csv_file = UploadedFile("test.csv", b"a,b\n1,2\n", "text/csv")
+    pdu.session_state["Upload Evaluation CSV"] = csv_file
+    pdu.session_state["last_uploaded_file"] = csv_file
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "test.csv" in body
+
+
+
 
 
 

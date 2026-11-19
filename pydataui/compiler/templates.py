@@ -513,6 +513,8 @@ def get_base_html(
     <div id="pdu-root" class="min-h-screen">
         {content}
     </div>
+    <!-- PyDataUI Client Bridge -->
+    <script src="/_pdu/static/js/pdu-bridge.js"></script>
     {scripts_html}
     {pwa_sw_script}
     {extra_body}

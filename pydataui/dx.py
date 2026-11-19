@@ -384,107 +384,180 @@ def _resolve_theme_css(theme: Union[str, Dict[str, str], Any]) -> str:
 
     if isinstance(theme, str):
         theme_clean = theme.strip().lower()
-        is_dark = _page_config.get("dark_mode", True)
         if theme_clean in THEME_PRESETS:
             preset = THEME_PRESETS[theme_clean]
             p = preset["primary"]
             ph = preset.get("primary_hover", p)
             a = preset.get("accent", p)
 
-            bg = preset.get("dark_bg" if is_dark else "light_bg", "#09090b" if is_dark else "#fafafa")
-            card = preset.get("dark_card" if is_dark else "light_card", "#18181b" if is_dark else "#ffffff")
-            sidebar = preset.get("dark_sidebar" if is_dark else "light_sidebar", "#121215" if is_dark else "#f4f4f5")
-            border = preset.get("dark_border" if is_dark else "light_border", "#27272a" if is_dark else "#e4e4e7")
-            text = preset.get("dark_text" if is_dark else "light_text", "#f4f4f5" if is_dark else "#09090b")
-            muted = preset.get("dark_muted" if is_dark else "light_muted", "#a1a1aa" if is_dark else "#71717a")
-            input_bg = preset.get("dark_input" if is_dark else "light_input", card)
+            # Dark tokens
+            d_bg = preset.get("dark_bg", "#09090b")
+            d_card = preset.get("dark_card", "#18181b")
+            d_sidebar = preset.get("dark_sidebar", "#121215")
+            d_border = preset.get("dark_border", "#27272a")
+            d_text = preset.get("dark_text", "#f4f4f5")
+            d_muted = preset.get("dark_muted", "#a1a1aa")
+            d_input = preset.get("dark_input", d_card)
+
+            # Light tokens
+            l_bg = preset.get("light_bg", "#fafafa")
+            l_card = preset.get("light_card", "#ffffff")
+            l_sidebar = preset.get("light_sidebar", "#f4f4f5")
+            l_border = preset.get("light_border", "#e4e4e7")
+            l_text = preset.get("light_text", "#09090b")
+            l_muted = preset.get("light_muted", "#71717a")
+            l_input = preset.get("light_input", "#ffffff")
 
             hsl_p = _hex_to_hsl_str(p)
             hsl_a = _hex_to_hsl_str(a)
-            hsl_bg = _hex_to_hsl_str(bg)
-            hsl_card = _hex_to_hsl_str(card)
-            hsl_border = _hex_to_hsl_str(border)
-            hsl_text = _hex_to_hsl_str(text)
-            hsl_muted = _hex_to_hsl_str(muted)
+            hsl_d_bg = _hex_to_hsl_str(d_bg)
+            hsl_d_card = _hex_to_hsl_str(d_card)
+            hsl_d_border = _hex_to_hsl_str(d_border)
+            hsl_d_text = _hex_to_hsl_str(d_text)
+            hsl_d_muted = _hex_to_hsl_str(d_muted)
+
+            hsl_l_bg = _hex_to_hsl_str(l_bg)
+            hsl_l_card = _hex_to_hsl_str(l_card)
+            hsl_l_border = _hex_to_hsl_str(l_border)
+            hsl_l_text = _hex_to_hsl_str(l_text)
+            hsl_l_muted = _hex_to_hsl_str(l_muted)
 
             return (
-                f"<style>:root, .dark, [data-theme='dark'] {{\n"
+                f"<style>\n"
+                f":root, [data-theme='light'] {{\n"
                 f"  --primary: {hsl_p} !important;\n"
                 f"  --ring: {hsl_p} !important;\n"
                 f"  --accent: {hsl_a} !important;\n"
-                f"  --background: {hsl_bg} !important;\n"
-                f"  --card: {hsl_card} !important;\n"
-                f"  --card-foreground: {hsl_text} !important;\n"
-                f"  --foreground: {hsl_text} !important;\n"
-                f"  --border: {hsl_border} !important;\n"
-                f"  --muted-foreground: {hsl_muted} !important;\n"
+                f"  --background: {hsl_l_bg} !important;\n"
+                f"  --card: {hsl_l_card} !important;\n"
+                f"  --card-foreground: {hsl_l_text} !important;\n"
+                f"  --foreground: {hsl_l_text} !important;\n"
+                f"  --border: {hsl_l_border} !important;\n"
+                f"  --muted-foreground: {hsl_l_muted} !important;\n"
                 f"  --pdu-color-primary: {p} !important;\n"
                 f"  --pdu-color-primary-hover: {ph} !important;\n"
                 f"  --pdu-color-accent: {a} !important;\n"
-                f"  --pdu-color-bg: {bg} !important;\n"
-                f"  --pdu-color-card: {card} !important;\n"
-                f"  --pdu-color-sidebar: {sidebar} !important;\n"
-                f"  --pdu-color-border: {border} !important;\n"
-                f"  --pdu-color-text: {text} !important;\n"
-                f"  --pdu-color-text-muted: {muted} !important;\n"
-                f"  --pdu-color-input: {input_bg} !important;\n"
+                f"  --pdu-color-bg: {l_bg} !important;\n"
+                f"  --pdu-color-card: {l_card} !important;\n"
+                f"  --pdu-color-sidebar: {l_sidebar} !important;\n"
+                f"  --pdu-color-border: {l_border} !important;\n"
+                f"  --pdu-color-text: {l_text} !important;\n"
+                f"  --pdu-color-text-muted: {l_muted} !important;\n"
+                f"  --pdu-color-input: {l_input} !important;\n"
+                f"}}\n\n"
+                f".dark, [data-theme='dark'] {{\n"
+                f"  --primary: {hsl_p} !important;\n"
+                f"  --ring: {hsl_p} !important;\n"
+                f"  --accent: {hsl_a} !important;\n"
+                f"  --background: {hsl_d_bg} !important;\n"
+                f"  --card: {hsl_d_card} !important;\n"
+                f"  --card-foreground: {hsl_d_text} !important;\n"
+                f"  --foreground: {hsl_d_text} !important;\n"
+                f"  --border: {hsl_d_border} !important;\n"
+                f"  --muted-foreground: {hsl_d_muted} !important;\n"
+                f"  --pdu-color-primary: {p} !important;\n"
+                f"  --pdu-color-primary-hover: {ph} !important;\n"
+                f"  --pdu-color-accent: {a} !important;\n"
+                f"  --pdu-color-bg: {d_bg} !important;\n"
+                f"  --pdu-color-card: {d_card} !important;\n"
+                f"  --pdu-color-sidebar: {d_sidebar} !important;\n"
+                f"  --pdu-color-border: {d_border} !important;\n"
+                f"  --pdu-color-text: {d_text} !important;\n"
+                f"  --pdu-color-text-muted: {d_muted} !important;\n"
+                f"  --pdu-color-input: {d_input} !important;\n"
                 f"}}\n\n"
                 f"html, body, .pdu-dx-shell {{\n"
-                f"  background-color: {bg} !important;\n"
-                f"  color: {text} !important;\n"
+                f"  background-color: var(--pdu-color-bg) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
                 f"}}\n"
                 f"aside, .pdu-sidebar {{\n"
-                f"  background-color: {sidebar} !important;\n"
-                f"  border-color: {border} !important;\n"
+                f"  background-color: var(--pdu-color-sidebar) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
                 f"}}\n"
-                f".pdu-card, .pdu-stat-card, .pdu-expander, .pdu-metric-card {{\n"
-                f"  background-color: {card} !important;\n"
-                f"  border-color: {border} !important;\n"
-                f"  color: {text} !important;\n"
+                f".pdu-card, .pdu-stat-card, .pdu-expander, .pdu-metric-card, .pdu-tabs-container {{\n"
+                f"  background-color: var(--pdu-color-card) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
                 f"}}\n"
                 f"nav.pdu-navbar {{\n"
-                f"  background-color: {card} !important;\n"
-                f"  border-color: {border} !important;\n"
+                f"  background-color: var(--pdu-color-card) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
                 f"}}\n"
                 f"input, textarea, select {{\n"
-                f"  background-color: {input_bg} !important;\n"
-                f"  border-color: {border} !important;\n"
-                f"  color: {text} !important;\n"
+                f"  background-color: var(--pdu-color-input) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
                 f"}}\n"
                 f"table th {{\n"
-                f"  background-color: {card} !important;\n"
-                f"  border-color: {border} !important;\n"
-                f"  color: {text} !important;\n"
+                f"  background-color: var(--pdu-color-card) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
                 f"}}\n"
                 f"table td {{\n"
-                f"  border-color: {border} !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
                 f"}}\n"
                 f".pdu-popover-content, .pdu-modal-content {{\n"
-                f"  background-color: {card} !important;\n"
-                f"  border-color: {border} !important;\n"
-                f"  color: {text} !important;\n"
+                f"  background-color: var(--pdu-color-card) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
                 f"}}\n"
                 f"</style>"
             )
         elif theme.startswith("#"):
             hsl_p = _hex_to_hsl_str(theme)
-            bg = "#09090b" if is_dark else "#fafafa"
-            card = "#18181b" if is_dark else "#ffffff"
-            text = "#f4f4f5" if is_dark else "#09090b"
-            border = "#27272a" if is_dark else "#e4e4e7"
             return (
-                f"<style>:root, .dark, [data-theme='dark'] {{\n"
+                f"<style>\n"
+                f":root, [data-theme='light'] {{\n"
                 f"  --primary: {hsl_p} !important;\n"
                 f"  --ring: {hsl_p} !important;\n"
                 f"  --pdu-color-primary: {theme} !important;\n"
-                f"  --pdu-color-bg: {bg} !important;\n"
-                f"  --pdu-color-card: {card} !important;\n"
-                f"  --pdu-color-text: {text} !important;\n"
-                f"  --pdu-color-border: {border} !important;\n"
-                f"}}\n"
+                f"  --pdu-color-bg: #fafafa !important;\n"
+                f"  --pdu-color-card: #ffffff !important;\n"
+                f"  --pdu-color-sidebar: #f4f4f5 !important;\n"
+                f"  --pdu-color-border: #e4e4e7 !important;\n"
+                f"  --pdu-color-text: #09090b !important;\n"
+                f"  --pdu-color-text-muted: #71717a !important;\n"
+                f"  --pdu-color-input: #ffffff !important;\n"
+                f"  --background: 0 0% 98% !important;\n"
+                f"  --foreground: 240 10% 3.9% !important;\n"
+                f"  --card: 0 0% 100% !important;\n"
+                f"  --card-foreground: 240 10% 3.9% !important;\n"
+                f"  --border: 240 5.9% 90% !important;\n"
+                f"}}\n\n"
+                f".dark, [data-theme='dark'] {{\n"
+                f"  --primary: {hsl_p} !important;\n"
+                f"  --ring: {hsl_p} !important;\n"
+                f"  --pdu-color-primary: {theme} !important;\n"
+                f"  --pdu-color-bg: #09090b !important;\n"
+                f"  --pdu-color-card: #18181b !important;\n"
+                f"  --pdu-color-sidebar: #121215 !important;\n"
+                f"  --pdu-color-border: #27272a !important;\n"
+                f"  --pdu-color-text: #f4f4f5 !important;\n"
+                f"  --pdu-color-text-muted: #a1a1aa !important;\n"
+                f"  --pdu-color-input: #18181b !important;\n"
+                f"  --background: 240 10% 3.9% !important;\n"
+                f"  --foreground: 0 0% 98% !important;\n"
+                f"  --card: 240 10% 3.9% !important;\n"
+                f"  --card-foreground: 0 0% 98% !important;\n"
+                f"  --border: 240 3.7% 15.9% !important;\n"
+                f"}}\n\n"
                 f"html, body, .pdu-dx-shell {{\n"
-                f"  background-color: {bg} !important;\n"
-                f"  color: {text} !important;\n"
+                f"  background-color: var(--pdu-color-bg) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
+                f"}}\n"
+                f"aside, .pdu-sidebar {{\n"
+                f"  background-color: var(--pdu-color-sidebar) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"}}\n"
+                f".pdu-card, .pdu-stat-card, .pdu-expander, .pdu-metric-card, .pdu-tabs-container {{\n"
+                f"  background-color: var(--pdu-color-card) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
+                f"}}\n"
+                f"input, textarea, select {{\n"
+                f"  background-color: var(--pdu-color-input) !important;\n"
+                f"  border-color: var(--pdu-color-border) !important;\n"
+                f"  color: var(--pdu-color-text) !important;\n"
                 f"}}\n"
                 f"</style>"
             )
@@ -691,10 +764,31 @@ class _ProceduralPageLayout(Component):
 
         main_html = flash_html + "".join(c.render(state_snapshot) for c in self.main_components)
 
+        restore_theme_script = (
+            "<script>"
+            "(function(){"
+            "  try {"
+            "    var saved = localStorage.getItem('pdu-theme');"
+            f"    var defaultDark = {'true' if _page_config.get('dark_mode', True) else 'false'};"
+            "    var useDark = saved !== null ? (saved === 'dark') : defaultDark;"
+            "    var html = document.documentElement;"
+            "    if (useDark) {"
+            "      html.classList.add('dark');"
+            "      html.setAttribute('data-theme', 'dark');"
+            "    } else {"
+            "      html.classList.remove('dark');"
+            "      html.setAttribute('data-theme', 'light');"
+            "    }"
+            "  } catch(e) {}"
+            "})();"
+            "</script>"
+        )
+
         if self.sidebar_components:
             sidebar_html = "".join(c.render(state_snapshot) for c in self.sidebar_components)
             return (
                 f"{theme_html}"
+                f"{restore_theme_script}"
                 f"<div class='pdu-dx-shell flex flex-row min-h-screen w-full bg-background text-foreground' "
                 f"style='display: flex !important; flex-direction: row !important; min-height: 100vh; width: 100%; background-color: var(--pdu-color-bg, hsl(var(--background))); color: var(--pdu-color-text, hsl(var(--foreground)));'>"
                 f"<aside class='w-72 min-w-[18rem] border-r border-border bg-card/60 backdrop-blur-md p-6 space-y-6 shrink-0 h-screen sticky top-0 overflow-y-auto flex flex-col justify-start z-20 shadow-sm' style='background-color: var(--pdu-color-card, var(--pdu-color-bg-secondary, hsl(var(--card))));'>"
@@ -708,6 +802,7 @@ class _ProceduralPageLayout(Component):
         else:
             return (
                 f"{theme_html}"
+                f"{restore_theme_script}"
                 f"<div class='pdu-dx-shell min-h-screen w-full bg-background text-foreground flex flex-col' style='min-height: 100vh; width: 100%; background-color: var(--pdu-color-bg, hsl(var(--background))); color: var(--pdu-color-text, hsl(var(--foreground)));'>"
                 f"<div class='{content_wrap} p-6 md:p-8 space-y-6 flex-1'>"
                 f"<main class='space-y-6'>{main_html}</main>"
@@ -775,6 +870,12 @@ class _ContainerContext:
             stack.pop()
         if stack and stack[-1] is self.target_list:
             stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
 
     def __getattr__(self, name: str) -> Any:
         try:
@@ -871,7 +972,12 @@ def get_fastapi() -> Any:
 def theme_toggle(**kwargs) -> Component:
     """One-click modern dark/light theme switch button."""
     return _add_component(RawHtml(
-        "<button type='button' onclick=\"document.documentElement.classList.toggle('dark'); localStorage.setItem('pdu-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');\" "
+        "<button type='button' onclick=\"(function(){"
+        "  var html = document.documentElement;"
+        "  var isDark = html.classList.toggle('dark');"
+        "  html.setAttribute('data-theme', isDark ? 'dark' : 'light');"
+        "  try { localStorage.setItem('pdu-theme', isDark ? 'dark' : 'light'); } catch(e){}"
+        "})()\" "
         "class='p-2 rounded-xl border border-border hover:bg-muted text-foreground transition-all flex items-center gap-2 text-xs font-medium cursor-pointer shadow-sm'>"
         "<span>🌓</span><span>Toggle Theme</span>"
         "</button>"
@@ -911,6 +1017,12 @@ class ColumnContext:
         stack = _get_container_stack()
         if stack and stack[-1] is self.children:
             stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
 
     def to_component(self) -> Component:
         return Box(*self.children, class_name="flex-1 min-w-0 space-y-4")
@@ -999,6 +1111,12 @@ class _ExpanderContext:
         stack = _get_container_stack()
         if stack and stack[-1] is self.children:
             stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
 
     def __getattr__(self, name: str) -> Any:
         try:
@@ -1305,6 +1423,9 @@ def write(*args: Any, **kwargs: Any) -> None:
             continue
         if hasattr(obj, "_resolve") and type(obj).__name__ == "LazyDataProxy":
             _add_component(_LazyDataWrapper(obj, **kwargs))
+            continue
+        elif hasattr(obj, "get_data") and type(obj).__name__ == "FileUpload":
+            _add_component(_LazyDataWrapper(obj.get_data(), **kwargs))
             continue
         elif isinstance(obj, Component):
             _add_component(obj)
@@ -1829,6 +1950,12 @@ class _FormContext:
         if stack and stack[-1] is self.children:
             stack.pop()
 
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
+
     def __getattr__(self, name: str) -> Any:
         try:
             import pydataui.dx as dx_mod
@@ -2149,22 +2276,26 @@ def file_uploader(
     When a file is uploaded, it is automatically saved to `session_state[key]`
     and passed directly to `on_change(file)` if provided.
     """
-    input_name = key or generate_id("file_uploader")
+    actual_on_change = on_change or kwargs.pop("onchange", None)
+    input_name = key or (label.strip() if label else None) or generate_id("file_uploader")
 
     def _file_callback(file=None, **kws):
         val = file or (next(iter(kws.values())) if kws else None)
         if key:
             session_state[key] = val
         session_state[input_name] = val
+        if label:
+            session_state[label] = val
+            session_state[label.strip()] = val
         session_state["last_uploaded_file"] = val
-        if on_change:
-            sig = inspect.signature(on_change)
+        if actual_on_change and callable(actual_on_change):
+            sig = inspect.signature(actual_on_change)
             if len(sig.parameters) == 0:
-                return on_change()
+                return actual_on_change()
             call_k = {k: v for k, v in kws.items() if k in sig.parameters}
             if not call_k and len(sig.parameters) == 1:
-                return on_change(val)
-            return on_change(**call_k)
+                return actual_on_change(val)
+            return actual_on_change(**call_k)
 
     cb = _file_callback
     comp = FileUpload(label=label, accept=accept, multiple=multiple, name=input_name, on_change=cb, **kwargs)
@@ -2266,6 +2397,12 @@ class _ChatMessageContext:
         stack = _get_container_stack()
         if stack and stack[-1] is self.children:
             stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
 
     def __getattr__(self, name: str) -> Any:
         try:
@@ -3301,6 +3438,12 @@ class DialogManager:
         stack = _get_container_stack()
         if stack and stack[-1] is self.children:
             stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
         _add_component(_DialogWrapper(self.title, self.children, self.dialog_id))
 
     def __call__(self, func: Callable):
@@ -3393,6 +3536,12 @@ class StatusContext:
         stack = _get_container_stack()
         if stack and stack[-1] is self.children:
             stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
         if exc_type is not None:
             self.state = "error"
             if self._wrapper:

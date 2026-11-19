@@ -84,6 +84,7 @@ with pdu.sidebar():
     model = pdu.selectbox("Select Model", ["Llama-3.3", "DeepSeek-R1", "GPT-4o"])
     temp = pdu.slider("Temperature", 0.0, 1.0, 0.7)
     dataset = pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"])
+    pdu.write(dataset.get_data())
 
 # 3. Main Dashboard Header & Status
 pdu.title("GPU Cluster Telemetry & Agent Dispatch")
@@ -255,6 +256,57 @@ with pdu.scrollable(height=240, direction="y"):
 with pdu.card(title="System Audit Logs", subtitle="Live telemetry traces", height=350, scroll=True):
     for log in logs:
         pdu.caption(f"[{log.time}] {log.message}")
+```
+
+#### 7. Core Interactive Patterns & Developer FAQ (v1.5.5)
+
+##### A. Instant Theme Toggle (Dark & Light Mode)
+Toggle themes with zero latency anywhere in your sidebar or header:
+```python
+pdu.theme_toggle()  # One-click client switcher between Light & Dark mode
+```
+* **How it works**: Swaps the `.dark` class and `data-theme` attribute on `<html>`. All CSS variables (`--pdu-color-bg`, `--pdu-color-card`, `--foreground`, etc.) update immediately across all sidebars, cards, inputs, and tables.
+* **Persistence**: Automatically remembers the user's choice in browser `localStorage`.
+
+##### B. File Uploading & Dataset Inspection
+PyDataUI supports two powerful upload patterns:
+
+**1. Zero-Boilerplate Procedural Flow (Recommended)**
+```python
+with pdu.sidebar():
+    dataset = pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"])
+    pdu.write(dataset.get_data())
+    pdu.write(dataset.get_data())  # Or simply pdu.write(dataset)
+```
+* **Before file selection**: Cleanly resolves with zero errors or empty boxes.
+* **Upon file selection**: Automatically uploads, shows a green badge (`✓ file.csv`), parses CSV/TSV/JSON/Parquet into Pandas, and displays the interactive table.
+
+**2. Custom Callback Pattern**
+```python
+def handle_upload(file):
+    df = file.to_pandas()  # Or pd.read_csv(file)
+    pdu.session_state["df"] = df
+    pdu.toast(f"Loaded {len(df)} rows from {file.filename}!", icon="📊")
+
+# Pass the function reference (do NOT call handle_upload() upfront with parentheses or await!)
+pdu.file_uploader("Upload CSV", accept=[".csv"], on_change=handle_upload)
+```
+
+##### C. Interactive DataTables with Live Search & Sorting
+Both `pdu.write(df)` / `pdu.dataframe(df)` and `pdu.table(records)` include instant client-side live search and column sorting:
+* **Live Search**: Type into the search box to filter table rows with zero latency and zero server reruns.
+* **Column Sorting**: Click any column header to sort ascending (`▲`) or descending (`▼`) numerically or alphabetically.
+
+##### D. Chat & Conversational AI Interfaces
+```python
+tab_data, tab_chat = pdu.tabs(["Data Explorer", "Operations Copilot"])
+
+with tab_chat:
+    with pdu.chat_message("user"):
+        pdu.write("Thermal status?")
+    with pdu.chat_message("assistant"):
+        pdu.write("All worker nodes online.")
+    pdu.chat_input("Ask a question...")  # Automatically appends conversation & preserves active tab
 ```
 
 ---

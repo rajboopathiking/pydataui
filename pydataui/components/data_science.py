@@ -35,10 +35,11 @@ class DataFrameTable(Component):
         DataFrameTable(df=my_df, max_rows=50)
     """
 
-    def __init__(self, df: Any, max_rows: int = 100, **kwargs):
+    def __init__(self, df: Any, max_rows: int = 100, searchable: bool = True, **kwargs):
         super().__init__(**kwargs)
         self.df = df
         self.max_rows = max_rows
+        self.searchable = searchable
 
     def render(self, state_snapshot=None) -> str:
         data = self.df
@@ -118,8 +119,34 @@ class DataFrameTable(Component):
                 f'× {cols} columns</p>' if total > self.max_rows else
                 f'<p class="text-xs text-muted-foreground mt-2">{rows} rows × {cols} columns</p>')
 
-        return (f'<div id="{self.id}" class="w-full overflow-auto rounded-md border bg-card p-2">'
-                f'{raw_html}{note}</div>')
+        search_html = ""
+        if self.searchable:
+            search_html = (
+                "<div class='pdu-dataframe-search mb-2.5'>"
+                "<input type='search' placeholder='Search records...' "
+                "oninput=\"(function(inp){"
+                "  var wrap = inp.closest('.pdu-dataframe-wrapper');"
+                "  if(!wrap) return;"
+                "  var q = (inp.value || '').toLowerCase().trim();"
+                "  var rows = wrap.querySelectorAll('tbody tr');"
+                "  var c = 0;"
+                "  for(var i=0; i<rows.length; i++){"
+                "    var t = (rows[i].innerText || '').toLowerCase();"
+                "    if(!q || t.indexOf(q) !== -1){ rows[i].style.display = ''; c++; }"
+                "    else { rows[i].style.display = 'none'; }"
+                "  }"
+                "  var note = wrap.querySelector('.pdu-dataframe-note');"
+                "  if(note) note.innerText = 'Showing ' + c + ' of ' + rows.length + ' matching rows';"
+                "})(this)\" "
+                "class='w-full max-w-xs px-3 py-1.5 text-xs rounded-lg border border-border bg-input/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40' />"
+                "</div>"
+            )
+
+        return (f'<div id="{self.id}" class="pdu-dataframe-wrapper w-full overflow-auto rounded-md border bg-card p-3">'
+                f'{search_html}'
+                f'<div class="overflow-x-auto">{raw_html}</div>'
+                f'<div class="pdu-dataframe-note">{note}</div>'
+                f'</div>')
 
 
 class MetricCard(Component):

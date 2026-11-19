@@ -1452,21 +1452,37 @@ def write(*args: Any, **kwargs: Any) -> None:
 # Typography & Code
 # ============================================================================
 
-def title(text_content: str, **kwargs) -> Heading:
-    """Add a top-level page title (H1)."""
+def title(text_content: str, font: str = "sans", **kwargs) -> Heading:
+    """Add a top-level page title (H1) with optional serif typography and markdown formatting."""
     app = get_app()
-    app.config.title = text_content
-    return _add_component(Heading(text_content, level=1, class_name="text-3xl font-bold tracking-tight text-foreground", **kwargs))
+    import re
+    clean_title = re.sub(r'\*([^*]+)\*', r'\1', text_content)
+    app.config.title = clean_title
+    font_cls = "font-serif tracking-normal" if font == "serif" else "tracking-tight"
+    if "*" in text_content:
+        styled_html = re.sub(r'\*([^*]+)\*', r'<em class="font-serif italic font-normal text-primary">\1</em>', escape_html(text_content))
+        return _add_component(Heading(RawHtml(styled_html), level=1, class_name=f"text-3xl md:text-5xl font-bold {font_cls} text-foreground leading-tight my-2", **kwargs))
+    return _add_component(Heading(text_content, level=1, class_name=f"text-3xl md:text-5xl font-bold {font_cls} text-foreground leading-tight my-2", **kwargs))
 
 
-def header(text_content: str, **kwargs) -> Heading:
-    """Add a section header (H2)."""
-    return _add_component(Heading(text_content, level=2, class_name="text-2xl font-semibold tracking-tight text-foreground", **kwargs))
+def header(text_content: str, font: str = "sans", **kwargs) -> Heading:
+    """Add a section header (H2) with optional serif typography and markdown formatting."""
+    import re
+    font_cls = "font-serif tracking-normal" if font == "serif" else "tracking-tight"
+    if "*" in text_content:
+        styled_html = re.sub(r'\*([^*]+)\*', r'<em class="font-serif italic font-normal text-primary">\1</em>', escape_html(text_content))
+        return _add_component(Heading(RawHtml(styled_html), level=2, class_name=f"text-2xl md:text-3xl font-semibold {font_cls} text-foreground leading-snug my-2", **kwargs))
+    return _add_component(Heading(text_content, level=2, class_name=f"text-2xl md:text-3xl font-semibold {font_cls} text-foreground leading-snug my-2", **kwargs))
 
 
-def subheader(text_content: str, **kwargs) -> Heading:
-    """Add a section subheader (H3)."""
-    return _add_component(Heading(text_content, level=3, class_name="text-xl font-medium tracking-tight text-foreground", **kwargs))
+def subheader(text_content: str, font: str = "sans", **kwargs) -> Heading:
+    """Add a section subheader (H3) with optional serif typography and markdown formatting."""
+    import re
+    font_cls = "font-serif tracking-normal" if font == "serif" else "tracking-tight"
+    if "*" in text_content:
+        styled_html = re.sub(r'\*([^*]+)\*', r'<em class="font-serif italic font-normal text-primary">\1</em>', escape_html(text_content))
+        return _add_component(Heading(RawHtml(styled_html), level=3, class_name=f"text-xl md:text-2xl font-medium {font_cls} text-foreground my-1.5", **kwargs))
+    return _add_component(Heading(text_content, level=3, class_name=f"text-xl md:text-2xl font-medium {font_cls} text-foreground my-1.5", **kwargs))
 
 
 def caption(text_content: str, **kwargs) -> Text:
@@ -2052,8 +2068,35 @@ def form_submit_button(
     return btn_comp
 
 
-def button(label: str, on_click: Optional[Union[Callable, EventHandler]] = None, **kwargs) -> Button:
-    """Add an interactive button with a Python event callback."""
+def button(
+    label: str,
+    on_click: Optional[Union[Callable, EventHandler]] = None,
+    href: Optional[str] = None,
+    new_tab: bool = True,
+    type: str = "primary",
+    icon: Optional[str] = None,
+    **kwargs
+) -> Union[Button, Component]:
+    """
+    Add a styled button or client-side link button.
+    - If `href` is provided (e.g. `href="https://wa.me/..."`), renders a direct client-side navigation link styled identically to a primary/secondary button without round-trip latency.
+    - If `on_click` is provided, executes the Python callback on server.
+    """
+    if href:
+        target_attr = " target='_blank' rel='noopener noreferrer'" if new_tab else ""
+        icon_html = f"<span class='mr-2'>{escape_html(icon)}</span>" if icon else ""
+        btn_cls = "bg-primary text-primary-foreground hover:opacity-90 shadow-sm" if type == "primary" else "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border/80"
+        extra_cls = kwargs.pop("class_name", "")
+        extra_attrs = " ".join(f'{k}="{v}"' for k, v in kwargs.items())
+        link_html = (
+            f"<a href='{escape_html(href)}'{target_attr} "
+            f"class='inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer select-none {btn_cls} {extra_cls}' "
+            f"{extra_attrs}>"
+            f"{icon_html}<span>{escape_html(label)}</span>"
+            f"</a>"
+        )
+        return _add_component(RawHtml(link_html))
+
     if _active_form_stack and "hx_include" not in kwargs and "include" not in kwargs:
         kwargs["include"] = "closest form"
     return _add_component(Button(label, on_click=on_click, **kwargs))
@@ -2540,9 +2583,290 @@ def chat_input(
     return _add_component(RawHtml(html_code))
 
 
-def chat(messages: Optional[List[Dict[str, str]]] = None, on_send: Optional[Callable] = None, **kwargs) -> Chat:
-    """Add an interactive composite Chat interface component."""
-    return _add_component(Chat(messages=messages, on_send=on_send, **kwargs))
+def chat(
+    messages: Optional[List[Dict[str, str]]] = None,
+    on_send: Optional[Callable] = None,
+    on_clear: Optional[Callable] = None,
+    key: Optional[str] = None,
+    chat_title: str = "Assistant",
+    **kwargs
+) -> Chat:
+    """
+    Add an interactive composite Chat interface component with automatic conversation state persistence.
+    
+    Features:
+    - Auto-managed conversation history in `session_state`
+    - Both synchronous and asynchronous `on_send` callbacks (e.g. LLM generation, bot replies)
+    - Default intelligent fallback reply if `on_send` is omitted
+    - `on_clear` callback for conversation reset
+    - Markdown formatting, suggestion chips, and copy buttons
+    """
+    chat_key = key or f"_chat_msgs_{chat_title.lower().replace(' ', '_')}_{kwargs.get('id', 'default')}"
+
+    # Initialize or synchronize conversation history in session_state
+    if chat_key not in session_state:
+        session_state[chat_key] = list(messages) if messages is not None else []
+    elif messages is not None and not session_state[chat_key] and len(messages) > 0:
+        session_state[chat_key] = list(messages)
+
+    def _chat_send_handler(message: str = "", **kws):
+        user_text = message.strip() if isinstance(message, str) else ""
+        if not user_text:
+            user_text = str(kws.get("message") or session_state.get("message") or "").strip()
+        if not user_text:
+            return
+
+        # 1. Append user message
+        history = session_state.setdefault(chat_key, [])
+        history.append({"role": "user", "content": user_text})
+
+        # 2. Invoke user's on_send or intelligent default
+        ai_reply = None
+        if on_send is not None:
+            sig = inspect.signature(on_send)
+            if len(sig.parameters) == 0:
+                res = on_send()
+            else:
+                call_k = {k: v for k, v in kws.items() if k in sig.parameters}
+                if not call_k and len(sig.parameters) == 1:
+                    res = on_send(user_text)
+                else:
+                    call_k.setdefault(next(iter(sig.parameters.keys())), user_text)
+                    res = on_send(**call_k)
+            if inspect.isawaitable(res):
+                import asyncio
+                try:
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        fut = asyncio.run_coroutine_threadsafe(res, loop)
+                        res = fut.result()
+                    else:
+                        res = loop.run_until_complete(res)
+                except RuntimeError:
+                    res = asyncio.run(res)
+            ai_reply = res
+        else:
+            ai_reply = f"Acknowledged: \"{user_text}\". Our concierge team has noted your inquiry."
+
+        # 3. Append assistant reply
+        if ai_reply:
+            if isinstance(ai_reply, str):
+                history.append({"role": "assistant", "content": ai_reply})
+            elif isinstance(ai_reply, dict) and "content" in ai_reply:
+                history.append(ai_reply)
+            elif isinstance(ai_reply, list):
+                for m in ai_reply:
+                    if isinstance(m, dict) and "content" in m:
+                        history.append(m)
+
+    def _chat_clear_handler(**kws):
+        session_state[chat_key] = []
+        if on_clear:
+            sig = inspect.signature(on_clear)
+            if len(sig.parameters) == 0:
+                on_clear()
+            else:
+                on_clear(**{k: v for k, v in kws.items() if k in sig.parameters})
+
+    # Pass the active persistent messages and registered handlers to the component
+    active_messages = session_state.get(chat_key, [])
+    return _add_component(Chat(
+        messages=active_messages,
+        on_send=_chat_send_handler,
+        on_clear=_chat_clear_handler,
+        chat_title=chat_title,
+        **kwargs
+    ))
+
+
+# ============================================================================
+# Spatial Composition & Immersive Canvas Primitives
+# ============================================================================
+
+class _HeroWrapper(Component):
+    """Full-bleed multi-layer spatial Hero canvas (Z-0 background, Z-1 gradient tint, Z-10 interactive widgets)."""
+    def __init__(
+        self,
+        children: List[Component],
+        video: Optional[str] = None,
+        image: Optional[str] = None,
+        overlay: Union[float, str] = 0.45,
+        height: Union[int, str] = "85vh",
+        align: str = "center",
+        bleed: bool = True,
+        rounded: Optional[str] = None,
+        class_name: str = "",
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.children_list = children
+        self.video_src = video
+        self.image_src = image
+        self.overlay = overlay
+        self.height = f"{height}px" if isinstance(height, (int, float)) or (isinstance(height, str) and height.isdigit()) else str(height)
+        self.align = align
+        self.bleed = bleed
+        self.rounded = rounded
+        self.custom_class = class_name
+
+    def render(self, state_snapshot=None) -> str:
+        bg_html = ""
+        if self.video_src:
+            bg_html = (
+                f"<video autoplay loop muted playsinline "
+                f"class='absolute inset-0 w-full h-full object-cover pointer-events-none' "
+                f"src='{escape_html(self.video_src)}'></video>"
+            )
+        elif self.image_src:
+            bg_html = (
+                f"<div class='absolute inset-0 w-full h-full bg-cover bg-center pointer-events-none' "
+                f"style=\"background-image: url('{escape_html(self.image_src)}');\"></div>"
+            )
+
+        if isinstance(self.overlay, (int, float)):
+            op = max(0.0, min(1.0, float(self.overlay)))
+            overlay_html = f"<div class='absolute inset-0 pointer-events-none' style='background: radial-gradient(circle at center, rgba(0,0,0,{round(op * 0.7, 2)}) 0%, rgba(0,0,0,{round(min(1.0, op * 1.25), 2)}) 100%), linear-gradient(to top, var(--pdu-color-bg, #09090b) 0%, rgba(0,0,0,{round(op, 2)}) 50%, rgba(0,0,0,{round(op * 0.8, 2)}) 100%);'></div>"
+        elif isinstance(self.overlay, str) and self.overlay:
+            overlay_html = f"<div class='absolute inset-0 {self.overlay} pointer-events-none'></div>"
+        else:
+            overlay_html = ""
+
+        if self.align == "left":
+            align_cls = "items-start text-left"
+        elif self.align == "right":
+            align_cls = "items-end text-right"
+        else:
+            align_cls = "items-center text-center"
+
+        rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        bleed_cls = "relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]" if self.bleed else "relative w-full"
+        rounded_cls = f"rounded-{self.rounded}" if self.rounded else ""
+
+        return (
+            f"<div class='pdu-hero-container {bleed_cls} {rounded_cls} overflow-hidden my-0 select-none {self.custom_class}' style='height: {self.height}; min-height: 400px;'>"
+            f"  {bg_html}"
+            f"  {overlay_html}"
+            f"  <div class='relative z-10 w-full h-full max-w-6xl mx-auto px-6 py-12 flex flex-col justify-center {align_cls} space-y-6 pointer-events-auto'>"
+            f"    {rendered_children}"
+            f"  </div>"
+            f"</div>"
+        )
+
+
+class _HeroContext:
+    def __init__(self, **kwargs):
+        self.children: List[Component] = []
+        self.kwargs = kwargs
+
+    def __enter__(self):
+        _get_container_stack().append(self.children)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        stack = _get_container_stack()
+        if stack and stack[-1] is self.children:
+            stack.pop()
+
+    async def __aenter__(self):
+        return self.__enter__()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return self.__exit__(exc_type, exc_val, exc_tb)
+
+    def __getattr__(self, name: str) -> Any:
+        try:
+            import pydataui.dx as dx_mod
+            if hasattr(dx_mod, name):
+                fn = getattr(dx_mod, name)
+                if callable(fn):
+                    def method_proxy(*args, **kwargs):
+                        with self:
+                            return fn(*args, **kwargs)
+                    return method_proxy
+        except Exception:
+            pass
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+
+
+def hero(
+    video: Optional[str] = None,
+    image: Optional[str] = None,
+    overlay: Union[float, str] = 0.45,
+    height: Union[int, str] = "85vh",
+    align: str = "center",
+    bleed: bool = True,
+    rounded: Optional[str] = None,
+    class_name: str = "",
+    **kwargs
+) -> _HeroContext:
+    """
+    Create a luxury, multi-layer spatial Hero canvas (Z-Index 0 background, Z-Index 1 tint overlay, Z-Index 10 interactive widgets).
+    
+    Supports both video canvas and high-res imagery, automatic vertical centering, and edge-to-edge full bleed.
+    
+    Example::
+    
+        with pdu.hero(video="https://...", overlay=0.4, height="90vh", align="center"):
+            pdu.badge("EST. 1988 • ROYAL HERITAGE")
+            pdu.title("Traditional Feasts, *Engineered for Royalty*", font="serif")
+            pdu.button("Reserve Auspicious Date", href="https://wa.me/...")
+    """
+    ctx = _HeroContext(video=video, image=image, overlay=overlay, height=height, align=align, bleed=bleed, rounded=rounded, class_name=class_name, **kwargs)
+    _add_component(_HeroWrapper(ctx.children, video=video, image=image, overlay=overlay, height=height, align=align, bleed=bleed, rounded=rounded, class_name=class_name, **kwargs))
+    return ctx
+
+
+def marquee(
+    items: List[str],
+    speed: int = 30,
+    separator: str = " · ",
+    reverse: bool = False,
+    pause_on_hover: bool = True,
+    font_size: str = "text-sm",
+    class_name: str = "",
+    **kwargs
+) -> Component:
+    """
+    Add a seamless, 60fps hardware-accelerated horizontal marquee ticker.
+    
+    Example::
+    
+        pdu.marquee(["Kongu Mutton Chukka", "Live Dosa Bar", "Tender Coconut Payasam"], speed=25)
+    """
+    if not items:
+        return _add_component(RawHtml(""))
+    
+    formatted_items = [f"<span>{escape_html(item)}</span>" for item in items]
+    sep_html = f"<span class='mx-4 text-primary opacity-60'>{escape_html(separator)}</span>"
+    track_content = sep_html.join(formatted_items) + sep_html
+    
+    direction = "reverse" if reverse else "normal"
+    hover_rule = "animation-play-state: paused;" if pause_on_hover else ""
+    marquee_id = generate_id("marquee")
+    
+    html_code = (
+        f"<style>\n"
+        f"@keyframes pdu-marquee-{marquee_id} {{\n"
+        f"  0% {{ transform: translate3d(0, 0, 0); }}\n"
+        f"  100% {{ transform: translate3d(-50%, 0, 0); }}\n"
+        f"}}\n"
+        f"#{marquee_id} .pdu-marquee-track {{\n"
+        f"  display: flex;\n"
+        f"  width: max-content;\n"
+        f"  animation: pdu-marquee-{marquee_id} {speed}s linear infinite {direction};\n"
+        f"}}\n"
+        f"#{marquee_id}:hover .pdu-marquee-track {{\n"
+        f"  {hover_rule}\n"
+        f"}}\n"
+        f"</style>\n"
+        f"<div id='{marquee_id}' class='w-full overflow-hidden py-3 bg-muted/30 border-y border-border/60 select-none {class_name}'>\n"
+        f"  <div class='pdu-marquee-track font-medium {font_size} tracking-wide text-foreground/90 whitespace-nowrap'>\n"
+        f"    <div class='flex items-center shrink-0'>{track_content}</div>\n"
+        f"    <div class='flex items-center shrink-0' aria-hidden='true'>{track_content}</div>\n"
+        f"  </div>\n"
+        f"</div>"
+    )
+    return _add_component(RawHtml(html_code))
 
 
 # ============================================================================
@@ -2555,14 +2879,16 @@ def card(
     subtitle: Optional[str] = None,
     height: Optional[Union[int, str]] = None,
     scroll: bool = False,
+    hover: Optional[str] = None,
     **kwargs
 ) -> Card:
     """
     Add an elevated card container.
     Supports both context manager syntax (`with pdu.card():`) and direct component arguments.
     If `height` is specified (e.g. `height=300`), the card body automatically enables smooth vertical scrolling.
+    Pass `hover="elevate-glow"` or `hover="lift"` for interactive micro-animations.
     """
-    return _add_component(Card(*children, title=title, subtitle=subtitle, height=height, scroll=scroll, **kwargs))
+    return _add_component(Card(*children, title=title, subtitle=subtitle, height=height, scroll=scroll, hover=hover, **kwargs))
 
 
 def box(*children: Component, **kwargs) -> Box:
@@ -3129,10 +3455,14 @@ def video(
     muted: bool = False,
     loop: bool = False,
     width: Optional[Union[int, str]] = None,
+    height: Optional[Union[int, str]] = None,
+    aspect: Optional[str] = None,
+    fit: str = "cover",
     **kwargs
 ) -> Video:
     """
     Display a native HTML5 video player (Streamlit `st.video` equivalent).
+    Supports modern vertical video reels (`aspect="9/16"`, `fit="cover"`), background ambient loops (`controls=False, autoplay=True, muted=True, loop=True`), and captions.
     """
     return _add_component(Video(
         src=data,
@@ -3142,6 +3472,9 @@ def video(
         muted=muted,
         loop=loop,
         width=width,
+        height=height,
+        aspect=aspect,
+        fit=fit,
         **kwargs
     ))
 

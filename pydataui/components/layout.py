@@ -244,7 +244,7 @@ class Col(Flex):
 class Card(Component):
     """Card container with optional header, height constraint, and scrolling."""
     tag = 'div'
-    def __init__(self, *children, title=None, subtitle=None, padding='lg', shadow='md', radius='md', bordered=True, height=None, scroll=False, **props):
+    def __init__(self, *children, title=None, subtitle=None, padding='lg', shadow='md', radius='md', bordered=True, height=None, scroll=False, hover=None, **props):
         super().__init__(*children, **props)
         self.title = title
         self.subtitle = subtitle
@@ -254,11 +254,20 @@ class Card(Component):
         self.bordered = bordered
         self.height = height
         self.scroll = scroll or (height is not None)
+        self.hover = hover
         
     def _get_classes(self) -> List[str]:
         classes = super()._get_classes() + ['pdu-card', f'pdu-p-{self.padding}', f'pdu-shadow-{self.shadow}', f'pdu-radius-{self.radius}']
         if self.bordered:
             classes.append('pdu-border')
+        if self.hover == 'elevate-glow':
+            classes.append('hover:-translate-y-1 hover:shadow-xl hover:border-primary/50 transition-all duration-300')
+        elif self.hover == 'lift':
+            classes.append('hover:-translate-y-1 hover:shadow-lg transition-transform duration-200')
+        elif self.hover == 'glow':
+            classes.append('hover:border-primary/60 hover:shadow-primary/20 hover:shadow-lg transition-all duration-300')
+        elif self.hover:
+            classes.append(str(self.hover))
         return classes
         
     def render(self, state_snapshot: Optional[Any] = None) -> str:

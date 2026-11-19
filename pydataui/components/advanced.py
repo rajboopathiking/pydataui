@@ -150,6 +150,7 @@ class Chat(Component):
         messages: Optional[List[Dict[str, Any]]] = None,
         placeholder: str = "Type your message... (Shift+Enter for newline)",
         title: str = "Agent Chat",
+        chat_title: Optional[str] = None,
         subtitle: Optional[str] = None,
         on_send: Optional[Union[EventHandler, Callable]] = None,
         on_clear: Optional[Union[EventHandler, Callable]] = None,
@@ -165,7 +166,7 @@ class Chat(Component):
         super().__init__(**kwargs)
         self.messages = messages or []
         self.placeholder = placeholder
-        self.chat_title = title
+        self.chat_title = chat_title or title
         self.subtitle = subtitle
         self.loading = loading
         self.suggestions = suggestions or []
@@ -284,6 +285,8 @@ class Chat(Component):
                 htmx_attrs["hx-indicator"] = f"#{chat_id}-loading, #{chat_id}-spinner"
             if "hx-disabled-elt" not in htmx_attrs:
                 htmx_attrs["hx-disabled-elt"] = f"#{chat_id}-send-btn, #{chat_id}-input"
+            if "hx-on::after-settle" not in htmx_attrs:
+                htmx_attrs["hx-on::after-settle"] = f"const el=document.getElementById('{chat_id}-messages');if(el){{el.scrollTop=el.scrollHeight;}}"
             htmx_send_attrs = " ".join(f'{k}="{v}"' for k, v in htmx_attrs.items())
 
         clear_btn_html = ""
@@ -334,7 +337,7 @@ class Chat(Component):
     <div class="flex items-end gap-2">
       <textarea name="message" id="{chat_id}-input" rows="1" placeholder="{html.escape(self.placeholder)}" class="chat-input flex-1 min-h-[42px] max-h-[140px] px-3.5 py-2.5 text-sm rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none leading-relaxed disabled:opacity-60 disabled:cursor-not-allowed" onkeydown="if(event.key==='Enter'&&!event.shiftKey){{if(event.isComposing||event.keyCode===229)return;event.preventDefault();document.getElementById('{chat_id}-send-btn').click();}}" oninput="this.style.height='auto';this.style.height=(this.scrollHeight)+'px';"></textarea>
       
-      <button type="button" id="{chat_id}-send-btn" class="h-10 px-4 bg-primary text-primary-foreground text-sm font-medium rounded-xl hover:bg-primary/90 transition shadow-sm inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed shrink-0 cursor-pointer" {htmx_send_attrs}>
+      <button type="button" id="{chat_id}-send-btn" onclick="setTimeout(()=>{{const inp=document.getElementById('{chat_id}-input');if(inp)inp.value='';}},20);" class="h-10 px-4 bg-primary text-primary-foreground text-sm font-medium rounded-xl hover:bg-primary/90 transition shadow-sm inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed shrink-0 cursor-pointer" {htmx_send_attrs}>
         <span>Send</span>
         <svg id="{chat_id}-spinner" class="htmx-indicator animate-spin h-4 w-4 text-primary-foreground hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -350,9 +353,14 @@ class Chat(Component):
 </div>
 <script>
 (function() {{
-  const el = document.getElementById('{chat_id}-messages');
-  if (el) {{
-    el.scrollTop = el.scrollHeight;
+  function scrollChat() {{
+    const el = document.getElementById('{chat_id}-messages');
+    if (el) {{
+      el.scrollTop = el.scrollHeight;
+    }}
   }}
+  scrollChat();
+  setTimeout(scrollChat, 50);
+  setTimeout(scrollChat, 200);
 }})();
 </script>'''

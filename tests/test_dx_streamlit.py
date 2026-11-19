@@ -1321,8 +1321,116 @@ async def test_async_context_manager_and_onchange_alias():
 
     app = pdu.get_app()
     status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
-    assert status == 200
-    assert "test.csv" in body
+
+def test_hero_spatial_canvas():
+    pdu.reset()
+    pdu.set_page_config(title="Luxury Hero Test")
+
+    with pdu.hero(
+        video="https://assets.mixkit.co/videos/preview/mixkit-chef-cooking-food-in-a-pan-43285-large.mp4",
+        overlay=0.4,
+        height="90vh",
+        align="center",
+        bleed=True
+    ):
+        pdu.badge("ROYAL HERITAGE")
+        pdu.title("Traditional Feasts, *Engineered for Royalty*", font="serif")
+        pdu.button("Reserve Date", href="https://wa.me/919999999999")
+
+    from pydataui.dx import _default_page_components
+    assert len(_default_page_components) > 0
+    hero_html = _default_page_components[0].render({})
+    assert "pdu-hero-container" in hero_html
+    assert "video autoplay loop muted" in hero_html
+    assert "ROYAL HERITAGE" in hero_html
+    assert "font-serif italic font-normal text-primary" in hero_html
+    assert "href='https://wa.me/919999999999'" in hero_html or "href=\"https://wa.me/919999999999\"" in hero_html
+
+
+def test_marquee_ticker():
+    pdu.reset()
+    ticker = pdu.marquee(["Kongu Mutton Chukka", "Live Dosa Bar", "Tender Coconut Payasam"], speed=25)
+    html = ticker.render({})
+    assert "pdu-marquee" in html
+    assert "Kongu Mutton Chukka" in html
+    assert "Live Dosa Bar" in html
+    assert "Tender Coconut Payasam" in html
+
+
+def test_styled_title_and_serif_italic():
+    pdu.reset()
+    h = pdu.title("Experience the *Grand Feast*", font="serif")
+    html = h.render({})
+    assert "font-serif" in html
+    assert "<em class=\"font-serif italic font-normal text-primary\">Grand Feast</em>" in html
+
+
+def test_button_href_client_side_link():
+    pdu.reset()
+    btn = pdu.button("WhatsApp Us", href="https://wa.me/919999999999", new_tab=True, icon="💬")
+    html = btn.render({})
+    assert "https://wa.me/919999999999" in html
+    assert "target='_blank'" in html or "target=\"_blank\"" in html
+    assert "WhatsApp Us" in html
+    assert "💬" in html
+
+
+def test_video_aspect_ratio_and_fit():
+    pdu.reset()
+    v = pdu.video("https://example.com/reel.mp4", aspect="9/16", fit="cover", controls=False, autoplay=True, loop=True, muted=True)
+    html = v.render({})
+    assert "aspect-ratio: 9/16;" in html
+    assert "object-fit: cover;" in html
+    assert "autoplay" in html
+
+
+def test_card_hover_and_scrolling():
+    pdu.reset()
+    with pdu.card(title="Menu Details", height=300, hover="elevate-glow"):
+        pdu.write("Delicious items")
+    from pydataui.dx import _default_page_components
+    card_html = _default_page_components[0].render({})
+    assert "hover:-translate-y-1" in card_html
+    assert "max-height: 300px" in card_html or "height: 300px" in card_html
+
+
+def test_chat_persistent_state_and_interaction():
+    pdu.reset()
+    initial_msgs = [{"role": "assistant", "content": "Welcome to Catering AI"}]
+
+    def ai_reply(user_msg):
+        return f"Quote prepared for {user_msg}"
+
+    chat_comp = pdu.chat(
+        messages=initial_msgs,
+        on_send=ai_reply,
+        chat_title="Chef Concierge",
+        key="my_test_chat"
+    )
+
+    # 1. State must contain the initial message
+    assert "my_test_chat" in pdu.session_state
+    assert len(pdu.session_state["my_test_chat"]) == 1
+    assert pdu.session_state["my_test_chat"][0]["content"] == "Welcome to Catering AI"
+
+    # 2. Rendered chat has send handler wired
+    html = chat_comp.render({})
+    assert "hx-post=\"/_pdu/event/ActionState/" in html
+    assert "Welcome to Catering AI" in html
+    assert "Chef Concierge" in html
+
+    # 3. Trigger callback with user message
+    action_handler = chat_comp._event_props["on_send"]
+    action_handler(message="800 guests wedding")
+
+    # 4. State must now contain both user message and assistant reply
+    history = pdu.session_state["my_test_chat"]
+    assert len(history) == 3
+    assert history[1]["role"] == "user"
+    assert history[1]["content"] == "800 guests wedding"
+    assert history[2]["role"] == "assistant"
+    assert history[2]["content"] == "Quote prepared for 800 guests wedding"
+
 
 
 

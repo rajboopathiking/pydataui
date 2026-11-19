@@ -60,7 +60,7 @@ class Image(Component):
 
 class Video(Component):
     tag = 'video'
-    def __init__(self, src='', poster=None, caption=None, controls=True, autoplay=False, muted=False, loop=False, width=None, height=None, **props):
+    def __init__(self, src='', poster=None, caption=None, controls=True, autoplay=False, muted=False, loop=False, width=None, height=None, aspect=None, fit=None, **props):
         super().__init__(**props)
         self.caption = caption
         self.props['src'] = _normalize_media_src(src, "video/mp4")
@@ -71,6 +71,8 @@ class Video(Component):
         if loop: self.props['loop'] = 'loop'
         self.width = width
         self.height = height
+        self.aspect = aspect
+        self.fit = fit
         
     def _get_classes(self) -> List[str]:
         return super()._get_classes() + ['pdu-video', 'max-w-full', 'rounded-xl']
@@ -83,6 +85,10 @@ class Video(Component):
         if self.height:
             h_val = f"{self.height}px" if isinstance(self.height, (int, float)) else str(self.height)
             s += f" height: {h_val};"
+        if self.aspect:
+            s += f" aspect-ratio: {self.aspect};"
+        if self.fit:
+            s += f" object-fit: {self.fit};"
         return s.strip()
         
     def render(self, state_snapshot: dict) -> str:

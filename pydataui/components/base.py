@@ -223,6 +223,18 @@ class Component:
         encoding_val = self.props.get('hx-encoding')
         if encoding_val and attrs:
             attrs['hx-encoding'] = encoding_val
+
+        target_val = self.props.get('hx-target') or self.props.get('target')
+        if not target_val:
+            try:
+                from ..dx import _active_fragment_target
+                target_val = _active_fragment_target.get()
+            except Exception:
+                pass
+        if target_val and attrs:
+            attrs['hx-target'] = target_val
+            if 'hx-swap' not in attrs:
+                attrs['hx-swap'] = 'innerHTML'
         return attrs
     
     def _get_classes(self) -> List[str]:

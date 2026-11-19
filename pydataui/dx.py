@@ -99,6 +99,7 @@ _sidebar_components: List[Component] = []
 _container_stack: List[List[Component]] = []
 _active_container_stack: ContextVar[Optional[List[List[Component]]]] = ContextVar("_active_container_stack", default=None)
 _active_page_sidebar: ContextVar[Optional[List[Component]]] = ContextVar("_active_page_sidebar", default=None)
+_active_fragment_target: ContextVar[Optional[str]] = ContextVar("_active_fragment_target", default=None)
 _active_form_stack: List[Any] = []
 
 
@@ -1381,6 +1382,293 @@ def scrollable(
 def scroll_container(*children: Component, **kwargs) -> Box:
     """Alias for `scrollable`."""
     return scrollable(*children, **kwargs)
+
+
+# ============================================================================
+# Scoped Procedural Fragments, Guided Wizards & 3D WebGL Primitives
+# ============================================================================
+
+class _FragmentWrapper(Component):
+    """Container component wrapping an isolated UI fragment."""
+    def __init__(
+        self,
+        fragment_id: str,
+        children: List[Component],
+        run_every: Optional[Union[str, int, float]] = None,
+        class_name: str = "",
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.id = fragment_id
+        self.children_list = children
+        self.run_every = run_every
+        self.class_name = class_name
+
+    def render(self, state_snapshot=None) -> str:
+        attrs = []
+        if self.run_every:
+            interval_str = f"{self.run_every}s" if isinstance(self.run_every, (int, float)) or (isinstance(self.run_every, str) and str(self.run_every).isdigit()) else str(self.run_every)
+            attrs.append(f'hx-get="/_pdu/event/ActionState/{self.id}"')
+            attrs.append(f'hx-trigger="every {interval_str}"')
+            attrs.append(f'hx-target="#{self.id}"')
+            attrs.append('hx-swap="innerHTML"')
+        
+        rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        attr_str = " ".join(attrs)
+        if attr_str:
+            attr_str = " " + attr_str
+        extra_cls = f" {self.class_name}" if self.class_name else ""
+        return f"<div id='{self.id}' class='pdu-fragment w-full{extra_cls}'{attr_str}>{rendered_children}</div>"
+
+
+def fragment(func: Optional[Callable] = None, *, run_every: Optional[Union[str, int, float]] = None, class_name: str = ""):
+    """
+    Decorator to create an isolated procedural UI fragment (Streamlit `st.fragment` equivalent).
+    
+    When widgets inside an `@pdu.fragment` trigger events, only this fragment's Python code
+    is re-executed, and only this fragment's container in the DOM is swapped via HTMX.
+    
+    If `run_every` is specified (e.g. `run_every="3s"` or `run_every=5`), the fragment automatically
+    polls the server on that recurring schedule, enabling real-time streaming without full-page re-renders.
+    
+    Example::
+    
+        @pdu.fragment(run_every="2s")
+        def live_metrics():
+            pdu.metric("Throughput", get_throughput())
+            pdu.line_chart(get_history())
+            
+        @pdu.fragment
+        def counter_box():
+            val = pdu.session_state.get("c", 0)
+            pdu.write(f"Count: {val}")
+            if pdu.button("+1"):
+                pdu.session_state["c"] = val + 1
+    """
+    def decorator(fn: Callable):
+        frag_name = getattr(fn, "__name__", "frag")
+        frag_id = f"frag_{frag_name}_{abs(hash(fn.__code__)) % 100000}"
+
+        def fragment_action_handler(self=None, *args, **kwargs):
+            frag_children: List[Component] = []
+            stack = _get_container_stack()
+            stack.append(frag_children)
+            token_target = _active_fragment_target.set(f"#{frag_id}")
+            try:
+                sig = inspect.signature(fn)
+                if len(sig.parameters) == 0:
+                    fn()
+                else:
+                    call_k = {k: v for k, v in kwargs.items() if k in sig.parameters}
+                    fn(**call_k)
+            finally:
+                _active_fragment_target.reset(token_target)
+                if stack and stack[-1] is frag_children:
+                    stack.pop()
+
+            content = "".join(c.render({}) for c in frag_children)
+            return HTMLResponse(content, status_code=200)
+
+        fragment_action_handler.__name__ = frag_id
+        setattr(ActionState, frag_id, fragment_action_handler)
+        _callbacks[frag_id] = fragment_action_handler
+
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            frag_children: List[Component] = []
+            stack = _get_container_stack()
+            stack.append(frag_children)
+            token_target = _active_fragment_target.set(f"#{frag_id}")
+            try:
+                sig = inspect.signature(fn)
+                if len(sig.parameters) == 0:
+                    fn()
+                else:
+                    fn(*args, **kwargs)
+            finally:
+                _active_fragment_target.reset(token_target)
+                if stack and stack[-1] is frag_children:
+                    stack.pop()
+
+            comp = _FragmentWrapper(frag_id, frag_children, run_every=run_every, class_name=class_name)
+            return _add_component(comp)
+
+        wrapper.__name__ = fn.__name__
+        wrapper._fragment_id = frag_id
+        return wrapper
+
+    if func is not None and callable(func):
+        return decorator(func)
+    return decorator
+
+
+class _WizardWrapper(Component):
+    """Multi-step guided workflow wizard container."""
+    def __init__(self, steps: List[str], current_step: int, step_contexts: List[ColumnContext], wizard_key: str, **kwargs):
+        super().__init__(**kwargs)
+        self.steps = steps
+        self.current_step = max(0, min(current_step, len(steps) - 1))
+        self.step_contexts = step_contexts
+        self.wizard_key = wizard_key
+
+    def render(self, state_snapshot=None) -> str:
+        step_items = []
+        for idx, name in enumerate(self.steps):
+            is_done = idx < self.current_step
+            is_active = idx == self.current_step
+            
+            if is_done:
+                badge_cls = "bg-primary text-primary-foreground font-bold shadow-xs"
+                badge_icon = "✓"
+                text_cls = "text-foreground font-medium"
+            elif is_active:
+                badge_cls = "bg-primary text-primary-foreground font-bold ring-4 ring-primary/20 shadow-sm"
+                badge_icon = str(idx + 1)
+                text_cls = "text-primary font-bold"
+            else:
+                badge_cls = "bg-muted text-muted-foreground font-semibold"
+                badge_icon = str(idx + 1)
+                text_cls = "text-muted-foreground"
+
+            connector = ""
+            if idx > 0:
+                conn_color = "bg-primary" if (is_done or is_active) else "bg-border"
+                connector = f"<div class='flex-1 h-0.5 {conn_color} mx-2 transition-colors'></div>"
+
+            step_items.append(f"{connector}<div class='flex items-center gap-2'><span class='w-7 h-7 rounded-full flex items-center justify-center text-xs {badge_cls}'>{badge_icon}</span><span class='text-xs md:text-sm {text_cls} whitespace-nowrap'>{escape_html(name)}</span></div>")
+
+        indicator_html = f"<div class='flex items-center justify-between w-full p-4 mb-6 bg-muted/20 border border-border/80 rounded-2xl'>{''.join(step_items)}</div>"
+
+        active_ctx = self.step_contexts[self.current_step]
+        step_content = active_ctx.to_component().render(state_snapshot)
+
+        prev_btn = ""
+        if self.current_step > 0:
+            prev_btn = f"<button type='button' onclick=\"const inp=document.getElementById('{self.wizard_key}_step');if(inp){{inp.value='{self.current_step - 1}';}};const f=this.closest('form');if(f){{const b=f.querySelector('button[type=submit]');if(b)b.click();}}\" class='px-4 py-2 text-xs font-semibold rounded-xl border border-border bg-card hover:bg-muted text-foreground transition cursor-pointer'>← Previous</button>"
+
+        next_label = "Complete" if self.current_step == len(self.steps) - 1 else "Next Step →"
+        next_step_val = self.current_step + 1 if self.current_step < len(self.steps) - 1 else self.current_step
+
+        controls_html = (
+            f"<div class='flex items-center justify-between pt-6 border-t border-border/60 mt-6'>"
+            f"  <div>{prev_btn}</div>"
+            f"  <button type='button' onclick=\"const inp=document.getElementById('{self.wizard_key}_step');if(inp){{inp.value='{next_step_val}';}};const f=this.closest('form');if(f){{const b=f.querySelector('button[type=submit]');if(b)b.click();}}\" class='px-5 py-2 text-xs font-semibold rounded-xl bg-primary text-primary-foreground hover:opacity-90 shadow-sm transition cursor-pointer'>{next_label}</button>"
+            f"</div>"
+        )
+
+        return (
+            f"<div class='pdu-wizard w-full my-4 border border-border/80 rounded-2xl p-6 bg-card shadow-sm'>"
+            f"  <input type='hidden' id='{self.wizard_key}_step' name='{self.wizard_key}_step' value='{self.current_step}' />"
+            f"  {indicator_html}"
+            f"  <div class='min-h-[160px]'>{step_content}</div>"
+            f"  {controls_html}"
+            f"</div>"
+        )
+
+
+def wizard(steps: List[str], key: Optional[str] = None, **kwargs) -> List[ColumnContext]:
+    """
+    Create a guided multi-step wizard workflow (e.g. Onboarding, Checkout, Multi-Step Inquiry).
+    
+    Returns a list of step contexts corresponding to each step in `steps`.
+    
+    Example::
+    
+        step1, step2, step3 = pdu.wizard(["Contact Info", "Menu Selection", "Confirm"])
+        with step1:
+            pdu.text_input("Full Name", key="name")
+        with step2:
+            pdu.selectbox("Package", ["Kongu Feasts", "Royal Chettinad"])
+        with step3:
+            pdu.write("Review booking...")
+    """
+    wiz_key = key or f"_wizard_{generate_id('wiz')}"
+    current_step = int(session_state.get(f"{wiz_key}_step", 0))
+    contexts = [ColumnContext() for _ in steps]
+    _add_component(_WizardWrapper(steps, current_step, contexts, wiz_key, **kwargs))
+    return contexts
+
+
+def model_viewer(
+    src: str,
+    alt: Optional[str] = "3D Interactive Model",
+    auto_rotate: bool = True,
+    camera_controls: bool = True,
+    ar: bool = True,
+    poster: Optional[str] = None,
+    height: Union[int, str] = "450px",
+    width: Union[int, str] = "100%",
+    shadow_intensity: float = 1.0,
+    background_color: str = "transparent",
+    class_name: str = "",
+    **kwargs
+) -> Component:
+    """
+    Embed an interactive 3D model viewer supporting glTF/GLB models, AR, and orbit controls.
+    
+    Example::
+    
+        pdu.model_viewer(
+            "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+            height="500px",
+            auto_rotate=True
+        )
+    """
+    h_val = f"{height}px" if isinstance(height, (int, float)) or (isinstance(height, str) and str(height).isdigit()) else str(height)
+    w_val = f"{width}px" if isinstance(width, (int, float)) or (isinstance(width, str) and str(width).isdigit()) else str(width)
+    
+    ar_attr = "ar" if ar else ""
+    rotate_attr = "auto-rotate" if auto_rotate else ""
+    controls_attr = "camera-controls" if camera_controls else ""
+    poster_attr = f"poster='{escape_html(poster)}'" if poster else ""
+    
+    mv_id = generate_id("mv")
+    html_code = (
+        f"<script type='module' src='https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js'></script>"
+        f"<div class='pdu-3d-model-container w-full rounded-2xl overflow-hidden border border-border/80 bg-card shadow-sm my-4 {class_name}'>"
+        f"<model-viewer id='{mv_id}' src='{escape_html(src)}' alt='{escape_html(alt)}' "
+        f"{controls_attr} {rotate_attr} {ar_attr} {poster_attr} shadow-intensity='{shadow_intensity}' "
+        f"style='width: {w_val}; height: {h_val}; background-color: {background_color}; outline: none;' touch-action='pan-y'>"
+        f"</model-viewer>"
+        f"</div>"
+    )
+    return _add_component(RawHtml(html_code))
+
+
+def client_toggle(
+    label: str,
+    target_id: str,
+    action: str = "toggle",
+    icon: Optional[str] = None,
+    type: str = "secondary",
+    class_name: str = "",
+    **kwargs
+) -> Component:
+    """
+    Add a zero-latency client-side toggle button that shows or hides elements without an ASGI round-trip.
+    
+    Example::
+    
+        pdu.client_toggle("Toggle Debug Log", target_id="debug_panel")
+    """
+    icon_html = f"<span class='mr-1.5'>{escape_html(icon)}</span>" if icon else ""
+    btn_cls = "bg-primary text-primary-foreground hover:opacity-90" if type == "primary" else "bg-muted/80 hover:bg-muted text-foreground border border-border/80"
+    
+    clean_target = target_id.lstrip("#")
+    if action == "show":
+        js_action = f"const el = document.getElementById('{clean_target}'); if (el) {{ el.classList.remove('hidden'); el.style.display = 'block'; }}"
+    elif action == "hide":
+        js_action = f"const el = document.getElementById('{clean_target}'); if (el) {{ el.classList.add('hidden'); el.style.display = 'none'; }}"
+    else:
+        js_action = f"const el = document.getElementById('{clean_target}'); if (el) {{ if (el.classList.contains('hidden') || el.style.display === 'none') {{ el.classList.remove('hidden'); el.style.display = 'block'; }} else {{ el.classList.add('hidden'); el.style.display = 'none'; }} }}"
+        
+    html_code = (
+        f"<button type='button' onclick=\"{js_action}\" "
+        f"class='inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer select-none shadow-xs {btn_cls} {class_name}'>"
+        f"{icon_html}<span>{escape_html(label)}</span>"
+        f"</button>"
+    )
+    return _add_component(RawHtml(html_code))
 
 
 # ============================================================================

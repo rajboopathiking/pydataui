@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.5.7'
+__version__ = '1.6.0'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -107,6 +107,10 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'breadcrumb': ('.dx', 'breadcrumb'),
     'hero': ('.dx', 'hero'),
     'marquee': ('.dx', 'marquee'),
+    'fragment': ('.dx', 'fragment'),
+    'wizard': ('.dx', 'wizard'),
+    'model_viewer': ('.dx', 'model_viewer'),
+    'client_toggle': ('.dx', 'client_toggle'),
     'loader': ('.dx', 'loader'),
     'skeleton': ('.dx', 'skeleton'),
     'image': ('.dx', 'image'),
@@ -213,6 +217,8 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'chat_message': ('.dx', 'chat_message'),
     'chat_input': ('.dx', 'chat_input'),
     'chat': ('.dx', 'chat'),
+    'hero': ('.dx', 'hero'),
+    'marquee': ('.dx', 'marquee'),
     'card': ('.dx', 'card'),
     'row': ('.dx', 'row'),
     'column': ('.dx', 'column'),
@@ -238,6 +244,12 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'error': ('.dx', 'error'),
     'toast': ('.dx', 'toast'),
     'spinner': ('.dx', 'spinner'),
+    'loader': ('.dx', 'loader'),
+    'skeleton': ('.dx', 'skeleton'),
+    'fragment': ('.dx', 'fragment'),
+    'wizard': ('.dx', 'wizard'),
+    'model_viewer': ('.dx', 'model_viewer'),
+    'client_toggle': ('.dx', 'client_toggle'),
     'progress': ('.dx', 'progress'),
     'set_page_config': ('.dx', 'set_page_config'),
     'theme_toggle': ('.dx', 'theme_toggle'),
@@ -379,7 +391,8 @@ if TYPE_CHECKING:
         column, col, box, flex, grid, spacer, pinned, overlay, badge, sparkline,
         stat_card, date_input, time_input, search_input, pricing_card,
         divider, code_editor, success, info, warning, error, toast,
-        spinner, loader, skeleton, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
+        spinner, loader, skeleton, progress, fragment, wizard, model_viewer, client_toggle,
+        set_page_config, theme_toggle, page, page_link, switch_page, rerun,
         form, form_submit_button, dialog, status, empty, cache_data, cache_resource, navigation,
         login, logout, is_authenticated, create_user, run,
         get_app, get_fastapi, get_default_app

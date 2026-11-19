@@ -1490,6 +1490,92 @@ def test_skeleton_placeholders():
     assert "rounded-2xl" in html_card
 
 
+def test_fragment_scoped_rendering():
+    pdu.reset()
+
+    # 1. Fragment with run_every polling
+    @pdu.fragment(run_every="3s")
+    def live_metrics():
+        pdu.metric("Realtime Latency", "12ms")
+
+    frag_comp = live_metrics()
+    rendered = frag_comp.render({})
+    assert "pdu-fragment" in rendered
+    assert "hx-trigger='every 3s'" in rendered or 'hx-trigger="every 3s"' in rendered
+    assert "Realtime Latency" in rendered
+    assert "12ms" in rendered
+
+    # 2. Verify fragment action handler returns isolated HTMLResponse without full page
+    frag_id = live_metrics._fragment_id
+    from pydataui.dx import ActionState
+    handler = getattr(ActionState, frag_id)
+    assert callable(handler)
+    resp = handler()
+    from pydataui.responses import HTMLResponse
+    assert isinstance(resp, HTMLResponse)
+    assert resp.status_code == 200
+    assert "Realtime Latency" in resp.body.decode('utf-8')
+    assert "12ms" in resp.body.decode('utf-8')
+
+
+def test_wizard_multistep_workflow():
+    pdu.reset()
+    step1, step2, step3 = pdu.wizard(["Personal Info", "Payment Plan", "Confirmation"], key="reg_wizard")
+    with step1:
+        pdu.write("Step 1: Enter your name")
+    with step2:
+        pdu.write("Step 2: Choose subscription")
+    with step3:
+        pdu.write("Step 3: Review & confirm")
+
+    from pydataui.dx import _default_page_components
+    assert len(_default_page_components) >= 1
+    wizard_comp = _default_page_components[0]
+    html = wizard_comp.render({})
+
+    assert "pdu-wizard" in html
+    assert "Personal Info" in html
+    assert "Payment Plan" in html
+    assert "Confirmation" in html
+    assert "reg_wizard_step" in html
+    assert "Step 1: Enter your name" in html
+    assert "Next Step →" in html
+
+
+def test_model_viewer_3d_component():
+    pdu.reset()
+    mv = pdu.model_viewer(
+        "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+        alt="Astronaut Model",
+        auto_rotate=True,
+        camera_controls=True,
+        poster="https://modelviewer.dev/shared-assets/models/Astronaut.webp",
+        height="500px"
+    )
+    rendered = mv.render({})
+    assert "<model-viewer" in rendered
+    assert "https://modelviewer.dev/shared-assets/models/Astronaut.glb" in rendered
+    assert "auto-rotate" in rendered
+    assert "camera-controls" in rendered
+    assert "model-viewer.min.js" in rendered
+    assert "height: 500px" in rendered
+
+
+def test_client_toggle_zero_latency():
+    pdu.reset()
+    btn = pdu.client_toggle(
+        "Toggle Analytics Details",
+        target_id="analytics_drawer",
+        icon="📊"
+    )
+    rendered = btn.render({})
+    assert "onclick=" in rendered
+    assert "document.getElementById('analytics_drawer')" in rendered
+    assert "Toggle Analytics Details" in rendered
+    assert "📊" in rendered
+
+
+
 
 
 

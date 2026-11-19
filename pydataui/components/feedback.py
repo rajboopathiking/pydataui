@@ -92,31 +92,148 @@ class Spinner(Component):
             return f"<div class='pdu-spinner-wrapper'>{spinner}<span class='pdu-spinner-label'>{lbl}</span></div>"
         return spinner
 
+
+class Loader(Component):
+    """
+    Modern high-performance loading animation component supporting essential visual presets:
+    - 'circle': SVG spinning ring with smooth 360° rotation + text (e.g. circle() {text})
+    - 'dots': 3 staggered bouncing/pulsing dots (LLM thinking / typing indicator: ... {text} or {text} ...)
+    - 'pulse': Glowing radar ping status beacon + text
+    - 'bars': Equalizer wave bars + text
+    - 'shimmer': Shimmering pulse text
+    """
+    tag = 'div'
+    def __init__(
+        self,
+        text: Optional[str] = None,
+        preset: str = "circle",
+        size: str = "md",
+        color: Optional[str] = None,
+        dots_position: str = "start",
+        center: bool = False,
+        **props
+    ):
+        super().__init__(**props)
+        self.text = text
+        self.preset = preset.lower() if preset else "circle"
+        self.size = size
+        self.color = color or "primary"
+        self.dots_position = dots_position
+        self.center = center
+
+    def render(self, state_snapshot: Optional[dict] = None) -> str:
+        snap = state_snapshot or {}
+        label_text = self._resolve_value(self.text, snap)
+        label_html = f"<span class='font-medium text-foreground/90'>{escape_html(str(label_text))}</span>" if label_text else ""
+        
+        size_configs = {
+            "sm": {"circle": "w-4 h-4", "dot": "w-1.5 h-1.5", "bar": "h-3 w-0.5", "text": "text-xs", "gap": "gap-2"},
+            "md": {"circle": "w-5 h-5", "dot": "w-2 h-2", "bar": "h-4 w-1", "text": "text-sm", "gap": "gap-2.5"},
+            "lg": {"circle": "w-7 h-7", "dot": "w-2.5 h-2.5", "bar": "h-6 w-1.5", "text": "text-base", "gap": "gap-3"},
+            "xl": {"circle": "w-10 h-10", "dot": "w-3.5 h-3.5", "bar": "h-8 w-2", "text": "text-lg", "gap": "gap-4"},
+        }
+        cfg = size_configs.get(self.size, size_configs["md"])
+        center_cls = "justify-center" if self.center else "justify-start"
+
+        if self.preset in ("circle", "spinner", "ring"):
+            anim_html = (
+                f"<svg class='animate-spin {cfg['circle']} text-primary shrink-0' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>"
+                f"<circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='3.5'></circle>"
+                f"<path class='opacity-85' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>"
+                f"</svg>"
+            )
+            content = f"{anim_html}{label_html}"
+
+        elif self.preset in ("dots", "ellipsis", "bounce", "..."):
+            anim_html = (
+                f"<span class='inline-flex items-center gap-1 shrink-0' aria-hidden='true'>"
+                f"<span class='{cfg['dot']} rounded-full bg-primary animate-bounce [animation-delay:-0.32s]'></span>"
+                f"<span class='{cfg['dot']} rounded-full bg-primary animate-bounce [animation-delay:-0.16s]'></span>"
+                f"<span class='{cfg['dot']} rounded-full bg-primary animate-bounce'></span>"
+                f"</span>"
+            )
+            if self.dots_position == "end":
+                content = f"{label_html}{anim_html}"
+            else:
+                content = f"{anim_html}{label_html}"
+
+        elif self.preset in ("pulse", "radar", "beacon"):
+            anim_html = (
+                f"<span class='relative flex {cfg['circle']} items-center justify-center shrink-0'>"
+                f"<span class='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60'></span>"
+                f"<span class='relative inline-flex rounded-full {cfg['dot']} bg-primary'></span>"
+                f"</span>"
+            )
+            content = f"{anim_html}{label_html}"
+
+        elif self.preset in ("bars", "wave", "equalizer", "audio"):
+            anim_html = (
+                f"<span class='inline-flex items-end gap-1 shrink-0' style='height: 20px;' aria-hidden='true'>"
+                f"<span class='{cfg['bar']} bg-primary rounded-full animate-bounce [animation-delay:-0.4s]'></span>"
+                f"<span class='{cfg['bar']} bg-primary rounded-full animate-bounce [animation-delay:-0.2s]'></span>"
+                f"<span class='{cfg['bar']} bg-primary rounded-full animate-bounce [animation-delay:-0.35s]'></span>"
+                f"<span class='{cfg['bar']} bg-primary rounded-full animate-bounce [animation-delay:-0.1s]'></span>"
+                f"</span>"
+            )
+            content = f"{anim_html}{label_html}"
+
+        elif self.preset in ("shimmer", "glow"):
+            anim_html = f"<span class='animate-pulse text-primary font-bold tracking-widest text-xs uppercase shrink-0'>●</span>"
+            text_shimmer = f"<span class='animate-pulse font-medium text-foreground/90'>{escape_html(str(label_text or 'Loading...'))}</span>"
+            content = f"{anim_html}{text_shimmer}"
+
+        else:
+            anim_html = (
+                f"<svg class='animate-spin {cfg['circle']} text-primary shrink-0' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>"
+                f"<circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='3.5'></circle>"
+                f"<path class='opacity-85' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>"
+                f"</svg>"
+            )
+            content = f"{anim_html}{label_html}"
+
+        attrs = self._build_attrs(snap)
+        return (
+            f"<div {attrs} class='pdu-loader inline-flex items-center {cfg['gap']} {cfg['text']} {center_cls} my-2 p-1.5 select-none'>"
+            f"{content}"
+            f"</div>"
+        )
+
+
 class Skeleton(Component):
     tag = 'div'
-    def __init__(self, width=None, height=None, variant='rectangle', lines=1, **props):
+    def __init__(self, width=None, height=None, variant='rectangle', lines=1, rounded="xl", **props):
         super().__init__(**props)
         self.width = width
         self.height = height
         self.variant = variant
         self.lines = lines
+        self.rounded = rounded
         
     def _get_classes(self) -> List[str]:
-        return super()._get_classes() + ['pdu-skeleton', f'pdu-skeleton-{self.variant}']
+        classes = super()._get_classes() + ['pdu-skeleton', 'animate-pulse', 'bg-muted/80', f'rounded-{self.rounded}']
+        if self.variant == 'circle':
+            classes.append('rounded-full')
+        return classes
         
     def _get_style_string(self) -> str:
         s = super()._get_style_string()
-        if self.width: s += f" width: {self.width};"
-        if self.height: s += f" height: {self.height};"
+        if self.width:
+            w_val = f"{self.width}px" if isinstance(self.width, (int, float)) or (isinstance(self.width, str) and str(self.width).isdigit()) else str(self.width)
+            s += f" width: {w_val};"
+        if self.height:
+            h_val = f"{self.height}px" if isinstance(self.height, (int, float)) or (isinstance(self.height, str) and str(self.height).isdigit()) else str(self.height)
+            s += f" height: {h_val};"
         return s.strip()
         
-    def render(self, state_snapshot: dict) -> str:
-        if self.lines > 1 and self.variant == 'text':
-            lines = []
-            for _ in range(self.lines):
-                lines.append(super().render(state_snapshot))
-            return f"<div class='pdu-skeleton-lines'>{''.join(lines)}</div>"
-        return super().render(state_snapshot)
+    def render(self, state_snapshot: Optional[dict] = None) -> str:
+        attrs = self._build_attrs(state_snapshot or {})
+        if self.lines > 1:
+            line_htmls = []
+            for i in range(self.lines):
+                w_style = "width: 100%;" if i < self.lines - 1 else "width: 70%;"
+                line_htmls.append(f"<div class='h-4 bg-muted/80 rounded-md animate-pulse my-1.5' style='{w_style}'></div>")
+            return f"<div class='pdu-skeleton-lines w-full my-2'>{''.join(line_htmls)}</div>"
+        return f"<{self.tag} {attrs}></{self.tag}>"
 
 class Toast(Component):
     tag = 'div'

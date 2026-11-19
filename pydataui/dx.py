@@ -1584,19 +1584,87 @@ def toast(message: str, icon: str = "🔔") -> Component:
 
 
 class _SpinnerContext:
-    def __init__(self, text_msg: str = "Loading..."):
+    def __init__(self, text_msg: str = "Loading...", preset: str = "circle", size: str = "md", **kwargs):
         self.text_msg = text_msg
+        self.preset = preset
+        self.size = size
+        self.kwargs = kwargs
+        from .components.feedback import Loader
+        self.loader_comp = Loader(text=text_msg, preset=preset, size=size, **kwargs)
 
     def __enter__(self):
+        _add_component(self.loader_comp)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
+    def render(self, state_snapshot=None) -> str:
+        return self.loader_comp.render(state_snapshot)
 
-def spinner(text_msg: str = "Loading...") -> _SpinnerContext:
-    """Context manager for long-running operations."""
-    return _SpinnerContext(text_msg)
+
+def spinner(
+    text_msg: str = "Loading...",
+    preset: str = "circle",
+    size: str = "md",
+    dots_position: str = "start",
+    center: bool = False,
+    **kwargs
+) -> _SpinnerContext:
+    """
+    Render a modern loading animation with visual presets, or use as a context manager (`with pdu.spinner("Thinking...", preset="dots"):`).
+
+    Available Presets:
+    - 'circle': Smooth SVG spinning ring + text (circle() {text})
+    - 'dots': Staggered bouncing dots + text (... {text} or {text} ...)
+    - 'pulse': Glowing radar beacon + text
+    - 'bars': Equalizer wave bars + text
+    - 'shimmer': Shimmering pulse text
+    """
+    return _SpinnerContext(text_msg=text_msg, preset=preset, size=size, dots_position=dots_position, center=center, **kwargs)
+
+
+def loader(
+    text: Optional[str] = None,
+    preset: str = "circle",
+    size: str = "md",
+    dots_position: str = "start",
+    center: bool = False,
+    **kwargs
+) -> Component:
+    """
+    Add a dedicated loading animation widget to the page with essential visual presets.
+
+    Example::
+
+        pdu.loader("Analyzing cluster telemetry...", preset="circle")
+        pdu.loader("Copilot thinking...", preset="dots")
+        pdu.loader("Audio stream synthesizing...", preset="bars")
+        pdu.loader("Live telemetry connection active", preset="pulse")
+        pdu.loader("Preparing response...", preset="shimmer")
+    """
+    from .components.feedback import Loader
+    return _add_component(Loader(text=text, preset=preset, size=size, dots_position=dots_position, center=center, **kwargs))
+
+
+def skeleton(
+    lines: int = 1,
+    width: Optional[Union[int, str]] = None,
+    height: Optional[Union[int, str]] = None,
+    variant: str = "rectangle",
+    rounded: str = "xl",
+    **kwargs
+) -> Component:
+    """
+    Render shimmering placeholder skeleton cards or lines while data is loading.
+
+    Example::
+
+        pdu.skeleton(lines=4)
+        pdu.skeleton(height=240, rounded="2xl")
+    """
+    from .components.feedback import Skeleton
+    return _add_component(Skeleton(width=width, height=height, variant=variant, lines=lines, rounded=rounded, **kwargs))
 
 
 def progress(value: int, text_label: str = "") -> Component:
@@ -3831,7 +3899,7 @@ class _StatusWrapper(Component):
 
     def render(self, state_snapshot=None) -> str:
         icons = {
-            "running": "<span class='inline-block animate-spin text-primary'>⏳</span>",
+            "running": "<svg class='animate-spin w-4 h-4 text-primary shrink-0' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'><circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='3.5'></circle><path class='opacity-85' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path></svg>",
             "complete": "<span class='text-emerald-500 font-bold'>✓</span>",
             "error": "<span class='text-rose-500 font-bold'>✕</span>",
         }

@@ -1432,6 +1432,65 @@ def test_chat_persistent_state_and_interaction():
     assert history[2]["content"] == "Quote prepared for 800 guests wedding"
 
 
+def test_loader_presets():
+    pdu.reset()
+    # 1. Circle preset: circle() {text}
+    ld_circle = pdu.loader("Connecting to GPU cluster...", preset="circle")
+    html_circle = ld_circle.render({})
+    assert "animate-spin" in html_circle
+    assert "Connecting to GPU cluster..." in html_circle
+
+    # 2. Dots preset: ... {text} (bouncing dots before text)
+    ld_dots_start = pdu.loader("AI Chef thinking", preset="dots", dots_position="start")
+    html_dots = ld_dots_start.render({})
+    assert "animate-bounce" in html_dots
+    assert "AI Chef thinking" in html_dots
+
+    # 3. Dots preset: {text} ... (dots after text)
+    ld_dots_end = pdu.loader("Processing", preset="dots", dots_position="end")
+    html_dots_end = ld_dots_end.render({})
+    assert "animate-bounce" in html_dots_end
+    assert "Processing" in html_dots_end
+
+    # 4. Pulse preset: radar beacon + text
+    ld_pulse = pdu.loader("Live telemetry stream active", preset="pulse")
+    html_pulse = ld_pulse.render({})
+    assert "animate-ping" in html_pulse
+    assert "Live telemetry stream active" in html_pulse
+
+    # 5. Bars preset: equalizer wave + text
+    ld_bars = pdu.loader("Synthesizing voice audio...", preset="bars")
+    html_bars = ld_bars.render({})
+    assert "animate-bounce" in html_bars
+    assert "Synthesizing voice audio..." in html_bars
+
+
+def test_spinner_context_manager_with_presets():
+    pdu.reset()
+    with pdu.spinner("Neural network inference in progress...", preset="dots"):
+        pdu.write("Processing payload...")
+
+    from pydataui.dx import _default_page_components
+    assert len(_default_page_components) >= 2
+    spinner_html = _default_page_components[0].render({})
+    assert "animate-bounce" in spinner_html
+    assert "Neural network inference in progress..." in spinner_html
+
+
+def test_skeleton_placeholders():
+    pdu.reset()
+    sk_lines = pdu.skeleton(lines=3)
+    html_lines = sk_lines.render({})
+    assert "pdu-skeleton-lines" in html_lines
+    assert "animate-pulse" in html_lines
+
+    sk_card = pdu.skeleton(height=180, rounded="2xl")
+    html_card = sk_card.render({})
+    assert "height: 180px;" in html_card
+    assert "rounded-2xl" in html_card
+
+
+
 
 
 

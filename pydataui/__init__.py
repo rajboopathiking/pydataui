@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.5.6'
+__version__ = '1.5.7'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -74,6 +74,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'Alert': ('.components.feedback', 'Alert'),
     'Progress': ('.components.feedback', 'Progress'),
     'Spinner': ('.components.feedback', 'Spinner'),
+    'Loader': ('.components.feedback', 'Loader'),
     'Skeleton': ('.components.feedback', 'Skeleton'),
     'Toast': ('.components.feedback', 'Toast'),
     'Empty': ('.components.feedback', 'Empty'),
@@ -106,6 +107,8 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'breadcrumb': ('.dx', 'breadcrumb'),
     'hero': ('.dx', 'hero'),
     'marquee': ('.dx', 'marquee'),
+    'loader': ('.dx', 'loader'),
+    'skeleton': ('.dx', 'skeleton'),
     'image': ('.dx', 'image'),
     'video': ('.dx', 'video'),
     'audio': ('.dx', 'audio'),
@@ -358,7 +361,7 @@ if TYPE_CHECKING:
     from .components.typography import Heading, Text, Paragraph, Link, Code, Blockquote, Label
     from .components.forms import Button, Input, TextArea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, Form, FileUpload
     from .components.data_display import DataTable, Table, Badge, Tag, Stat, KeyValue, Avatar, Tooltip, List, ListItem, DescriptionList
-    from .components.feedback import Alert, Progress, Spinner, Skeleton, Toast, Empty
+    from .components.feedback import Alert, Progress, Spinner, Loader, Skeleton, Toast, Empty
     from .components.navigation import Navbar, NavLink, Breadcrumb, Tabs, Tab, Pagination, Menu
     from .components.overlay import Modal, Drawer, Popover, Dropdown
     from .mount import mount
@@ -376,7 +379,7 @@ if TYPE_CHECKING:
         column, col, box, flex, grid, spacer, pinned, overlay, badge, sparkline,
         stat_card, date_input, time_input, search_input, pricing_card,
         divider, code_editor, success, info, warning, error, toast,
-        spinner, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
+        spinner, loader, skeleton, progress, set_page_config, theme_toggle, page, page_link, switch_page, rerun,
         form, form_submit_button, dialog, status, empty, cache_data, cache_resource, navigation,
         login, logout, is_authenticated, create_user, run,
         get_app, get_fastapi, get_default_app

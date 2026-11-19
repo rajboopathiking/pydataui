@@ -293,24 +293,27 @@ class TunnelManager:
         try:
             proc.kill()
             proc.wait(timeout=1)
-        except Exception:
+        except BaseException:
             pass
 
     def stop_tunnel(self):
         """Cleanly terminate the background tunnel process."""
-        if self.process:
-            self._kill_process(self.process)
-            self.process = None
+        try:
+            if self.process:
+                self._kill_process(self.process)
+                self.process = None
 
-        if hasattr(self, '_pty_master') and self._pty_master is not None:
-            try:
-                import os
-                os.close(self._pty_master)
-            except Exception:
-                pass
-            self._pty_master = None
+            if hasattr(self, '_pty_master') and self._pty_master is not None:
+                try:
+                    import os
+                    os.close(self._pty_master)
+                except BaseException:
+                    pass
+                self._pty_master = None
 
-        self.public_url = None
+            self.public_url = None
+        except BaseException:
+            pass
 
     def stop(self):
         """Convenience alias for stop_tunnel."""

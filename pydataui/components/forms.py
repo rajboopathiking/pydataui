@@ -366,6 +366,46 @@ class Form(Component):
         return ShadForm.from_pydantic(model_class, on_submit=on_submit, **kwargs)
 
 
+class LazyDataProxy:
+    """
+    Lazy proxy representing uploaded file data that resolves dynamically upon render.
+    Allows procedural code like `pdu.write(dataset.get_data())` to bind cleanly
+    before any file is uploaded, and automatically display the table once uploaded.
+    """
+    def __init__(self, uploader: Any):
+        self._uploader = uploader
+
+    def _resolve(self) -> Any:
+        try:
+            from ..dx import session_state
+            k = getattr(self._uploader, "key", None) or getattr(self._uploader, "name", None) or self._uploader.props.get("name")
+            val = session_state.get(k) if k else None
+            if val is None:
+                val = session_state.get("last_uploaded_file")
+            if val is not None:
+                if hasattr(val, "get_data"):
+                    return val.get_data()
+                if hasattr(val, "to_pandas"):
+                    return val.to_pandas()
+                return val
+        except Exception:
+            pass
+        return None
+
+    def __bool__(self) -> bool:
+        return self._resolve() is not None
+
+    def __getattr__(self, name: str) -> Any:
+        res = self._resolve()
+        if res is not None:
+            return getattr(res, name)
+        raise AttributeError(f"No file has been uploaded yet (cannot access '{name}'). Check 'if dataset:' first.")
+
+    def __repr__(self) -> str:
+        res = self._resolve()
+        return repr(res) if res is not None else "<Empty FileUpload dataset>"
+
+
 class FileUpload(Input):
     def __init__(self, name='file', accept=None, multiple=False, label='Choose file', on_change=None, **props):
         super().__init__(type='file', name=name, label=label, on_change=on_change, **props)
@@ -376,9 +416,58 @@ class FileUpload(Input):
                 self.props['accept'] = str(accept)
         if multiple: self.props['multiple'] = 'multiple'
         self.props['hx-encoding'] = 'multipart/form-data'
-        
+
+    def get_data(self) -> Any:
+        """Return a dynamic lazy proxy that resolves to the uploaded DataFrame / file data."""
+        proxy = LazyDataProxy(self)
+        res = proxy._resolve()
+        return res if res is not None else proxy
+
+    def to_pandas(self, **kwargs) -> Any:
+        proxy = LazyDataProxy(self)
+        res = proxy._resolve()
+        if res is not None and hasattr(res, "to_pandas"):
+            return res.to_pandas(**kwargs)
+        return res
+
+    to_dataframe = to_pandas
+
+    def getvalue(self) -> Optional[bytes]:
+        proxy = LazyDataProxy(self)
+        res = proxy._resolve()
+        if hasattr(res, "getvalue"):
+            return res.getvalue()
+        return None
+
+    def __bool__(self) -> bool:
+        return LazyDataProxy(self)._resolve() is not None
+
     def _get_classes(self) -> List[str]:
         classes = super()._get_classes()
         if 'pdu-input' in classes: classes.remove('pdu-input')
         classes.append('pdu-file-upload')
         return classes
+
+    def render(self, state_snapshot: Optional[dict] = None) -> str:
+        snap = state_snapshot or {}
+        from ..dx import session_state
+        k = getattr(self, "key", None) or getattr(self, "name", None) or self.props.get("name")
+        uploaded = session_state.get(k) if k else None
+        if uploaded is None:
+            uploaded = session_state.get("last_uploaded_file")
+
+        file_status_html = ""
+        if uploaded is not None:
+            fname = getattr(uploaded, "filename", "File uploaded")
+            size = getattr(uploaded, "size", 0)
+            size_kb = round(size / 1024, 1) if size else 0
+            file_status_html = (
+                f"<div class='mt-2 flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 shadow-xs'>"
+                f"<span>✓</span><span>{escape_html(fname)} ({size_kb} KB)</span>"
+                f"</div>"
+            )
+
+        base_html = super().render(snap)
+        if file_status_html:
+            return f"<div class='w-full'>{base_html}{file_status_html}</div>"
+        return base_html

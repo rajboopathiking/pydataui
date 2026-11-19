@@ -59,6 +59,18 @@ class UploadedFile:
 
     to_dataframe = to_pandas
 
+    def get_data(self) -> Any:
+        """Parse uploaded file content into a pandas DataFrame (for CSV/JSON/Parquet) or string/bytes."""
+        if any(self.filename.lower().endswith(ext) for ext in ('.csv', '.tsv', '.parquet', '.json', '.jsonl')):
+            try:
+                return self.to_pandas()
+            except Exception:
+                pass
+        try:
+            return self.content.decode('utf-8')
+        except Exception:
+            return self.content
+
     def close(self) -> None:
         return None
 

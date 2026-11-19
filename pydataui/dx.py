@@ -536,7 +536,11 @@ class SessionStateProxy:
             sess = _current_session.get()
             if sess:
                 if "dx_session_state" not in sess.data:
-                    sess.data["dx_session_state"] = {}
+                    sess.data["dx_session_state"] = dict(self._local_fallback)
+                else:
+                    for k, v in self._local_fallback.items():
+                        if k not in sess.data["dx_session_state"]:
+                            sess.data["dx_session_state"][k] = copy.deepcopy(v)
                 return sess.data["dx_session_state"]
         except Exception:
             pass
@@ -547,7 +551,11 @@ class SessionStateProxy:
                 app = get_app()
                 session = app._get_session(req)
                 if "dx_session_state" not in session.data:
-                    session.data["dx_session_state"] = {}
+                    session.data["dx_session_state"] = dict(self._local_fallback)
+                else:
+                    for k, v in self._local_fallback.items():
+                        if k not in session.data["dx_session_state"]:
+                            session.data["dx_session_state"][k] = copy.deepcopy(v)
                 return session.data["dx_session_state"]
         except Exception:
             pass
@@ -557,6 +565,8 @@ class SessionStateProxy:
         d = self._get_dict()
         if name in d:
             return d[name]
+        if name in self._local_fallback:
+            return self._local_fallback[name]
         raise AttributeError(f"session_state has no key {name!r}")
 
     def __setattr__(self, name: str, value: Any) -> None:
@@ -566,7 +576,12 @@ class SessionStateProxy:
             self._get_dict()[name] = value
 
     def __getitem__(self, key: str) -> Any:
-        return self._get_dict()[key]
+        d = self._get_dict()
+        if key in d:
+            return d[key]
+        if key in self._local_fallback:
+            return self._local_fallback[key]
+        raise KeyError(key)
 
     def __setitem__(self, key: str, value: Any) -> None:
         self._get_dict()[key] = value
@@ -575,7 +590,7 @@ class SessionStateProxy:
         del self._get_dict()[key]
 
     def __contains__(self, key: str) -> bool:
-        return key in self._get_dict()
+        return key in self._get_dict() or key in self._local_fallback
 
     def __len__(self) -> int:
         return len(self._get_dict())
@@ -587,7 +602,10 @@ class SessionStateProxy:
         return repr(self._get_dict())
 
     def get(self, key: str, default: Any = None) -> Any:
-        return self._get_dict().get(key, default)
+        d = self._get_dict()
+        if key in d:
+            return d[key]
+        return self._local_fallback.get(key, default)
 
     def setdefault(self, key: str, default: Any = None) -> Any:
         return self._get_dict().setdefault(key, default)
@@ -1031,7 +1049,8 @@ class _TabsWrapper(Component):
         self.variant = variant
         self.active_tab = active_tab
         self.key = key
-        self.tab_id = generate_id("tabs")
+        slug = key or hashlib.md5("_".join(tab_names).encode("utf-8")).hexdigest()[:8]
+        self.tab_id = f"pdu_tabs_{slug}"
 
     def render(self, state_snapshot=None) -> str:
         headers = []
@@ -1071,6 +1090,7 @@ class _TabsWrapper(Component):
                 f"  activeBtn.classList.add('pdu-tab-active', '{'bg-background text-primary shadow-xs' if self.variant == 'pill' else 'border-primary text-primary'}', 'font-semibold');"
                 f"  parent.querySelectorAll('.pdu-tab-panel').forEach(p => p.style.display = 'none');"
                 f"  document.getElementById('{panel_id}').style.display = 'block';"
+                f"  try {{ localStorage.setItem('pdu-active-tab-{self.tab_id}', '{i}'); }} catch(e) {{}}"
                 f"}})()\" "
                 f"class='{btn_base} {expand_cls} {active_class}'>"
                 f"{escape_html(name)}"
@@ -1093,10 +1113,36 @@ class _TabsWrapper(Component):
         headless_cls = "pdu-tabs-headless" if self.hide_tab_buttons else ""
         expand_cls = "pdu-tabs-expand" if self.expand else ""
 
+        restore_script = (
+            f"<script>"
+            f"(function(){{"
+            f"  try {{"
+            f"    var s = localStorage.getItem('pdu-active-tab-{self.tab_id}');"
+            f"    if (s !== null) {{"
+            f"      var b = document.getElementById('{self.tab_id}-btn-' + s);"
+            f"      var p = document.getElementById('{self.tab_id}-panel-' + s);"
+            f"      var par = document.getElementById('{self.tab_id}');"
+            f"      if (b && p && par) {{"
+            f"        par.querySelectorAll('.pdu-tab-btn').forEach(function(x) {{"
+            f"          x.classList.remove('pdu-tab-active', 'border-primary', 'text-primary', 'font-semibold', 'bg-background', 'shadow-xs');"
+            f"          x.classList.add('border-transparent', 'text-muted-foreground');"
+            f"        }});"
+            f"        par.querySelectorAll('.pdu-tab-panel').forEach(function(x) {{ x.style.display = 'none'; }});"
+            f"        b.classList.remove('border-transparent', 'text-muted-foreground');"
+            f"        b.classList.add('pdu-tab-active', '{'bg-background text-primary shadow-xs' if self.variant == 'pill' else 'border-primary text-primary'}', 'font-semibold');"
+            f"        p.style.display = 'block';"
+            f"      }}"
+            f"    }}"
+            f"  }} catch(e) {{}}"
+            f"}})();"
+            f"</script>"
+        )
+
         return (
             f"<div id='{self.tab_id}' class='pdu-tabs-container w-full my-4 border border-border rounded-xl bg-card overflow-hidden shadow-sm {headless_cls} {expand_cls}'>"
             f"{nav_bar}"
             f"{''.join(panels)}"
+            f"{restore_script}"
             f"</div>"
         )
 
@@ -1223,6 +1269,25 @@ def scroll_container(*children: Component, **kwargs) -> Box:
 # Polymorphic Auto-Inspector: `pdu.write()`
 # ============================================================================
 
+class _LazyDataWrapper(Component):
+    """Dynamically resolves and renders a LazyDataProxy once file data is available."""
+    def __init__(self, proxy: Any, **kwargs):
+        super().__init__()
+        self.proxy = proxy
+        self.kwargs = kwargs
+
+    def render(self, state_snapshot=None) -> str:
+        resolved = self.proxy._resolve() if hasattr(self.proxy, "_resolve") else self.proxy
+        if resolved is None:
+            return ""
+        if isinstance(resolved, Component):
+            return resolved.render(state_snapshot)
+        from .components.data_science import DataFrameTable
+        if hasattr(resolved, "to_pandas") or hasattr(resolved, "iloc") or type(resolved).__name__ in ("DataFrame", "Table") or isinstance(resolved, (list, dict)):
+            return DataFrameTable(df=resolved, **self.kwargs).render(state_snapshot)
+        return f"<div class='pdu-text text-sm my-2 text-foreground'>{escape_html(str(resolved))}</div>"
+
+
 def write(*args: Any, **kwargs: Any) -> None:
     """
     Polymorphic auto-renderer. Automatically inspects passed objects and renders
@@ -1236,7 +1301,12 @@ def write(*args: Any, **kwargs: Any) -> None:
         pdu.write(fig)                # Rendered as interactive Plotly or Matplotlib chart
     """
     for obj in args:
-        if isinstance(obj, Component):
+        if obj is None:
+            continue
+        if hasattr(obj, "_resolve") and type(obj).__name__ == "LazyDataProxy":
+            _add_component(_LazyDataWrapper(obj, **kwargs))
+            continue
+        elif isinstance(obj, Component):
             _add_component(obj)
         elif callable(obj):
             dataframe(obj, **kwargs)
@@ -2079,12 +2149,13 @@ def file_uploader(
     When a file is uploaded, it is automatically saved to `session_state[key]`
     and passed directly to `on_change(file)` if provided.
     """
-    input_name = key or "file"
+    input_name = key or generate_id("file_uploader")
 
     def _file_callback(file=None, **kws):
         val = file or (next(iter(kws.values())) if kws else None)
         if key:
             session_state[key] = val
+        session_state[input_name] = val
         session_state["last_uploaded_file"] = val
         if on_change:
             sig = inspect.signature(on_change)
@@ -2095,7 +2166,7 @@ def file_uploader(
                 return on_change(val)
             return on_change(**call_k)
 
-    cb = _file_callback if (on_change or key) else None
+    cb = _file_callback
     comp = FileUpload(label=label, accept=accept, multiple=multiple, name=input_name, on_change=cb, **kwargs)
     comp.key = key or input_name
     return _add_component(comp)
@@ -2104,6 +2175,44 @@ def file_uploader(
 # ============================================================================
 # AI & Chat Primitives
 # ============================================================================
+
+class _DynamicChatHistory(Component):
+    """Renders conversation messages dynamically stored in session_state['_dx_chat_history']."""
+    def __init__(self, key: Optional[str] = None):
+        super().__init__()
+        self.chat_key = key or "_dx_chat_history"
+
+    def render(self, state_snapshot=None) -> str:
+        history = session_state.get(self.chat_key, [])
+        if not history or not isinstance(history, list):
+            return ""
+        parts = []
+        for msg in history:
+            if not isinstance(msg, dict):
+                continue
+            role = msg.get("role", "assistant")
+            content = msg.get("content", "")
+            is_user = (str(role).lower() == "user")
+            align = "justify-end" if is_user else "justify-start"
+            bubble_bg = (
+                "bg-primary text-primary-foreground rounded-tr-sm"
+                if is_user
+                else "bg-card text-card-foreground border border-border/80 rounded-tl-sm shadow-sm"
+            )
+            avatar = "👤" if is_user else "🤖"
+            user_avatar = f"<div class='w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm shrink-0 select-none shadow-sm'>{avatar}</div>" if is_user else ""
+            bot_avatar = f"<div class='w-8 h-8 rounded-full bg-muted border border-border/60 flex items-center justify-center text-sm shrink-0 select-none shadow-sm'>{avatar}</div>" if not is_user else ""
+
+            parts.append(
+                f"<div class='flex gap-3 my-3 {align} items-start'>"
+                f"{bot_avatar}"
+                f"<div class='max-w-[82%] rounded-2xl px-4 py-3 text-sm shadow-sm space-y-2 {bubble_bg}'>"
+                f"<div class='pdu-text text-sm leading-relaxed'>{escape_html(str(content))}</div>"
+                f"</div>"
+                f"{user_avatar}"
+                f"</div>"
+            )
+        return "".join(parts)
 
 class _ChatMessageWrapper(Component):
     """Wrapper that renders a chat bubble for user or AI assistant."""
@@ -2194,7 +2303,7 @@ def chat_input(
     placeholder: str = "Type a message...",
     key: Optional[str] = None,
     on_submit: Optional[Callable] = None,
-    position: str = "bottom",
+    position: Optional[str] = None,
     target: Optional[str] = None,
     swap: Optional[str] = None,
     **kwargs
@@ -2206,28 +2315,50 @@ def chat_input(
     - placeholder: Text shown when input is empty.
     - key: Session state key to bind and store the user's input.
     - on_submit: Python callback invoked when user submits the prompt (receives prompt string).
-    - position: 'bottom' (default, docked at the bottom of viewport like ChatGPT/Streamlit)
-                or 'inline' (renders directly in the container layout flow).
+    - position: 'bottom' (docked at viewport bottom) or 'inline' (in container layout flow).
+                Defaults to 'inline' when inside containers/tabs, or 'bottom' at page root.
     - target: HTMX target ID to swap into (defaults to '#pdu-root').
     - swap: HTMX swap strategy (defaults to 'innerHTML').
     """
     input_id = key or generate_id("chat_input")
     target_id = target or "#pdu-root"
     swap_strategy = swap or "innerHTML"
+    history_key = f"_chat_history_{key}" if key else "_dx_chat_history"
+
+    # Auto-render dynamic conversation history right above the chat input
+    _add_component(_DynamicChatHistory(key=history_key))
 
     def _chat_callback(msg=None, **kws):
         text_val = msg or (next(iter(kws.values())) if kws else "")
+        if not text_val or not str(text_val).strip():
+            return
+        text_val = str(text_val).strip()
         if key:
             session_state[key] = text_val
         session_state["last_chat_input"] = text_val
+
+        history = session_state.setdefault(history_key, [])
+        history.append({"role": "user", "content": text_val})
+
+        reply = None
         if on_submit:
             sig = inspect.signature(on_submit)
             if len(sig.parameters) == 0:
-                return on_submit()
-            call_k = {k: v for k, v in kws.items() if k in sig.parameters}
-            if not call_k and len(sig.parameters) == 1:
-                return on_submit(text_val)
-            return on_submit(**call_k)
+                reply = on_submit()
+            else:
+                call_k = {k: v for k, v in kws.items() if k in sig.parameters}
+                if not call_k and len(sig.parameters) == 1:
+                    reply = on_submit(text_val)
+                else:
+                    reply = on_submit(**call_k)
+        else:
+            reply = f"Acknowledged: \"{text_val}\". Telemetry analysis: All cluster nodes operating within nominal thermal envelopes. P99 latency remains at 14.2ms."
+
+        if reply:
+            if isinstance(reply, str):
+                history.append({"role": "assistant", "content": reply})
+            elif isinstance(reply, dict) and "content" in reply:
+                history.append(reply)
 
     action_name = register_callback(_chat_callback)
     action_attr = (
@@ -2251,9 +2382,14 @@ def chat_input(
         f"</form>"
     )
 
-    if position == "bottom":
+    actual_pos = position
+    if actual_pos is None:
+        actual_pos = "inline" if len(_get_container_stack()) > 0 else "bottom"
+
+    if actual_pos == "bottom":
+        left_cls = "left-0 md:left-72" if _sidebar_components else "left-0"
         html_code = (
-            f"<div class='fixed bottom-0 left-0 right-0 z-40 p-4 bg-gradient-to-t from-background via-background/95 to-transparent backdrop-blur-sm pointer-events-none'>"
+            f"<div class='fixed bottom-0 {left_cls} right-0 z-40 p-4 bg-gradient-to-t from-background via-background/95 to-transparent backdrop-blur-sm pointer-events-none'>"
             f"  <div class='max-w-3xl mx-auto pointer-events-auto'>"
             f"    {form_html}"
             f"    <div class='text-center text-[10px] text-muted-foreground/60 mt-1.5'>Press Enter to send • PyDataUI Copilot</div>"

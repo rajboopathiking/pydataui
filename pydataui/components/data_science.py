@@ -71,6 +71,12 @@ class DataFrameTable(Component):
             except Exception:
                 pass
 
+        if hasattr(data, "_resolve"):
+            try:
+                data = data._resolve()
+            except Exception:
+                pass
+
         if hasattr(data, "to_pandas") and not hasattr(data, "iloc"):
             try:
                 data = data.to_pandas()

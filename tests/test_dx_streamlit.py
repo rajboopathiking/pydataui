@@ -1155,6 +1155,103 @@ async def test_dx_fastapi_and_swagger_config():
     assert hasattr(fastapi_app, "add_middleware")
 
 
+@pytest.mark.anyio
+async def test_file_uploader_lazy_proxy_and_write():
+    """Verify file_uploader returns lazy data proxy that renders seamlessly before and after upload."""
+    pdu.reset()
+    pdu.set_page_config(title="File Upload Test")
+
+    with pdu.sidebar():
+        dataset = pdu.file_uploader("Upload Evaluation CSV", accept=[".csv"])
+        pdu.write(dataset.get_data())
+
+    # 1. Before upload: verify no error and clean initial render
+    assert hasattr(dataset, "get_data")
+    data_proxy = dataset.get_data()
+    assert hasattr(data_proxy, "_resolve")
+    assert bool(dataset) is False
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "Upload Evaluation CSV" in body
+
+    # 2. Simulate upload by populating session_state with UploadedFile
+    from pydataui.request import UploadedFile
+    csv_bytes = b"id,model,score\n1,Llama-3,94.2\n2,GPT-4o,96.8\n"
+    uploaded = UploadedFile("eval.csv", csv_bytes, "text/csv")
+    pdu.session_state["last_uploaded_file"] = uploaded
+    if hasattr(dataset, "key") and dataset.key:
+        pdu.session_state[dataset.key] = uploaded
+
+    assert bool(dataset) is True
+    df_data = dataset.get_data()
+    assert hasattr(df_data, "columns") or hasattr(df_data, "shape")
+    assert len(df_data) == 2
+
+    # Verify SSR render includes the table and the success badge
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "eval.csv" in body
+    assert "Llama-3" in body
+    assert "GPT-4o" in body
+
+
+@pytest.mark.anyio
+async def test_chat_interface_dynamic_history_and_tabs():
+    """Verify chat_input auto-appends to history, responds dynamically, and tabs persist."""
+    pdu.reset()
+    pdu.set_page_config(title="Chat & Tabs Test")
+
+    tab_data, tab_chat = pdu.tabs(["Data View", "Copilot"])
+    with tab_data:
+        pdu.write("Data content")
+    with tab_chat:
+        with pdu.chat_message("user"):
+            pdu.write("Thermal status?")
+        with pdu.chat_message("assistant"):
+            pdu.write("All nodes normal.")
+        pdu.chat_input("Ask a question...", key="chat_test_input")
+
+    app = pdu.get_app()
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "Thermal status?" in body
+    assert "All nodes normal." in body
+    assert "pdu-active-tab-" in body  # localStorage persistence script present
+
+    # Find the registered chat callback action
+    from pydataui.dx import _callbacks
+    chat_action = None
+    for act_id, cb in _callbacks.items():
+        if "_chat_callback" in getattr(cb, "__name__", ""):
+            chat_action = act_id
+            break
+
+    assert chat_action is not None, "chat callback should be registered"
+
+    # Simulate sending a prompt
+    from pydataui.state import StateMeta
+    action_cls = StateMeta._registry.get("ActionState")
+    action_method = getattr(action_cls, chat_action)
+    action_method(chat_test_input="Check Node-04 VRAM")
+
+    # Verify message appended to session_state
+    history = pdu.session_state.get("_chat_history_chat_test_input")
+    assert history is not None
+    assert len(history) == 2
+    assert history[0]["role"] == "user"
+    assert history[0]["content"] == "Check Node-04 VRAM"
+    assert history[1]["role"] == "assistant"
+
+    # Verify subsequent render includes dynamic bubbles
+    status, body, headers = await app._engine.dispatch_request('GET', '/', '', {}, '')
+    assert status == 200
+    assert "Check Node-04 VRAM" in body
+    assert "Telemetry analysis" in body
+
+
+
 
 
 

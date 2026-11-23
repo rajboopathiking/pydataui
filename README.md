@@ -14,7 +14,7 @@
 **The Full-Stack Python Framework: Streamlit Simplicity for Rapid Prototyping, Reflex-Grade Declarative Power Underneath.**  
 *Data Scientists • AI Engineers • Backend Developers • Full-Stack Pythonistas*
 
-[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_Final.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Reflex Declarative Track](#-track-2-reflex-style-declarative-apps) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
+[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_Final.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Reflex Declarative Track](#-track-2-reflex-style-declarative-apps) • [Community Components & JSX](#-community-components--developer-contributions-build--publish-with-pdufrom_jsx) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
 
 </div>
 
@@ -1092,6 +1092,86 @@ def home():
 # Mount directly: 1 process, 1 port, zero latency hops!
 api.mount("/dashboard", dashboard.fastapi)
 ```
+
+---
+
+## 🌐 Community Components & Developer Contributions: Build & Publish with `pdu.from_jsx()`
+
+React and Angular achieved global adoption because developers could easily build, share, and publish thousands of open-source UI blocks to npm.
+
+Today, the most popular design ecosystems in the world (**Shadcn UI**, **Tailwind UI**, **v0.dev**, **Magic UI**) author components in **JSX & Tailwind format**.
+
+With **`pdu.from_jsx()`**, PyDataUI opens the door for **any developer** to author, publish, and share reusable Python UI components in their own repositories or on PyPI—with **zero Node.js, zero npm, and zero build toolchains**.
+
+### 1. How `pdu.from_jsx` Works
+`pdu.from_jsx()` takes any raw JSX / HTML snippet from Shadcn or v0.dev and compiles it directly into a callable Python component factory:
+
+```python
+import pydataui as pdu
+
+# Define a reusable component factory in 1 line:
+MetricCard = pdu.from_jsx("""
+<div className="relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition">
+    <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</span>
+        <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500 border border-emerald-500/20">{badge}</span>
+    </div>
+    <div className="mt-3 flex items-baseline gap-2">
+        <span className="text-3xl font-extrabold tracking-tight text-card-foreground">{value}</span>
+        <span className="text-xs font-semibold text-emerald-500">{delta}</span>
+    </div>
+    <p className="mt-2 text-xs text-muted-foreground">{caption}</p>
+</div>
+""")
+
+# Use it in your layout just like native components:
+with pdu.grid(columns=3, gap=4):
+    pdu.write(MetricCard(title="Active GPU Clusters", value="16 / 16", delta="+2 nodes", badge="Healthy", caption="SXM5 H100 Fleet"))
+    pdu.write(MetricCard(title="P99 Inference Latency", value="12.4ms", delta="-1.8ms", badge="Optimal", caption="Measured over 50k reqs"))
+    pdu.write(MetricCard(title="Token Throughput", value="8.4k t/s", delta="+14.2%", badge="Streaming", caption="Real-time telemetry"))
+```
+
+### 2. Interactive Callbacks: Binding JSX to Python Actions
+React-style `onClick`, `onChange`, and `onSubmit` attributes bind seamlessly to Python functions and `@state.action` methods:
+
+```python
+s = pdu.state(counter=0)
+
+@s.action
+def increment():
+    s.counter += 1
+
+InteractiveCounter = pdu.from_jsx("""
+<div className="flex items-center gap-4 p-4 border rounded-lg bg-card">
+    <span className="text-lg font-bold">Count: {count}</span>
+    <button onClick={on_click} className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium">
+        Increment +1
+    </button>
+</div>
+""")
+
+pdu.write(InteractiveCounter(count=s.counter, on_click=increment))
+```
+
+### 3. Build & Publish Components in Your Own Repository
+You can create your own open-source component library, publish it to PyPI, and share it on GitHub:
+
+1. **Create your package repository** (e.g. `pydataui-shadcn-blocks`).
+2. **Define your components** in Python using `pdu.from_jsx()` or native Component classes.
+3. **Publish to PyPI** via `twine`:
+   ```bash
+   pip install pydataui-shadcn-blocks
+   ```
+4. **Use in any PyDataUI app**:
+   ```python
+   from pydataui_shadcn_blocks import SpotlightCard, PricingTable
+   pdu.write(SpotlightCard(title="Autonomous AI Agent", category="Ops"))
+   ```
+
+### 4. Join the Community Showcase & Registry
+Did you build a cool component library, dashboard template, or AI agent UI with PyDataUI?
+- **Publish on your GitHub**: Tag it with `#pydataui` and `#pydataui-components`.
+- **Submit a PR**: Open a PR to add your repository to the official [Community Components & JSX Guide](docs/COMMUNITY_COMPONENTS_AND_JSX_GUIDE.md) and get featured on the documentation site!
 
 ---
 

@@ -76,6 +76,7 @@ nav:
       - Mounting & Engine Routing: FASTAPI_MOUNTING_AND_CONFLICTS.md
   - Components & Theming:
       - Component Encyclopedia: COMPONENTS_REFERENCE.md
+      - Community Components & JSX Guide: COMMUNITY_COMPONENTS_AND_JSX_GUIDE.md
       - Data Science & ML Components: DATA_COMPONENTS.md
       - UI Customization & 20 Themes: CUSTOMIZATION.md
       - CSS & Design Tokens Reference: CSS_REFERENCE.md

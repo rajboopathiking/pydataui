@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## [1.7.0] - 2026-11-23 - Milestone v1.7.0: Native Bi-Directional WebSockets Engine & Community JSX Extensibility
+
+- **1. Native Bi-Directional WebSocket Streaming Engine (`@pdu.channel` / `pdu.live_channel` / `pdu.broadcast`)**:
+  - Full-duplex WebSocket channel architecture enabling sub-millisecond, low-latency DOM updates for financial tickers, live telemetry, and autonomous AI agent operations.
+  - `@pdu.channel("channel_name")`: Decorator to register server-side streaming generators (sync or async), coroutines, or bi-directional socket handlers.
+  - `with pdu.live_channel("channel_name"):`: Context manager that binds children to a live HTMX WebSocket stream (`hx-ext="ws"` and `ws-connect="/_pdu/ws/{channel_name}"`). Server pushes automatically trigger surgical DOM swaps without HTTP polling overhead.
+  - `pdu.broadcast("channel_name", message)` / `app.broadcast("channel_name", message)`: Thread-safe broadcast method that sends HTML strings or rendered `Component` objects to all active WebSocket subscribers.
+  - Automatic bundle integration: includes official HTMX WebSocket extension `htmx-ws.js` with CDN fallback for complete offline/air-gapped support.
+  - Integrated directly with FastAPI / Starlette ASGI WebSocket routes at `/_pdu/ws/{channel_name}`.
+
+- **2. Verified Universal JSX & Component Extensibility (`pdu.from_jsx` / `pdu.from_html`)**:
+  - Direct ingestion and transpilation of community shadcn/ui and React/JSX snippets into callable, native Python component factories.
+  - Automatic slot token interpolation (`{title}`, `{children}`, `{metric}`) and class normalization (`className` -> `class`).
+  - Seamless community contribution path for third-party component libraries and templates.
+
+- **3. Scoped Fragment Action Routing (`@pdu.fragment`)**:
+  - Actions and form submissions inside an `@pdu.fragment` automatically scope their HTMX target to swap only the enclosing fragment container, preventing full-page DOM disruptions.
+
+
 ## [1.2.0] - 2026-11-11 - Stable DX Revolution: Zero-Class Reactive State Hook, Universal Tabular Sniffing, Pythonic Layouts, Pydantic Auto-Forms, Multi-Page Auto-Discovery & Terminal TUI Runner
 
 - **1. Zero-Class Procedural State Hook (`state(**defaults)` / `reactive_state(**defaults)`)**:

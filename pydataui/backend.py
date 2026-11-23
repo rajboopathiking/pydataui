@@ -232,6 +232,36 @@ class FastAPIEngine:
             return func
         return decorator
 
+    def websocket(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            from starlette.websockets import WebSocket
+            sig = getattr(func, "__signature__", None) or inspect.signature(func)
+            params = list(sig.parameters.values())
+            modified = False
+            new_params = []
+            for p in params:
+                if p.name == "websocket" and p.annotation is inspect.Parameter.empty:
+                    new_params.append(p.replace(annotation=WebSocket))
+                    modified = True
+                else:
+                    new_params.append(p)
+            if modified:
+                new_sig = sig.replace(parameters=new_params)
+                @functools.wraps(func)
+                async def wrapper(*args, **kwargs):
+                    return await func(*args, **kwargs)
+                wrapper.__signature__ = new_sig
+                target_func = wrapper
+            else:
+                target_func = func
+
+            if hasattr(self.app, "add_api_websocket_route"):
+                self.app.add_api_websocket_route(path, target_func, **kwargs)
+            else:
+                self.app.add_websocket_route(path, target_func, **kwargs)
+            return func
+        return decorator
+
     def _get_swagger_ui_html(self, swagger_ui_parameters: Optional[Dict[str, Any]] = None) -> str:
         from fastapi.openapi.docs import get_swagger_ui_html
         api_openapi_url = self.openapi_url or "/openapi.json"
@@ -430,6 +460,13 @@ class RustAPIEngine:
         def decorator(func: Callable):
             wrapped = _wrap_rustapi_handler(func, self._rust_mod)
             return self._engine.patch(path, **kwargs)(wrapped)
+        return decorator
+
+    def websocket(self, path: str, **kwargs):
+        def decorator(func: Callable):
+            if hasattr(self._engine, "websocket"):
+                return self._engine.websocket(path, **kwargs)(func)
+            return func
         return decorator
 
     def add_api_route(self, path: str, endpoint: Callable, **kwargs):

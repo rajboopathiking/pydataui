@@ -43,6 +43,7 @@ Usage::
 from __future__ import annotations
 
 import base64
+from contextlib import contextmanager
 from contextvars import ContextVar
 import copy
 import functools
@@ -81,6 +82,7 @@ from .components.typography import Code, Heading, Paragraph, Text
 from .responses import HTMLResponse, RedirectResponse, Response
 from .state import EventHandler, ProceduralState, State, _is_event_handling, reactive_state, state
 from .utils import escape_html, generate_id
+from .channels import channel, broadcast, default_hub
 
 
 # ============================================================================
@@ -566,24 +568,44 @@ def _resolve_theme_css(theme: Union[str, Dict[str, str], Any]) -> str:
     return ""
 
 
+_action_fragment_map: Dict[str, str] = {}
+
+
 def register_callback(func: Callable) -> str:
     """Register a plain Python function as an ActionState method."""
     action_id = f"act_{len(_callbacks)}_{getattr(func, '__name__', 'cb')}"
     _callbacks[action_id] = func
 
+    frag_target = _active_fragment_target.get()
+    if frag_target and frag_target.startswith("#"):
+        _action_fragment_map[action_id] = frag_target[1:]
+
     def action_method(self=None, *args, **kwargs):
         cb = _callbacks.get(action_id)
+        res = None
         if cb:
             sig = inspect.signature(cb)
             if len(sig.parameters) == 0:
-                return cb()
-            has_var_keyword = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
-            if has_var_keyword:
-                return cb(*args, **kwargs)
-            call_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
-            if not call_kwargs and kwargs and len(sig.parameters) == 1:
-                return cb(next(iter(kwargs.values())))
-            return cb(**call_kwargs)
+                res = cb()
+            else:
+                has_var_keyword = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+                if has_var_keyword:
+                    res = cb(*args, **kwargs)
+                else:
+                    call_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
+                    if not call_kwargs and kwargs and len(sig.parameters) == 1:
+                        res = cb(next(iter(kwargs.values())))
+                    else:
+                        res = cb(**call_kwargs)
+
+        # If action was created inside an @pdu.fragment, re-render only that fragment container!
+        if action_id in _action_fragment_map:
+            frag_id = _action_fragment_map[action_id]
+            frag_handler = _callbacks.get(frag_id)
+            if frag_handler:
+                return frag_handler(self, *args, **kwargs)
+
+        return res
 
     action_method.__name__ = action_id
     setattr(ActionState, action_id, action_method)
@@ -1413,7 +1435,11 @@ class _FragmentWrapper(Component):
             attrs.append(f'hx-target="#{self.id}"')
             attrs.append('hx-swap="innerHTML"')
         
-        rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        token = _active_fragment_target.set(f"#{self.id}")
+        try:
+            rendered_children = "".join(c.render(state_snapshot) for c in self.children_list)
+        finally:
+            _active_fragment_target.reset(token)
         attr_str = " ".join(attrs)
         if attr_str:
             attr_str = " " + attr_str
@@ -1461,12 +1487,12 @@ def fragment(func: Optional[Callable] = None, *, run_every: Optional[Union[str, 
                 else:
                     call_k = {k: v for k, v in kwargs.items() if k in sig.parameters}
                     fn(**call_k)
+                content = "".join(c.render({}) for c in frag_children)
             finally:
                 _active_fragment_target.reset(token_target)
                 if stack and stack[-1] is frag_children:
                     stack.pop()
 
-            content = "".join(c.render({}) for c in frag_children)
             return HTMLResponse(content, status_code=200)
 
         fragment_action_handler.__name__ = frag_id
@@ -1500,6 +1526,78 @@ def fragment(func: Optional[Callable] = None, *, run_every: Optional[Union[str, 
     if func is not None and callable(func):
         return decorator(func)
     return decorator
+
+
+class _LiveChannelWrapper(Component):
+    """Container component connected to a WebSocket channel via HTMX ws extension."""
+
+    def __init__(
+        self,
+        channel_name: str,
+        children: Optional[List[Component]] = None,
+        key: Optional[str] = None,
+        class_name: str = "",
+        tag: str = "div",
+        ws_url: Optional[str] = None,
+        **props
+    ):
+        super().__init__(*(children or []), **props)
+        self.channel_name = channel_name
+        self.key = key or f"pdu_live_{channel_name}"
+        self.class_name = class_name
+        self.tag = tag
+        self.ws_url = ws_url or f"/_pdu/ws/{channel_name}"
+        self.props = props
+
+    def render(self, state_snapshot: Optional[Dict[str, Any]] = None) -> str:
+        snap = state_snapshot or {}
+        rendered_children = "".join(
+            c.render(snap) if isinstance(c, Component) else str(c)
+            for c in self.children
+        )
+        cls_str = f" class='{self.class_name}'" if self.class_name else ""
+        return (
+            f"<{self.tag} id='{self.key}' hx-ext='ws' ws-connect='{self.ws_url}'{cls_str}>"
+            f"{rendered_children}"
+            f"</{self.tag}>"
+        )
+
+
+@contextmanager
+def live_channel(
+    name: str,
+    key: Optional[str] = None,
+    class_name: str = "",
+    tag: str = "div",
+    ws_url: Optional[str] = None,
+    **props
+):
+    """
+    Live WebSocket Streaming Container for High-Throughput Real-Time Telemetry.
+
+    Wraps children in an HTMX-WebSocket container connected to '/_pdu/ws/{name}'.
+    Server pushes (via pdu.broadcast or @pdu.channel generator) surgical DOM updates
+    directly into this container without HTTP polling overhead.
+
+    Example::
+
+        with pdu.live_channel("agent_telemetry"):
+            pdu.metric("Throughput", "1.4k ops/s")
+            pdu.line_chart(df)
+    """
+    children: List[Component] = []
+    with _ContainerContext(children):
+        yield
+    comp = _LiveChannelWrapper(
+        channel_name=name,
+        children=children,
+        key=key,
+        class_name=class_name,
+        tag=tag,
+        ws_url=ws_url,
+        **props
+    )
+    _add_component(comp)
 
 
 class _WizardWrapper(Component):
@@ -2373,9 +2471,10 @@ class FormSubmitButton(Component):
         return self.was_submitted
 
     def render(self, state_snapshot=None) -> str:
+        target = _active_fragment_target.get() or "#pdu-root"
         action_attr = (
             f'hx-post="/_pdu/event/ActionState/{self.action_id}" '
-            f'hx-target="#pdu-root" '
+            f'hx-target="{target}" '
             f'hx-swap="innerHTML" '
             f'hx-include="closest form" '
         )

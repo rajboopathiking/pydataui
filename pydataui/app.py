@@ -18,6 +18,7 @@ from .api import APIGenerator
 from .state import StateMeta, _current_session, _current_snapshot, _current_root_path
 from .components.base import Component
 from .exceptions import AuthenticationThrottledError
+from .channels import default_hub, ChannelHub
 
 class App:
     """PyDataUI Application."""
@@ -91,6 +92,7 @@ class App:
                     self.config.session_secret = shared_secret
 
         self._session_manager = SessionManager(secret=self.config.session_secret, max_age=self.config.session_max_age, store=session_store)
+        self.channel_hub: ChannelHub = default_hub
         self._boot_id = f"{int(time.time())}_{secrets.token_hex(4)}"
         self._api_generator = APIGenerator(self.config, self)
         self._custom_api_routes = []
@@ -267,6 +269,14 @@ class App:
             self._register_page_route(path)
             return func
         return decorator
+
+    def channel(self, channel_name: str) -> Callable:
+        """Register a WebSocket streaming generator or handler on this application."""
+        return self.channel_hub.register(channel_name)
+
+    def broadcast(self, channel_name: str, message: Any) -> int:
+        """Broadcast a component, HTML string, or data payload to all clients on channel_name."""
+        return self.channel_hub.broadcast_sync(channel_name, message)
         
     def api(self, path: str, method: str = 'GET', *, public=False, roles=(), **kwargs):
         """Custom routes inherit authentication; opt into public access explicitly."""
@@ -511,6 +521,17 @@ class App:
         @self._engine.post(f'{self.config.internal_prefix}/event/{{state_name}}/{{method_name}}')
         def event_handler(request, state_name: str, method_name: str):
             return self._handle_event(request, state_name, method_name)
+
+        from starlette.websockets import WebSocket
+
+        @self._engine.websocket(f'{self.config.internal_prefix}/ws/{{channel_name}}')
+        async def internal_ws_endpoint(websocket: WebSocket, channel_name: str):
+            await self.channel_hub.handle_connection(channel_name, websocket)
+
+        if self.config.internal_prefix != '/_pdu':
+            @self._engine.websocket('/_pdu/ws/{channel_name}')
+            async def default_ws_endpoint(websocket: WebSocket, channel_name: str):
+                await self.channel_hub.handle_connection(channel_name, websocket)
             
         MIME_TYPES = {
             '.css': 'text/css; charset=utf-8',

@@ -327,6 +327,7 @@ def get_base_html(
     live_reload: bool = False,
     health_url: str = '/_pdu/health',
     bridge_url: Optional[str] = None,
+    ws_url: Optional[str] = None,
 ) -> str:
     """Generate the full HTML shell with HTMX, Tailwind, and theme customization."""
     if bridge_url is None:
@@ -335,6 +336,13 @@ def get_base_html(
             bridge_url = f"{static_base}/static/js/pdu-bridge.js"
         else:
             bridge_url = '/_pdu/static/js/pdu-bridge.js'
+
+    if ws_url is None:
+        if '/static/' in htmx_url:
+            static_base = htmx_url.split('/static/')[0]
+            ws_url = f"{static_base}/static/js/htmx-ws.js"
+        else:
+            ws_url = '/_pdu/static/js/htmx-ws.js'
 
     theme_lower = theme.lower().strip()
     theme_class = 'dark' if theme_lower == 'dark' else ''
@@ -510,6 +518,8 @@ def get_base_html(
     </style>
     <!-- HTMX -->
     <script src="{htmx_url}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/htmx.org@{htmx_version}/dist/htmx.min.js'"></script>
+    <!-- HTMX WebSocket Extension -->
+    <script src="{ws_url}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/htmx.org@{htmx_version}/dist/ext/ws.js'"></script>
     <!-- Chart.js 4.4 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <!-- PyDataUI CSS -->

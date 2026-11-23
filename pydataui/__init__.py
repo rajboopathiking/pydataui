@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.6.2'
+__version__ = '1.7.0'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -18,6 +18,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'state': ('.state', 'state'),
     'reactive_state': ('.state', 'reactive_state'),
     'ProceduralState': ('.state', 'ProceduralState'),
+    'ChannelHub': ('.channels', 'ChannelHub'),
 
     # Layout Primitives
     'Flex': ('.components.layout', 'Flex'),
@@ -108,6 +109,9 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'hero': ('.dx', 'hero'),
     'marquee': ('.dx', 'marquee'),
     'fragment': ('.dx', 'fragment'),
+    'live_channel': ('.dx', 'live_channel'),
+    'channel': ('.dx', 'channel'),
+    'broadcast': ('.dx', 'broadcast'),
     'wizard': ('.dx', 'wizard'),
     'model_viewer': ('.dx', 'model_viewer'),
     'client_toggle': ('.dx', 'client_toggle'),
@@ -247,6 +251,9 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'loader': ('.dx', 'loader'),
     'skeleton': ('.dx', 'skeleton'),
     'fragment': ('.dx', 'fragment'),
+    'live_channel': ('.dx', 'live_channel'),
+    'channel': ('.dx', 'channel'),
+    'broadcast': ('.dx', 'broadcast'),
     'wizard': ('.dx', 'wizard'),
     'model_viewer': ('.dx', 'model_viewer'),
     'client_toggle': ('.dx', 'client_toggle'),

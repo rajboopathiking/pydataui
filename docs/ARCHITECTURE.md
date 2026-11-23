@@ -23,8 +23,8 @@ flowchart TD
     end
 
     subgraph Backend["High-Performance HTTP Core"]
-        Rust["PyRustAPI Compiled Rust Core (Default)"]
-        PythonFallback["FastAPI / Starlette / Uvicorn (Fallback)"]
+        FastAPI["FastAPI / Starlette ASGI Engine (Default)"]
+        Uvicorn["Uvicorn High-Concurrency Async Workers"]
     end
 
     subgraph Storage["Storage & Persistence"]
@@ -41,8 +41,8 @@ flowchart TD
     SessionMgr --> StateEngine
     StateEngine --> Compiler
     Compiler --> Router
-    Router --> Rust
-    Rust -.->|C-ABI Fallback| PythonFallback
+    Router --> FastAPI
+    FastAPI --> Uvicorn
     StateEngine --> Storage
 ```
 
@@ -107,22 +107,22 @@ Rather than requiring a Node build process to extract Tailwind utilities:
 
 ---
 
-## 🦀 3. The Compiled Rust Core (`PyRustAPI`)
+## ⚡ 3. The Native Enterprise ASGI Engine (FastAPI & Starlette)
 
-For enterprise deployments requiring microsecond latencies, PyDataUI integrates seamlessly with **PyRustAPI**:
+For enterprise deployments requiring high-throughput concurrency, PyDataUI integrates seamlessly with **FastAPI and Starlette**:
 
-| Feature | PyRustAPI Rust Core | Standard Python Uvicorn |
+| Feature | PyDataUI ASGI Engine | Traditional WSGI Frameworks |
 | :--- | :--- | :--- |
-| **HTTP Parser** | Compiled Rust (`httparse` / `hyper`) | Python `uvicorn-h11` |
-| **Throughput** | Up to 110,000 req/sec | ~18,000 req/sec |
-| **Memory Footprint** | Extremely low (~25MB base) | ~70MB base |
-| **Worker Threads** | Native OS threads (Tokio runtime) | Python GIL / Multi-process |
-| **Fallback** | Automatic graceful fallback if missing | Native standard library |
+| **HTTP Protocol** | Asynchronous ASGI 3.0 (`httptools` / `uvloop`) | Synchronous WSGI (`gunicorn-sync`) |
+| **Concurrency** | 1,000+ non-blocking concurrent requests | Thread / worker bound |
+| **API Documentation** | Automatic OpenAPI 3.1 & Swagger UI at `/docs` | Manual documentation |
+| **WebSockets** | Native Bi-Directional WebSockets (`@pdu.channel`) | Requires external push services |
+| **Microservice Mounting**| Native 1-line mounting inside existing FastAPI backends | Separate microservice process |
 
 When `pydataui run app.py` starts:
-1. It inspects whether `pyrustapi` is available in the Python environment.
-2. If available, it spins up the compiled Rust asynchronous server bridge.
-3. If not installed, it falls back to Starlette/Uvicorn with zero configuration changes required from the user.
+1. It initializes the native FastAPI/Starlette engine with configured middlewares.
+2. Registers internal hypermedia routes (`/_pdu/event`, `/_pdu/ws/{channel}`, `/_pdu/static`).
+3. Spawns high-concurrency Uvicorn workers with full async/await coroutine support.
 
 ---
 

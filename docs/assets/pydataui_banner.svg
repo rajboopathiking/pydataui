@@ -32,12 +32,12 @@
   <g transform="translate(60, 42)">
     <rect width="180" height="28" rx="14" fill="#1e1b4b" stroke="#4338ca" stroke-width="1" />
     <circle cx="16" cy="14" r="5" fill="#10b981" />
-    <text x="28" y="18" fill="#c7d2fe" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" letter-spacing="0.5">PYDATAUI v1.3.1</text>
+    <text x="28" y="18" fill="#c7d2fe" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" letter-spacing="0.5">PYDATAUI v1.7.0</text>
   </g>
 
   <!-- Main Title & Hook -->
   <text x="60" y="125" fill="url(#textGrad)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" letter-spacing="-1">
-    Streamlit Simplicity. Next.js Performance.
+    Streamlit Simplicity. Reflex Architecture.
   </text>
   <text x="60" y="165" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="400">
     The unified full-stack Python framework for rapid AI prototypes, interactive dashboards, and production SaaS.
@@ -55,14 +55,14 @@
     <text x="20" y="140" fill="#10b981" font-family="-apple-system, sans-serif" font-size="13" font-weight="600">⚡ 0 Script Re-Runs</text>
   </g>
 
-  <!-- Card 2: Next.js Track -->
+  <!-- Card 2: Reflex Track -->
   <g transform="translate(330, 205)">
     <rect width="250" height="170" rx="12" fill="#111827" stroke="#374151" stroke-width="1.5" />
     <rect x="0" y="0" width="250" height="4" rx="2" fill="#8b5cf6" />
-    <text x="20" y="36" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="13" font-weight="700">TRACK 2: FULL-STACK SAAS</text>
-    <text x="20" y="66" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="18" font-weight="700">Next.js Architecture</text>
+    <text x="20" y="36" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="13" font-weight="700">TRACK 2: DECLARATIVE APPS</text>
+    <text x="20" y="66" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="18" font-weight="700">Reflex Architecture</text>
     <text x="20" y="96" fill="#9ca3af" font-family="-apple-system, sans-serif" font-size="13">✓ @app.page() &amp; AppShell</text>
-    <text x="20" y="118" fill="#9ca3af" font-family="-apple-system, sans-serif" font-size="13">✓ @s.action (Server Actions)</text>
+    <text x="20" y="118" fill="#9ca3af" font-family="-apple-system, sans-serif" font-size="13">✓ @s.action (Reactive State)</text>
     <text x="20" y="140" fill="#10b981" font-family="-apple-system, sans-serif" font-size="13" font-weight="600">⚡ 0ms Memory Latency</text>
   </g>
 

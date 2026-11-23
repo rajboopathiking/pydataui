@@ -6,8 +6,8 @@
 
 </div>
 
-> **The Production-Grade Full-Stack Python Framework: Streamlit Simplicity on the Surface, Next.js Performance Underneath.**  
-> Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and 20 Shadcn themes.
+> **The Production-Grade Full-Stack Python Framework: Streamlit Simplicity for Rapid Prototyping, Reflex-Grade Declarative Power Underneath.**  
+> Powered by native FastAPI & Starlette ASGI, HTMX surgical DOM morphing, Tailwind CSS, and 20 Shadcn themes.
 
 ![Theme Gallery Showcase](assets/theme_gallery_showcase.svg)
 
@@ -57,10 +57,10 @@
 
 With PyDataUI:
 - 🐍 **100% Python Code**: Build responsive web, mobile (Android/iOS), and desktop apps without writing JavaScript, Swift, or Kotlin.
-- ⚡ **FastAPI Default Engine**: Native ASGI foundation running on standard FastAPI and Uvicorn with zero C/Rust compilation requirements.
-- 🦀 **Optional PyRustAPI Core**: Seamlessly switch to an ultra-high-throughput compiled Rust HTTP engine (Tokio & Hyper) delivering up to 34,000+ req/sec for hyper-scale workloads.
+- ⚡ **Native FastAPI & Starlette Engine**: Standard ASGI foundation running on high-concurrency Uvicorn workers with zero compilation requirements.
+- 📡 **Native Bi-Directional WebSockets**: Sub-millisecond real-time streaming via `@pdu.channel` and `with pdu.live_channel("...")` without polling overhead.
 - 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards, admin consoles, and AI tools directly inside existing FastAPI backends via `mount(api, app, path="/dashboard")`.
-- 🪄 **Dual Developer Experience**: Use the rapid procedural API (`import pydataui as ui; ui.title(...); ui.run()`) for instant scripts, or the declarative Component & State system for large-scale enterprise applications.
+- 🪄 **Dual Developer Experience**: Use the rapid procedural API (`import pydataui as pdu; pdu.title(...); pdu.run()`) for Streamlit-like prototyping, or the declarative Component & State system for Reflex-grade enterprise applications.
 - 📱 **Cross-Platform Mobile & Desktop**: Built-in Progressive Web App (PWA), Capacitor mobile shell (Android `.apk` and iOS `.ipa`), and standalone desktop apps (`--desktop` or Tauri 2.0).
 - 🎨 **Tailwind CSS + shadcn/ui**: Modern design system with dark mode, CSS variables, and accessible components.
 - ⚡ **Reactive SSR via HTMX**: State changes trigger hypermedia fragment responses that update the DOM dynamically without client-side virtual DOM overhead.
@@ -76,22 +76,20 @@ With PyDataUI:
 
 ### Comparison with Existing Frameworks
 
-| Capability | PyDataUI (v1.0.0 Stable) | Streamlit | Gradio | FastAPI + React |
+| Capability | PyDataUI (v1.7.0 Stable) | Streamlit | Reflex (Transpiler) | FastAPI (Backend Only) |
 |---|---|---|---|---|
-| **Programming Language** | **100% Python** | 100% Python | 100% Python | Python + TypeScript |
-| **Default HTTP Engine** | ⚡ **FastAPI ASGI** | 🐍 Tornado | 🐍 Uvicorn | 🐍 Uvicorn + Node |
-| **High-Throughput Option** | 🦀 **Rust (PyRustAPI Tokio/Hyper)** | ❌ None | ❌ None | ❌ None |
-| **Mount in FastAPI App** | ✅ **Native (`mount()`)** | ❌ Separate process | ⚠️ Mount as WSGI/ASGI | ✅ Native |
-| **Streamlit-like DX (`ui.*`)** | ✅ **Yes (`import pydataui as ui`)** | ✅ Yes | ⚠️ Blocks | ❌ No |
-| **Mobile Apps (APK & IPA)** | ✅ **Native (Capacitor 8.x) + PWA** | ❌ None | ❌ None | ⚠️ React Native rewrite |
-| **Desktop Executables** | ✅ **Tauri 2.0 & Native Window** | ❌ None | ❌ None | ⚠️ Electron rewrite |
-| **P99 Latency** | **< 1.2ms** (Rust) / ~2.5ms (FastAPI) | > 25ms | > 15ms | ~ 5ms |
-| **Multi-User Session Isolation** | ✅ **Per-user session state** | ❌ Script reruns | ❌ Global state issues | ✅ Full JWT / sessions |
-| **Auto-Generated REST APIs** | ✅ **Full OpenAPI CRUD per State** | ❌ None | ❌ Limited | ⚠️ Manual routes |
-| **UI Design System** | ✅ **Tailwind + shadcn/ui** | ⚠️ Custom opinionated | ⚠️ Block-based | ⚠️ Manual CSS |
-| **Port Forwarding (`share=True`)** | ✅ **Built-in tunnel** | ❌ None | ✅ ngrok tunnel | ❌ Manual setup |
-| **Data & AI Components** | ✅ **Chat, Code, DF, Metrics, Charts** | ⚠️ Basic | ⚠️ Basic | ❌ Build from scratch |
-| **Built-in RBAC & API Keys** | ✅ **Yes** | ❌ None | ❌ None | ⚠️ Manual |
+| **Programming Language** | **100% Pure Python** | 100% Python | Python (Requires Node.js/npm) | Python backend only |
+| **Default HTTP Engine** | ⚡ **FastAPI / Starlette ASGI** | 🐍 Tornado | 🐍 FastAPI + Node.js | 🐍 Starlette / Uvicorn |
+| **Real-Time WebSockets** | ✅ **Native (`@pdu.channel`)** | ⚠️ Internal only | ⚠️ Mandatory on every click | ⚠️ Manual config |
+| **Mount in FastAPI App** | ✅ **Native (`mount()`)** | ❌ Separate process | ❌ Separate front/backend | ✅ Native |
+| **Streamlit-like DX (`pdu.*`)** | ✅ **Yes (`pdu.write`)** | ✅ Yes | ❌ Component classes only | ❌ No |
+| **Mobile Apps (APK & IPA)** | ✅ **Native (Capacitor) + PWA** | ❌ None | ⚠️ WebSockets tethered | ⚠️ Custom React Native |
+| **Desktop Executables** | ✅ **Tauri 2.0 & Native Window** | ❌ None | ⚠️ Heavy Electron bundle | ❌ None |
+| **P99 Response Latency** | **~2.5ms** (Native ASGI) | > 25ms | ~ 15ms | ~ 2.5ms |
+| **Multi-User Session Isolation** | ✅ **Per-user session state** | ❌ Script reruns | ✅ Session state | ✅ Full JWT / sessions |
+| **Auto-Generated REST APIs** | ✅ **Full OpenAPI CRUD per State** | ❌ None | ❌ Custom routes only | ⚠️ Manual routes |
+| **UI Design System** | ✅ **Tailwind + shadcn/ui** | ⚠️ Custom opinionated | ⚠️ Custom Chakra UI | ❌ None |
+| **Zero Node.js Dependencies** | ✅ **100% Clean Python (0 MB npm)** | ✅ Clean Python | ❌ 450 MB+ `node_modules` | ✅ Clean Python |
 
 ---
 
@@ -113,7 +111,7 @@ With PyDataUI:
 │                          PYDATAUI SERVER                                  │
 │                                                                           │
 │   ┌───────────────────────────────────────────────────────────────────┐   │
-│   │   FastAPI ASGI Engine (Default) or PyRustAPI Engine (Rust/Tokio)  │   │
+│   │   FastAPI / Starlette ASGI Engine (Uvicorn or Granian)         │   │
 │   │   Supports standalone App() or mounted inside existing FastAPI    │   │
 │   └─────────────────┬───────────────────────────────▲─────────────────┘   │
 │                     │                               │                     │

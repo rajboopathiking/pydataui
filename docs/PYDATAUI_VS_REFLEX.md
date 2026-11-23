@@ -26,7 +26,7 @@ flowchart TD
 
     subgraph PyDataUIModel["PyDataUI Architecture (Server-Driven Reactive Hypermedia)"]
         P_Py["Python Code: Component, State, shadcn/ui"]
-        P_ASGI["Enterprise ASGI Server (FastAPI / Compiled Rust Tokio Core)"]
+        P_ASGI["Enterprise ASGI Server (Native FastAPI & Starlette Core)"]
         P_HTMX["HTMX HTML Diff Engine + Tailwind CSS + GSAP"]
         P_DOM["Client Browser (Real DOM, Zero JavaScript Compilation)"]
 
@@ -39,7 +39,7 @@ flowchart TD
 ### The Fundamental Architectural Difference
 
 - **Reflex is a Transpiler**: It takes Python UI AST nodes and translates them into a real **React Single Page Application (SPA)** orchestrated by **Next.js**. It requires a local Node.js/npm runtime, generates a multi-megabyte JavaScript bundle, and synchronizes state bi-directionally over persistent **WebSockets**.
-- **PyDataUI is an ASGI Hypermedia Engine**: It renders clean, semantic HTML5 directly on the server (using **FastAPI** or a compiled **Rust Tokio/Hyper core**) and streams targeted micro-diffs via **HTMX**. It has **zero Node.js dependencies**, zero build steps, and communicates over standard, resilient **HTTP/ASGI**.
+- **PyDataUI is an ASGI Hypermedia Engine**: It renders clean, semantic HTML5 directly on the server (using **FastAPI & Starlette**) and streams targeted micro-diffs via **HTMX**. It has **zero Node.js dependencies**, zero build steps, and communicates over standard, resilient **HTTP/ASGI**.
 
 ---
 
@@ -84,7 +84,7 @@ PyDataUI has **zero supply-chain flags, zero obfuscated code, and zero untrusted
   - Python FastAPI server running `rx.State`: ~120–200 MB RAM.
   💾 **Baseline Idle Memory: 300–500 MB+ RAM**.
 - **PyDataUI**:
-  Runs inside a single lightweight Python process (or compiled Rust Tokio process):
+  Runs inside a single lightweight Python process:
   💾 **Baseline Idle Memory: 25–45 MB RAM** (10× less memory consumption).
 
 ### C. Network Protocol & Horizontal Scalability (The WebSocket Bottleneck)

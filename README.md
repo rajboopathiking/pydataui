@@ -7,14 +7,14 @@
 [![PyPI version](https://img.shields.io/pypi/v/pydataui.svg?color=6366f1&label=PyPI%20Version)](https://pypi.org/project/pydataui/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/pydataui?color=blue&label=Downloads)](https://pypi.org/project/pydataui/)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://pypi.org/project/pydataui/)
-[![Tests](https://img.shields.io/badge/tests-242%20passed%20(100%25)-emerald.svg)](https://github.com/rajboopathiking/pydataui/actions)
+[![Tests](https://img.shields.io/badge/tests-258%20passed%20(100%25)-emerald.svg)](https://github.com/rajboopathiking/pydataui/actions)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-indigo.svg)](https://rajboopathiking.github.io/pydataui/)
 
-**The Full-Stack Python Framework: Streamlit Simplicity on the Surface, Next.js Performance Underneath.**  
+**The Full-Stack Python Framework: Streamlit Simplicity for Rapid Prototyping, Reflex-Grade Declarative Power Underneath.**  
 *Data Scientists • AI Engineers • Backend Developers • Full-Stack Pythonistas*
 
-[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_v1.5.0.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Next.js Full-Stack SaaS](#-track-2-nextjs-style-full-stack-saas) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
+[🌐 Documentation Website](https://rajboopathiking.github.io/pydataui/) • [📖 Developer Cookbook (PDF)](docs/PyDataUI_Developer_Cookbook_Final.pdf) • [10s Quickstart](#-track-1-streamlit-style-rapid-prototyping) • [Reflex Declarative Track](#-track-2-reflex-style-declarative-apps) • [20 Visual Themes](#-20-modern-themes--infinite-custom-palettes) • [FastAPI Mounting](#-native-fastapi-mounting)
 
 </div>
 
@@ -23,8 +23,8 @@
 ## 💡 Why PyDataUI?
 
 In modern web development, developers are forced to choose between two painful trade-offs:
-1. **Streamlit**: Great 10-second prototyping DX, but re-executes lines 1–100 on every user click, leading to laggy UIs, session bugs, and zero built-in REST API capabilities.
-2. **Next.js + FastAPI**: Exceptional performance, but requires maintaining two languages (TypeScript + Python), 450 MB of `node_modules`, separate deployments, and constant API schema glue code.
+1. **Streamlit**: Great 10-second procedural prototyping DX, but re-executes lines 1–100 on every user click, leading to laggy UIs, session bugs, and zero built-in REST API capabilities.
+2. **Reflex / Transpilers**: Clean declarative Python syntax, but compiles through a heavy Node.js/npm toolchain, generates bulky JavaScript bundles, consumes 500+ MB RAM idle, and depends on stateful WebSockets for every single button click.
 
 **PyDataUI eliminates this trade-off completely:**
 
@@ -134,7 +134,7 @@ python app.py
 
 ### 🧩 Advanced Layout, Positioning & Commercial Dashboard Guide (v1.4.4)
 
-PyDataUI v1.4.4 introduces **Next.js-level layout freedom and commercial primitives** directly into Streamlit-style procedural Python:
+PyDataUI introduces **commercial-grade layout freedom and enterprise primitives** directly into Streamlit-style procedural Python:
 
 #### 1. Flexbox Layout Engine (`pdu.flex`, `pdu.row`, `pdu.column`)
 Take complete control over alignment, justification, gaps, and wrapping with both `with` context managers and direct component arguments:
@@ -431,9 +431,9 @@ if __name__ == "__main__":
 
 ---
 
-## ⚡ Track 2: Next.js-Style Full-Stack SaaS
+## ⚡ Track 2: Reflex-Style Declarative Data Apps
 
-When building complex, multi-page web applications, PyDataUI provides a **Next.js App Router equivalent in pure Python**:
+When building modular, component-driven data applications, PyDataUI provides a **Reflex-grade declarative component tree and state model in pure Python with zero Node.js or npm dependencies**:
 
 ```python
 from pydataui import App, Container, Card, Heading, Text, Button, Table, Row, state
@@ -441,7 +441,7 @@ from pydantic import BaseModel, Field
 
 app = App(title="CloudAI Enterprise SaaS")
 
-# 1. Server State & Server Actions (Next.js "use server" equivalent)
+# 1. Declarative Server State & Reactive Actions
 s = state(credits=1500, deployments=[{"id": "dep-01", "model": "Llama-3.3-70B", "status": "Running"}])
 
 @s.action
@@ -449,7 +449,7 @@ def deploy_model(model_name: str = "Mistral-Large"):
     s.deployments.append({"id": f"dep-0{len(s.deployments) + 1}", "model": model_name, "status": "Running"})
     s.credits -= 100
 
-# 2. Server-Rendered Component Page (app/page.tsx equivalent)
+# 2. Declarative Component Tree & Page Route
 @app.page("/")
 def dashboard_page():
     return Container(
@@ -467,7 +467,7 @@ def dashboard_page():
         class_name="max-w-5xl mx-auto p-8"
     )
 
-# 3. Built-In FastAPI Route (Next.js route.ts / FastAPI API equivalent)
+# 3. Built-In Native FastAPI API Route
 class PromptRequest(BaseModel):
     prompt: str = Field(..., min_length=1)
 
@@ -481,21 +481,21 @@ if __name__ == "__main__":
 
 ---
 
-### ⚖️ Streamlit-Style (Track 1) vs. Next.js-Style (Track 2): Which is Production-Grade?
+### ⚖️ Streamlit-Style (Track 1) vs. Reflex-Style (Track 2): Which is Production-Grade?
 
-A frequent question when adopting PyDataUI is whether **Track 1 (Streamlit-style procedural `pdu.*`)** is only for prototypes while **Track 2 (Next.js-style declarative `App()`, `Container()`)** is for production.
+A frequent question when adopting PyDataUI is whether **Track 1 (Streamlit-style procedural `pdu.*`)** is only for prototypes while **Track 2 (Reflex-style declarative `App()`, `Container()`)** is for production.
 
 **In PyDataUI, BOTH Track 1 and Track 2 are 100% Production-Grade.**
 
 Here is the architectural reason why:
 * **Track 1 is NOT Streamlit under the hood:** It borrows Streamlit's ergonomic procedural syntax (`pdu.text_input`, `pdu.button`, `pdu.metric`), but compiles to the exact same ASGI FastAPI backend and surgical HTMX DOM-diffing engine as Track 2. It **never** re-runs your script from line 1. It shares process memory, runs in Uvicorn multi-worker clusters, and exposes full Swagger docs at `/docs`.
-* **Track 2 provides Next.js / React mental models:** It uses explicit component trees (`Container`, `Row`, `Card`) and declarative state bindings (`s = state()`, `@s.action`), which is ideal for large multi-engineer teams building modular component libraries.
+* **Track 2 provides Reflex-grade declarative component architecture:** It uses explicit component trees (`Container`, `Row`, `Card`) and declarative state bindings (`s = state()`, `@s.action`), which is ideal for multi-engineer teams building reusable, modular UI components.
 
 #### When to Choose Which Track:
 
 | Dimension | Track 1: Procedural (`pdu.*`) | Track 2: Declarative (`App()`, `Container()`) |
 | :--- | :--- | :--- |
-| **Syntax Style** | Linear procedural Python (Streamlit-like) | Component tree & State objects (Next.js / React-like) |
+| **Syntax Style** | Linear procedural Python (Streamlit-like) | Component tree & State objects (Reflex-like) |
 | **Production Ready?** |  **Yes (100% FastAPI + HTMX)** |  **Yes (100% FastAPI + HTMX)** |
 | **Full-Script Re-runs?**| ❌ **Never** (Surgical DOM fragment morphing)| ❌ **Never** (Targeted `@s.action` dispatch) |
 | **FastAPI Access & Docs**| `pdu.get_fastapi()`, auto `/docs` | `app.fastapi`, auto `/docs` |
@@ -983,61 +983,45 @@ pdu.set_page_config(theme={
 
 ---
 
-## ⚖️ Architectural Trade-Offs, The 5 Limitations & Advantage Comparison
+## ⚖️ Architectural Trade-Offs & Advantage Comparison
 
-When choosing a framework for commercial SaaS, internal tools, or AI platforms, understanding both **where PyDataUI wins** and its **concrete limitations** is essential.
+When choosing a framework for commercial data applications, AI platforms, or internal tools, understanding where PyDataUI wins and its architectural boundaries is essential.
 
-### 🏆 Where PyDataUI Outperforms Next.js, FastAPI & Streamlit
+### 🏆 Where PyDataUI Outperforms Reflex & Streamlit
 
 1. **0.02ms In-Memory Model Access**: Your UI and your AI models (PyTorch, LangChain, Ollama, Pandas, Polars) share the exact same Python process memory. No JSON serialization overhead, zero internal REST/gRPC latency hops.
-2. **1 Language & 1 Runtime**: 100% pure Python. Zero `package.json`, zero Webpack/Turbopack bundling, zero npm security vulnerabilities, and 0 MB `node_modules` (saving ~450 MB).
+2. **1 Language & 1 Runtime (Zero Node.js)**: 100% pure Python. Unlike Reflex, PyDataUI requires zero `package.json`, zero Node.js/npm toolchains, zero Webpack/Babel compilation steps, and 0 MB `node_modules` (saving ~450 MB).
 3. **Surgical HTMX DOM Morphing**: Unlike Streamlit (which re-executes lines 1–100 on every user click), PyDataUI dispatches only the targeted state action and surgical DOM swap, eliminating session sync bugs and lag.
 4. **Native FastAPI & Auto OpenAPI 3.1**: Built directly on FastAPI and Starlette. Every state action can automatically expose an OpenAPI 3.1 REST route with interactive Swagger UI at `/docs`.
 5. **Unified Full-Stack Deployment**: 1 process, 1 port. Deploy via standard Docker, Uvicorn, or launch an instant secure public HTTPS tunnel in 3.5 seconds with `share=True`.
 
 ---
 
-### ⚠️ The 5 Concrete Architectural Limitations of PyDataUI vs Next.js
+### ⚠️ Architectural Boundaries: When to Choose What
 
-Being completely transparent about what PyDataUI is and is not designed for:
+Being completely transparent about framework design choices:
 
-1. **Zero Offline-First Apps (Network & Server Dependency)**:
-   * *Next.js*: Can bundle client-side React code running entirely inside the browser without contacting a server (e.g., offline PWAs, local SQLite via WASM, client-side canvas tools).
-   * *PyDataUI*: Is **server-driven**. When a user types in a form or clicks a dynamic button, HTMX sends a lightweight request to the Python backend and swaps the returned HTML fragment. If internet connectivity drops, dynamic server callbacks pause until reconnected.
-   * *Verdict*: Not suited for offline-first progressive web apps.
-2. **Canvas-Heavy, 120 FPS Client-Side Tools (Figma, Canva, Video/Audio Editors, WebGL Games)**:
-   * *Next.js*: Excels at client-only apps requiring thousands of real-time GPU-driven vector calculations running at 120 FPS directly on the client canvas.
-   * *PyDataUI*: Engineered for **data products, SaaS platforms, AI copilots, executive dashboards, and B2B portals**. It is not designed to build an in-browser Photoshop or a 3D gaming engine.
-   * *Verdict*: For browser graphic engines or games, use Next.js / WebGL.
-3. **The Vast 3rd-Party NPM React Component Ecosystem (2M+ Packages)**:
-   * *Next.js*: Has access to 2M+ NPM packages. If you need a hyper-niche widget (e.g. `react-flow` for node-based graphs, `tiptap` for collaborative rich-text Google Docs), you can `npm install` it in seconds.
-   * *PyDataUI*: Ships with **40+ curated enterprise components** (DataTables, Metrics, StatCards, Sparklines, Badges, Charts, Chat, Tabs). Hyper-niche React widgets require wrapping via custom web components or iframe.
-   * *Verdict*: If your core differentiator is an existing proprietary React widget library, Next.js has the ecosystem edge.
-4. **Python GIL & CPU-Bound Blocking Concurrency**:
-   * *Next.js / Node.js*: V8 event loop handles high-concurrency non-blocking I/O.
-   * *PyDataUI*: Runs on Python. Heavy CPU-bound computation (e.g. distributed ML training or massive image transformation) on the main event loop will block other requests unless explicitly offloaded to `BackgroundTasks`, `multiprocessing`, or Celery/Redis workers.
-   * *Verdict*: CPU-heavy tasks must use asynchronous background workers.
-5. **0ms Optimistic Client UI Updates**:
-   * *Next.js / React*: Allows client-side "optimistic updates" where a button or toggle flips in 0ms on the client before the server acknowledges the write.
-   * *PyDataUI*: Waits for the server roundtrip (~10ms–25ms over broadband) before morphing the DOM fragment.
-   * *Verdict*: Perfectly responsive for 99% of business dashboards and SaaS, but not 0ms client-side optimistic simulation.
+1. **Streamlit**: Best for quick, disposable exploratory scripts and single-user Jupyter notebooks where full-script reruns on every widget click are acceptable.
+2. **Reflex**: Best if your architecture specifically demands a client-side React SPA transpiler with heavy client-side JavaScript bundles and you already maintain a Node.js/npm CI/CD toolchain.
+3. **PyDataUI**: Best for data teams, AI engineers, and Python developers who want **Streamlit's 10-second procedural prototyping speed** AND **Reflex's declarative component architecture**, but demand a clean 100% pure Python stack powered natively by **FastAPI and HTMX** with zero Node.js overhead.
 
 ---
 
 ### 📊 4-Way Comprehensive Architecture Comparison
 
-| Feature / Dimension | Next.js (Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.5.3 (Full-Stack) |
+| Feature / Dimension | Reflex (Python + Node.js) | FastAPI (Backend Only) | Streamlit (Python) | PyDataUI v1.7.0 (Full-Stack) |
 | :--- | :---: | :---: | :---: | :---: |
-| **Languages Required** | 2 (TypeScript + Python) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
-| **UI Presentation Layer** | React / Virtual DOM | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |
-| **Execution on Click** | Client-side re-render | N/A (REST endpoint) | ❌ **Reruns script lines 1-100** | **Surgical fragment swap (0 rerun)** |
-| **Model / Data Latency** | 15ms–60ms (JSON HTTP hop) | 0.02ms (In-Memory) | 0.02ms (In-Memory) | **0.02ms (Direct process memory)** |
-| **Build & Dependencies** | 450 MB+ `node_modules` | Clean Python | Clean Python | **Clean Python (0 MB npm)** |
-| **Built-in REST API & Docs** | Manual route handlers |  OpenAPI 3.1 Swagger | ❌ None | **Auto OpenAPI 3.1 Swagger UI** |
-| **Responsive Flex & Grid** |  Tailwind CSS | ❌ None | ❌ Primitive columns only | **Native `pdu.flex` & `pdu.grid`** |
-| **Coordinate Positioning** |  Tailwind CSS | ❌ None | ❌ None | **Native props (`top`, `right`, etc.)** |
-| **Public Sharing Demos** | Manual Vercel / Cloud | Manual cloud hosting | Cloud login required | **`share=True` (3.5s instant tunnel)** |
-| **Memory per User Session** | Low (Client-side) | Stateless | ❌ High (Duplicate DataFrames) | **Ultra-Low (Shared memory)** |
+| **Languages Required** | Python (requires Node.js/npm) | 1 (Python backend only) | 1 (Python) | **1 (Pure Python Full-Stack)** |
+| **UI Presentation Layer** | React SPA (Transpiled) | ❌ None (API only) | Python procedural widgets | **Server-Side HTMX DOM Morphing** |
+| **Execution on Click** | WebSocket state roundtrip | N/A (REST endpoint) | ❌ **Reruns script lines 1-100** | **Surgical fragment swap (0 rerun)** |
+| **Model / Data Latency** | 15ms–60ms (WebSocket/JSON) | 0.02ms (In-Memory) | 0.02ms (In-Memory) | **0.02ms (Direct process memory)** |
+| **Build & Dependencies** | 450 MB+ `node_modules` | Clean Python | Clean Python | **Clean Python (Zero npm / 0 MB)** |
+| **Built-in REST API & Docs** | Separate FastAPI backend | OpenAPI 3.1 Swagger | ❌ None | **Auto OpenAPI 3.1 Swagger UI** |
+| **WebSockets Streaming** | Mandatory for every click | Manual WebSockets | Internal session | **Native `@pdu.channel` / `live_channel`** |
+| **Responsive Flex & Grid** | Chakra / Tailwind | ❌ None | ❌ Primitive columns only | **Native `pdu.flex` & `pdu.grid`** |
+| **Coordinate Positioning** | CSS props | ❌ None | ❌ None | **Native props (`top`, `right`, etc.)** |
+| **Public Sharing Demos** | Manual hosting | Manual cloud hosting | Cloud login required | **`share=True` (3.5s instant tunnel)** |
+| **Memory per User Session** | 300–500 MB+ RAM (Node + Py) | Stateless | ❌ High (Duplicate DataFrames) | **Ultra-Low (25–45 MB base)** |
 
 ---
 
@@ -1052,67 +1036,61 @@ Being completely transparent about what PyDataUI is and is not designed for:
 
 ---
 
-### ⚡ Next.js-Style Architecture in Pure Python
+### ⚡ Reflex-Style Declarative Architecture with Zero Node.js Tax
 
-PyDataUI delivers the core architecture developers love about **Next.js**, implemented in 100% pure Python without `node_modules`:
+PyDataUI delivers the clean declarative component and state model developers love in Reflex, implemented in 100% pure Python without `node_modules` or Webpack:
 
-* **Next.js App Router Equivalent:** `@app.page("/dashboard")` route decorators with automatic layout nesting.
-* **Route Handlers / API Equivalent:** `@app.api("/api/v1/generate", method="POST")` with automatic OpenAPI 3.1 Swagger docs.
-* **React Server Components (RSC) Equivalent:** Server-rendered Python component trees compiled directly to semantic HTML.
-* **Next.js Streaming Equivalent:** `pdu.write_stream(gen)` for real-time LLM token streaming over Server-Sent Events (SSE).
+* **Declarative Page Routing:** `@app.page("/dashboard")` route decorators with automatic layout nesting.
+* **Native API Route Handlers:** `@app.api("/api/v1/generate", method="POST")` with automatic OpenAPI 3.1 Swagger docs.
+* **Declarative Component Trees:** Server-rendered Python component trees (`Container`, `Row`, `Card`) compiled directly to semantic HTML.
+* **Bi-Directional WebSocket Streaming:** `@pdu.channel("ticker")` and `with pdu.live_channel("ticker"):` for sub-millisecond telemetry.
 * **Modern Design Tokens:** Native Tailwind utility classes (`class_name="..."`) and 20+ official Shadcn theme presets.
 
-See [docs/PYDATAUI_VS_REACT_AND_STREAMLIT.md](docs/PYDATAUI_VS_REACT_AND_STREAMLIT.md) for the full architectural breakdown.
+See [docs/PYDATAUI_VS_REFLEX.md](docs/PYDATAUI_VS_REFLEX.md) for the full architectural breakdown.
 
 ---
 
-## ⚡ High-Performance Compiled Rust Backend: PyRustAPI Support
+## ⚡ Native FastAPI & Starlette High-Performance ASGI Engine
 
-PyDataUI features a **dual-backend pluggable architecture**:
-1. **`fastapi` (Default)**: Standard Python ASGI ecosystem powered by Starlette, FastAPI, and Uvicorn.
-2. **`pyrustapi` (High-Performance Rust)**: Compiled multi-threaded Rust engine powered by Tokio and Hyper, delivering sub-millisecond route dispatch and high-concurrency throughput with zero external ASGI server overhead.
+PyDataUI is powered directly by the **FastAPI and Starlette ASGI ecosystem**, delivering enterprise-grade asynchronous performance, high-throughput concurrency, and complete integration with existing Python services:
 
-### Installation
+1. **Native ASGI Engine (FastAPI Default)**: Runs on Starlette and FastAPI with Uvicorn worker clusters. Zero C or Rust compilation toolchains required.
+2. **Automatic OpenAPI 3.1 & Swagger UI**: Every state action and API route is documented at `/docs` out of the box.
+3. **Bi-Directional WebSockets**: Built-in native WebSocket routing at `/_pdu/ws/{channel_name}` with full support for HTMX WebSocket extensions (`htmx-ws.js`).
+4. **Seamless Middleware Stack**: 100% compatible with Starlette CORS, GZip, Session, and security middlewares.
+
+### Multi-Worker Production Deployment (Uvicorn & Granian)
+
+PyDataUI is fully ASGI 3.0 compliant. Deploy in production with either the battle-tested **Uvicorn** worker fleet or the ultra-high-throughput Rust-powered **Granian** runner:
+
+#### Option A: Standard Production Runner (Uvicorn)
 ```bash
-pip install "pydataui[pyrustapi]"
+# High-concurrency multi-worker Uvicorn deployment:
+uvicorn app:app.asgi_app --workers 4 --host 0.0.0.0 --port 8000
 ```
 
-### 3 Flexible Ways to Activate PyRustAPI
+#### Option B: Rust-Powered High-Throughput Runner (Granian)
+```bash
+# Maximum ASGI throughput powered by Rust, Tokio & Hyper (38,000+ req/s):
+pip install granian
+granian --interface asgi app:app.asgi_app --workers 4 --host 0.0.0.0 --port 8000
+```
 
-#### Option 1: Next.js Style (`App`)
+### Direct FastAPI Mounting
+Mount PyDataUI into your existing microservices in a single line:
 ```python
-import pydataui as pdu
+from fastapi import FastAPI
+from pydataui import App, Container, Heading
 
-app = pdu.App(title="Ultra-Low Latency Rust UI", backend="pyrustapi")
+api = FastAPI(title="Enterprise Gateway")
+dashboard = App(title="Internal Admin")
 
-@app.page("/")
+@dashboard.page("/")
 def home():
-    pdu.title("Powered by Compiled Rust & Tokio")
-    pdu.metric("Throughput", "120,000 req/s", delta="Sub-millisecond")
+    return Container(Heading("Enterprise Ops Portal"))
 
-if __name__ == "__main__":
-    app.run(port=8000)
-```
-
-#### Option 2: Streamlit Procedural Style
-```python
-import pydataui as pdu
-
-# Configure backend via set_page_config or run()
-pdu.set_page_config(title="Rust-Accelerated Analytics", backend="pyrustapi")
-
-pdu.title("Real-Time Financial Telemetry")
-pdu.metric("P99 Latency", "0.42 ms", delta="-75% vs standard ASGI")
-
-if __name__ == "__main__":
-    pdu.run(port=8000, backend="pyrustapi")
-```
-
-#### Option 3: Zero-Code Environment Variable
-Switch any existing PyDataUI application to the PyRustAPI compiled Rust engine without modifying a single line of code:
-```bash
-export PYDATAUI_BACKEND=pyrustapi
-python app.py
+# Mount directly: 1 process, 1 port, zero latency hops!
+api.mount("/dashboard", dashboard.fastapi)
 ```
 
 ---

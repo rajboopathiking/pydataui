@@ -6,7 +6,7 @@ A definitive guide to diagnosing, resolving, and understanding UI responsiveness
 
 ## 1. How PyDataUI Reactivity Works
 
-PyDataUI combines **Rust Tokio/Hyper** (`pyrustapi`), **HTMX** (reactive SSR), **Tailwind CSS**, and **shadcn/ui**:
+PyDataUI combines **FastAPI & Starlette Core** (runnable with high-performance ASGI servers like **Granian** [Rust Tokio/Hyper] or **Uvicorn**), **HTMX** (reactive SSR), **Tailwind CSS**, and **shadcn/ui**:
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -20,7 +20,7 @@ PyDataUI combines **Rust Tokio/Hyper** (`pyrustapi`), **HTMX** (reactive SSR), *
                            │ Body: application/x-www-form-urlencoded / JSON
                            ▼
 ┌────────────────────────────────────────────────────────┐
-│                   pyrustapi Server Core                │
+│     FastAPI / Starlette ASGI Engine (Uvicorn/Granian)  │
 │                                                        │
 │  1. Restores Session from Cookie (`pdu-session`)       │
 │  2. Deserializes form fields into State variables      │

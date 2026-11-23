@@ -1,7 +1,7 @@
 # PyDataUI Documentation
 
 > **The Production-Grade Full-Stack Python Framework for Web, Mobile & Desktop.**  
-> Powered by standard FastAPI ASGI (default) with optional PyRustAPI (compiled Rust Tokio/Hyper Core), HTMX, Tailwind CSS, and shadcn/ui.
+> Powered by standard FastAPI and Starlette ASGI (with high-performance Uvicorn and Granian runners), HTMX, Tailwind CSS, and shadcn/ui.
 
 ---
 
@@ -37,8 +37,8 @@
 
 With PyDataUI:
 - 🐍 **100% Python Code**: Build responsive web, mobile (Android/iOS), and desktop apps without writing JavaScript, Swift, or Kotlin.
-- ⚡ **FastAPI Default Engine**: Native ASGI foundation running on standard FastAPI and Uvicorn with zero C/Rust compilation requirements.
-- 🦀 **Optional PyRustAPI Core**: Seamlessly switch to an ultra-high-throughput compiled Rust HTTP engine (Tokio & Hyper) delivering up to 34,000+ req/sec for hyper-scale workloads.
+- ⚡ **FastAPI ASGI Core**: Native ASGI foundation running on standard FastAPI and Starlette with zero C/Rust compilation requirements.
+- 🚀 **High-Performance ASGI with Uvicorn & Granian**: Seamlessly run on Uvicorn (uvloop) or Granian (Rust Tokio & Hyper ASGI engine), delivering up to 38,400+ req/sec for hyper-scale workloads with minimal memory footprint.
 - 🔌 **Native FastAPI Mounting**: Mount PyDataUI dashboards, admin consoles, and AI tools directly inside existing FastAPI backends via `mount(api, app, path="/dashboard")`.
 - 🪄 **Dual Developer Experience**: Use the rapid procedural API (`import pydataui as ui; ui.title(...); ui.run()`) for instant scripts, or the declarative Component & State system for large-scale enterprise applications.
 - 📱 **Cross-Platform Mobile & Desktop**: Built-in Progressive Web App (PWA), Capacitor mobile shell (Android `.apk` and iOS `.ipa`), and standalone desktop apps (`--desktop` or Tauri 2.0).
@@ -59,8 +59,8 @@ With PyDataUI:
 | Capability | PyDataUI (v1.0.0 Stable) | Streamlit | Gradio | FastAPI + React |
 |---|---|---|---|---|
 | **Programming Language** | **100% Python** | 100% Python | 100% Python | Python + TypeScript |
-| **Default HTTP Engine** | ⚡ **FastAPI ASGI** | 🐍 Tornado | 🐍 Uvicorn | 🐍 Uvicorn + Node |
-| **High-Throughput Option** | 🦀 **Rust (PyRustAPI Tokio/Hyper)** | ❌ None | ❌ None | ❌ None |
+| **Default HTTP Engine** | ⚡ **FastAPI / Starlette ASGI** | 🐍 Tornado | 🐍 Uvicorn | 🐍 Uvicorn + Node |
+| **High-Throughput ASGI Option** | ⚡ **Granian (Rust Tokio) & Uvicorn** | ❌ None | ❌ None | ❌ None |
 | **Mount in FastAPI App** | ✅ **Native (`mount()`)** | ❌ Separate process | ⚠️ Mount as WSGI/ASGI | ✅ Native |
 | **Streamlit-like DX (`ui.*`)** | ✅ **Yes (`import pydataui as ui`)** | ✅ Yes | ⚠️ Blocks | ❌ No |
 | **Mobile Apps (APK & IPA)** | ✅ **Native (Capacitor 8.x) + PWA** | ❌ None | ❌ None | ⚠️ React Native rewrite |
@@ -93,7 +93,7 @@ With PyDataUI:
 │                          PYDATAUI SERVER                                  │
 │                                                                           │
 │   ┌───────────────────────────────────────────────────────────────────┐   │
-│   │   FastAPI ASGI Engine (Default) or PyRustAPI Engine (Rust/Tokio)  │   │
+│   │   FastAPI / Starlette ASGI Engine (Uvicorn or Granian)         │   │
 │   │   Supports standalone App() or mounted inside existing FastAPI    │   │
 │   └─────────────────┬───────────────────────────────▲─────────────────┘   │
 │                     │                               │                     │

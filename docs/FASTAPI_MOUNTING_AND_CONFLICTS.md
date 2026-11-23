@@ -21,7 +21,7 @@ When you attach a PyDataUI application to an existing FastAPI application, the f
 
 ```mermaid
 flowchart TD
-    Client["Client Browser / Mobile Device"] -->|"HTTP Request"| ParentFastAPI["Parent FastAPI App (Uvicorn / PyRustAPI)"]
+    Client["Client Browser / Mobile Device"] -->|"HTTP Request"| ParentFastAPI["Parent FastAPI App (Uvicorn / Granian)"]
     
     ParentFastAPI -->|"Route: /api/v1/*"| APIRoutes["FastAPI API Endpoints & Business Logic"]
     ParentFastAPI -->|"Route: /docs"| ParentDocs["FastAPI Swagger UI (/docs)"]
@@ -233,4 +233,4 @@ pydataui build app.py --output dist
 cd dist
 docker compose up --build -d
 ```
-Your containerized PyDataUI service is live on port `8000` with production Uvicorn or PyRustAPI engine!
+Your containerized PyDataUI service is live on port `8000` with production Uvicorn or Granian ASGI engine!

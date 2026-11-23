@@ -85,11 +85,16 @@ Display alternative commands or multi-language examples using tabs:
     app = App(backend="fastapi")
     ```
 
-=== "Python (PyRustAPI)"
+=== "Production ASGI (Granian / Rust Engine)"
 
-    ```python
-    from pydataui import App
-    app = App(backend="rust")
+    ```bash
+    granian --interface asgi app:app.asgi_app --workers 4 --threads 2
+    ```
+
+=== "Production ASGI (Uvicorn / uvloop)"
+
+    ```bash
+    uvicorn app:app.asgi_app --workers 4 --loop uvloop
     ```
 
 === "Bash CLI"

@@ -472,11 +472,11 @@ with tab_settings:
 ## 9. Framework Positioning: Customer-Facing, Developer Internal-Centric, or Both?
 
 A common question when evaluating PyDataUI:  
-> *"Is PyDataUI designed for internal developer tooling (like Streamlit / Retool) or customer-facing production web apps (like Next.js / FastAPI)?"*
+> *"Is PyDataUI designed for internal developer tooling (like Streamlit / Retool) or customer-facing production data apps (like Reflex / FastAPI)?"*
 
 ### **The Answer: It Is Architected for Both.**
 
-| Capability | Streamlit | Next.js / React | PyDataUI |
+| Capability | Streamlit | Reflex / Transpilers | PyDataUI |
 | :--- | :--- | :--- | :--- |
 | **Rapid Python Prototyping** | ⚡ High (10 lines of code) | 🛑 Low (requires npm, TS, JSX, APIs) | ⚡ **High (10 lines of procedural Python)** |
 | **Customer-Facing Performance** | 🛑 Poor (1,200ms script re-runs) | ⚡ High (sub-50ms static/SSR) | ⚡ **High (sub-15ms ASGI + surgical HTMX)** |

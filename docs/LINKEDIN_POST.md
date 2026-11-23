@@ -8,18 +8,18 @@ Stop rewriting your Python data prototypes in React just to make them fast enoug
 
 For years, Python engineers have been caught between two extremes:
 1. **Streamlit & Gradio**: Great for a 1-day proof-of-concept, but their "full-script rerun" architecture chokes on real datasets, causes memory leaks, and lacks commercial UI flexibility.
-2. **React / Next.js + FastAPI**: Fast and scalable, but now your data team is forced to maintain dual repositories, deal with TypeScript build chains, npm dependencies, and state-sync boilerplate.
+2. **Reflex / React Transpilers**: More scalable than rerun scripts, but forces your Python team to manage Node.js, npm dependencies, WebSockets state sync, and complex build steps.
 
 Today, we are changing that.
 
-Introducing **PyDataUI** — a production-ready, full-stack Python framework engineered for Data & AI applications, powered by a **compiled Rust HTTP core**. 🦀🐍
+Introducing **PyDataUI** — a production-ready, full-stack Python framework engineered for Data & AI applications, powered by native **FastAPI & Starlette ASGI Core** with **Granian & Uvicorn** production runners. ⚡🐍
 
 ---
 
 ### 💡 Why is PyDataUI different?
 
-⚡ **Compiled Rust HTTP Engine (`PyRustAPI`)**:
-Serves up to **112,000+ requests/sec** with sub-millisecond P99 latency. That is up to 60x faster than traditional Python UI rerun frameworks, with a base memory footprint under 30MB.
+⚡ **High-Performance FastAPI ASGI Core (Granian & Uvicorn)**:
+Serves up to **38,400+ requests/sec** with sub-millisecond P99 latency via Granian (Rust Hyper/Tokio) and standard Uvicorn. That is up to 20x faster than traditional rerun frameworks, with a base memory footprint under 32MB.
 
 🎯 **Fine-Grained Reactive State**:
 No full-page script re-executions. When your `@s.action` updates state, PyDataUI calculates the delta and updates *only* the affected DOM element via lightweight HTMX swaps.

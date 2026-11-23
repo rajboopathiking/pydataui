@@ -1,8 +1,8 @@
 # PyDataUI Production Readiness & Architecture Assessment
 
-> **Version note:** This assessment was written for **v0.2.1**. The current
-> v0.3.0 release defaults to FastAPI, with PyRustAPI available as an optional
-> backend. Validate engine-specific statements against the current
+> **Version note:** PyDataUI standardizes on native **FastAPI & Starlette Core**,
+> running with high-performance production ASGI engines (**Granian** [Rust Tokio/Hyper]
+> and **Uvicorn** [uvloop]). Validate engine-specific statements against the current
 > [API reference](API_REFERENCE.md) and release notes.
 
 This document provides a candid, authoritative engineering assessment of **PyDataUI v0.2.1** for production deployments, its security guarantees, remaining architectural boundaries, and how it compares to **Django, Streamlit, Gradio, and Reflex**.
@@ -19,7 +19,7 @@ PyDataUI v0.2.1 achieves enterprise security and performance for targeted data e
 
 | Category | Status | Details |
 |---|---|---|
-| **HTTP Engine** | ✅ **Production-Grade** | Rust Tokio/Hyper core (`pyrustapi`) delivers sub-millisecond latency and high concurrency without Uvicorn/Gunicorn. |
+| **HTTP Engine** | ✅ **Production-Grade** | Native FastAPI and Starlette ASGI engine running on high-concurrency Uvicorn workers. |
 | **Session Isolation** | ✅ **Production-Grade** | State is isolated per signed `pdu-session` cookie with mutex locking. No cross-user state leaks. |
 | **Authentication & RBAC** | ✅ **Production-Grade** | PBKDF2-SHA256 (600,000 iterations, random per-user salt), JWT tokens, SHA-256 API key digests, and role gates. |
 | **CSRF & Security** | ✅ **Production-Grade** | Automatic per-session CSRF token validation on all mutations. Browser requests redirect to `/login` via HTTP 303. |
@@ -72,7 +72,7 @@ PyDataUI incorporates **Optimistic Concurrency Control (OCC)** versioning (`pdu_
 
 ### Architecture A: Single Process Behind Reverse Proxy (Fastest Dev & Internal Tools)
 
-Since the Rust `pyrustapi` engine is multi-threaded and asynchronous (Tokio event loop), a **single process** can comfortably handle thousands of concurrent requests:
+Since PyDataUI is powered by FastAPI and Starlette, a **single process** can comfortably handle thousands of concurrent requests:
 
 ```
 Internet / Clients
@@ -84,8 +84,8 @@ Internet / Clients
                        │ (HTTP :8000)
                        ▼
 ┌──────────────────────────────────────────────┐
-│  PyDataUI Process (pyrustapi / Tokio Async)  │
-│  - Multi-threaded HTTP Server                │
+│  PyDataUI Process (FastAPI / Uvicorn Async)  │
+│  - Multi-threaded ASGI Server                │
 │  - In-Memory or SQLite WAL Storage           │
 │  - HTMX SSR Component Tree                   │
 └──────────────────────────────────────────────┘
@@ -102,7 +102,7 @@ When running multiple worker processes on a multicore server (`app.run(workers=4
        ▼                       ▼                       ▼
 ┌──────────────┐        ┌──────────────┐        ┌──────────────┐
 │   Worker 1   │        │   Worker 2   │        │   Worker 3   │
-│ (pyrustapi)  │        │ (pyrustapi)  │        │ (pyrustapi)  │
+│  (Uvicorn)   │        │  (Uvicorn)   │        │  (Uvicorn)   │
 └──────┬───────┘        └──────┬───────┘        └──────┬───────┘
        │                       │                       │
        └───────────────────────┼───────────────────────┘
@@ -262,14 +262,14 @@ flowchart TD
 
     subgraph PyDataUIArchitecture["PyDataUI Production Architecture (Unified & Fast)"]
         DirectData["In-Memory Data & AI Models\n(DuckDB, Polars, PyTorch, LangChain)"]
-        ASGI["Enterprise Async ASGI Core\n(FastAPI / PyRustAPI Tokio Core)"]
+        ASGI["Enterprise Async ASGI Core\n(FastAPI / Starlette Engine)"]
         HTMXDiff["Targeted HTMX HTML Diffs + shadcn/ui + GSAP\n(Zero JSON serialization, Zero npm, 60fps)"]
         DirectData --> ASGI --> HTMXDiff
     end
 ```
 
 #### 1. Real Enterprise ASGI Core (Not an Ad-hoc Script Runner)
-Unlike Streamlit, PyDataUI does **not** re-run Python files on user interactions. It is built directly on **standard async ASGI** (FastAPI, Starlette, Uvicorn, Gunicorn, uvloop) with an optional compiled **Rust Tokio/Hyper core**. It scales horizontally across Kubernetes pods, Docker containers, and multi-worker processes (`workers=4+`) using standard HTTP load balancers.
+Unlike Streamlit, PyDataUI does **not** re-run Python files on user interactions. It is built directly on **standard async ASGI** (FastAPI, Starlette, Uvicorn, uvloop). It scales horizontally across Kubernetes pods, Docker containers, and multi-worker processes (`workers=4+`) using standard HTTP load balancers.
 
 #### 2. HTMX Server-Side Reactivity (Zero Node.js, Zero Build Step)
 When a user clicks a button or filters a dataset, PyDataUI executes only the targeted state method on the server and streams back a lightweight HTML fragment over the wire.

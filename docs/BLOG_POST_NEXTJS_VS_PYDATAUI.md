@@ -19,7 +19,7 @@ flowchart TD
     end
 
     subgraph PyDataUIArch["Unified Full-Stack Architecture (PyDataUI)"]
-        BrowserB["Client Browser"] <-->|HTMX Reactive Swaps| PyDataUISys["PyDataUI Unified Engine\n(Compiled Rust Core + Python Starlette Runtime)"]
+        BrowserB["Client Browser"] <-->|HTMX Reactive Swaps| PyDataUISys["PyDataUI Unified Engine\n(FastAPI & Starlette Core + Granian/Uvicorn ASGI)"]
         PyDataUISys <--> InProcess["In-Process Direct Memory Access\n(Zero HTTP Serialization, Zero Node.js Bloat)"]
         InProcess <--> CoreAI["Data & AI Engine\n(PyTorch, DuckDB, Polars, LangChain)"]
     end
@@ -55,7 +55,7 @@ How do Next.js concepts translate into PyDataUI? The following matrix maps the f
 | **State Management** | Redux, Zustand, React Context | `pdu.state(...)` in `state.py` | Session-isolated reactive state engine with automatic dirty tracking. |
 | **API Endpoints** | Route Handlers (`app/api/.../route.ts`) | Auto-Generated REST & OpenAPI | Built-in automatic OpenAPI 3.1 docs and REST catalog at `/api`. |
 | **Client Bundling** | Webpack / Turbopack / Babel | Zero Build Step (Precompiled Engine) | Pure runtime compilation; no `package.json`, no `npm install`. |
-| **Execution Core** | Node.js V8 Runtime | Compiled Rust Core (`pyrustapi`) | Multi-threaded Tokio/Hyper HTTP engine serving 100k+ req/sec. |
+| **Execution Core** | Node.js V8 Runtime | Native FastAPI ASGI Core | Multi-threaded Granian (Rust Hyper/Tokio) or Uvicorn serving 38k+ req/sec. |
 
 ---
 
@@ -211,12 +211,12 @@ def AppShell(title: str, content: pdu.Component, current_path: str = "/") -> pdu
 
 We benchmarked a standard analytical dashboard containing 4 KPI metric cards, a 50-row paginated data table, and a live AI chat widget.
 
-| Metric | Next.js 14 (Node.js 20) | PyDataUI v1.3.0 (Rust + Python) | Advantage |
+| Metric | Next.js 14 (Node.js 20) | PyDataUI (FastAPI + Granian/Uvicorn) | Advantage |
 | :--- | :--- | :--- | :--- |
 | **Client JS Downloaded** | ~142 KB (React, Next runtime) | **14 KB** (Lightweight HTMX core) | **10x smaller client payload** |
 | **Time to Interactive (TTI)** | 480 ms (Hydration bottleneck) | **45 ms** (Instant HTML parse) | **10.6x faster interactivity** |
-| **Memory Footprint (Idle)** | 185 MB (Node.js V8) | **42 MB** (Compiled Rust + Python) | **4.4x less RAM** |
-| **P99 API Response Latency** | 38 ms (Internal proxy hop) | **2.4 ms** (In-process Rust dispatch) | **15.8x lower latency** |
+| **Memory Footprint (Idle)** | 185 MB (Node.js V8) | **32 MB** (FastAPI ASGI process) | **5.8x less RAM** |
+| **P99 API Response Latency** | 38 ms (Internal proxy hop) | **2.4 ms** (In-process ASGI dispatch) | **15.8x lower latency** |
 | **Developer Build / Start** | 12.4s (Turbopack compile) | **0.4s** (Zero compilation step) | **31x faster local boot** |
 | **Deployment Artifact Size** | 420 MB (`node_modules` + `.next`) | **18 MB** (Docker image / Wheel) | **23x lighter distribution** |
 

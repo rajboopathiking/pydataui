@@ -21,38 +21,38 @@ flowchart LR
         B --> C["Laggy UI, High CPU Churn, Memory Leaks"]
     end
 
-    subgraph ComplexStack["Choice 2: Full-Stack Web (React, Next.js, FastAPI)"]
-        D["FastAPI Backend"] --> E["Node.js, Webpack, TypeScript, Tailwind, Redux"]
-        E --> F["Production Speed, but 2x Maintenance & Context Switching"]
+    subgraph ComplexStack["Choice 2: Transpiler Stacks (Reflex, Node.js, WebSockets)"]
+        D["FastAPI Backend"] --> E["Node.js, npm, Webpack, Transpilation"]
+        E --> F["Declarative Syntax, but 500MB RAM & WebSocket Bottlenecks"]
     end
 ```
 
 1. **The Rapid Scripting Route (Streamlit / Gradio)**:
    - *The Good*: Pure Python, fast prototyping in 50 lines.
    - *The Catch*: The full-page rerun execution model. Any slider click or button tap re-executes the entire script from top to bottom. As your dataset grows or models load into VRAM, your app becomes sluggish, consumes excessive server memory, and resists custom commercial styling.
-2. **The Microservice Stack (React + Next.js + FastAPI)**:
-   - *The Good*: Blazing fast, beautiful, commercial-grade UI.
-   - *The Catch*: Python engineers are forced to maintain dual repositories, configure TypeScript build tooling, fight npm dependencies, and manually wire up REST/GraphQL glue.
+2. **The Transpiler Route (Reflex / Python-to-React)**:
+   - *The Good*: Pure Python declarative components.
+   - *The Catch*: Requires Node.js and npm toolchains, generates heavy JavaScript bundles, consumes 300–500 MB RAM idle, and routes every single click over stateful WebSockets.
 
 ---
 
 ## 🚀 The PyDataUI Solution: Production Speed in Pure Python
 
-**PyDataUI** bridges this gap entirely. It offers the speed and declarative DX of Python, but eliminates the rerun bottleneck through **fine-grained server-driven reactivity** and a **compiled Rust execution engine**.
+**PyDataUI** bridges this gap entirely. It offers the speed and declarative DX of Python, but eliminates the rerun bottleneck through **fine-grained server-driven reactivity** and an **enterprise FastAPI & Starlette ASGI engine** (powered by Uvicorn or Granian).
 
 ```mermaid
 flowchart TD
     UserAction["User Interacts (Clicks Button, Filters Table, Types Prompt)"] --> Proxy["PyDataUI Reactive State Proxy"]
     Proxy --> Delta["Detect Affected State Variables"]
-    Delta --> Rust["Compiled Rust Core (PyRustAPI)"]
-    Rust --> SSR["Server-Side Render Affected DOM Element Only"]
+    Delta --> ASGI["FastAPI / Starlette ASGI Engine (Uvicorn / Granian)"]
+    ASGI --> SSR["Server-Side Render Affected DOM Element Only"]
     SSR --> Swap["HTMX Smooth DOM Swap (No Full-Page Reload)"]
 ```
 
 ### Core Innovations:
 
 1. **Fine-Grained Reactive State**: No full-page reloads. When you update a state variable in `@s.action`, only the specific DOM node bound to that variable updates.
-2. **Compiled Rust HTTP Engine (`PyRustAPI`)**: Throughput of up to **110,000 requests/sec** with microsecond latency—surpassing conventional Python WSGI/ASGI servers by 5x to 10x.
+2. **Enterprise ASGI HTTP Engine (FastAPI + Uvicorn / Granian)**: Sub-millisecond route dispatch and high concurrency with standard ASGI multi-worker scaling.
 3. **80+ Modern shadcn/ui Inspired Components**: Production-ready styling tokens out of the box—KPI metric cards, accordions, data tables, sliders, dialogs, badges, and chat containers.
 4. **Universal Tabular Data Sniffing**: Pass a **DuckDB** result, **Polars** DataFrame, **PyArrow** Table, **Pandas** DataFrame, or raw Python dictionaries directly into `DataTable`—it automatically formats, paginates, and sorts without manual boilerplate.
 5. **Dual Web & Terminal (TUI) Target**: Run your dashboard in Google Chrome or deploy it to a headless SSH jump box in Terminal UI mode with zero changes to your Python code.
@@ -141,12 +141,12 @@ In benchmark tests simulating high-concurrency enterprise workloads (10,000 conc
 
 | Framework | Architecture | Req / Second | P99 Latency | Memory Footprint |
 | :--- | :--- | :--- | :--- | :--- |
-| **PyDataUI + PyRustAPI** | Compiled Rust + HTMX SSR | **112,400** | **0.8 ms** | **~28 MB** |
-| **FastAPI + React** | Python ASGI + Node SSR | 24,100 | 4.2 ms | ~180 MB |
+| **PyDataUI (Granian / Rust ASGI)** | Granian + FastAPI + HTMX SSR | **38,400** | **1.2 ms** | **~32 MB** |
+| **PyDataUI (Uvicorn / Python ASGI)**| Uvicorn + FastAPI + HTMX SSR | **24,800** | **2.5 ms** | **~28 MB** |
+| **Reflex** | Python Compile + React Transpile | 8,900 | 18.5 ms | ~320 MB |
 | **Streamlit** | Python Script Rerun + WebSockets | 1,840 | 85.0 ms | ~450 MB |
-| **Reflex** | Python Compile + Next.js Transpile | 8,900 | 18.5 ms | ~320 MB |
 
-PyDataUI delivers up to **60x higher request throughput** than traditional script-rerun frameworks while maintaining a fraction of their memory footprint.
+PyDataUI delivers up to **20x higher request throughput** than traditional script-rerun frameworks while maintaining a fraction of their memory footprint.
 
 ---
 

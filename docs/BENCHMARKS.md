@@ -1,6 +1,6 @@
 # ⚡ Performance Benchmarks: PyDataUI (FastAPI / ASGI with Granian & Uvicorn) vs Reflex & Streamlit
 
-This benchmark suite provides a rigorous, head-to-head comparison between **PyDataUI** (powered by native **FastAPI & Starlette Core** running on either **Granian** [Rust Tokio/Hyper ASGI] or **Uvicorn** [uvloop ASGI]), **Reflex** (Python-to-React/Next.js transpiler with WebSockets), and **Streamlit** (Python script-rerun model).
+This benchmark suite provides a rigorous, head-to-head comparison between **PyDataUI** (powered by native **FastAPI & Starlette Core** running on either **Granian** [Rust Tokio/Hyper ASGI] or **Uvicorn** [uvloop ASGI]), **Reflex** (Python-to-React transpiler with WebSockets), and **Streamlit** (Python script-rerun model).
 
 All tests measure real HTTP performance over loopback TCP sockets using **ApacheBench (`ab`)** and **wrk**, evaluating both **Real GET** (payload serialization) and **Real POST** (Pydantic model validation and state mutations) on production-spec hardware.
 
@@ -94,7 +94,7 @@ VS
    - Eliminates client-side Virtual DOM diffing and hydration overhead.
 
 4. **Zero Node.js / JavaScript Transpilation Overhead**:
-   - Reflex must compile Python UI code into React/Next.js JavaScript, requiring Node.js, `node_modules`, and dual-process orchestration (Node on port 3000 + FastAPI on port 8000).
+   - Reflex must compile Python UI code into React JavaScript, requiring Node.js, `node_modules`, and dual-process orchestration (Node on port 3000 + FastAPI on port 8000).
    - PyDataUI runs in a single unified Python process with minimal memory (~30 MB).
 
 ---

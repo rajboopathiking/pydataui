@@ -8,7 +8,7 @@ This guide establishes the architectural standards for building clean, maintaina
 
 PyDataUI combines the expressiveness of Python with the sub-millisecond execution speeds of compiled Rust and the simplicity of modern HTMX. Unlike script-based frameworks that re-execute the entire file from line 1 on every user click, PyDataUI operates on a **persistent, session-isolated reactive state engine**.
 
-To prevent codebases from becoming messy or tightly coupled, PyDataUI enforces a clean separation of concerns modeled after modern enterprise React/Next.js architectures:
+To prevent codebases from becoming messy or tightly coupled, PyDataUI enforces a clean separation of concerns modeled after modern declarative Reflex architectures:
 
 ```text
 my_enterprise_app/
@@ -39,7 +39,7 @@ my_enterprise_app/
 | **Functional Components** | Python Functions returning `Component` | Return declarative tree of UI primitives (`pdu.Card`, `pdu.Grid`). |
 | **Virtual DOM Reconciliation** | Server-Side HTMX DOM Diffing | Instead of running a heavy JS runtime in the browser, the server sends precise HTML fragments to swap in the DOM. |
 | **Controlled Inputs (`value + onChange`)** | `pdu.Input(name="field", value=s.field)` | Standard HTML input attributes with automatic two-way binding. |
-| **Next.js App Router** | `@app.page("/path")` in `app.py` | Native multi-page routing with automatic CSRF protection and SEO metadata. |
+| **Reflex / Declarative Page Router** | `@app.page("/path")` in `app.py` | Native multi-page routing with automatic CSRF protection and SEO metadata. |
 
 ### For Streamlit Developers
 

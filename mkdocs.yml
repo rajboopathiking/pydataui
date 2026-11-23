@@ -62,19 +62,18 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Rapid Prototyping (Streamlit Style):
+  - Rapid Prototyping (Streamlit Track):
       - 10-Second Quickstart & Cheat Sheet: STREAMLIT_MIGRATION_AND_RAPID_PROTOTYPING_GUIDE.md
       - Streamlit to PyDataUI Cookbook: STREAMLIT_TO_PYDATAUI_COOKBOOK.md
       - PyDataUI vs. Streamlit & React: PYDATAUI_VS_REACT_AND_STREAMLIT.md
       - Quick Reference: QUICKREF.md
-  - Full-Stack Web (Next.js Style):
-      - Next.js vs. PyDataUI Deep Dive: BLOG_POST_NEXTJS_VS_PYDATAUI.md
+  - Declarative Web (Reflex Track):
+      - PyDataUI vs. Reflex Deep Dive: PYDATAUI_VS_REFLEX.md
       - Clean Modular Architecture: MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE.md
       - Architecture & Request Lifecycle: ARCHITECTURE.md
-      - Web Dev to PyDataUI (React & Redux): WEB_TO_PYDATAUI_COMPARISON.md
+      - Web Dev to PyDataUI (Components & State): WEB_TO_PYDATAUI_COMPARISON.md
       - FastAPI & REST Integration: FASTAPI_AND_INTERNAL_TOOLING_GUIDE.md
       - Mounting & Engine Routing: FASTAPI_MOUNTING_AND_CONFLICTS.md
-      - PyDataUI vs. Reflex: PYDATAUI_VS_REFLEX.md
   - Components & Theming:
       - Component Encyclopedia: COMPONENTS_REFERENCE.md
       - Data Science & ML Components: DATA_COMPONENTS.md

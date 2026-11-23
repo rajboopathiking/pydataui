@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://rajboopathiking.github.io/pydataui/MODULAR_ARCHITECTURE_AND_ORGANIZATION_GUIDE/">
       
       
-        <link rel="prev" href="../BLOG_POST_NEXTJS_VS_PYDATAUI/">
+        <link rel="prev" href="../PYDATAUI_VS_REFLEX/">
       
       
         <link rel="next" href="../ARCHITECTURE/">
@@ -254,7 +254,7 @@
   
     
   
-  Rapid Prototyping (Streamlit Style)
+  Rapid Prototyping (Streamlit Track)
 
         </a>
       </li>
@@ -272,13 +272,13 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../BLOG_POST_NEXTJS_VS_PYDATAUI/" class="md-tabs__link">
+        <a href="../PYDATAUI_VS_REFLEX/" class="md-tabs__link">
           
   
   
     
   
-  Full-Stack Web (Next.js Style)
+  Declarative Web (Reflex Track)
 
         </a>
       </li>
@@ -530,7 +530,7 @@
   <span class="md-ellipsis">
     
   
-    Rapid Prototyping (Streamlit Style)
+    Rapid Prototyping (Streamlit Track)
   
 
     
@@ -546,7 +546,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Rapid Prototyping (Streamlit Style)
+    Rapid Prototyping (Streamlit Track)
   
 
           </label>
@@ -694,8 +694,6 @@
       
         
       
-        
-      
     
     
     
@@ -722,7 +720,7 @@
   <span class="md-ellipsis">
     
   
-    Full-Stack Web (Next.js Style)
+    Declarative Web (Reflex Track)
   
 
     
@@ -738,7 +736,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Full-Stack Web (Next.js Style)
+    Declarative Web (Reflex Track)
   
 
           </label>
@@ -751,14 +749,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../BLOG_POST_NEXTJS_VS_PYDATAUI/" class="md-nav__link">
+      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Next.js vs. PyDataUI Deep Dive
+    PyDataUI vs. Reflex Deep Dive
   
 
     
@@ -1177,7 +1175,7 @@
   <span class="md-ellipsis">
     
   
-    Web Dev to PyDataUI (React & Redux)
+    Web Dev to PyDataUI (Components & State)
   
 
     
@@ -1234,34 +1232,6 @@
     
   
     Mounting & Engine Routing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../PYDATAUI_VS_REFLEX/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    PyDataUI vs. Reflex
   
 
     
@@ -2827,7 +2797,7 @@
 <hr />
 <h2 id="1-the-core-philosophy-why-organization-matters">1. The Core Philosophy: Why Organization Matters</h2>
 <p>PyDataUI combines the expressiveness of Python with the sub-millisecond execution speeds of compiled Rust and the simplicity of modern HTMX. Unlike script-based frameworks that re-execute the entire file from line 1 on every user click, PyDataUI operates on a <strong>persistent, session-isolated reactive state engine</strong>.</p>
-<p>To prevent codebases from becoming messy or tightly coupled, PyDataUI enforces a clean separation of concerns modeled after modern enterprise React/Next.js architectures:</p>
+<p>To prevent codebases from becoming messy or tightly coupled, PyDataUI enforces a clean separation of concerns modeled after modern declarative Reflex architectures:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>my_enterprise_app/
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── app.py                  # Main Entrypoint &amp; Page Router
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── state.py                # Pure Reactive State Schemas (Single Source of Truth)
@@ -2880,7 +2850,7 @@
 <td style="text-align: left;">Standard HTML input attributes with automatic two-way binding.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Next.js App Router</strong></td>
+<td style="text-align: left;"><strong>Reflex / Declarative Page Router</strong></td>
 <td style="text-align: left;"><code>@app.page("/path")</code> in <code>app.py</code></td>
 <td style="text-align: left;">Native multi-page routing with automatic CSRF protection and SEO metadata.</td>
 </tr>

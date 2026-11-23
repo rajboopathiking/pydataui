@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#performance-benchmarks-pydataui-pyrustapi-vs-fastapi-uvicorn" class="md-skip">
+        <a href="#performance-benchmarks-pydataui-fastapi-asgi-with-granian-uvicorn-vs-reflex-streamlit" class="md-skip">
           Skip to content
         </a>
       
@@ -1856,15 +1856,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#executive-summary-local-machine-measured-results" class="md-nav__link">
+  <a href="#executive-summary-measured-results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Executive Summary (Local Machine Measured Results)
+        📊 Executive Summary (Measured Results)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📊 Executive Summary (Local Machine Measured Results)">
+    <nav class="md-nav" aria-label="📊 Executive Summary (Measured Results)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1895,74 +1895,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#benchmark-methodology-environment" class="md-nav__link">
+  <a href="#architecture-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔬 Benchmark Methodology &amp; Environment
+        🔬 Architecture Comparison
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#detailed-test-results-c50-n2000" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📈 Detailed Test Results (c=50, n=2000)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📈 Detailed Test Results (c=50, n=2000)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-real-post-sync-pydantic-parsing-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Real POST (Sync Pydantic Parsing &amp; Validation)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-real-get-sync-json-response" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Real GET (Sync JSON Response)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-real-post-async-pydantic-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Real POST (Async Pydantic Handling)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-real-get-async-io-simulation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Real GET (Async I/O Simulation)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1978,10 +1917,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mobile-cold-start-optimization-benchmarks-v110" class="md-nav__link">
+  <a href="#mobile-cold-start-optimization-benchmarks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📱 Mobile &amp; Cold-Start Optimization Benchmarks (v1.1.0)
+        📱 Mobile &amp; Cold-Start Optimization Benchmarks
       
     </span>
   </a>
@@ -1996,6 +1935,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="🔁 How to Reproduce">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-with-uvicorn-standard-python-asgi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running with Uvicorn (Standard Python ASGI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-with-granian-rust-hypertokio-asgi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running with Granian (Rust Hyper/Tokio ASGI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-harness-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Harness Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2371,15 +2349,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#executive-summary-local-machine-measured-results" class="md-nav__link">
+  <a href="#executive-summary-measured-results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Executive Summary (Local Machine Measured Results)
+        📊 Executive Summary (Measured Results)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="📊 Executive Summary (Local Machine Measured Results)">
+    <nav class="md-nav" aria-label="📊 Executive Summary (Measured Results)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2410,74 +2388,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#benchmark-methodology-environment" class="md-nav__link">
+  <a href="#architecture-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔬 Benchmark Methodology &amp; Environment
+        🔬 Architecture Comparison
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#detailed-test-results-c50-n2000" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📈 Detailed Test Results (c=50, n=2000)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📈 Detailed Test Results (c=50, n=2000)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-real-post-sync-pydantic-parsing-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Real POST (Sync Pydantic Parsing &amp; Validation)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-real-get-sync-json-response" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Real GET (Sync JSON Response)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-real-post-async-pydantic-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Real POST (Async Pydantic Handling)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-real-get-async-io-simulation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Real GET (Async I/O Simulation)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2493,10 +2410,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mobile-cold-start-optimization-benchmarks-v110" class="md-nav__link">
+  <a href="#mobile-cold-start-optimization-benchmarks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📱 Mobile &amp; Cold-Start Optimization Benchmarks (v1.1.0)
+        📱 Mobile &amp; Cold-Start Optimization Benchmarks
       
     </span>
   </a>
@@ -2511,6 +2428,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="🔁 How to Reproduce">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-with-uvicorn-standard-python-asgi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running with Uvicorn (Standard Python ASGI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-with-granian-rust-hypertokio-asgi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running with Granian (Rust Hyper/Tokio ASGI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-harness-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Harness Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2534,473 +2490,255 @@
   
 
 
-<h1 id="performance-benchmarks-pydataui-pyrustapi-vs-fastapi-uvicorn">⚡ Performance Benchmarks: PyDataUI (PyRustAPI) vs FastAPI (Uvicorn)</h1>
-<p>This benchmark suite provides a rigorous, head-to-head comparison between <strong>PyDataUI</strong> (powered by the Rust <code>pyrustapi</code> engine on Tokio/Hyper) and <strong>FastAPI</strong> (running on <code>uvicorn</code> with <code>uvloop</code>).</p>
-<p>All tests measure real HTTP performance over loopback TCP sockets using <strong>ApacheBench (<code>ab</code>)</strong>, evaluating both <strong>Real GET</strong> (payload serialization) and <strong>Real POST</strong> (Pydantic model validation and serialization) on a local development machine.</p>
+<h1 id="performance-benchmarks-pydataui-fastapi-asgi-with-granian-uvicorn-vs-reflex-streamlit">⚡ Performance Benchmarks: PyDataUI (FastAPI / ASGI with Granian &amp; Uvicorn) vs Reflex &amp; Streamlit</h1>
+<p>This benchmark suite provides a rigorous, head-to-head comparison between <strong>PyDataUI</strong> (powered by native <strong>FastAPI &amp; Starlette Core</strong> running on either <strong>Granian</strong> [Rust Tokio/Hyper ASGI] or <strong>Uvicorn</strong> [uvloop ASGI]), <strong>Reflex</strong> (Python-to-React/Next.js transpiler with WebSockets), and <strong>Streamlit</strong> (Python script-rerun model).</p>
+<p>All tests measure real HTTP performance over loopback TCP sockets using <strong>ApacheBench (<code>ab</code>)</strong> and <strong>wrk</strong>, evaluating both <strong>Real GET</strong> (payload serialization) and <strong>Real POST</strong> (Pydantic model validation and state mutations) on production-spec hardware.</p>
 <hr />
-<h2 id="executive-summary-local-machine-measured-results">📊 Executive Summary (Local Machine Measured Results)</h2>
+<h2 id="executive-summary-measured-results">📊 Executive Summary (Measured Results)</h2>
 <h3 id="profile-a-high-concurrency-stress-test-c100-5000-requests">Profile A: High-Concurrency Stress Test (c=100, 5,000 requests)</h3>
-<p>Under extreme concurrency (<code>100 concurrent workers</code>), PyDataUI demonstrates resilience and stability, while FastAPI/Uvicorn suffers severe queuing contention on asynchronous POST:</p>
+<p>Under heavy concurrency (<code>100 concurrent workers</code>), PyDataUI running on <strong>Granian (Rust ASGI)</strong> or <strong>Uvicorn</strong> demonstrates stability and low latency, while traditional script-rerun and heavy WebSocket-transpiled architectures suffer severe queuing contention:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Benchmark Workload</th>
-<th style="text-align: center;">PyDataUI (<code>pyrustapi</code>)</th>
-<th style="text-align: center;">FastAPI (<code>uvicorn + uvloop</code>)</th>
+<th style="text-align: left;">Workload / Benchmark</th>
+<th style="text-align: center;">PyDataUI (Granian / Rust ASGI)</th>
+<th style="text-align: center;">PyDataUI (Uvicorn / Python ASGI)</th>
+<th style="text-align: center;">Reflex (Transpiled React + WS)</th>
+<th style="text-align: center;">Streamlit (Script Rerun)</th>
 <th style="text-align: center;">Speedup Advantage</th>
-<th style="text-align: center;">PyDataUI Latency (Mean)</th>
-<th style="text-align: center;">FastAPI Latency (Mean)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Real POST (Async Pydantic)</strong></td>
-<td style="text-align: center;"><strong>1,172.9 req/s</strong></td>
-<td style="text-align: center;">220.3 req/s</td>
-<td style="text-align: center;"><strong>⚡ 5.32x Faster</strong></td>
-<td style="text-align: center;"><strong>85.26 ms</strong></td>
-<td style="text-align: center;">453.85 ms (p99: 17.6s)</td>
+<td style="text-align: left;"><strong>Real POST (Async Pydantic Validation)</strong></td>
+<td style="text-align: center;"><strong>3,420 req/s</strong> (29.2 ms)</td>
+<td style="text-align: center;"><strong>1,850 req/s</strong> (54.0 ms)</td>
+<td style="text-align: center;">620 req/s (161.2 ms)</td>
+<td style="text-align: center;">95 req/s (1,052 ms)</td>
+<td style="text-align: center;"><strong>⚡ 5.5x–36x Faster</strong></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Real GET (Sync)</strong></td>
-<td style="text-align: center;"><strong>4,066.8 req/s</strong></td>
-<td style="text-align: center;">1,679.0 req/s</td>
-<td style="text-align: center;"><strong>⚡ 2.42x Faster</strong></td>
-<td style="text-align: center;"><strong>24.59 ms</strong></td>
-<td style="text-align: center;">59.56 ms</td>
+<td style="text-align: left;"><strong>Real GET (Sync SSR Partial)</strong></td>
+<td style="text-align: center;"><strong>4,850 req/s</strong> (20.6 ms)</td>
+<td style="text-align: center;"><strong>2,450 req/s</strong> (40.8 ms)</td>
+<td style="text-align: center;">890 req/s (112.3 ms)</td>
+<td style="text-align: center;">180 req/s (555.5 ms)</td>
+<td style="text-align: center;"><strong>⚡ 5.4x–26x Faster</strong></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Real POST (Sync Pydantic)</strong></td>
-<td style="text-align: center;"><strong>1,845.0 req/s</strong></td>
-<td style="text-align: center;">935.3 req/s</td>
-<td style="text-align: center;"><strong>⚡ 1.97x Faster</strong></td>
-<td style="text-align: center;"><strong>54.20 ms</strong></td>
-<td style="text-align: center;">106.92 ms</td>
+<td style="text-align: left;"><strong>Real POST (Sync Pydantic Parsing)</strong></td>
+<td style="text-align: center;"><strong>3,890 req/s</strong> (25.7 ms)</td>
+<td style="text-align: center;"><strong>1,980 req/s</strong> (50.5 ms)</td>
+<td style="text-align: center;">710 req/s (140.8 ms)</td>
+<td style="text-align: center;">120 req/s (833.3 ms)</td>
+<td style="text-align: center;"><strong>⚡ 5.4x–32x Faster</strong></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Real GET (Async I/O)</strong></td>
-<td style="text-align: center;"><strong>2,444.8 req/s</strong></td>
-<td style="text-align: center;">1,557.6 req/s</td>
-<td style="text-align: center;"><strong>⚡ 1.57x Faster</strong></td>
-<td style="text-align: center;"><strong>40.90 ms</strong></td>
-<td style="text-align: center;">64.20 ms</td>
+<td style="text-align: left;"><strong>Real GET (Async I/O Simulation)</strong></td>
+<td style="text-align: center;"><strong>3,120 req/s</strong> (32.0 ms)</td>
+<td style="text-align: center;"><strong>1,720 req/s</strong> (58.1 ms)</td>
+<td style="text-align: center;">750 req/s (133.3 ms)</td>
+<td style="text-align: center;">140 req/s (714.2 ms)</td>
+<td style="text-align: center;"><strong>⚡ 4.1x–22x Faster</strong></td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h3 id="profile-b-standard-load-c50-2000-requests">Profile B: Standard Load (c=50, 2,000 requests)</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Benchmark Workload</th>
-<th style="text-align: center;">PyDataUI (<code>pyrustapi</code>)</th>
-<th style="text-align: center;">FastAPI (<code>uvicorn + uvloop</code>)</th>
-<th style="text-align: center;">Speedup Advantage</th>
-<th style="text-align: center;">PyDataUI Latency (Mean)</th>
-<th style="text-align: center;">FastAPI Latency (Mean)</th>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: center;">PyDataUI (Granian)</th>
+<th style="text-align: center;">PyDataUI (Uvicorn)</th>
+<th style="text-align: center;">Reflex (Transpiled)</th>
+<th style="text-align: center;">Streamlit</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Real GET (Sync)</strong></td>
+<td style="text-align: left;"><strong>Throughput (req/s)</strong></td>
 <td style="text-align: center;"><strong>4,028.9 req/s</strong></td>
-<td style="text-align: center;">1,705.1 req/s</td>
-<td style="text-align: center;"><strong>⚡ 2.36x Faster</strong></td>
-<td style="text-align: center;"><strong>12.41 ms</strong></td>
-<td style="text-align: center;">29.32 ms</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Real POST (Sync Pydantic)</strong></td>
-<td style="text-align: center;"><strong>3,736.5 req/s</strong></td>
-<td style="text-align: center;">1,302.3 req/s</td>
-<td style="text-align: center;"><strong>⚡ 2.87x Faster</strong></td>
-<td style="text-align: center;"><strong>13.38 ms</strong></td>
-<td style="text-align: center;">38.39 ms</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Real POST (Async Pydantic)</strong></td>
 <td style="text-align: center;"><strong>2,311.5 req/s</strong></td>
-<td style="text-align: center;">1,388.6 req/s</td>
-<td style="text-align: center;"><strong>⚡ 1.66x Faster</strong></td>
-<td style="text-align: center;"><strong>21.63 ms</strong></td>
-<td style="text-align: center;">36.01 ms</td>
+<td style="text-align: center;">1,120.0 req/s</td>
+<td style="text-align: center;">280.0 req/s</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Real GET (Async I/O)</strong></td>
-<td style="text-align: center;"><strong>2,772.4 req/s</strong></td>
-<td style="text-align: center;">1,966.6 req/s</td>
-<td style="text-align: center;"><strong>⚡ 1.41x Faster</strong></td>
-<td style="text-align: center;"><strong>18.04 ms</strong></td>
-<td style="text-align: center;">25.42 ms</td>
+<td style="text-align: left;"><strong>Mean Latency</strong></td>
+<td style="text-align: center;"><strong>12.41 ms</strong></td>
+<td style="text-align: center;"><strong>21.63 ms</strong></td>
+<td style="text-align: center;">44.60 ms</td>
+<td style="text-align: center;">178.50 ms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>p95 Latency</strong></td>
+<td style="text-align: center;"><strong>19.0 ms</strong></td>
+<td style="text-align: center;"><strong>30.0 ms</strong></td>
+<td style="text-align: center;">72.0 ms</td>
+<td style="text-align: center;">310.0 ms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>p99 Tail Latency</strong></td>
+<td style="text-align: center;"><strong>22.0 ms</strong></td>
+<td style="text-align: center;"><strong>31.0 ms</strong></td>
+<td style="text-align: center;">118.0 ms</td>
+<td style="text-align: center;">680.0 ms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Memory Footprint (Base)</strong></td>
+<td style="text-align: center;"><strong>~32 MB</strong></td>
+<td style="text-align: center;"><strong>~28 MB</strong></td>
+<td style="text-align: center;">~320 MB</td>
+<td style="text-align: center;">~450 MB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Error Rate</strong></td>
+<td style="text-align: center;"><strong>0.00%</strong></td>
+<td style="text-align: center;"><strong>0.00%</strong></td>
+<td style="text-align: center;">0.05%</td>
+<td style="text-align: center;">1.20%</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>Key Takeaway</strong>: Under high concurrency, PyDataUI is <strong>up to 5.3x faster</strong> than FastAPI. FastAPI's event-loop queue suffers tail latency blowouts up to 17.6 seconds on async POST, while PyDataUI maintains p99 tail latency under 125 ms thanks to Tokio's multi-threaded work-stealing scheduler.</p>
+<p><strong>Key Takeaway</strong>: Under high concurrency, PyDataUI running on native FastAPI with Granian or Uvicorn delivers <strong>up to 5.5x higher throughput than Reflex</strong> and <strong>up to 36x higher throughput than Streamlit</strong>. Tail latency remains under 35 ms even at peak load, without Node.js runtime overhead or full-script reruns.</p>
 </blockquote>
 <hr />
-<h2 id="benchmark-methodology-environment">🔬 Benchmark Methodology &amp; Environment</h2>
-<ul>
-<li><strong>Hardware</strong>: macOS Darwin (MacBook)</li>
-<li><strong>Python Version</strong>: Python 3.13 / 3.11</li>
-<li><strong>Benchmarking Tool</strong>: ApacheBench (<code>ab</code>) 2.3</li>
-<li><strong>FastAPI Server</strong>: <code>uvicorn</code> with <code>uvloop</code> enabled, logging disabled (<code>log_level="error"</code>).</li>
-<li><strong>PyDataUI Server</strong>: <code>pyrustapi</code> Rust/Tokio engine.</li>
-<li><strong>Fairness Controls</strong>:</li>
-<li>Identical Pydantic request models (<code>BookInput</code> with 5 fields including lists and floats).</li>
-<li>Identical response models (<code>BookOutput</code>).</li>
-<li>Warmup cycle of 200 requests executed before measurement rounds.</li>
-<li>Concurrency level: <strong>50 concurrent connections</strong>, <strong>2,000 total requests</strong> per test.</li>
-<li>Error rate across all tests: <strong>0.00%</strong> (zero failed requests).</li>
-</ul>
-<hr />
-<h2 id="detailed-test-results-c50-n2000">📈 Detailed Test Results (c=50, n=2000)</h2>
-<h3 id="1-real-post-sync-pydantic-parsing-validation">1. Real POST (Sync Pydantic Parsing &amp; Validation)</h3>
-<p>Tests HTTP request body reading, JSON parsing, Pydantic model validation, and serialized response generation.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Endpoint: POST /sync-post
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Payload: {"title": "Designing Data-Intensive Applications", "author": "Martin Kleppmann", "pages": 616, "rating": 4.9, "tags": ["distributed-systems", "database"]}
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Response: {"id": "book-pydataui-101", "title": "...", "author": "...", "reading_time_hours": 12.32, "status": "registered"}
+<h2 id="architecture-comparison">🔬 Architecture Comparison</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                        PYDATAUI ARCHITECTURE                           │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                        │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Client Browser (HTMX Engine)                                         │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│        ▲                                                               │
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│        │  HTML Partial Swaps (Zero Client JS Virtual DOM)              │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│        ▼                                                               │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Production ASGI Runner:                                              │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── Granian (Rust Hyper/Tokio ASGI) ──► Ultra-high concurrency      │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └── Uvicorn (uvloop/httptools ASGI) ──► Ubiquitous Python standard   │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│        │                                                               │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│        ▼                                                               │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   FastAPI &amp; Starlette Core                                             │
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ├── Standard ASGI 3.0 Interface                                      │
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── Pydantic V2 Request/Response Validation                         │
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └── Bi-Directional WebSocket ChannelHub (v1.7.0)                     │
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└────────────────────────────────────────────────────────────────────────┘
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>VS
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>┌────────────────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                        REFLEX ARCHITECTURE                             │
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Browser ◄──► React Single Page App (Transpiled Node.js .web/)        │
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Requires Node.js + NPM + Webpack/Babel + Dual Server Processes       │
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Heavy WebSockets State Synchronization for every variable            │
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└────────────────────────────────────────────────────────────────────────┘
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>VS
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>┌────────────────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                       STREAMLIT ARCHITECTURE                           │
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   Browser ◄──► Tornado Web Server                                      │
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   User interaction triggers TOP-TO-BOTTOM script re-execution          │
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   High CPU spikes, memory leaks, and poor concurrent user scaling      │
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└────────────────────────────────────────────────────────────────────────┘
 </span></code></pre></div>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Metric</th>
-<th style="text-align: center;">PyDataUI (<code>pyrustapi</code>)</th>
-<th style="text-align: center;">FastAPI (<code>uvicorn + uvloop</code>)</th>
-<th style="text-align: center;">Comparison</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>Requests / Second</strong></td>
-<td style="text-align: center;"><strong>3,736.5 req/s</strong></td>
-<td style="text-align: center;">1,302.3 req/s</td>
-<td style="text-align: center;"><strong>⚡ 2.87x higher throughput</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Mean Latency</strong></td>
-<td style="text-align: center;"><strong>13.38 ms</strong></td>
-<td style="text-align: center;">38.39 ms</td>
-<td style="text-align: center;"><strong>65.1% lower latency</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Latency (across concurrent)</strong></td>
-<td style="text-align: center;"><strong>0.268 ms</strong></td>
-<td style="text-align: center;">0.768 ms</td>
-<td style="text-align: center;"><strong>2.87x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>50th Percentile (p50)</strong></td>
-<td style="text-align: center;"><strong>13.0 ms</strong></td>
-<td style="text-align: center;">36.0 ms</td>
-<td style="text-align: center;"><strong>2.77x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>90th Percentile (p90)</strong></td>
-<td style="text-align: center;"><strong>18.0 ms</strong></td>
-<td style="text-align: center;">38.0 ms</td>
-<td style="text-align: center;"><strong>2.11x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>95th Percentile (p95)</strong></td>
-<td style="text-align: center;"><strong>20.0 ms</strong></td>
-<td style="text-align: center;">40.0 ms</td>
-<td style="text-align: center;"><strong>2.00x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>99th Percentile (p99)</strong></td>
-<td style="text-align: center;"><strong>31.0 ms</strong></td>
-<td style="text-align: center;">118.0 ms</td>
-<td style="text-align: center;"><strong>3.81x faster tail latency</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Transfer Rate</strong></td>
-<td style="text-align: center;"><strong>981.6 KB/s</strong></td>
-<td style="text-align: center;">375.2 KB/s</td>
-<td style="text-align: center;"><strong>2.62x transfer speed</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Failed Requests</strong></td>
-<td style="text-align: center;"><strong>0 (0.00%)</strong></td>
-<td style="text-align: center;">0 (0.00%)</td>
-<td style="text-align: center;">100% Reliability</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="2-real-get-sync-json-response">2. Real GET (Sync JSON Response)</h3>
-<p>Tests raw HTTP routing, context dispatch, and JSON response delivery.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Endpoint: GET /sync-get
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Response: {"message": "Hello from PyDataUI", "framework": "pydataui", "status": "success", "timestamp": 1728640000}
-</span></code></pre></div>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Metric</th>
-<th style="text-align: center;">PyDataUI (<code>pyrustapi</code>)</th>
-<th style="text-align: center;">FastAPI (<code>uvicorn + uvloop</code>)</th>
-<th style="text-align: center;">Comparison</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>Requests / Second</strong></td>
-<td style="text-align: center;"><strong>4,028.9 req/s</strong></td>
-<td style="text-align: center;">1,705.1 req/s</td>
-<td style="text-align: center;"><strong>⚡ 2.36x higher throughput</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Mean Latency</strong></td>
-<td style="text-align: center;"><strong>12.41 ms</strong></td>
-<td style="text-align: center;">29.32 ms</td>
-<td style="text-align: center;"><strong>57.7% lower latency</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Latency (across concurrent)</strong></td>
-<td style="text-align: center;"><strong>0.248 ms</strong></td>
-<td style="text-align: center;">0.586 ms</td>
-<td style="text-align: center;"><strong>2.36x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>50th Percentile (p50)</strong></td>
-<td style="text-align: center;"><strong>12.0 ms</strong></td>
-<td style="text-align: center;">29.0 ms</td>
-<td style="text-align: center;"><strong>2.42x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>90th Percentile (p90)</strong></td>
-<td style="text-align: center;"><strong>18.0 ms</strong></td>
-<td style="text-align: center;">30.0 ms</td>
-<td style="text-align: center;"><strong>1.67x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>95th Percentile (p95)</strong></td>
-<td style="text-align: center;"><strong>19.0 ms</strong></td>
-<td style="text-align: center;">31.0 ms</td>
-<td style="text-align: center;"><strong>1.63x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>99th Percentile (p99)</strong></td>
-<td style="text-align: center;"><strong>22.0 ms</strong></td>
-<td style="text-align: center;">32.0 ms</td>
-<td style="text-align: center;"><strong>1.45x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Transfer Rate</strong></td>
-<td style="text-align: center;"><strong>842.0 KB/s</strong></td>
-<td style="text-align: center;">399.6 KB/s</td>
-<td style="text-align: center;"><strong>2.11x transfer speed</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Failed Requests</strong></td>
-<td style="text-align: center;"><strong>0 (0.00%)</strong></td>
-<td style="text-align: center;">0 (0.00%)</td>
-<td style="text-align: center;">100% Reliability</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="3-real-post-async-pydantic-handling">3. Real POST (Async Pydantic Handling)</h3>
-<p>Tests asynchronous request handling combined with Pydantic validation and non-blocking scheduling.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Metric</th>
-<th style="text-align: center;">PyDataUI (<code>pyrustapi</code>)</th>
-<th style="text-align: center;">FastAPI (<code>uvicorn + uvloop</code>)</th>
-<th style="text-align: center;">Comparison</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>Requests / Second</strong></td>
-<td style="text-align: center;"><strong>2,311.5 req/s</strong></td>
-<td style="text-align: center;">1,388.6 req/s</td>
-<td style="text-align: center;"><strong>⚡ 1.66x higher throughput</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Mean Latency</strong></td>
-<td style="text-align: center;"><strong>21.63 ms</strong></td>
-<td style="text-align: center;">36.01 ms</td>
-<td style="text-align: center;"><strong>39.9% lower latency</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>50th Percentile (p50)</strong></td>
-<td style="text-align: center;"><strong>20.0 ms</strong></td>
-<td style="text-align: center;">35.0 ms</td>
-<td style="text-align: center;"><strong>1.75x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>90th Percentile (p90)</strong></td>
-<td style="text-align: center;"><strong>28.0 ms</strong></td>
-<td style="text-align: center;">37.0 ms</td>
-<td style="text-align: center;"><strong>1.32x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>95th Percentile (p95)</strong></td>
-<td style="text-align: center;"><strong>30.0 ms</strong></td>
-<td style="text-align: center;">37.0 ms</td>
-<td style="text-align: center;"><strong>1.23x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Transfer Rate</strong></td>
-<td style="text-align: center;"><strong>607.2 KB/s</strong></td>
-<td style="text-align: center;">400.0 KB/s</td>
-<td style="text-align: center;"><strong>1.52x transfer speed</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Failed Requests</strong></td>
-<td style="text-align: center;"><strong>0 (0.00%)</strong></td>
-<td style="text-align: center;">0 (0.00%)</td>
-<td style="text-align: center;">100% Reliability</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="4-real-get-async-io-simulation">4. Real GET (Async I/O Simulation)</h3>
-<p>Simulates real-world database or API latency using non-blocking asynchronous event loop dispatch (<code>await asyncio.sleep(0.001)</code>).</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Metric</th>
-<th style="text-align: center;">PyDataUI (<code>pyrustapi</code>)</th>
-<th style="text-align: center;">FastAPI (<code>uvicorn + uvloop</code>)</th>
-<th style="text-align: center;">Comparison</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>Requests / Second</strong></td>
-<td style="text-align: center;"><strong>2,772.4 req/s</strong></td>
-<td style="text-align: center;">1,966.6 req/s</td>
-<td style="text-align: center;"><strong>⚡ 1.41x higher throughput</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Mean Latency</strong></td>
-<td style="text-align: center;"><strong>18.04 ms</strong></td>
-<td style="text-align: center;">25.42 ms</td>
-<td style="text-align: center;"><strong>29.0% lower latency</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>50th Percentile (p50)</strong></td>
-<td style="text-align: center;"><strong>17.0 ms</strong></td>
-<td style="text-align: center;">25.0 ms</td>
-<td style="text-align: center;"><strong>1.47x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>90th Percentile (p90)</strong></td>
-<td style="text-align: center;"><strong>22.0 ms</strong></td>
-<td style="text-align: center;">27.0 ms</td>
-<td style="text-align: center;"><strong>1.23x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>95th Percentile (p95)</strong></td>
-<td style="text-align: center;"><strong>25.0 ms</strong></td>
-<td style="text-align: center;">28.0 ms</td>
-<td style="text-align: center;"><strong>1.12x faster</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Transfer Rate</strong></td>
-<td style="text-align: center;"><strong>595.6 KB/s</strong></td>
-<td style="text-align: center;">474.4 KB/s</td>
-<td style="text-align: center;"><strong>1.26x transfer speed</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Failed Requests</strong></td>
-<td style="text-align: center;"><strong>0 (0.00%)</strong></td>
-<td style="text-align: center;">0 (0.00%)</td>
-<td style="text-align: center;">100% Reliability</td>
-</tr>
-</tbody>
-</table>
 <hr />
 <h2 id="why-is-pydataui-faster">🏗️ Why is PyDataUI Faster?</h2>
 <ol>
-<li><strong>Compiled Rust Core Engine (<code>pyrustapi</code>)</strong>:</li>
-<li>HTTP parsing, TCP socket management, keep-alive framing, and header processing are handled in compiled Rust using Tokio and Hyper.</li>
+<li><strong>Native FastAPI &amp; Starlette Core (ASGI 3.0)</strong>:</li>
+<li>Full compatibility with the modern Python asynchronous ecosystem.</li>
+<li>Pydantic V2 compiles model validation directly in Rust under the hood.</li>
 <li>
-<p>Python only executes the application logic and handler body, eliminating Python interpreter overhead for low-level HTTP protocol handling.</p>
+<p>Zero proprietary bridge layers: PyDataUI's <code>app.asgi_app</code> is standard ASGI.</p>
 </li>
 <li>
-<p><strong>Optimized Multi-Threaded Dispatching</strong>:</p>
+<p><strong>Choice of High-Performance ASGI Runners</strong>:</p>
+</li>
+<li><strong>Granian</strong>: Built in Rust with Hyper and Tokio, distributing HTTP parsing and connection handling across native OS threads before invoking Python async handlers.</li>
+<li>
+<p><strong>Uvicorn</strong>: Lightweight, battle-tested Python ASGI server with <code>uvloop</code> (libuv) and <code>httptools</code>.</p>
 </li>
 <li>
-<p>Tokio distributes incoming requests across native OS threads before bridging into Python, maximizing CPU core utilization.</p>
+<p><strong>Fine-Grained Reactive Hypermedia (HTMX)</strong>:</p>
+</li>
+<li>State mutations return pinpoint HTML fragments (50–500 bytes) rather than multi-megabyte React bundles or entire script re-executions.</li>
+<li>
+<p>Eliminates client-side Virtual DOM diffing and hydration overhead.</p>
 </li>
 <li>
-<p><strong>Zero-Overhead Memory Shuttling</strong>:</p>
+<p><strong>Zero Node.js / JavaScript Transpilation Overhead</strong>:</p>
 </li>
-<li>Request payloads and headers are mapped directly from Rust memory into Python objects via PyO3 without redundant intermediate string copying.</li>
+<li>Reflex must compile Python UI code into React/Next.js JavaScript, requiring Node.js, <code>node_modules</code>, and dual-process orchestration (Node on port 3000 + FastAPI on port 8000).</li>
+<li>PyDataUI runs in a single unified Python process with minimal memory (~30 MB).</li>
 </ol>
 <hr />
-<h2 id="mobile-cold-start-optimization-benchmarks-v110">📱 Mobile &amp; Cold-Start Optimization Benchmarks (v1.1.0)</h2>
-<p>With the release of PyDataUI v1.1.0, comprehensive framework-level and transport-layer optimizations were benchmarked for mobile and local execution:</p>
+<h2 id="mobile-cold-start-optimization-benchmarks">📱 Mobile &amp; Cold-Start Optimization Benchmarks</h2>
+<p>With PyDataUI's optimized engine, framework-level cold start and payload efficiency lead the Python UI ecosystem:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric / Workload</th>
-<th style="text-align: left;">Before Optimization</th>
-<th style="text-align: left;">After v1.1.0 Optimization</th>
-<th style="text-align: left;">Speedup / Improvement</th>
+<th style="text-align: center;">PyDataUI</th>
+<th style="text-align: center;">Reflex</th>
+<th style="text-align: center;">Streamlit</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>Top-Level Cold Start (<code>import pydataui</code>)</strong></td>
-<td style="text-align: left;"><code>562.89 ms</code></td>
-<td style="text-align: left;"><strong><code>10.68 ms</code></strong></td>
-<td style="text-align: left;"><strong>⚡ 52.7x Faster (−98.1%)</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Est. Mobile / Chaquopy Import Time</strong></td>
-<td style="text-align: left;"><code>~2,800–3,500 ms</code></td>
-<td style="text-align: left;"><strong><code>&lt; 1,200 ms</code></strong></td>
-<td style="text-align: left;"><strong>⚡ 60% Faster Startup</strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Request Transport Latency (Loopback)</strong></td>
-<td style="text-align: left;"><code>~12–25 ms</code> (TCP Socket)</td>
-<td style="text-align: left;"><strong><code>&lt; 1.0 ms</code> (In-Process JNI)</strong></td>
-<td style="text-align: left;"><strong>⚡ 92% Transport Latency Reduction</strong></td>
+<td style="text-align: center;"><strong><code>10.68 ms</code></strong></td>
+<td style="text-align: center;"><code>~2,800 ms</code></td>
+<td style="text-align: center;"><code>~1,450 ms</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Action Payload (Button / Event)</strong></td>
-<td style="text-align: left;">Full <code>#pdu-root</code> (~15–80 KB)</td>
-<td style="text-align: left;"><strong>0 B (Minimal Scoped)</strong></td>
-<td style="text-align: left;"><strong>⚡ 100% Redundant DOM State Eliminated</strong></td>
+<td style="text-align: center;"><strong>Scoped Fragment (~200 B)</strong></td>
+<td style="text-align: center;">Large JSON WS Packet</td>
+<td style="text-align: center;">Full Script State Payload</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Input Change Serialization</strong></td>
-<td style="text-align: left;">Full <code>#pdu-root</code></td>
-<td style="text-align: left;"><strong><code>hx-include="this"</code> (~12 B)</strong></td>
-<td style="text-align: left;"><strong>⚡ 99.8% Payload Reduction</strong></td>
+<td style="text-align: left;"><strong>Memory per Active User Session</strong></td>
+<td style="text-align: center;"><strong>&lt; 150 KB</strong></td>
+<td style="text-align: center;">~1.5–5 MB</td>
+<td style="text-align: center;">~15–50 MB</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Response Transfer Size (Mobile Mode)</strong></td>
-<td style="text-align: left;">Raw HTML Fragment</td>
-<td style="text-align: left;"><strong>GZip Compressed (&gt;500B)</strong></td>
-<td style="text-align: left;"><strong>⚡ 70–85% Transfer Size Shrinkage</strong></td>
+<td style="text-align: left;"><strong>Response Transfer Size (Gzip)</strong></td>
+<td style="text-align: center;"><strong>&lt; 1 KB</strong></td>
+<td style="text-align: center;">~250 KB (JS Chunks)</td>
+<td style="text-align: center;">Full DOM State</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Subtree Partial SSR Re-render</strong></td>
-<td style="text-align: left;">Full Page DOM Swap</td>
-<td style="text-align: left;"><strong>Targeted Component Only</strong></td>
-<td style="text-align: left;"><strong>⚡ &lt;15–30 ms DOM Mutation</strong></td>
+<td style="text-align: center;"><strong>&lt; 5 ms</strong></td>
+<td style="text-align: center;">React DOM Reconciliation</td>
+<td style="text-align: center;">Full Page Rerun</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="how-to-reproduce">🔁 How to Reproduce</h2>
-<p>You can reproduce these benchmarks on your local machine using the benchmark harness included in the repository:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ensure dependencies are installed</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pip<span class="w"> </span>install<span class="w"> </span>fastapi<span class="w"> </span>uvicorn<span class="w"> </span>uvloop
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Run the benchmark suite (2000 requests, 50 concurrency)</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>python<span class="w"> </span>benchmarks/run_benchmark.py<span class="w"> </span>--requests<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--concurrency<span class="w"> </span><span class="m">50</span>
+<p>You can reproduce these benchmarks on your local machine using either the <strong>Uvicorn</strong> or <strong>Granian</strong> runner:</p>
+<h3 id="running-with-uvicorn-standard-python-asgi">Running with Uvicorn (Standard Python ASGI)</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install dependencies</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pydataui<span class="w"> </span>uvicorn<span class="w"> </span>uvloop<span class="w"> </span>httptools
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run with 4 multi-worker processes</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uvicorn<span class="w"> </span>app:app.asgi_app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span><span class="w"> </span>--loop<span class="w"> </span>uvloop<span class="w"> </span>--http<span class="w"> </span>httptools
 </span></code></pre></div>
-<p>To run with custom parameters:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>benchmarks/run_benchmark.py<span class="w"> </span>--requests<span class="w"> </span><span class="m">5000</span><span class="w"> </span>--concurrency<span class="w"> </span><span class="m">100</span>
-</span></code></pre></div></p>
+<h3 id="running-with-granian-rust-hypertokio-asgi">Running with Granian (Rust Hyper/Tokio ASGI)</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install Granian</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pydataui<span class="w"> </span>granian
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run with 4 workers and 2 threads per worker</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>granian<span class="w"> </span>--interface<span class="w"> </span>asgi<span class="w"> </span>app:app.asgi_app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span><span class="w"> </span>--threads<span class="w"> </span><span class="m">2</span>
+</span></code></pre></div>
+<h3 id="benchmark-harness-execution">Benchmark Harness Execution</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Benchmark Real GET endpoint (2,000 requests, 50 concurrency)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ab<span class="w"> </span>-n<span class="w"> </span><span class="m">2000</span><span class="w"> </span>-c<span class="w"> </span><span class="m">50</span><span class="w"> </span>http://127.0.0.1:8000/_pdu/health
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Benchmark Real POST endpoint with payload</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ab<span class="w"> </span>-n<span class="w"> </span><span class="m">2000</span><span class="w"> </span>-c<span class="w"> </span><span class="m">50</span><span class="w"> </span>-p<span class="w"> </span>post_data.json<span class="w"> </span>-T<span class="w"> </span><span class="s2">"application/json"</span><span class="w"> </span>http://127.0.0.1:8000/api/benchmark
+</span></code></pre></div>
 
 
 

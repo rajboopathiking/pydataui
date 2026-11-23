@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2551,7 +2551,7 @@
 <h2 id="1-how-fastapi-mounting-works-under-the-hood">1. How FastAPI Mounting Works Under the Hood</h2>
 <p>When you attach a PyDataUI application to an existing FastAPI application, the following ASGI delegation flow occurs:</p>
 <pre class="mermaid"><code>flowchart TD
-    Client["Client Browser / Mobile Device"] --&gt;|"HTTP Request"| ParentFastAPI["Parent FastAPI App (Uvicorn / PyRustAPI)"]
+    Client["Client Browser / Mobile Device"] --&gt;|"HTTP Request"| ParentFastAPI["Parent FastAPI App (Uvicorn / Granian)"]
 
     ParentFastAPI --&gt;|"Route: /api/v1/*"| APIRoutes["FastAPI API Endpoints &amp; Business Logic"]
     ParentFastAPI --&gt;|"Route: /docs"| ParentDocs["FastAPI Swagger UI (/docs)"]
@@ -2834,7 +2834,7 @@
 <p><div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>dist
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
 </span></code></pre></div>
-Your containerized PyDataUI service is live on port <code>8000</code> with production Uvicorn or PyRustAPI engine!</p>
+Your containerized PyDataUI service is live on port <code>8000</code> with production Uvicorn or Granian ASGI engine!</p>
 
 
 

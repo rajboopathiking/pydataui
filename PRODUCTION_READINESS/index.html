@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2982,9 +2982,9 @@
 
 <h1 id="pydataui-production-readiness-architecture-assessment">PyDataUI Production Readiness &amp; Architecture Assessment</h1>
 <blockquote>
-<p><strong>Version note:</strong> This assessment was written for <strong>v0.2.1</strong>. The current
-v0.3.0 release defaults to FastAPI, with PyRustAPI available as an optional
-backend. Validate engine-specific statements against the current
+<p><strong>Version note:</strong> PyDataUI standardizes on native <strong>FastAPI &amp; Starlette Core</strong>,
+running with high-performance production ASGI engines (<strong>Granian</strong> [Rust Tokio/Hyper]
+and <strong>Uvicorn</strong> [uvloop]). Validate engine-specific statements against the current
 <a href="../API_REFERENCE/">API reference</a> and release notes.</p>
 </blockquote>
 <p>This document provides a candid, authoritative engineering assessment of <strong>PyDataUI v0.2.1</strong> for production deployments, its security guarantees, remaining architectural boundaries, and how it compares to <strong>Django, Streamlit, Gradio, and Reflex</strong>.</p>
@@ -3005,7 +3005,7 @@ backend. Validate engine-specific statements against the current
 <tr>
 <td><strong>HTTP Engine</strong></td>
 <td>✅ <strong>Production-Grade</strong></td>
-<td>Rust Tokio/Hyper core (<code>pyrustapi</code>) delivers sub-millisecond latency and high concurrency without Uvicorn/Gunicorn.</td>
+<td>Native FastAPI and Starlette ASGI engine running on high-concurrency Uvicorn workers.</td>
 </tr>
 <tr>
 <td><strong>Session Isolation</strong></td>
@@ -3080,7 +3080,7 @@ backend. Validate engine-specific statements against the current
 - If two concurrent requests update the same session simultaneously across independent workers, the runner automatically reconciles and merges numeric counters, metrics, and reactive <code>State</code> instances.
 - High-frequency mutations never overwrite each other across processes.</p>
 <h3 id="architecture-a-single-process-behind-reverse-proxy-fastest-dev-internal-tools">Architecture A: Single Process Behind Reverse Proxy (Fastest Dev &amp; Internal Tools)</h3>
-<p>Since the Rust <code>pyrustapi</code> engine is multi-threaded and asynchronous (Tokio event loop), a <strong>single process</strong> can comfortably handle thousands of concurrent requests:</p>
+<p>Since PyDataUI is powered by FastAPI and Starlette, a <strong>single process</strong> can comfortably handle thousands of concurrent requests:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Internet / Clients
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>       │ (HTTPS :443)
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       ▼
@@ -3090,8 +3090,8 @@ backend. Validate engine-specific statements against the current
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                       │ (HTTP :8000)
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                       ▼
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌──────────────────────────────────────────────┐
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  PyDataUI Process (pyrustapi / Tokio Async)  │
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  - Multi-threaded HTTP Server                │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  PyDataUI Process (FastAPI / Uvicorn Async)  │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  - Multi-threaded ASGI Server                │
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  - In-Memory or SQLite WAL Storage           │
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  - HTMX SSR Component Tree                   │
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└──────────────────────────────────────────────┘
@@ -3104,7 +3104,7 @@ backend. Validate engine-specific statements against the current
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       ▼                       ▼                       ▼
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>┌──────────────┐        ┌──────────────┐        ┌──────────────┐
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   Worker 1   │        │   Worker 2   │        │   Worker 3   │
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ (pyrustapi)  │        │ (pyrustapi)  │        │ (pyrustapi)  │
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  (Uvicorn)   │        │  (Uvicorn)   │        │  (Uvicorn)   │
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└──────┬───────┘        └──────┬───────┘        └──────┬───────┘
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>       │                       │                       │
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>       └───────────────────────┼───────────────────────┘
@@ -3329,12 +3329,12 @@ backend. Validate engine-specific statements against the current
 
     subgraph PyDataUIArchitecture["PyDataUI Production Architecture (Unified &amp; Fast)"]
         DirectData["In-Memory Data &amp; AI Models\n(DuckDB, Polars, PyTorch, LangChain)"]
-        ASGI["Enterprise Async ASGI Core\n(FastAPI / PyRustAPI Tokio Core)"]
+        ASGI["Enterprise Async ASGI Core\n(FastAPI / Starlette Engine)"]
         HTMXDiff["Targeted HTMX HTML Diffs + shadcn/ui + GSAP\n(Zero JSON serialization, Zero npm, 60fps)"]
         DirectData --&gt; ASGI --&gt; HTMXDiff
     end</code></pre>
 <h4 id="1-real-enterprise-asgi-core-not-an-ad-hoc-script-runner">1. Real Enterprise ASGI Core (Not an Ad-hoc Script Runner)</h4>
-<p>Unlike Streamlit, PyDataUI does <strong>not</strong> re-run Python files on user interactions. It is built directly on <strong>standard async ASGI</strong> (FastAPI, Starlette, Uvicorn, Gunicorn, uvloop) with an optional compiled <strong>Rust Tokio/Hyper core</strong>. It scales horizontally across Kubernetes pods, Docker containers, and multi-worker processes (<code>workers=4+</code>) using standard HTTP load balancers.</p>
+<p>Unlike Streamlit, PyDataUI does <strong>not</strong> re-run Python files on user interactions. It is built directly on <strong>standard async ASGI</strong> (FastAPI, Starlette, Uvicorn, uvloop). It scales horizontally across Kubernetes pods, Docker containers, and multi-worker processes (<code>workers=4+</code>) using standard HTTP load balancers.</p>
 <h4 id="2-htmx-server-side-reactivity-zero-nodejs-zero-build-step">2. HTMX Server-Side Reactivity (Zero Node.js, Zero Build Step)</h4>
 <p>When a user clicks a button or filters a dataset, PyDataUI executes only the targeted state method on the server and streams back a lightweight HTML fragment over the wire.
 - <strong>No Node.js, no <code>package.json</code>, and no <code>node_modules</code></strong>.

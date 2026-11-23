@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2689,7 +2689,7 @@
 
     subgraph PyDataUIModel["PyDataUI Architecture (Server-Driven Reactive Hypermedia)"]
         P_Py["Python Code: Component, State, shadcn/ui"]
-        P_ASGI["Enterprise ASGI Server (FastAPI / Compiled Rust Tokio Core)"]
+        P_ASGI["Enterprise ASGI Server (Native FastAPI &amp; Starlette Core)"]
         P_HTMX["HTMX HTML Diff Engine + Tailwind CSS + GSAP"]
         P_DOM["Client Browser (Real DOM, Zero JavaScript Compilation)"]
 
@@ -2700,7 +2700,7 @@
 <h3 id="the-fundamental-architectural-difference">The Fundamental Architectural Difference</h3>
 <ul>
 <li><strong>Reflex is a Transpiler</strong>: It takes Python UI AST nodes and translates them into a real <strong>React Single Page Application (SPA)</strong> orchestrated by <strong>Next.js</strong>. It requires a local Node.js/npm runtime, generates a multi-megabyte JavaScript bundle, and synchronizes state bi-directionally over persistent <strong>WebSockets</strong>.</li>
-<li><strong>PyDataUI is an ASGI Hypermedia Engine</strong>: It renders clean, semantic HTML5 directly on the server (using <strong>FastAPI</strong> or a compiled <strong>Rust Tokio/Hyper core</strong>) and streams targeted micro-diffs via <strong>HTMX</strong>. It has <strong>zero Node.js dependencies</strong>, zero build steps, and communicates over standard, resilient <strong>HTTP/ASGI</strong>.</li>
+<li><strong>PyDataUI is an ASGI Hypermedia Engine</strong>: It renders clean, semantic HTML5 directly on the server (using <strong>FastAPI &amp; Starlette</strong>) and streams targeted micro-diffs via <strong>HTMX</strong>. It has <strong>zero Node.js dependencies</strong>, zero build steps, and communicates over standard, resilient <strong>HTTP/ASGI</strong>.</li>
 </ul>
 <hr />
 <h2 id="2-truth-check-supply-chain-package-verification">2. Truth Check: Supply-Chain &amp; Package Verification</h2>
@@ -2767,7 +2767,7 @@
 <li>Python FastAPI server running <code>rx.State</code>: ~120–200 MB RAM.
   💾 <strong>Baseline Idle Memory: 300–500 MB+ RAM</strong>.</li>
 <li><strong>PyDataUI</strong>:
-  Runs inside a single lightweight Python process (or compiled Rust Tokio process):
+  Runs inside a single lightweight Python process:
   💾 <strong>Baseline Idle Memory: 25–45 MB RAM</strong> (10× less memory consumption).</li>
 </ul>
 <h3 id="c-network-protocol-horizontal-scalability-the-websocket-bottleneck">C. Network Protocol &amp; Horizontal Scalability (The WebSocket Bottleneck)</h3>

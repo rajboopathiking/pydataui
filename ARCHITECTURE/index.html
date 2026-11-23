@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -945,10 +945,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-the-compiled-rust-core-pyrustapi" class="md-nav__link">
+  <a href="#3-the-native-enterprise-asgi-engine-fastapi-starlette" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🦀 3. The Compiled Rust Core (PyRustAPI)
+        ⚡ 3. The Native Enterprise ASGI Engine (FastAPI &amp; Starlette)
       
     </span>
   </a>
@@ -2416,10 +2416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-the-compiled-rust-core-pyrustapi" class="md-nav__link">
+  <a href="#3-the-native-enterprise-asgi-engine-fastapi-starlette" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🦀 3. The Compiled Rust Core (PyRustAPI)
+        ⚡ 3. The Native Enterprise ASGI Engine (FastAPI &amp; Starlette)
       
     </span>
   </a>
@@ -2488,8 +2488,8 @@
     end
 
     subgraph Backend["High-Performance HTTP Core"]
-        Rust["PyRustAPI Compiled Rust Core (Default)"]
-        PythonFallback["FastAPI / Starlette / Uvicorn (Fallback)"]
+        FastAPI["FastAPI / Starlette ASGI Engine (Default)"]
+        Uvicorn["Uvicorn High-Concurrency Async Workers"]
     end
 
     subgraph Storage["Storage &amp; Persistence"]
@@ -2506,8 +2506,8 @@
     SessionMgr --&gt; StateEngine
     StateEngine --&gt; Compiler
     Compiler --&gt; Router
-    Router --&gt; Rust
-    Rust -.-&gt;|C-ABI Fallback| PythonFallback
+    Router --&gt; FastAPI
+    FastAPI --&gt; Uvicorn
     StateEngine --&gt; Storage</code></pre>
 <hr />
 <h2 id="1-the-reactive-state-engine">⚡ 1. The Reactive State Engine</h2>
@@ -2554,48 +2554,48 @@
 - Themes (<code>slate</code>, <code>indigo</code>, <code>dark</code>, <code>light</code>) are defined via CSS variables in the page header.
 - Dynamic UI changes instantaneously adopt the CSS design tokens without full page reloads.</p>
 <hr />
-<h2 id="3-the-compiled-rust-core-pyrustapi">🦀 3. The Compiled Rust Core (<code>PyRustAPI</code>)</h2>
-<p>For enterprise deployments requiring microsecond latencies, PyDataUI integrates seamlessly with <strong>PyRustAPI</strong>:</p>
+<h2 id="3-the-native-enterprise-asgi-engine-fastapi-starlette">⚡ 3. The Native Enterprise ASGI Engine (FastAPI &amp; Starlette)</h2>
+<p>For enterprise deployments requiring high-throughput concurrency, PyDataUI integrates seamlessly with <strong>FastAPI and Starlette</strong>:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Feature</th>
-<th style="text-align: left;">PyRustAPI Rust Core</th>
-<th style="text-align: left;">Standard Python Uvicorn</th>
+<th style="text-align: left;">PyDataUI ASGI Engine</th>
+<th style="text-align: left;">Traditional WSGI Frameworks</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>HTTP Parser</strong></td>
-<td style="text-align: left;">Compiled Rust (<code>httparse</code> / <code>hyper</code>)</td>
-<td style="text-align: left;">Python <code>uvicorn-h11</code></td>
+<td style="text-align: left;"><strong>HTTP Protocol</strong></td>
+<td style="text-align: left;">Asynchronous ASGI 3.0 (<code>httptools</code> / <code>uvloop</code>)</td>
+<td style="text-align: left;">Synchronous WSGI (<code>gunicorn-sync</code>)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Throughput</strong></td>
-<td style="text-align: left;">Up to 110,000 req/sec</td>
-<td style="text-align: left;">~18,000 req/sec</td>
+<td style="text-align: left;"><strong>Concurrency</strong></td>
+<td style="text-align: left;">1,000+ non-blocking concurrent requests</td>
+<td style="text-align: left;">Thread / worker bound</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Memory Footprint</strong></td>
-<td style="text-align: left;">Extremely low (~25MB base)</td>
-<td style="text-align: left;">~70MB base</td>
+<td style="text-align: left;"><strong>API Documentation</strong></td>
+<td style="text-align: left;">Automatic OpenAPI 3.1 &amp; Swagger UI at <code>/docs</code></td>
+<td style="text-align: left;">Manual documentation</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Worker Threads</strong></td>
-<td style="text-align: left;">Native OS threads (Tokio runtime)</td>
-<td style="text-align: left;">Python GIL / Multi-process</td>
+<td style="text-align: left;"><strong>WebSockets</strong></td>
+<td style="text-align: left;">Native Bi-Directional WebSockets (<code>@pdu.channel</code>)</td>
+<td style="text-align: left;">Requires external push services</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Fallback</strong></td>
-<td style="text-align: left;">Automatic graceful fallback if missing</td>
-<td style="text-align: left;">Native standard library</td>
+<td style="text-align: left;"><strong>Microservice Mounting</strong></td>
+<td style="text-align: left;">Native 1-line mounting inside existing FastAPI backends</td>
+<td style="text-align: left;">Separate microservice process</td>
 </tr>
 </tbody>
 </table>
 <p>When <code>pydataui run app.py</code> starts:
-1. It inspects whether <code>pyrustapi</code> is available in the Python environment.
-2. If available, it spins up the compiled Rust asynchronous server bridge.
-3. If not installed, it falls back to Starlette/Uvicorn with zero configuration changes required from the user.</p>
+1. It initializes the native FastAPI/Starlette engine with configured middlewares.
+2. Registers internal hypermedia routes (<code>/_pdu/event</code>, <code>/_pdu/ws/{channel}</code>, <code>/_pdu/static</code>).
+3. Spawns high-concurrency Uvicorn workers with full async/await coroutine support.</p>
 <hr />
 <h2 id="4-multi-tenant-session-concurrency-isolation">🔒 4. Multi-Tenant Session &amp; Concurrency Isolation</h2>
 <p>To prevent state leakage between simultaneous users:</p>

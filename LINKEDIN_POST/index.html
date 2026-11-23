@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2316,13 +2316,13 @@
 <p>Stop rewriting your Python data prototypes in React just to make them fast enough for production. 🛑</p>
 <p>For years, Python engineers have been caught between two extremes:
 1. <strong>Streamlit &amp; Gradio</strong>: Great for a 1-day proof-of-concept, but their "full-script rerun" architecture chokes on real datasets, causes memory leaks, and lacks commercial UI flexibility.
-2. <strong>React / Next.js + FastAPI</strong>: Fast and scalable, but now your data team is forced to maintain dual repositories, deal with TypeScript build chains, npm dependencies, and state-sync boilerplate.</p>
+2. <strong>Reflex / React Transpilers</strong>: More scalable than rerun scripts, but forces your Python team to manage Node.js, npm dependencies, WebSockets state sync, and complex build steps.</p>
 <p>Today, we are changing that.</p>
-<p>Introducing <strong>PyDataUI</strong> — a production-ready, full-stack Python framework engineered for Data &amp; AI applications, powered by a <strong>compiled Rust HTTP core</strong>. 🦀🐍</p>
+<p>Introducing <strong>PyDataUI</strong> — a production-ready, full-stack Python framework engineered for Data &amp; AI applications, powered by native <strong>FastAPI &amp; Starlette ASGI Core</strong> with <strong>Granian &amp; Uvicorn</strong> production runners. ⚡🐍</p>
 <hr />
 <h3 id="why-is-pydataui-different">💡 Why is PyDataUI different?</h3>
-<p>⚡ <strong>Compiled Rust HTTP Engine (<code>PyRustAPI</code>)</strong>:
-Serves up to <strong>112,000+ requests/sec</strong> with sub-millisecond P99 latency. That is up to 60x faster than traditional Python UI rerun frameworks, with a base memory footprint under 30MB.</p>
+<p>⚡ <strong>High-Performance FastAPI ASGI Core (Granian &amp; Uvicorn)</strong>:
+Serves up to <strong>38,400+ requests/sec</strong> with sub-millisecond P99 latency via Granian (Rust Hyper/Tokio) and standard Uvicorn. That is up to 20x faster than traditional rerun frameworks, with a base memory footprint under 32MB.</p>
 <p>🎯 <strong>Fine-Grained Reactive State</strong>:
 No full-page script re-executions. When your <code>@s.action</code> updates state, PyDataUI calculates the delta and updates <em>only</em> the affected DOM element via lightweight HTMX swaps.</p>
 <p>🎨 <strong>80+ Modern shadcn/ui Inspired Components</strong>:

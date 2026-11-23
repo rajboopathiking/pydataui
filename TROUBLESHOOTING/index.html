@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2438,7 +2438,7 @@
 <p>A definitive guide to diagnosing, resolving, and understanding UI responsiveness, reactivity, and distinguishing <strong>Framework-Level Issues</strong> from <strong>Application/Usage-Level Issues</strong>.</p>
 <hr />
 <h2 id="1-how-pydataui-reactivity-works">1. How PyDataUI Reactivity Works</h2>
-<p>PyDataUI combines <strong>Rust Tokio/Hyper</strong> (<code>pyrustapi</code>), <strong>HTMX</strong> (reactive SSR), <strong>Tailwind CSS</strong>, and <strong>shadcn/ui</strong>:</p>
+<p>PyDataUI combines <strong>FastAPI &amp; Starlette Core</strong> (runnable with high-performance ASGI servers like <strong>Granian</strong> [Rust Tokio/Hyper] or <strong>Uvicorn</strong>), <strong>HTMX</strong> (reactive SSR), <strong>Tailwind CSS</strong>, and <strong>shadcn/ui</strong>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────┐
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                      Client Browser                    │
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                        │
@@ -2450,7 +2450,7 @@
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                           │ Body: application/x-www-form-urlencoded / JSON
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                           ▼
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌────────────────────────────────────────────────────────┐
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                   pyrustapi Server Core                │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│     FastAPI / Starlette ASGI Engine (Uvicorn/Granian)  │
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                        │
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  1. Restores Session from Cookie (`pdu-session`)       │
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  2. Deserializes form fields into State variables      │

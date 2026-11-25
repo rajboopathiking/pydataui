@@ -3,7 +3,7 @@ import importlib
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Tuple
 
-__version__ = '1.7.0'
+__version__ = '1.7.1'
 
 # Mapping of exported symbol names to (submodule_relative_path, attribute_name).
 # If attribute_name is None, the submodule itself is returned.
@@ -28,10 +28,52 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'Spacer': ('.components.layout', 'Spacer'),
     'Container': ('.components.layout', 'Container'),
     'Box': ('.components.layout', 'Box'),
+    'Stack': ('.components.layout', 'Stack'),
+    'Center': ('.components.layout', 'Center'),
     'HStack': ('.components.layout', 'HStack'),
     'VStack': ('.components.layout', 'VStack'),
     'Card': ('.components.layout', 'Card'),
     'Divider': ('.components.layout', 'Divider'),
+
+    # Charts & Data Science Re-Exports
+    'BarChart': ('.components.charts', 'BarChart'),
+    'LineChart': ('.components.charts', 'LineChart'),
+    'PieChart': ('.components.charts', 'PieChart'),
+    'DoughnutChart': ('.components.charts', 'DoughnutChart'),
+    'Sparkline': ('.components.charts', 'Sparkline'),
+    'JSONViewer': ('.components.data_science', 'JSONViewer'),
+    'PlotlyChart': ('.components.data_science', 'PlotlyChart'),
+    'DataFrameTable': ('.components.data_science', 'DataFrameTable'),
+    'ModelMetrics': ('.components.data_science', 'ModelMetrics'),
+    'ConfusionMatrix': ('.components.data_science', 'ConfusionMatrix'),
+    'FeatureImportance': ('.components.data_science', 'FeatureImportance'),
+    'PipelineStatus': ('.components.data_science', 'PipelineStatus'),
+    'DataTimeline': ('.components.data_science', 'DataTimeline'),
+    'SchemaViewer': ('.components.data_science', 'SchemaViewer'),
+    'SQLEditor': ('.components.data_science', 'SQLEditor'),
+    'FileDownload': ('.components.data_science', 'FileDownload'),
+
+    # Shadcn Components Re-Exports
+    'ShadButton': ('.components.shadcn', 'ShadButton'),
+    'ShadCard': ('.components.shadcn', 'ShadCard'),
+    'ShadBadge': ('.components.shadcn', 'ShadBadge'),
+    'ShadAlert': ('.components.shadcn', 'ShadAlert'),
+    'ShadSeparator': ('.components.shadcn', 'ShadSeparator'),
+    'ShadProgress': ('.components.shadcn', 'ShadProgress'),
+    'ShadSkeleton': ('.components.shadcn', 'ShadSkeleton'),
+    'ShadSwitch': ('.components.shadcn', 'ShadSwitch'),
+    'ShadTable': ('.components.shadcn', 'ShadTable'),
+    'ShadSelect': ('.components.shadcn', 'ShadSelect'),
+    'ShadTextarea': ('.components.shadcn', 'ShadTextarea'),
+    'ShadLabel': ('.components.shadcn', 'ShadLabel'),
+    'ShadDialog': ('.components.shadcn', 'ShadDialog'),
+    'ShadScrollArea': ('.components.shadcn', 'ShadScrollArea'),
+    'ShadTabs': ('.components.shadcn', 'ShadTabs'),
+    'ShadToast': ('.components.shadcn', 'ShadToast'),
+    'ShadAvatar': ('.components.shadcn', 'ShadAvatar'),
+    'ShadHoverCard': ('.components.shadcn', 'ShadHoverCard'),
+    'ShadAccordion': ('.components.shadcn', 'ShadAccordion'),
+    'ShadSheet': ('.components.shadcn', 'ShadSheet'),
 
     # Data Display & Universal Sniffing
     'DataTable': ('.components.data_display', 'DataTable'),
@@ -60,6 +102,7 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'Slider': ('.components.forms', 'Slider'),
     'Form': ('.components.forms', 'Form'),
     'FileUpload': ('.components.forms', 'FileUpload'),
+    'DatePicker': ('.components.forms', 'DatePicker'),
     'ShadForm': ('.shadcn', 'ShadForm'),
 
     # Typography
@@ -205,8 +248,11 @@ _LAZY_IMPORTS: Dict[str, Tuple[str, str | None]] = {
     'plotly_chart': ('.dx', 'plotly_chart'),
     'pyplot': ('.dx', 'pyplot'),
     'button': ('.dx', 'button'),
+    'link_button': ('.dx', 'link_button'),
+    'download_button': ('.dx', 'download_button'),
     'input': ('.dx', 'input'),
     'text_input': ('.dx', 'text_input'),
+    'password_input': ('.dx', 'password_input'),
     'textarea': ('.dx', 'textarea'),
     'text_area': ('.dx', 'text_area'),
     'number_input': ('.dx', 'number_input'),

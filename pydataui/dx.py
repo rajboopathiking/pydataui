@@ -2557,6 +2557,41 @@ def button(
     return _add_component(Button(label, on_click=on_click, **kwargs))
 
 
+def link_button(
+    label: str,
+    url: Optional[str] = None,
+    href: Optional[str] = None,
+    new_tab: bool = True,
+    type: str = "secondary",
+    icon: Optional[str] = None,
+    **kwargs
+) -> Component:
+    """Add a styled external/internal navigation button."""
+    target_url = url or href or "#"
+    return button(label, href=target_url, new_tab=new_tab, type=type, icon=icon, **kwargs)
+
+
+def download_button(
+    label: str = "Download",
+    data: Any = "",
+    file_name: str = "download.txt",
+    mime: str = "text/plain",
+    **kwargs
+) -> Component:
+    """Add a client-side file download button (supports str, bytes, or dict/list JSON)."""
+    from .components.data_science import FileDownload
+    if isinstance(data, bytes):
+        content_str = data.decode("utf-8", errors="replace")
+    elif isinstance(data, (dict, list)):
+        import json as _json
+        content_str = _json.dumps(data, indent=2, default=str)
+        if mime == "text/plain":
+            mime = "application/json"
+    else:
+        content_str = str(data) if data is not None else ""
+    return _add_component(FileDownload(filename=file_name, content=content_str, label=label, mime_type=mime, **kwargs))
+
+
 def text_input(
     label: str = "",
     value: Any = "",
@@ -2574,6 +2609,18 @@ def text_input(
         elif value:
             session_state[key] = value
     return _add_component(Input(label=label, value=actual_value, placeholder=placeholder, name=key, type=type, on_change=on_change, **kwargs))
+
+
+def password_input(
+    label: str = "",
+    value: Any = "",
+    placeholder: str = "",
+    key: Optional[str] = None,
+    on_change: Optional[Callable] = None,
+    **kwargs
+) -> Input:
+    """Add a masked password input field."""
+    return text_input(label=label, value=value, placeholder=placeholder, key=key, type="password", on_change=on_change, **kwargs)
 
 
 input = text_input

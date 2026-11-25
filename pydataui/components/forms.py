@@ -471,3 +471,15 @@ class FileUpload(Input):
         if file_status_html:
             return f"<div class='w-full'>{base_html}{file_status_html}</div>"
         return base_html
+
+
+class DatePicker(Input):
+    """Date picker input component (type='date')."""
+
+    def __init__(self, *args, value=None, min_date=None, max_date=None, **props):
+        if min_date is not None:
+            props.setdefault("min", min_date)
+        if max_date is not None:
+            props.setdefault("max", max_date)
+        props["type"] = "date"
+        super().__init__(*args, value=value, **props)

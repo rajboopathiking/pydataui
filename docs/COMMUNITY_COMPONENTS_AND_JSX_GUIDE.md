@@ -168,7 +168,22 @@ pdu.write(SpotlightCard(title="Autonomous Agent", category="AI Ops", description
 
 ---
 
-## 5. Submit Your Components to the Official Showcase
+## 5. Featured Community Components & Showcase
+
+### 1. Modern Collapsible Sidebar (Hide & Expand) — `examples/community_modern_sidebar.py`
+Contributed by `@rajboopathiking` using `pdu.from_jsx()`:
+- **Smooth 300ms Hide & Expand Drawer:** Collapses to give 100% full-width canvas to wide DataTables, Plotly charts, or AI chat.
+- **Floating Expand Button & `Cmd+B` / `Ctrl+B` Shortcut:** Re-expand cleanly at any time.
+- **Theme-Aware:** Automatically adapts to all 20+ PyDataUI themes (`bg-card`, `border-border`, `text-foreground`).
+
+Run locally:
+```bash
+python examples/community_modern_sidebar.py
+```
+
+---
+
+## 6. Submit Your Components to the Official Showcase
 
 Have you published a PyDataUI component package or template repository on GitHub?
 
